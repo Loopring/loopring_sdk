@@ -24,13 +24,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
   },
   "include": [
     "src",
     "src/**/*.json",
     "src/*",
-    "tests"
   ],
   "exclude": [
     "node_modules",
