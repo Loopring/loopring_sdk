@@ -1,2 +1,4 @@
 infura_url.txt
 node_modules
+tsconfig.tsbuildinfo
+dist

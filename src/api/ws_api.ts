@@ -1,8 +1,8 @@
 import { BaseAPI } from './base_api'
 
-import { ReqParams, SIG_FLAG, } from './request'
+import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
 
-import { LOOPRING_URLs, ReqMethod } from '../defs/url_defs'
+import { LOOPRING_URLs, } from '../defs/url_defs'
 
 export class WsAPI extends BaseAPI {
 

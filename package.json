@@ -1,21 +1,17 @@
 {
-  "name": "@loopring-web/sdk",
-  "version": "0.1.1-alpha.0",
+  "name": "loopring-sdk",
+  "version": "0.0.1",
   "author": "Loopring Dex Frontend Team",
   "description": "dexwebapp new version",
   "private": true,
   "license": "(MIT OR Apache-2.0)",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/loopring-sdk.esm.js",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
-    "@web3-react/abstract-connector": "^6.0.7",
-    "@web3-react/authereum-connector": "^6.2.0",
-    "@web3-react/core": "^6.1.9",
-    "@web3-react/injected-connector": "^6.0.7",
-    "@web3-react/ledger-connector": "^6.1.9",
-    "@web3-react/network-connector": "^6.1.9",
-    "@web3-react/trezor-connector": "^6.1.9",
-    "@web3-react/types": "^6.0.7",
-    "@web3-react/walletconnect-connector": "^6.2.0",
-    "@web3-react/walletlink-connector": "^6.2.0",
     "async": "^3.2.0",
     "axios": "^0.21.1",
     "blake-hash": "^2.0.0",
@@ -26,7 +22,7 @@
     "eth-sig-util": "2.3.0",
     "ethereumjs-abi": "0.6.8",
     "ethereumjs-tx": "1.3.3",
-    "ethereumjs-util": "^7.0.8",
+    "ethereumjs-util": "5.2.0",
     "ethers": "^5.0.32",
     "fast-deep-equal": "^3.1.3",
     "ffjavascript": "0.1.3",
@@ -38,11 +34,9 @@
     "react-use": "^17.2.4",
     "snarkjs": "0.1.20",
     "use-local-storage-state": "^9.0.2",
+    "web3": "^1.3.6",
     "web3-eth-personal": "^1.3.4",
     "web3-provider-engine": "^16.0.1"
-  },
-  "resolutions": {
-    "styled-components": "^5"
   },
   "build": {
     "files": [
@@ -51,12 +45,15 @@
     ],
     "publish": {
       "provider": "custom",
-      "repo": "ssh://git@github.com/loopring/dexwebappv2",
+      "repo": "https://github.com/leochan007/loopring_ts_sdk",
       "owner": "leochan007"
     }
   },
   "scripts": {
-    "test": "jest"
+    "build": "tsdx build",
+    "start": "tsdx watch",
+    "test": "tsdx test",
+    "prepublishOnly": "tsdx build"
   },
   "browserslist": {
     "production": [
@@ -74,23 +71,29 @@
     "@babel/plugin-transform-typescript": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/classnames": "^2.2.11",
     "@types/crypto-js": "^4.0.1",
     "@types/eth-sig-util": "^2.1.0",
+    "@types/ethereumjs-abi": "^0.6.3",
     "@types/ethereumjs-tx": "^2.0.0",
     "@types/ethereumjs-util": "^6.1.0",
     "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.168",
+    "@types/ms": "^0.7.31",
     "@types/node": "^12.0.0",
-    "@types/voca": "^1.4.0",
     "babel-jest": "^26.6.3",
     "babel-plugin-import": "^1.13.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.4",
-    "dotenv-cli": "^4.0.0",
     "jest": "^26.6.3",
     "mocha": "^8.3.2",
-    "truffle-privatekey-provider": "1.3.0"
+    "truffle-privatekey-provider": "1.3.0",
+    "ts-node": "^10.0.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.0",
+    "typescript": "^4.1.2"
   }
 }

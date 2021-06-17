@@ -1,50 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ReqMethod } from '../defs/url_defs'
+import { DEFAULT_TIMEOUT, ReqParams, SIG_FLAG, ReqOptions, } from '../defs/loopring_defs'
 
 import { getEdDSASig, getEdDSASigWithPoseidon, getEcDSASig, GetEcDSASigType, } from './sign/sign_tools'
-
-export const DEFAULT_TIMEOUT = 30000
-
-export enum SIG_FLAG {
-    NO_SIG,
-    EDDSA_SIG,
-    EDDSA_SIG_POSEIDON,
-    ECDSA_SIG,
-}
-
-export interface ReqOptions {
-    baseUrl?: string
-    apiKey?: string
-    signature?: string
-    
-    url?: string
-}
-
-export interface ReqParams {
-    url: string
-    method: ReqMethod
-    sigFlag: SIG_FLAG
-
-    queryParams?: any
-    bodyParams?: any
-
-    apiKey?: string
-
-    sigObj?: {
-        dataToSig?: any
-
-        sigPatch?: string
-
-        PrivateKey?: string
-
-        owner?: string
-        pwd?: string
-        web3? : any
-        hasDataStruct?: boolean
-    }
-    eddsaSignature?: string
-    ecdsaSignature?: string
-}
 
 /**
  *

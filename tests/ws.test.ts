@@ -1,7 +1,7 @@
 import { ChainId } from '../src/defs/web3_defs'
 import { WsAPI } from '../src/api/ws_api'
 
-import { DEFAULT_TIMEOUT } from '../src/api/request'
+import { DEFAULT_TIMEOUT } from '../src'
 
 let api: WsAPI
 

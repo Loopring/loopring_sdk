@@ -13,7 +13,7 @@ import {
     AmmPoolRequestPatch,
 } from '../src/defs/loopring_defs'
 
-import { DEFAULT_TIMEOUT } from '../src/api/request'
+import { DEFAULT_TIMEOUT } from '../src'
 
 import { loopring_exported_account as acc } from './utils'
 import { dumpError400 } from '../src/utils/network_tools'

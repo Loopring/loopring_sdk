@@ -49,13 +49,3 @@ export enum LOOPRING_URLs {
 
     GET_WS_KEY = '/v3/ws/key',
 }
-
-export enum ReqMethod {
-    GET = 'GET',
-    POST = 'POST',
-    DELETE = 'DELETE',
-}
-
-export enum SigPatchField {
-    EddsaSignature = 'eddsaSignature',
-}

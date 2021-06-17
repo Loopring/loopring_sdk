@@ -1,8 +1,8 @@
 import { BaseAPI } from './base_api'
 
-import { ReqParams, SIG_FLAG, } from './request'
+import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
 
-import { LOOPRING_URLs, ReqMethod } from '../defs/url_defs'
+import { LOOPRING_URLs, } from '../defs/url_defs'
 
 import {
     GetAccountRequest,
@@ -15,12 +15,13 @@ import {
     GetAllowancesRequest,
     MarketInfo,
     TokenPairs,
+    ExchangeInfo, 
+    TickerData, 
+    DepthData, 
+    Candlestick,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
-
-import { ExchangeInfo, TickerData, DepthData, Candlestick,
- } from '../defs/exchange_defs'
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote } from '../utils/symbol_tools'

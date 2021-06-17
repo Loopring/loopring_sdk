@@ -10,7 +10,7 @@ import { TradingInterval,
 import { ChainId } from '../src/defs/web3_defs'
 import { ExchangeAPI } from '../src/api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '../src/api/request'
+import { DEFAULT_TIMEOUT } from '../src'
 
 import { loopring_exported_account as acc } from './utils'
 
