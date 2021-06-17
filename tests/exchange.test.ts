@@ -1,4 +1,4 @@
-import { dumpError400 } from '../../utils/network_tools'
+import { dumpError400 } from '../src/utils/network_tools'
 import { TradingInterval,
     GetAccountRequest,
     GetCandlestickRequest,
@@ -6,22 +6,22 @@ import { TradingInterval,
     GetAllowancesRequest,
     GetTickerRequest,
     GetDepthRequest,
-} from '../../defs/loopring_defs'
-import { ChainId } from '../../defs/web3_defs'
-import { ExchangeAPI } from '../exchange_api'
+} from '../src/defs/loopring_defs'
+import { ChainId } from '../src/defs/web3_defs'
+import { ExchangeAPI } from '../src/api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '../request'
+import { DEFAULT_TIMEOUT } from '../src/api/request'
 
 import { loopring_exported_account as acc } from './utils'
 
-import { hasMarket, getPair, getExistedMarket, } from '../../utils/symbol_tools'
+import { hasMarket, getPair, getExistedMarket, } from '../src/utils/symbol_tools'
 
 let api: ExchangeAPI
 
 describe('ExchangeAPI test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI(ChainId.GORLI)
     })
 
     it('getAccount', async () => {
@@ -30,27 +30,27 @@ describe('ExchangeAPI test', function () {
         }
         const response = await api.getAccount(request)
         console.log(response)
-    })
+    }, DEFAULT_TIMEOUT)
 
     it('getRelayerCurrentTime', async () => {
         const response = await api.getRelayerCurrentTime()
         console.log(response)
-    })
+    }, DEFAULT_TIMEOUT)
 
     it('getFiatPrice1', async () => {
         const response = await api.getFiatPrice({ legal: 'USD' })
         console.log(response)
-    })
+    }, DEFAULT_TIMEOUT)
 
     it('getFiatPrice2', async () => {
         const response = await api.getFiatPrice({ legal: 'CNY' })
         console.log(response)
-    })
+    }, DEFAULT_TIMEOUT)
 
     it('getLatestTokenPrices', async () => {
         const response = await api.getLatestTokenPrices()
         console.log(response.raw_data.data)
-    })
+    }, DEFAULT_TIMEOUT)
 
     it('getAllowances', async () => {
         
