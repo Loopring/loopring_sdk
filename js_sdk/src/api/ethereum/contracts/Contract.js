@@ -1,5 +1,5 @@
 import { methodID } from 'ethereumjs-abi';
-import { toHex } from '../../common/formatter';
+import { toHex } from '../../../utils/formatter';
 import AbiFunction from './AbiFunction';
 
 export default class Contract {

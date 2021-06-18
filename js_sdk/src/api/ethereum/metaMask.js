@@ -7,7 +7,7 @@ import {
 } from 'ethereumjs-util'
 import Transaction from 'ethereumjs-tx'
 
-import { addHexPrefix, toBuffer, toHex, toNumber } from '../common/formatter'
+import { addHexPrefix, toBuffer, toHex, toNumber } from '../../utils/formatter'
 import ABI from './contracts'
 
 import { ConnectorNames } from '../../defs/web3_defs'

@@ -3,7 +3,7 @@ import {
   clearHexPrefix,
   toBuffer,
   toHex,
-} from '../../common/formatter'
+} from '../../../utils/formatter'
 import { methodID, rawDecode, rawEncode } from 'ethereumjs-abi'
 import BN from 'bn.js'
 

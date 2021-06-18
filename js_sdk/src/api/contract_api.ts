@@ -5,7 +5,7 @@ import { ChainId } from '../defs/web3_defs'
 
 import { TokenInfo } from '../defs/loopring_defs'
 
-import * as fm from './common/formatter'
+import * as fm from '../utils/formatter'
 
 import Contracts from './ethereum/contracts/Contracts'
 

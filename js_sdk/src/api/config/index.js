@@ -1,4 +1,4 @@
-import { toBig, toFixed } from '../common/formatter';
+import { toBig, toFixed } from '../../utils/formatter';
 const config = require('./config.json');
 
 function getMaintenanceMode() {

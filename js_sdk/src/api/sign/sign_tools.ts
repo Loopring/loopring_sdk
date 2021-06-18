@@ -11,7 +11,7 @@ import EdDSA from './eddsa'
 
 import BigInteger from 'bignumber.js'
 
-import * as fm from '../common/formatter'
+import * as fm from '../../utils/formatter'
 
 import { personalSign } from '../ethereum/metaMask'
 

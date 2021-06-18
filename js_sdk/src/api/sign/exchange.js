@@ -1,6 +1,6 @@
 import * as Poseidon from './poseidon';
 
-import * as fm from '../common/formatter';
+import * as fm from '../../utils/formatter';
 import * as sigUtil from 'eth-sig-util';
 
 import * as abi from 'ethereumjs-abi';
