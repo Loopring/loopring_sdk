@@ -1,1 +1,1 @@
-# loopring_ts_sdk
+# loopring_sdk
