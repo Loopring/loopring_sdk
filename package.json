@@ -1,0 +1,15 @@
+{
+  "name": "loopring-sdk",
+  "version": "0.0.1",
+  "author": "Loopring Dex Dev Team",
+  "description": "dexwebapp new version",
+  "private": true,
+  "license": "(MIT OR Apache-2.0)",
+  "scripts": {
+    "build_book": "npx honkit build",
+    "serve": "npx honkit serve"
+  },
+  "devDependencies": {
+    "honkit": "^3.6.20"
+  }
+}
