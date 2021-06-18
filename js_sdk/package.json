@@ -46,7 +46,7 @@
     ],
     "publish": {
       "provider": "custom",
-      "repo": "https://github.com/leochan007/loopring_ts_sdk",
+      "repo": "https://github.com/leochan007/loopring_sdk",
       "owner": "leochan007"
     }
   },
