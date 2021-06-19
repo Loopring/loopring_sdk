@@ -24,7 +24,7 @@ import {
     GetUserTransferListRequest, } from '../src/defs/loopring_defs'
 
 import * as sign_tools from '../src/api/sign/sign_tools'
-import * as fm from '../src/api/common/formatter'
+import * as fm from '../src/utils/formatter'
 
 let api: UserAPI
 

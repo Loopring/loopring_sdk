@@ -11,7 +11,7 @@ describe('WsAPI test', function () {
         api = new WsAPI(ChainId.GORLI)
     })
 
-    it('getWsKey get', async () => {
+    it('getWsKey', async () => {
         const response = await api.getWsKey()
         console.log(response)
     }, DEFAULT_TIMEOUT)

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
-    "rootDir": "src",
+    "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
     "target": "es5",
@@ -28,10 +28,11 @@
   "include": [
     "src",
     "src/**/*.json",
-    "src/*",
+    "src/*"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "tests"
   ]
 }

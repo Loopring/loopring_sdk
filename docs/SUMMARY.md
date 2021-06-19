@@ -8,10 +8,16 @@
 ### SDKs
 
 * [JS SDK](./js_sdk/intro.md)
-    * [Install](./js_sdk/intro.md#install)
+    * [Overview](./js_sdk/intro.md#install)
+    * [AmmPool](./js_sdk/ammpool_api.md)
+    * [Contract](./js_sdk/contract_api.md)
+    * [Exchange](./js_sdk/exchange_api.md)
+    * [User](./js_sdk/user_api.md)
+    * [WS REST](./js_sdk/ws_api.md)
+    * [Websocket](./js_sdk/websocket_api.md)
 
 * [PYTHON SDK](python_sdk/intro.md)
-    * [Install](python_sdk/intro.md#install)
+    * [Overview](python_sdk/intro.md#overview)
 
 ----
 
