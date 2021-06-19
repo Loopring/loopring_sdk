@@ -1,6 +1,6 @@
 # Exchange Api
 
-1) getAccount
+##### 1) getAccount
 
 ```javascript
     const request: GetAccountRequest = {
@@ -9,25 +9,25 @@
     const response = await api.getAccount(request)
 ```
 
-2) getRelayerCurrentTime
+##### 2) getRelayerCurrentTime
 
 ```javascript
     const response = await api.getRelayerCurrentTime()
 ```
 
-3) getFiatPrice
+##### 3) getFiatPrice
 
 ```javascript
     const response = await api.getFiatPrice({ legal: 'USD' })
 ```
 
-4) getLatestTokenPrices
+##### 4) getLatestTokenPrices
 
 ```javascript
     const response = await api.getLatestTokenPrices()
 ```
 
-5) getAllowances
+##### 5) getAllowances
 
 ```javascript
     const request: GetAllowancesRequest = {
@@ -40,7 +40,7 @@
     const response = await api.getAllowances(request, tokens.tokenSymbolMap)
 ```
 
-6) getAllowances
+##### 6) getAllowances
 
 ```javascript
     const request: GetAllowancesRequest = {
@@ -53,7 +53,7 @@
     const response = await api.getAllowances(request, tokens.tokenSymbolMap)
 ```
 
-7) getTokenBalances
+##### 7) getTokenBalances
 
 ```javascript
     const tokens = await api.getTokens()
@@ -66,19 +66,19 @@
     const response = await api.getTokenBalances(request, tokens.tokenSymbolMap)
 ```
 
-8) getMixMarkets
+##### 8) getMixMarkets
 
 ```javascript
     const response = await api.getMixMarkets()
 ```
 
-9) getTokens
+##### 9) getTokens
 
 ```javascript
     const response = await api.getTokens()
 ```
 
-10) getDepth
+##### 10) getDepth
 
 ```javascript
     const request: GetDepthRequest = {
@@ -88,13 +88,13 @@
     const response = await api.getDepth(request)
 ```
 
-11) getExchangeInfo
+##### 11) getExchangeInfo
 
 ```javascript
     const response = await api.getExchangeInfo()
 ```
 
-12) getTicker
+##### 12) getTicker
 
 ```javascript
     const request: GetTickerRequest = {
@@ -103,13 +103,13 @@
     const response = await api.getTicker(request)
 ```
 
-13) getAllTickers
+##### 13) getAllTickers
 
 ```javascript
     const response = await api.getAllTickers()
 ```
 
-14) getCandlestick
+##### 14) getCandlestick
 
 ```javascript
     const request: GetCandlestickRequest = {

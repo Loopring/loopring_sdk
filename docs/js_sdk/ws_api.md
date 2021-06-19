@@ -1,6 +1,6 @@
 # WS REST Api
 
-1) getWsKey
+##### 1) getWsKey
 
 ```javascript
         const response = await api.getWsKey()

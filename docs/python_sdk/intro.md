@@ -2,4 +2,4 @@
 
 ## Overview
 
-[Source and Demo](https://github.com/Loopring/hello_loopring)
+##### See [Source and Demo](https://github.com/Loopring/hello_loopring)

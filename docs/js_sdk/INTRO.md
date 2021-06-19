@@ -40,19 +40,7 @@ const loopring_exported_account = {
 
 ## Getting Started
 
-Unit Test
-1. test all test cases
-```shell
-yarn test
-```
-
-2. test some cases with specified pattern
-```shell
-yarn test -t getAccount
-```
-tips: getAccount is item name, which equals to the string in test case description.
-
-Init APIs
+#### Init APIs
 
 ```javascript
     const userApi: UserAPI = new UserApi(ChainId.GORLI)
@@ -61,16 +49,16 @@ Init APIs
     const wsAPI: WsAPI = new WsAPI(ChainId.GORLI)
 ```
 
-Examples:(Transfer Process)
+#### Examples:(Transfer Process)
 
-step 0. init api
+##### step 0. init api
 
 ```javascript
     const api: UserAPI = new UserApi(ChainId.GORLI)
     const exchangeApi: UserAPI = new UserApi(ChainId.GORLI)
 ```
 
-step 1. get storageId for transfer
+##### step 1. get storageId for transfer
 
 ```javascript
         const request: GetNextStorageIdRequest = {
@@ -80,7 +68,7 @@ step 1. get storageId for transfer
         const storageId = await api.getNextStorageId(request, acc.apiKey)
 ```
 
-step 2. get nonce with getAccountApi
+##### step 2. get nonce with getAccountApi
 
 ```javascript
         const { nonce } = await exchangeApi.getAccount({
@@ -88,7 +76,7 @@ step 2. get nonce with getAccountApi
         })
 ```
 
-step 3. submit internal transfer
+##### step 3. submit internal transfer
 
 ```javascript
     const request: OriginTransferRequestV3 = {

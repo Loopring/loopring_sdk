@@ -1,6 +1,6 @@
 # User Api
 
-1) getUserApiKey
+##### 1) getUserApiKey
 
 ```javascript
     const request: GetUserApiKeyRequest = {
@@ -9,7 +9,7 @@
     const response = await api.getUserApiKey(request, acc.eddsaKey)
 ```
 
-2) getUserTranferList
+##### 2) getUserTranferList
 
 ```javascript
     const request: GetUserTransferListRequest = {
@@ -18,7 +18,7 @@
     const response = await api.getUserTranferList(request, acc.apiKey)
 ```
 
-3) getUserTrades
+##### 3) getUserTrades
 
 ```javascript
     const request: GetUserTradesRequest = {
@@ -29,7 +29,7 @@
     const response = await api.getUserTrades(request, acc.apiKey)
 ```
 
-4) getNextStorageId
+##### 4) getNextStorageId
 
 ```javascript
     const request: GetNextStorageIdRequest = {
@@ -39,7 +39,7 @@
     const response = await api.getNextStorageId(request, acc.apiKey)
 ```
 
-5) getUserFeeRate
+##### 5) getUserFeeRate
 
 ```javascript
     const request: GetUserFeeRateRequest = {
@@ -49,7 +49,7 @@
     const response = await api.getUserFeeRate(request, acc.apiKey)
 ```
 
-6) getUserOrderFeeRate
+##### 6) getUserOrderFeeRate
 
 ```javascript
     const request: GetUserOrderFeeRateRequest = {
@@ -61,7 +61,7 @@
     const response = await api.getUserOrderFeeRate(request, acc.apiKey)
 ```
 
-7) getOffchainFeeAmt
+##### 7) getOffchainFeeAmt
 
 ```javascript
     const request: GetOffchainFeeAmtRequest = {
@@ -74,7 +74,7 @@
     const response = await api.getOffchainFeeAmt(request, acc.apiKey)
 ```
 
-8) getOrderDetails
+##### 8) getOrderDetails
 
 ```javascript
     let orderHash = process.env.ORDER_HASH ? process.env.ORDER_HASH : ''
@@ -85,7 +85,7 @@
     const response = await api.getOrderDetails(request, acc.apiKey)
 ```
 
-9) getUserBalances
+##### 9) getUserBalances
 
 ```javascript
     const request: GetUserBalancesRequest = {
@@ -96,7 +96,7 @@
     const response = await api.getUserBalances(request, acc.apiKey)
 ```
 
-10) submitOffchainWithdraw
+##### 10) submitOffchainWithdraw
 
 ```javascript
     const request: OffChainWithdrawalRequestV3 = {
@@ -123,7 +123,7 @@
             acc.eddsaKey, acc.apiKey, false)
 ```
 
-11) submitInternalTransfer
+##### 11) submitInternalTransfer
 
 ```javascript
     const request: OriginTransferRequestV3 = {

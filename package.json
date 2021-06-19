@@ -7,9 +7,11 @@
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
     "build_book": "npx honkit build",
-    "serve": "npx honkit serve"
+    "serve": "npx honkit serve",
+    "deploy": "gh-pages -d _book"
   },
   "devDependencies": {
+    "gh-pages": "^3.2.2",
     "honkit": "^3.6.20"
   }
 }

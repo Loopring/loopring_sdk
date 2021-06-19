@@ -1,30 +1,30 @@
 # AmmPool Api
 
-1) getAmmPoolConf
+##### 1) getAmmPoolConf
 
 ```javascript
     const { ammpools, pairs } = await api.getAmmPoolConf()
 ```
 
-2) getAmmPoolUserRewards
+##### 2) getAmmPoolUserRewards
 
 ```javascript
     const response: any = await api.getAmmPoolUserRewards({ owner: acc.accountId.toString() })
 ```
 
-3) getAmmPoolActivityRules
+##### 3) getAmmPoolActivityRules
 
 ```javascript
     const response: any = await api.getAmmPoolActivityRules()
 ```
 
-4) getAmmPoolStats
+##### 4) getAmmPoolStats
 
 ```javascript
     const response: any = await api.getAmmPoolStats()
 ```
 
-5) getAmmPoolSnapshot
+##### 5) getAmmPoolSnapshot
 
 ```javascript
     const request: GetAmmPoolSnapshotRequest = {
@@ -33,13 +33,13 @@
     const response = await api.getAmmPoolSnapshot(request, acc.apiKey)
 ```
 
-6) getAmmPoolBalances
+##### 6) getAmmPoolBalances
 
 ```javascript
     const response = await api.getAmmPoolBalances()
 ```
 
-7) getAmmPoolTrades
+##### 7) getAmmPoolTrades
 
 ```javascript
     const request: GetAmmPoolTradesRequest = {
@@ -48,7 +48,7 @@
     const response = await api.getAmmPoolTrades(request)
 ```
 
-8) getUserAmmPoolTxs
+##### 8) getUserAmmPoolTxs
 
 ```javascript
     const request: GetUserAmmPoolTxsRequest = {
@@ -57,7 +57,7 @@
     const response = await api.getUserAmmPoolTxs(request, acc.apiKey)
 ```
 
-9) joinAmmPool
+##### 9) joinAmmPool
 
 ```javascript
     const request2: JoinAmmPoolRequest = {
@@ -81,7 +81,7 @@
     const response = await api.joinAmmPool(request2, patch, acc.apiKey)
 ```
 
-10) exitAmmPool
+##### 10) exitAmmPool
 
 ```javascript
     const request2: ExitAmmPoolRequest = {

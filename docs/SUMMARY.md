@@ -9,6 +9,7 @@
 
 * [JS SDK](./js_sdk/intro.md)
     * [Overview](./js_sdk/intro.md#install)
+    * [Unit Test](./js_sdk/unit_test.md)
     * [AmmPool](./js_sdk/ammpool_api.md)
     * [Contract](./js_sdk/contract_api.md)
     * [Exchange](./js_sdk/exchange_api.md)
