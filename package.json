@@ -6,8 +6,9 @@
   "private": true,
   "license": "(MIT OR Apache-2.0)",
   "scripts": {
-    "build_book": "npx honkit build",
+    "build": "npx honkit build",
     "serve": "npx honkit serve",
+    "predeploy": "yarn build; sleep 1;",
     "deploy": "gh-pages -d _book"
   },
   "devDependencies": {

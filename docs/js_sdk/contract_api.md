@@ -1,4 +1,4 @@
-# Contract Api
+# Contract Part
 
 ##### 1) getNonce
 

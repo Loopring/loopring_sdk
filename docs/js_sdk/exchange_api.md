@@ -1,4 +1,4 @@
-# Exchange Api
+# Exchange Part
 
 ##### 1) getAccount
 

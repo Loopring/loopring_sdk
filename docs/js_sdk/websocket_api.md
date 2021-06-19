@@ -1,3 +1,3 @@
-# Websocket Api
+# Websocket Part
 
-##### See [loopring websocket](https://docs3.loopring.io/en/websocket/overview.html)
+##### See Original Api Description [loopring websocket](https://docs3.loopring.io/en/websocket/overview.html)

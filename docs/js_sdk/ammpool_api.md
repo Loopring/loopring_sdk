@@ -1,4 +1,4 @@
-# AmmPool Api
+# AmmPool Part
 
 ##### 1) getAmmPoolConf
 

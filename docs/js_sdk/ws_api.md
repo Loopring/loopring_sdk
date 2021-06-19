@@ -1,4 +1,4 @@
-# WS REST Api
+# WS REST Part
 
 ##### 1) getWsKey
 
