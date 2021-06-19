@@ -40,6 +40,18 @@ const loopring_exported_account = {
 
 ## Getting Started
 
+Unit Test
+1. test all test cases
+```shell
+yarn test
+```
+
+2. test some cases with specified pattern
+```shell
+yarn test -t getAccount
+```
+tips: getAccount is item name, which equals to the string in test case description.
+
 Init APIs
 
 ```javascript

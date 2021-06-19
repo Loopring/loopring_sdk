@@ -1,3 +1,3 @@
 # Introduction
 
-This is loopring javascript/typescript sdk.
+This is Loopring SDKs.
