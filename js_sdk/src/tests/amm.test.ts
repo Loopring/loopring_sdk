@@ -11,11 +11,10 @@ import {
     ExitAmmPoolRequest,
     VALID_UNTIL,
     AmmPoolRequestPatch,
+    DEFAULT_TIMEOUT,
 } from '../defs/loopring_defs'
 
-import { DEFAULT_TIMEOUT } from '..'
-
-import { loopring_exported_account as acc } from 'tests/utils'
+import { loopring_exported_account as acc } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 import { UserAPI } from '../api/user_api'
 

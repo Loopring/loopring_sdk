@@ -1,9 +1,9 @@
 import { ChainId } from '../defs/web3_defs'
 import * as contract from '../api/contract_api'
 
-import { DEFAULT_TIMEOUT } from '..'
+import { DEFAULT_TIMEOUT } from '../defs/loopring_defs'
 
-import { loopring_exported_account as acc, web3 } from 'tests/utils'
+import { loopring_exported_account as acc, web3 } from './utils'
 
 import { ExchangeAPI } from '../api/exchange_api'
 

@@ -6,13 +6,12 @@ import { TradingInterval,
     GetAllowancesRequest,
     GetTickerRequest,
     GetDepthRequest,
+    DEFAULT_TIMEOUT,
 } from '../defs/loopring_defs'
 import { ChainId } from '../defs/web3_defs'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '..'
-
-import { loopring_exported_account as acc } from 'tests/utils'
+import { loopring_exported_account as acc } from './utils'
 
 import { hasMarket, getPair, getExistedMarket, } from '../utils/symbol_tools'
 
