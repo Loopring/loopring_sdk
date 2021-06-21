@@ -1,10 +1,10 @@
 {
   "name": "loopring-sdk",
   "version": "0.0.5",
-  "author": "Loopring Dev Team",
+  "author": "leochan007",
   "description": "Loopring SDK",
   "private": false,
-  "license": "MIT License",
+  "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/loopring-sdk.esm.js",
@@ -46,7 +46,7 @@
     ],
     "publish": {
       "provider": "custom",
-      "repo": "https://github.com/leochan007/loopring_sdk",
+      "repo": "https://github.com/Loopring/loopring_sdk",
       "owner": "leochan007"
     }
   },

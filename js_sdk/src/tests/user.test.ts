@@ -1,11 +1,11 @@
-import { ChainId, ConnectorNames } from '../src/defs/web3_defs'
-import { UserAPI } from '../src/api/user_api'
-import { ExchangeAPI } from '../src/api/exchange_api'
+import { ChainId, ConnectorNames } from '../defs/web3_defs'
+import { UserAPI } from '../api/user_api'
+import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '../src'
+import { DEFAULT_TIMEOUT } from '..'
 
 import { loopring_exported_account as acc, web3, } from './utils'
-import { dumpError400 } from '../src/utils/network_tools'
+import { dumpError400 } from '../utils/network_tools'
 
 import { 
     GetNextStorageIdRequest, 
@@ -21,10 +21,10 @@ import {
     GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
     FilledType,
-    GetUserTransferListRequest, } from '../src/defs/loopring_defs'
+    GetUserTransferListRequest, } from '../defs/loopring_defs'
 
-import * as sign_tools from '../src/api/sign/sign_tools'
-import * as fm from '../src/utils/formatter'
+import * as sign_tools from '../api/sign/sign_tools'
+import * as fm from '../utils/formatter'
 
 let api: UserAPI
 

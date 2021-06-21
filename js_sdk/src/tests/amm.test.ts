@@ -1,5 +1,5 @@
-import { ChainId } from '../src/defs/web3_defs'
-import { AmmpoolAPI } from '../src/api/ammpool_api'
+import { ChainId } from '../defs/web3_defs'
+import { AmmpoolAPI } from '../api/ammpool_api'
 
 import { 
     GetNextStorageIdRequest,
@@ -11,13 +11,13 @@ import {
     ExitAmmPoolRequest,
     VALID_UNTIL,
     AmmPoolRequestPatch,
-} from '../src/defs/loopring_defs'
+} from '../defs/loopring_defs'
 
-import { DEFAULT_TIMEOUT } from '../src'
+import { DEFAULT_TIMEOUT } from '..'
 
 import { loopring_exported_account as acc } from './utils'
-import { dumpError400 } from '../src/utils/network_tools'
-import { UserAPI } from '../src/api/user_api'
+import { dumpError400 } from '../utils/network_tools'
+import { UserAPI } from '../api/user_api'
 
 let userApi: UserAPI
 let api: AmmpoolAPI

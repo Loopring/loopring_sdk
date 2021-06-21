@@ -1,11 +1,11 @@
-import { ChainId } from '../src/defs/web3_defs'
-import * as contract from '../src/api/contract_api'
+import { ChainId } from '../defs/web3_defs'
+import * as contract from '../api/contract_api'
 
-import { DEFAULT_TIMEOUT } from '../src'
+import { DEFAULT_TIMEOUT } from '..'
 
 import { loopring_exported_account as acc, web3 } from './utils'
 
-import { ExchangeAPI } from '../src/api/exchange_api'
+import { ExchangeAPI } from '../api/exchange_api'
 
 // start ganache-cli before
 // ganache-cli --debug --chainId=5 --account="0xadc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf,1000e+18" --secure --unlock "0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8"

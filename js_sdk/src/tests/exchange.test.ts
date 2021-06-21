@@ -1,4 +1,4 @@
-import { dumpError400 } from '../src/utils/network_tools'
+import { dumpError400 } from '../utils/network_tools'
 import { TradingInterval,
     GetAccountRequest,
     GetCandlestickRequest,
@@ -6,15 +6,15 @@ import { TradingInterval,
     GetAllowancesRequest,
     GetTickerRequest,
     GetDepthRequest,
-} from '../src/defs/loopring_defs'
-import { ChainId } from '../src/defs/web3_defs'
-import { ExchangeAPI } from '../src/api/exchange_api'
+} from '../defs/loopring_defs'
+import { ChainId } from '../defs/web3_defs'
+import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '../src'
+import { DEFAULT_TIMEOUT } from '..'
 
 import { loopring_exported_account as acc } from './utils'
 
-import { hasMarket, getPair, getExistedMarket, } from '../src/utils/symbol_tools'
+import { hasMarket, getPair, getExistedMarket, } from '../utils/symbol_tools'
 
 let api: ExchangeAPI
 
