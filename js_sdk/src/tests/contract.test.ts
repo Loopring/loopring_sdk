@@ -3,7 +3,7 @@ import * as contract from '../api/contract_api'
 
 import { DEFAULT_TIMEOUT } from '..'
 
-import { loopring_exported_account as acc, web3 } from './utils'
+import { loopring_exported_account as acc, web3 } from 'tests/utils'
 
 import { ExchangeAPI } from '../api/exchange_api'
 

@@ -12,7 +12,7 @@ import { ExchangeAPI } from '../api/exchange_api'
 
 import { DEFAULT_TIMEOUT } from '..'
 
-import { loopring_exported_account as acc } from './utils'
+import { loopring_exported_account as acc } from 'tests/utils'
 
 import { hasMarket, getPair, getExistedMarket, } from '../utils/symbol_tools'
 

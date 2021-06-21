@@ -12,6 +12,8 @@ import {
     TokenPairs,
     AmmPoolBalance,
     AmmPoolStat,
+    GetAmmPoolGameRankRequest,
+    GetAmmPoolGameUserRankRequest,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -87,6 +89,49 @@ export class AmmpoolAPI extends BaseAPI {
         const reqParams: ReqParams = {
             queryParams: request,
             url: LOOPRING_URLs.GET_AMMPOOL_USER_REWARDS,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        console.log('raw_data:', raw_data)
+
+        return {
+            raw_data,
+        }
+
+    }
+
+    /*
+    */
+    public async getAmmPoolGameRank(request: GetAmmPoolGameRankRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_AMMPOOL_GAME_RANK,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        console.log('raw_data:', raw_data)
+
+        return {
+            raw_data,
+        }
+
+    }
+
+    /*
+    */
+    public async getAmmPoolGameUserRank(request: GetAmmPoolGameUserRankRequest, apiKey: string) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            apiKey,
+            url: LOOPRING_URLs.GET_AMMPOOL_GAME_USER_RANK,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
         }

@@ -15,7 +15,7 @@ import {
 
 import { DEFAULT_TIMEOUT } from '..'
 
-import { loopring_exported_account as acc } from './utils'
+import { loopring_exported_account as acc } from 'tests/utils'
 import { dumpError400 } from '../utils/network_tools'
 import { UserAPI } from '../api/user_api'
 
@@ -38,11 +38,21 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolUserRewards', async () => {
-        const response: any = await api.getAmmPoolUserRewards({ owner: acc.accountId.toString() })
+        const response: any = await api.getAmmPoolUserRewards({ owner: acc.accountId })
         console.log('getAmmPoolUserRewards:', response.raw_data.data)
         console.log('getAmmPoolUserRewards:', response.raw_data.data[0].extraRewards)
         console.log('getAmmPoolUserRewards:', response.raw_data.data[0].currentRewards)
         
+    }, DEFAULT_TIMEOUT)
+
+    it('getAmmPoolGameRank', async () => {
+        const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-LRC-ETH' })
+        console.log('getAmmPoolGameRank:', response.raw_data)
+    }, DEFAULT_TIMEOUT)
+
+    it('getAmmPoolGameUserRank', async () => {
+        const response: any = await api.getAmmPoolGameUserRank({ owner: acc.address, ammPoolMarket: 'AMM-LRC-ETH' }, acc.apiKey)
+        console.log('getAmmPoolGameUserRank:', response.raw_data)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolActivityRules', async () => {
@@ -129,8 +139,6 @@ describe('AmmpoolAPI test', function () {
                 poolAddress,
                 eddsaKey: acc.eddsaKey
             }
-
-            console.log('1111111')
 
             const response = await api.joinAmmPool(request2, patch, acc.apiKey)
             console.log(response)

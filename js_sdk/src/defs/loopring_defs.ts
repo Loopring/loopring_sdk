@@ -375,7 +375,16 @@ export interface AmmPoolExitTokens {
 }
 
 export interface GetAmmUserRewardsRequest {
-    owner: string // accountId
+    owner: number // accountId
+}
+
+export interface GetAmmPoolGameRankRequest {
+    ammPoolMarket: string // symbol AMM-LRC-ETH
+}
+
+export interface GetAmmPoolGameUserRankRequest {
+    owner: string // address
+    ammPoolMarket: string // symbol AMM-LRC-ETH
 }
 
 export interface GetAmmPoolSnapshotRequest {

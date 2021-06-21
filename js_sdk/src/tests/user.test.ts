@@ -4,7 +4,7 @@ import { ExchangeAPI } from '../api/exchange_api'
 
 import { DEFAULT_TIMEOUT } from '..'
 
-import { loopring_exported_account as acc, web3, } from './utils'
+import { loopring_exported_account as acc, web3, } from 'tests/utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import { 
@@ -22,9 +22,6 @@ import {
     OriginTransferRequestV3,
     FilledType,
     GetUserTransferListRequest, } from '../defs/loopring_defs'
-
-import * as sign_tools from '../api/sign/sign_tools'
-import * as fm from '../utils/formatter'
 
 let api: UserAPI
 
