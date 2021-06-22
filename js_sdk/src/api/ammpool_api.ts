@@ -14,6 +14,8 @@ import {
     AmmPoolStat,
     GetAmmPoolGameRankRequest,
     GetAmmPoolGameUserRankRequest,
+    TokenVolumeV3,
+    GameRankInfo,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -95,8 +97,6 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        console.log('raw_data:', raw_data)
-
         return {
             raw_data,
         }
@@ -116,9 +116,13 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        console.log('raw_data:', raw_data)
+        const totalRewards: TokenVolumeV3[] = raw_data.data?.totalRewards ? raw_data.data.totalRewards : []
+
+        const userRankList: GameRankInfo[] = raw_data.data?.userRankList ? raw_data.data.userRankList : []
 
         return {
+            totalRewards,
+            userRankList,
             raw_data,
         }
 
@@ -138,9 +142,10 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        console.log('raw_data:', raw_data)
+        const userRankList: GameRankInfo[] = raw_data.data?.userRankList ? raw_data.data.userRankList : []
 
         return {
+            userRankList,
             raw_data,
         }
 

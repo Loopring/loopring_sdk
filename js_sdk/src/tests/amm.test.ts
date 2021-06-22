@@ -26,7 +26,7 @@ const poolAddress = '0xfEB069407df0e1e4B365C10992F1bc16c078E34b'
 describe('AmmpoolAPI test', function () {
 
     beforeEach(() => {
-        api = new AmmpoolAPI(ChainId.GORLI)
+        api = new AmmpoolAPI(ChainId.MAINNET)
         userApi = new UserAPI(ChainId.GORLI)
     })
 
@@ -41,17 +41,21 @@ describe('AmmpoolAPI test', function () {
         console.log('getAmmPoolUserRewards:', response.raw_data.data)
         console.log('getAmmPoolUserRewards:', response.raw_data.data[0].extraRewards)
         console.log('getAmmPoolUserRewards:', response.raw_data.data[0].currentRewards)
-        
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolGameRank', async () => {
-        const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-LRC-ETH' })
+        const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-VSP-ETH' })
         console.log('getAmmPoolGameRank:', response.raw_data)
+        console.log('totalRewards:', response.totalRewards)
+        console.log('userRankList:', response.userRankList)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolGameUserRank', async () => {
-        const response: any = await api.getAmmPoolGameUserRank({ owner: acc.address, ammPoolMarket: 'AMM-LRC-ETH' }, acc.apiKey)
+        api = new AmmpoolAPI(ChainId.GORLI)
+        const response: any = await api.getAmmPoolGameUserRank({ owner: acc.address, 
+            ammPoolMarket: 'AMM-VSP-ETH' }, acc.apiKey)
         console.log('getAmmPoolGameUserRank:', response.raw_data)
+        console.log('userRankList:', response.userRankList)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolActivityRules', async () => {

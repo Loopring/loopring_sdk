@@ -374,6 +374,13 @@ export interface AmmPoolExitTokens {
     burned: TokenVolumeV3
 }
 
+export interface GameRankInfo {
+    address: string
+    volume: string
+    rank: number,
+    rewards: TokenVolumeV3[]
+}
+
 export interface GetAmmUserRewardsRequest {
     owner: number // accountId
 }

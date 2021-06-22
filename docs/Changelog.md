@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+#### v0.0.6
+    1) add ammpool rank api;
+    2) fix deposit confliction;
+
 #### v0.0.5
     1) fix sign_tool functions export issue.
 

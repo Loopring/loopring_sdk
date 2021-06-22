@@ -4,10 +4,10 @@ export * from './defs'
 
 export * from './api'
 
-import contractWallet from './config/abis/contractWallet.json'
-import erc20 from './config/abis/erc20.json'
-import exchange_3_6 from './config/abis/exchange_3_6.json'
-import hebao from './config/abis/hebao.json'
-import deposit from './config/abis/deposit.json'
+import contractWallet_abi from './config/abis/contractWallet.json'
+import erc20_abi from './config/abis/erc20.json'
+import exchange_abi from './config/abis/exchange_3_6.json'
+import hebao_abi from './config/abis/hebao.json'
+import deposit_abi from './config/abis/deposit.json'
 
-export { contractWallet, erc20, exchange_3_6, hebao, deposit, }
+export { contractWallet_abi, erc20_abi, exchange_abi, hebao_abi, deposit_abi, }

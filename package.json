@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Loopring Dev Team",
   "description": "dexwebapp new version",
-  "private": false,
+  "private": true,
   "license": "MIT",
   "scripts": {
     "build": "npx honkit build",
