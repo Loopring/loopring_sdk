@@ -216,6 +216,7 @@ export class AmmpoolAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
+
         return {
             raw_data,
         }
@@ -277,7 +278,9 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return raw_data
+        return {
+            raw_data
+        }
 
     }
 
@@ -294,7 +297,9 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return raw_data
+        return {
+            raw_data
+        }
 
     }
 
@@ -319,7 +324,9 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return raw_data
+        return {
+            raw_data
+        }
 
     }
 

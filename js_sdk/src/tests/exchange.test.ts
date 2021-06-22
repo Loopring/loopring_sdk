@@ -7,6 +7,7 @@ import { TradingInterval,
     GetTickerRequest,
     GetDepthRequest,
     DEFAULT_TIMEOUT,
+    GetMarketTradesRequest,
 } from '../defs/loopring_defs'
 import { ChainId } from '../defs/web3_defs'
 import { ExchangeAPI } from '../api/exchange_api'
@@ -31,6 +32,19 @@ describe('ExchangeAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getGasPrice', async () => {
+        const response = await api.getGasPrice()
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getMarketTrades', async () => {
+        const req: GetMarketTradesRequest = {
+            market: 'LRC-ETH'
+        }
+        const response = await api.getMarketTrades(req)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
     it('getRelayerCurrentTime', async () => {
         const response = await api.getRelayerCurrentTime()
         console.log(response)
@@ -48,7 +62,7 @@ describe('ExchangeAPI test', function () {
 
     it('getLatestTokenPrices', async () => {
         const response = await api.getLatestTokenPrices()
-        console.log(response.raw_data.data)
+        console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getAllowances', async () => {
@@ -108,12 +122,16 @@ describe('ExchangeAPI test', function () {
 
     it('getDepth', async () => {
 
+        api = new ExchangeAPI(ChainId.MAINNET)
+
         const request: GetDepthRequest = {
             market: ['LRC-ETH']
         }
 
         const response = await api.getDepth(request)
         console.log(response)
+        console.log(response.depth.bids)
+        console.log(response.depth.asks)
     }, DEFAULT_TIMEOUT)
 
     it('getExchangeInfo', async () => {

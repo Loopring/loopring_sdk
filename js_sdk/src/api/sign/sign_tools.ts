@@ -58,11 +58,15 @@ export async function generateKeyPair(web3: any, address: string, exchangeAddres
 const makeRequestParamStr = (request: Map<string, any>) => {
 
   // @ts-ignore
-  var mapAsc = new Map([...request.entries()].sort())
+  // var mapAsc = new Map([...request.entries()].sort())
+  const mapAsc = new Map([...request].sort())
 
   var paramlist: Array<string> = new Array()
 
-  mapAsc.forEach((value, key) => {
+  const keys = Object.keys(Object.fromEntries(request))
+
+  keys.forEach((key: string) => {
+    const value = request.get(key)
     if (value !== undefined && value !== '')
       paramlist.push(encodeURIComponent(`${key}=${value}`))
   })
@@ -222,6 +226,8 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
   const msgParams = JSON.stringify(typedData)
   const params = [address, msgParams]
 
+  console.log('address:', address, ' type:', type)
+
   console.log('getEcDSASig params:', JSON.stringify(params))
 
   switch (type) {
@@ -257,6 +263,9 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
       }
 
     case GetEcDSASigType.WithoutDataStruct:
+
+      console.log('enter WithoutDataStruct--->', typedData)
+
       let hash: any = sigUtil.TypedDataUtils.sign(typedData)
       hash = fm.toHex(hash)
 

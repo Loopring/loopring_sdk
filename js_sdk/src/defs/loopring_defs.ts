@@ -12,6 +12,11 @@ export enum SigPatchField {
     EddsaSignature = 'eddsaSignature',
 }
 
+export enum TradeChannel {
+    ORDER_BOOK = 'ORDER_BOOK', // 0
+    AMM_POOL = 'AMM_POOL', // 1
+    MIXED = 'MIXED', // 2
+}
 
 export enum OrderType {
     LimitOrder = 'LIMIT_ORDER',
@@ -85,11 +90,6 @@ export enum TxTypes {
     JOIN = 'join',
     EXIT = 'exit',
 }
-export const REFRESH_RATE = 1000
-
-export const REFRESH_RATE_SLOW = 15000
-
-export const DEFAULT_TIMEOUT = 30000
 
 export enum SIG_FLAG {
     NO_SIG,
@@ -97,6 +97,12 @@ export enum SIG_FLAG {
     EDDSA_SIG_POSEIDON,
     ECDSA_SIG,
 }
+
+export const REFRESH_RATE = 1000
+
+export const REFRESH_RATE_SLOW = 15000
+
+export const DEFAULT_TIMEOUT = 30000
 
 export interface ReqOptions {
     baseUrl?: string
@@ -164,13 +170,19 @@ export interface TickerData {
     change?: number
 }
 
+export interface ABInfo {
+    price: number
+    amt: number
+    amtTotal: number
+}
+
 export interface DepthData {
     version: number
     date_time: Date
-    bids: any[][]
+    bids: ABInfo[][]
     bids_prices: any[]
     bids_amtTotals: any[]
-    asks: any[][]
+    asks: ABInfo[][]
     asks_prices: any[]
     asks_amtTotals: any[]
 }
@@ -448,9 +460,25 @@ export interface GetFiatPriceRequest {
     legal: string
 }
 
+export interface FiatPriceInfo {
+    symbol: string 
+    price: number
+    updatedAt: number
+}
+
 export interface GetMarketTradesRequest {
     market: string
     limit?: number
+}
+
+export interface MarketTradeInfo {
+    tradeTime: number
+    tradeId: string
+    side: Side
+    volume: string
+    price: string
+    market: string
+    fee: string
 }
 
 export interface GetTokenBalancesRequest {
@@ -500,14 +528,25 @@ export interface GetOffchainFeeAmtRequest {
     amount?: string
 }
 
+export interface OffchainFeeInfo {
+    token: string
+    fee: string
+    discount: number
+}
+
 export interface GetUserBalancesRequest {
     accountId: number
     tokens: string
 }
 
-export interface GetUserFeeRateRequest {
-    accountId: number
-    markets: string
+export interface UserBalanceInfo {
+    tokenId: number,
+    total: string,
+    locked: string,
+    pending: { 
+        withdraw: string, 
+        deposit: string 
+    }
 }
 
 export interface GetOrderDetailsRequest {
@@ -515,11 +554,47 @@ export interface GetOrderDetailsRequest {
     orderHash: string
 }
 
+export interface OrderDetail {
+    hash: string
+    clientOrderId: string,
+    side: Side,
+    market: string,
+    price: string,
+    volumes: {
+      baseAmount: string,
+      quoteAmount: string,
+      baseFilled: string,
+      quoteFilled: string,
+      fee: string
+    },
+    validity: { start: number, end: number },
+    orderType: OrderType,
+    tradeChannel: TradeChannel,
+    status: OrderStatus
+  }
+
 export interface GetUserOrderFeeRateRequest {
     accountId: number
     market: string
     tokenB: number
     amountB: string
+}
+
+export interface FeeRateInfo { 
+    symbol: string
+    makerRate: number
+    takerRate: number
+}
+
+export interface GetUserFeeRateRequest {
+    accountId: number
+    markets: string
+}
+
+export interface UserFeeRateInfo {
+    symbol: string
+    makerRate: number
+    takerRate: number
 }
 
 export interface GetNextStorageIdRequest {
@@ -640,6 +715,20 @@ export interface GetUserRegTxsRequest {
     offset?: number
 }
 
+export interface UserRegTx {
+    id: number
+    hash: string
+    owner: string
+    txHash: string
+    feeTokenSymbol: string
+    feeAmount: number
+    status: TxStatus
+    progress: string
+    timestamp: number
+    blockNum: number
+    updatedAt: number
+}
+
 export interface GetUserPwdResetTxsRequest {
     accountId: number
     start?: number
@@ -647,6 +736,9 @@ export interface GetUserPwdResetTxsRequest {
     status?: string
     limit?: number
     offset?: number
+}
+
+export interface UserPwdResetTx extends UserRegTx {
 }
 
 export interface GetUserDepositHistoryRequest {

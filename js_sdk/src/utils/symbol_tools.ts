@@ -1,3 +1,5 @@
+import { TokenInfo } from "defs"
+
 const specialSymbols = [
     'ETH2x-FIL',
 ]
@@ -42,7 +44,7 @@ export function getBaseQuote(symbol: string) {
     }
 }
 
-export const getTokenInfoBySymbol = (tokenSymbolMap: any, symbol: string) => {
+export const getTokenInfoBySymbol = (tokenSymbolMap: { [key: string]: TokenInfo }, symbol: string) => {
     if (!tokenSymbolMap) {
         return undefined
     }
@@ -54,7 +56,7 @@ export const getTokenInfoBySymbol = (tokenSymbolMap: any, symbol: string) => {
 }
 
 
-export const getTokenInfoById = (tokenIdMap: any, id: number) => {
+export const getTokenInfoById = (tokenIdMap: { [key: number]: TokenInfo }, id: number) => {
     if (!tokenIdMap) {
         return undefined
     }

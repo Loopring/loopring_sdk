@@ -1891,6 +1891,11 @@
   dependencies:
     classnames "*"
 
+"@types/collections@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/collections/-/collections-5.1.2.tgz#a9be0796b94bb2fe737d5b2070d49f78a9633b20"
+  integrity sha512-d//S1BKZl/ikhsMXk0TECEUZOu+AIbVtMnYBpUAeZUvyfktX7bhc6DokZ8YFy56XGqXvKQmGLT0aYou/Jnhalw==
+
 "@types/crypto-js@^4.0.1":
   version "4.0.1"
   resolved "https://registry.nlark.com/@types/crypto-js/download/@types/crypto-js-4.0.1.tgz#3a4bd24518b0e6c5940da4e2659eeb2ef0806963"
@@ -4032,6 +4037,13 @@ collection-visit@^1.0.0:
   dependencies:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
+
+collections@^5.1.12:
+  version "5.1.12"
+  resolved "https://registry.yarnpkg.com/collections/-/collections-5.1.12.tgz#270f6c26ddc2930734ae6cc19ad4e8fb412af739"
+  integrity sha512-7WV0gdGlQFHjB//+/5JW4CdMnOlf7fWMMeM3EWvuao7RbK0MeFS01bZOgWmIH5DHDejSutf455QUZ56ZjjROXw==
+  dependencies:
+    weak-map "~1.0.x"
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -12359,6 +12371,11 @@ wcwidth@^1.0.1:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+weak-map@~1.0.x:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/weak-map/-/weak-map-1.0.5.tgz#79691584d98607f5070bd3b70a40e6bb22e401eb"
+  integrity sha1-eWkVhNmGB/UHC9O3CkDmuyLkAes=
 
 web-resource-inliner@^4.3.3:
   version "4.3.4"

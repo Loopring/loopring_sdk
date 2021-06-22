@@ -2,26 +2,31 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT } from '../defs/loopring_defs'
+import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest } from '../defs/loopring_defs'
 
 import { loopring_exported_account as acc, web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
-import { 
-    GetNextStorageIdRequest, 
-    GetUserOrderFeeRateRequest, 
+import {
+    UpdateAccountRequestV3,
+    GetNextStorageIdRequest,
+    GetUserOrderFeeRateRequest,
     GetUserFeeRateRequest,
     GetUserBalancesRequest,
     GetUserApiKeyRequest,
     GetOrderDetailsRequest,
     GetUserTradesRequest,
-    OffchainFeeReqType, 
-    OffChainWithdrawalRequestV3, 
+    OffchainFeeReqType,
+    OffChainWithdrawalRequestV3,
     VALID_UNTIL,
     GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
     FilledType,
-    GetUserTransferListRequest, } from '../defs/loopring_defs'
+    GetUserTransferListRequest,
+} from '../defs/loopring_defs'
+
+import * as sign_tools from '../api/sign/sign_tools'
+import { toHex, toBig, } from '../utils/formatter'
 
 let api: UserAPI
 
@@ -37,10 +42,66 @@ describe('UserAPI test', function () {
     })
 
     it('getUserApiKey', async () => {
-        const request: GetUserApiKeyRequest = {
-            accountId: acc.accountId, 
+        try {
+
+            const { accInfo } = await exchange.getAccount({owner: acc.address})
+
+            console.log('accInfo:', accInfo)
+
+            const eddsakey = await sign_tools
+                .generateKeyPair(
+                    web3,
+                    acc.address,
+                    acc.exchangeAddr,
+                    accInfo.nonce - 1,
+                    ConnectorNames.Injected,
+                )
+            const sk = toHex(toBig(eddsakey.keyPair.secretKey))
+            console.log('eddsakey:', eddsakey, ' sk:', sk, ' e2:', acc.eddsaKey)
+
+            const request: GetUserApiKeyRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.getUserApiKey(request, sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
         }
-        const response = await api.getUserApiKey(request, acc.eddsaKey)
+    }, DEFAULT_TIMEOUT)
+
+    it('updateAccount', async () => {
+        try {
+            const req: GetAccountRequest = {
+                owner: acc.address
+            }
+            const { accInfo } = await exchange.getAccount(req)
+
+            console.log('accInfo:', accInfo)
+
+            const request: UpdateAccountRequestV3 = {
+                exchange: acc.exchangeAddr,
+                owner: accInfo.owner,
+                accountId: accInfo.accountId,
+                publicKey: accInfo.publicKey,
+                maxFee: { tokenId: '0', volume: '10000000000' },
+                validUntil: VALID_UNTIL,
+                nonce: accInfo.nonce,
+            }
+            const response = await api.updateAccount(request, web3)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserRegTxs', async () => {
+        const response = await api.getUserRegTxs({accountId: acc.accountId}, acc.apiKey)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserPwdResetTxs', async () => {
+        const response = await api.getUserPwdResetTxs({accountId: acc.accountId}, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
@@ -64,7 +125,7 @@ describe('UserAPI test', function () {
 
     it('getNextStorageId', async () => {
         const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId, 
+            accountId: acc.accountId,
             sellTokenId: 1
         }
         const response = await api.getNextStorageId(request, acc.apiKey)
@@ -74,8 +135,8 @@ describe('UserAPI test', function () {
     it('getUserFeeRate', async () => {
         try {
             const request: GetUserFeeRateRequest = {
-                accountId: acc.accountId, 
-                markets: 'AMM-LRC-ETH',
+                accountId: acc.accountId,
+                markets: 'AMM-LRC-ETH,AMM-LRC-USDT',
             }
             const response = await api.getUserFeeRate(request, acc.apiKey)
             console.log(response)
@@ -99,7 +160,7 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getOffchainFeeAmt', async () => {
+    it('getOffchainFeeAmt1', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
                 accountId: acc.accountId,
@@ -110,6 +171,8 @@ describe('UserAPI test', function () {
             const type = OffchainFeeReqType.ORDER
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
+            console.log('fees:', response.raw_data.fees)
+
         } catch (reason) {
             dumpError400(reason)
         }
@@ -123,6 +186,18 @@ describe('UserAPI test', function () {
                 requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
             }
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOrders', async () => {
+        try {
+            const request: GetOrdersRequest = {
+                accountId: acc.accountId,
+            }
+            const response = await api.getOrders(request, acc.apiKey)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
@@ -149,7 +224,7 @@ describe('UserAPI test', function () {
                 accountId: acc.accountId,
                 tokens: '0',
             }
-            
+
             const response = await api.getUserBalances(request, acc.apiKey)
             console.log(response)
         } catch (reason) {
@@ -159,12 +234,12 @@ describe('UserAPI test', function () {
 
     it('submitOffchainWithdraw', async () => {
         const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId, 
+            accountId: acc.accountId,
             sellTokenId: 1
         }
         const storageId = await api.getNextStorageId(request, acc.apiKey)
-        
-        const accInfo = await exchange.getAccount({
+
+        const { accInfo } = await exchange.getAccount({
             owner: acc.address
         })
 
@@ -197,13 +272,13 @@ describe('UserAPI test', function () {
 
             // console.log('request:', JSON.stringify(request))
             // console.log('eddsa:', eddsa)
-            
-            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Injected, 
+
+            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Injected,
                 acc.eddsaKey, acc.apiKey, false)
-    
+
             console.log(response)
 
-        } catch(reason) {
+        } catch (reason) {
 
             dumpError400(reason)
 
@@ -212,12 +287,12 @@ describe('UserAPI test', function () {
 
     it('submitInternalTransfer', async () => {
         const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId, 
+            accountId: acc.accountId,
             sellTokenId: 1
         }
         const storageId = await api.getNextStorageId(request, acc.apiKey)
-        
-        const accInfo = await exchange.getAccount({
+
+        const { accInfo } = await exchange.getAccount({
             owner: acc.address
         })
 
@@ -225,7 +300,7 @@ describe('UserAPI test', function () {
         console.log(`nonce:${nonce}`)
         console.log(`storageId:${storageId}`)
 
-        try { 
+        try {
             const request: OriginTransferRequestV3 = {
                 exchange: acc.exchangeAddr,
                 payerAddr: acc.address,
@@ -244,12 +319,12 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitInternalTransfer(request, web3, ChainId.GORLI, ConnectorNames.Injected, 
+            const response = await api.submitInternalTransfer(request, web3, ChainId.GORLI, ConnectorNames.Injected,
                 acc.eddsaKey, acc.apiKey, true)
-    
+
             console.log(response)
 
-        } catch(reason) {
+        } catch (reason) {
 
             dumpError400(reason)
 

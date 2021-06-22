@@ -41,7 +41,13 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        const apiKey = raw_data['apiKey']
+
+        return {
+            apiKey,
+            raw_data,
+        }
 
     }
 
@@ -60,7 +66,10 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        return {
+            raw_data
+        }
 
     }
 
@@ -81,8 +90,12 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
-
+        const { orderId, offchainId } = raw_data
+        return {
+            orderId,
+            offchainId,
+            raw_data,
+        }
     }
 
     /*
@@ -98,8 +111,32 @@ export class UserAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
+        const raw_data: loopring_defs.OrderDetail = (await this.makeReq().request(reqParams)).data
+
+        return {
+            orderDetail: raw_data,
+            raw_data,
+        }
+
+    }
+
+    public async getOrders(request: loopring_defs.GetOrdersRequest, apiKey: string) {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_MULTI_ORDERS,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+        const orders : loopring_defs.OrderDetail[] = raw_data.orders
+        
+        return {
+            orders,
+            raw_data,
+        }
 
     }
 
@@ -135,7 +172,10 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        return {
+            raw_data
+        }
 
     }
 
@@ -165,22 +205,10 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
 
-    }
-
-    public async getOrders(request: loopring_defs.GetOrdersRequest, apiKey: string) {
-
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.GET_MULTI_ORDERS,
-            queryParams: request,
-            apiKey,
-            method: ReqMethod.GET,
-            sigFlag: SIG_FLAG.NO_SIG,
+        return {
+            raw_data
         }
-
-        const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
 
     }
 
@@ -196,12 +224,16 @@ export class UserAPI extends BaseAPI {
             sigFlag: SIG_FLAG.ECDSA_SIG,
             sigObj: {
                 dataToSig: request,
+                owner: request.owner,
                 web3,
             }
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        return {
+            raw_data
+        }
 
     }
 
@@ -219,7 +251,13 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        const userRegTxs: loopring_defs.UserRegTx[] = raw_data.transactions
+
+        return {
+            userRegTxs,
+            raw_data,
+        }
 
     }
 
@@ -237,7 +275,13 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        const userPwdResetTxs: loopring_defs.UserPwdResetTx[] = raw_data.transactions
+
+        return {
+            userPwdResetTxs,
+            raw_data
+        }
 
     }
 
@@ -255,7 +299,17 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        let userBalances: {[key: number]: loopring_defs.UserBalanceInfo} = {}
+
+        raw_data.forEach((item: any) => {
+            userBalances[parseInt(item.tokenId)] = item
+        })
+
+        return {
+            userBalances,
+            raw_data,
+        }
 
     }
 
@@ -345,7 +399,17 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        let userFreeRateMap : { [key: string]: loopring_defs.UserFeeRateInfo } = {}
+
+        raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
+            userFreeRateMap[item.symbol] = item
+        })
+        
+        return {
+            userFreeRateMap,
+            raw_data,
+        }
 
     }
 
@@ -362,8 +426,17 @@ export class UserAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
-        const rawData = (await this.makeReq().request(reqParams)).data
-        return rawData
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const gasPrice = parseInt(raw_data.gasPrice)
+
+        const feeRate: loopring_defs.FeeRateInfo = raw_data.feeRate
+        
+        return {
+            feeRate,
+            gasPrice,
+            raw_data,
+        }
 
     }
 
@@ -380,8 +453,21 @@ export class UserAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
-        const rawData = (await this.makeReq().request(reqParams)).data
-        return rawData
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const gasPrice = parseInt(raw_data.gasPrice)
+
+        let fees: {[key: string]: loopring_defs.OffchainFeeInfo} = {}
+
+        raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
+            fees[item.token] = item
+        })
+
+        return {
+            gasPrice,
+            fees,
+            raw_data,
+        }
 
     }
 
@@ -454,8 +540,8 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            raw_data,
             shouldSaveHWAddr,
+            raw_data,
         }
 
     }
@@ -522,9 +608,10 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
+
         return {
-            raw_data,
             shouldSaveHWAddr,
+            raw_data,
         }
 
     }
