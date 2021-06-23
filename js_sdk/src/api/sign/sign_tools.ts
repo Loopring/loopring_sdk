@@ -22,13 +22,16 @@ import {
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
   OffChainWithdrawalRequestV3,
-  OriginTransferRequestV3, 
+  OriginTransferRequestV3,
+  PublicKey,
+  UpdateAccountRequestV3, 
 } from '../../defs/loopring_defs'
 
 import Web3 from 'web3'
 
 import { EIP712TypedData } from 'eth-sig-util'
-import { pathToFileURL } from 'url'
+
+import { toHex, toBig, } from '../../utils/formatter'
 
 const keyMessage = 'Sign this message to access Loopring Exchange: '
 const transferMessage = 'Sign this message to authorize Loopring Pay: '
@@ -45,14 +48,57 @@ export async function generateKeyPair(web3: any, address: string, exchangeAddres
   )
 
   if (!result.error) {
+    const keyPair = EdDSA.generateKeyPair(ethUtil.sha256(fm.toBuffer((result.sig))))
+    const sk = toHex(toBig(keyPair.secretKey))
     return {
-      // keyPair: EdDSA.generateKeyPair(sha256(result.sig)),
-      keyPair: EdDSA.generateKeyPair(ethUtil.sha256(fm.toBuffer((result.sig)))),
+      keyPair,
+      sk,
     }
   } else {
     throw Error(result.error)
-    // return result
   }
+}
+
+export function convertPublicKey(pk: PublicKey) {
+  
+}
+
+export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, patch: AmmPoolRequestPatch) {
+  let message: any = {
+    owner: data.owner,
+    accountID: data.accountId,
+    feeTokenID: data.maxFee.tokenId,
+    maxFee: data.maxFee.volume,
+    publicKey: data.publicKey,
+    validUntil: data.validUntil,
+  };
+  const typedData: EIP712TypedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      PoolExit: [
+        { name: 'owner', type: 'address' },
+        { name: 'burnAmount', type: 'uint96' },
+        { name: 'burnStorageID', type: 'uint32' },
+        { name: 'exitMinAmounts', type: 'uint96[]' },
+        { name: 'fee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+      ],
+    },
+    primaryType: 'PoolExit',
+    domain: {
+      name: patch.ammName,
+      version: '1.0.0',
+      chainId: patch.chainId,
+      verifyingContract: patch.poolAddress,
+    },
+    message: message,
+  };
+  return typedData;
 }
 
 const makeRequestParamStr = (request: Map<string, any>) => {
@@ -126,24 +172,29 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 }
 
+const makeObjectStr = (request: Map<string, any>) => {
+  return encodeURIComponent(JSON.stringify(Object.fromEntries(request)))
+}
+
 export function getEdDSASig(method: string, basePath: string, api_url: string, requestInfo: any, PrivateKey: string | undefined) {
 
-  var params = makeRequestParamStr(requestInfo)
+  let params = makeRequestParamStr(requestInfo)
 
-  /*
-  if (method === 'GET') {
-  } else if (method === 'POST' || method === 'PUT' || method === 'DELETE')  {
+  if (method === 'GET' || method === 'DELETE') {
+    params = makeRequestParamStr(requestInfo)
+  } else if (method === 'POST' || method === 'PUT')  {
     params = makeObjectStr(requestInfo)
   } else {
     throw new Error(`${method} is not supported yet!`)
   }
-  */
 
   const uri = encodeURIComponent(`${basePath}${api_url}`)
 
   const message = `${method}&${uri}&${params}`
 
   const hash = (new BigInteger(sha256(message).toString(), 16).mod(SNARK_SCALAR_FIELD)).toFormat(0, 0, {})
+
+  console.log('message:', message, ' hash:', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -226,6 +277,7 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
   const msgParams = JSON.stringify(typedData)
   const params = [address, msgParams]
 
+  console.log('typedData:', typedData)
   console.log('address:', address, ' type:', type)
 
   console.log('getEcDSASig params:', JSON.stringify(params))

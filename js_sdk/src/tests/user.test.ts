@@ -9,6 +9,7 @@ import { dumpError400 } from '../utils/network_tools'
 
 import {
     UpdateAccountRequestV3,
+    UpdateUserApiKeyRequest,
     GetNextStorageIdRequest,
     GetUserOrderFeeRateRequest,
     GetUserFeeRateRequest,
@@ -26,7 +27,6 @@ import {
 } from '../defs/loopring_defs'
 
 import * as sign_tools from '../api/sign/sign_tools'
-import { toHex, toBig, } from '../utils/formatter'
 
 let api: UserAPI
 
@@ -36,7 +36,7 @@ let orderHash = process.env.ORDER_HASH ? process.env.ORDER_HASH : ''
 
 describe('UserAPI test', function () {
 
-    beforeEach(() => {
+    beforeEach(async() => {
         api = new UserAPI(ChainId.GORLI)
         exchange = new ExchangeAPI(ChainId.GORLI)
     })
@@ -56,14 +56,39 @@ describe('UserAPI test', function () {
                     accInfo.nonce - 1,
                     ConnectorNames.Injected,
                 )
-            const sk = toHex(toBig(eddsakey.keyPair.secretKey))
-            console.log('eddsakey:', eddsakey, ' sk:', sk, ' e2:', acc.eddsaKey)
 
             const request: GetUserApiKeyRequest = {
                 accountId: acc.accountId,
             }
 
-            const response = await api.getUserApiKey(request, sk)
+            const response = await api.getUserApiKey(request, eddsakey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('updateUserApiKey', async () => {
+        try {
+
+            const { accInfo } = await exchange.getAccount({owner: acc.address})
+
+            console.log('accInfo:', accInfo)
+
+            const eddsakey = await sign_tools
+                .generateKeyPair(
+                    web3,
+                    acc.address,
+                    acc.exchangeAddr,
+                    accInfo.nonce - 1,
+                    ConnectorNames.Injected,
+                )
+
+            const request: UpdateUserApiKeyRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.updateUserApiKey(request, acc.apiKey, eddsakey.sk)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)

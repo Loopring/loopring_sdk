@@ -55,14 +55,24 @@ export class UserAPI extends BaseAPI {
     * Change the ApiKey associated with the user's account. 
     * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
     */
-    public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest, apiKey: string) {
+    public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest, 
+        apiKey: string, PrivateKey: string) {
+
+        const dataToSig: Map<string, any> = new Map()
+
+        dataToSig.set('accountId', request.accountId)
 
         const reqParams: ReqParams = {
             url: LOOPRING_URLs.API_KEY_ACTION,
             bodyParams: request,
             apiKey,
             method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj:
+            {
+                dataToSig,
+                PrivateKey,
+            }
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data

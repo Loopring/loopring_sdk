@@ -121,36 +121,41 @@ export class ExchangeAPI extends BaseAPI {
         var pairs: TokenPairs = {}
             
         raw_data.markets.forEach((item: any, index: number, array: any)=>{
+            console.log(item)
             markets[item.market] = {
                 'baseTokenId': item.baseTokenId, 
-                'enabled': item.enabled === 'true' ? true: false, 
+                'enabled': item.enabled, 
                 'market': item.market, 
                 'orderbookAggLevels': item.orderbookAggLevels, 
                 'precisionForPrice': item.precisionForPrice, 
                 'quoteTokenId': item.quoteTokenId, 
             }
 
-            const market: string = item.market
-            const ind = market.indexOf('-')
-            const base = market.substring(0, ind)
-            const quote = market.substring(ind + 1, market.length)
+            if (item.enabled) {
 
-            if (!pairs[base]) {
-                pairs[base] = {
-                    tokenId: item.baseTokenId,
-                    tokenList: [quote],
+                const market: string = item.market
+                const ind = market.indexOf('-')
+                const base = market.substring(0, ind)
+                const quote = market.substring(ind + 1, market.length)
+    
+                if (!pairs[base]) {
+                    pairs[base] = {
+                        tokenId: item.baseTokenId,
+                        tokenList: [quote],
+                    }
+                } else {
+                    pairs[base].tokenList = [...pairs[base].tokenList, quote]
                 }
-            } else {
-                pairs[base].tokenList = [...pairs[base].tokenList, quote]
-            }
+    
+                if (!pairs[quote]) {
+                    pairs[quote] = {
+                        tokenId: item.quoteTokenId,
+                        tokenList: [base],
+                    }
+                } else {
+                    pairs[quote].tokenList = [...pairs[quote].tokenList, base]
+                }
 
-            if (!pairs[quote]) {
-                pairs[quote] = {
-                    tokenId: item.quoteTokenId,
-                    tokenList: [base],
-                }
-            } else {
-                pairs[quote].tokenList = [...pairs[quote].tokenList, base]
             }
 
         })

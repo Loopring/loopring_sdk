@@ -45,7 +45,7 @@ const loopring_exported_account = {
   exchangeAddr: '0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e',
   address: '0xff7d59d9316eba168837e3ef924bcdfd64b237d8',
   accountId: 10083,
-  apiKey: 'dLZNKRR5EJloOX5a9trd99OMv4qux2zFbOOK5SnQWbwCeGAOSzzsLCkVmrK24W4A',
+  apiKey: '1uAAZ87ABCqcS8FDJvpNcVm65jM5Oo0opVl1eHYZHuhP2CxSbjnIaBmQfSWeUfHH',
   chainId: 5,
   publicKeyX: '0x1256c6535c9de10e874a59d098364ea67f6341a0e519971068b916d94ab95476',
   publicKeyY: '0x1a84c4104e002c506302239c8c68756b91cfa62a7a6d76be6fa8534b2feba3a3',

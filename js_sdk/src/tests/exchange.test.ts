@@ -21,7 +21,7 @@ let api: ExchangeAPI
 describe('ExchangeAPI test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI(ChainId.MAINNET)
     })
 
     it('getAccount', async () => {
@@ -109,7 +109,7 @@ describe('ExchangeAPI test', function () {
         console.log(response)
         console.log(response.pairs.LRC.tokenList)
 
-        console.log('hasMarket LRC-ETH:', hasMarket(response.markets, 'LRC-ETH'))
+        console.log('hasMarket LRC-ETH:', hasMarket(response.marketArr, 'LRC-ETH'))
         console.log('market 1:', getExistedMarket(response.marketArr, 'LRC', 'ETH'))
         console.log('market 2:', getExistedMarket(response.marketArr, 'ETH', 'LRC'))
 
