@@ -3,7 +3,7 @@
 ### Overview
 
 * [Introduction](README.md)
-* [Changelog](Changelog.md)
+* [Changelog](CHANGELOG.md)
 
 ### SDKs
 

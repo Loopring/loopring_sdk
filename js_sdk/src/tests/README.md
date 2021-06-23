@@ -5,3 +5,5 @@ public address:
 
 private key:
 adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf
+
+ganache-cli --chainId=5 --account="adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf,100" --unlock "0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8"

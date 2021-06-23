@@ -223,31 +223,6 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
-    */
-    public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, web3: any) {
-
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.ACCOUNT_ACTION,
-            bodyParams: request,
-            method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.ECDSA_SIG,
-            sigObj: {
-                dataToSig: request,
-                owner: request.owner,
-                web3,
-            }
-        }
-
-        const raw_data = (await this.makeReq().request(reqParams)).data
-
-        return {
-            raw_data
-        }
-
-    }
-
-    /*
     * Returns a list Ethereum transactions from users for exchange account registration.
     */
     public async getUserRegTxs(request: loopring_defs.GetUserRegTxsRequest, apiKey: string) {
@@ -622,6 +597,69 @@ export class UserAPI extends BaseAPI {
         return {
             shouldSaveHWAddr,
             raw_data,
+        }
+
+    }
+
+    /*
+    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
+    */
+    public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, web3: Web3, 
+        chainId: ChainId, walletType: ConnectorNames, isHardwareAddress: boolean = false) {
+
+            let shouldSaveHWAddr = false
+    
+            let ecdsaSignature = undefined
+    
+            if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
+                try {
+                    console.log('1. signUpdateAccountWithDataStructure')
+                    const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                } catch (err) {
+    
+                    if (err.message.indexOf('Not supported on this device') !== -1) {
+                        console.log('catch err', err)
+                        await sleep(1500)
+                        shouldSaveHWAddr = true
+                        console.log('2. signUpdateAccountWithoutDataStructure')
+                        const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
+                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                    }
+                    throw err
+                }
+            } else {
+    
+                const isContractCheck = await isContract(web3, request.owner)
+    
+                if (isContractCheck) {
+                    console.log('3. signUpdateAccountWithDataStructureForContract')
+                    const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
+                    ecdsaSignature = result.ecdsaSig
+                } else {
+                    console.log('4. signUpdateAccountWithDataStructure 2')
+                    const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                }
+    
+            }
+    
+            console.log('signUpdateAccount ecdsaSignature:', ecdsaSignature)
+    
+            // request.eddsaSignature = sign_tools.getEDD(request, privateKey)
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.ACCOUNT_ACTION,
+            bodyParams: request,
+            method: ReqMethod.POST,
+            sigFlag: SIG_FLAG.NO_SIG,
+            ecdsaSignature,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data
         }
 
     }

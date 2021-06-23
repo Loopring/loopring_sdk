@@ -22,8 +22,13 @@ export class BaseAPI {
     private timeout: number
 
     public constructor(chainId: ChainId, timeout: number = DEFAULT_TIMEOUT) {
-        this.baseUrl = getBaseUrlByChainId(chainId)
+        this.baseUrl = ''
+        this.setChainId(chainId)
         this.timeout = timeout
+    }
+
+    public setChainId(chainId: ChainId) {
+        this.baseUrl = getBaseUrlByChainId(chainId)
     }
 
     protected makeReq(): Request {

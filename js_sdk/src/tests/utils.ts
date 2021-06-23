@@ -37,6 +37,10 @@ const provider = new PrivateKeyProvider(
 );
 const web3 = new Web3(provider)
 
+const local_web3 = () => {
+  return new Web3('http://127.0.0.1:8545')
+}
+
 const loopring_exported_account = {
   name : 'DEV Account 1',
   exchangeName: 'LoopringDEX: V2',
@@ -53,4 +57,4 @@ const loopring_exported_account = {
   eddsaKey: '0x3f0058a9ce78b9a23ad86cde5721687fc7048117335cd7377065106a8ee0689'
 }
 
-export { dumpRequest, apikey, exAddr, edd, ecd, owner, new_account, acc_pwd, loopring_exported_account, web3, }
+export { local_web3, dumpRequest, apikey, exAddr, edd, ecd, owner, new_account, acc_pwd, loopring_exported_account, web3, }

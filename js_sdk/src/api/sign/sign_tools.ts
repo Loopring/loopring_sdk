@@ -33,6 +33,12 @@ import { EIP712TypedData } from 'eth-sig-util'
 
 import { toHex, toBig, } from '../../utils/formatter'
 
+export enum GetEcDSASigType {
+  HasDataStruct,
+  WithoutDataStruct,
+  Contract,
+}
+
 const keyMessage = 'Sign this message to access Loopring Exchange: '
 const transferMessage = 'Sign this message to authorize Loopring Pay: '
 
@@ -59,48 +65,6 @@ export async function generateKeyPair(web3: any, address: string, exchangeAddres
   }
 }
 
-export function convertPublicKey(pk: PublicKey) {
-  
-}
-
-export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, patch: AmmPoolRequestPatch) {
-  let message: any = {
-    owner: data.owner,
-    accountID: data.accountId,
-    feeTokenID: data.maxFee.tokenId,
-    maxFee: data.maxFee.volume,
-    publicKey: data.publicKey,
-    validUntil: data.validUntil,
-  };
-  const typedData: EIP712TypedData = {
-    types: {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
-      ],
-      PoolExit: [
-        { name: 'owner', type: 'address' },
-        { name: 'burnAmount', type: 'uint96' },
-        { name: 'burnStorageID', type: 'uint32' },
-        { name: 'exitMinAmounts', type: 'uint96[]' },
-        { name: 'fee', type: 'uint96' },
-        { name: 'validUntil', type: 'uint32' },
-      ],
-    },
-    primaryType: 'PoolExit',
-    domain: {
-      name: patch.ammName,
-      version: '1.0.0',
-      chainId: patch.chainId,
-      verifyingContract: patch.poolAddress,
-    },
-    message: message,
-  };
-  return typedData;
-}
-
 const makeRequestParamStr = (request: Map<string, any>) => {
 
   // @ts-ignore
@@ -122,10 +86,6 @@ const makeRequestParamStr = (request: Map<string, any>) => {
 }
 
 /*
-const makeObjectStr = (request: any) => {
-  return JSON.stringify(request)
-}
-
 const genSig = (PrivateKey: string, hash: any) => {
 
   const signature = EdDSA.sign(PrivateKey, hash)
@@ -180,6 +140,8 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
 
   let params = makeRequestParamStr(requestInfo)
 
+  method = method.toUpperCase().trim()
+
   if (method === 'GET' || method === 'DELETE') {
     params = makeRequestParamStr(requestInfo)
   } else if (method === 'POST' || method === 'PUT')  {
@@ -211,12 +173,6 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
 
   return genSigWithPadding(PrivateKey, hash)
 
-}
-
-export enum GetEcDSASigType {
-  HasDataStruct,
-  WithoutDataStruct,
-  Contract,
 }
 
 /**
@@ -347,7 +303,108 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
   throw Error('getEcDSASig unsupported switch case:' + type)
 }
 
-// 3.6
+export function convertPublicKey(pk: PublicKey) {
+  const publicKeyX = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.x)))
+  const publicKeyY = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.y)))
+
+  return new BN(EdDSA.pack(publicKeyX, publicKeyY), 16)
+}
+
+// update account
+export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, chainId: ChainId) {
+
+  let message: any = {
+    owner: data.owner,
+    accountID: data.accountId,
+    feeTokenID: data.maxFee.tokenId,
+    maxFee: data.maxFee.volume,
+    publicKey: convertPublicKey(data.publicKey),
+    validUntil: data.validUntil,
+    nonce: data.nonce,
+  }
+
+  const typedData: EIP712TypedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      AccountUpdate: [
+        { name: 'owner', type: 'address' },
+        { name: 'accountID', type: 'uint32' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'publicKey', type: 'uint256' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'nonce', type: 'uint32' },
+      ],
+    },
+    primaryType: 'AccountUpdate',
+    domain: {
+      name: 'Loopring Protocol',
+      version: '3.6.0',
+      chainId,
+      verifyingContract: data.exchange,
+    },
+    message: message,
+  }
+
+  return typedData
+}
+
+export async function signUpdateAccountWithDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
+  const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.HasDataStruct)
+  return result
+}
+
+export async function signUpdateAccountWithoutDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
+  const typedData: any = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.WithoutDataStruct)
+  return result
+}
+
+export async function signUpdateAccountWithDataStructureForContract(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
+  const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.Contract)
+  return result
+}
+
+// withdraw
+export function get_EddsaSig_OffChainWithdraw(request: OffChainWithdrawalRequestV3, eddsaKey: string) {
+  
+  const onchainDataHash = abi.soliditySHA3(
+      ['uint256', 'address', 'bytes'],
+      [
+        request.minGas,
+        new BN(fm.clearHexPrefix(request.to), 16),
+        ethUtil.toBuffer(request.extraData),
+      ]
+    ).slice(0, 20)
+
+  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
+
+  console.log('onchainDataHash:', onchainDataHash)
+  console.log('orderHashStr:', orderHashStr)
+
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.accountId,
+    request.token.tokenId,
+    request.token.volume,
+    request.maxFee.tokenId,
+    request.maxFee.volume,
+    orderHashStr,
+    request.validUntil,
+    request.storageId,
+  ]
+
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+
+}
+
 export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId: ChainId): EIP712TypedData  {
 
   let message = {
@@ -362,7 +419,8 @@ export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId:
     minGas: data.minGas,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
+  
   const typedData: EIP712TypedData = {
     types: {
       EIP712Domain: [
@@ -397,39 +455,7 @@ export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId:
   return typedData
 }
 
-export function get_EddsaSig_OffChainWithdraw(request: OffChainWithdrawalRequestV3, eddsaKey: string) {
-  
-  const onchainDataHash = abi.soliditySHA3(
-      ['uint256', 'address', 'bytes'],
-      [
-        request.minGas,
-        new BN(fm.clearHexPrefix(request.to), 16),
-        ethUtil.toBuffer(request.extraData),
-      ]
-    ).slice(0, 20)
-
-  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
-
-  console.log('onchainDataHash:', onchainDataHash)
-  console.log('orderHashStr:', orderHashStr)
-
-  const inputs = [
-    new BN(ethUtil.toBuffer(request.exchange)).toString(),
-    request.accountId,
-    request.token.tokenId,
-    request.token.volume,
-    request.maxFee.tokenId,
-    request.maxFee.volume,
-    orderHashStr,
-    request.validUntil,
-    request.storageId,
-  ]
-
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
-
-}
-
-export async function signOffchainWithdrawWithDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3, chainId: ChainId,) {
+export async function signOffchainWithdrawWithDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3, chainId: ChainId) {
   const typedData = getWithdrawTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.HasDataStruct)
   return result
@@ -445,6 +471,26 @@ export async function signOffchainWithdrawWithDataStructureForContract(web3: Web
   const typedData = getWithdrawTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.Contract)
   return result
+}
+
+// transfer
+export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey: string) {
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.payerId,
+    request.payeeId,
+    request.token.tokenId,
+    request.token.volume,
+    request.maxFee.tokenId,
+    request.maxFee.volume,
+    new BN(ethUtil.toBuffer(request.payeeAddr)).toString(),
+    0,
+    0,
+    request.validUntil,
+    request.storageId,
+  ];
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  
 }
 
 export function getTransferTypedData(data: OriginTransferRequestV3, chainId: ChainId): EIP712TypedData  {
@@ -490,26 +536,6 @@ export function getTransferTypedData(data: OriginTransferRequestV3, chainId: Cha
   return typedData
 }
 
-
-export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey: string) {
-  const inputs = [
-    new BN(ethUtil.toBuffer(request.exchange)).toString(),
-    request.payerId,
-    request.payeeId,
-    request.token.tokenId,
-    request.token.volume,
-    request.maxFee.tokenId,
-    request.maxFee.volume,
-    new BN(ethUtil.toBuffer(request.payeeAddr)).toString(),
-    0,
-    0,
-    request.validUntil,
-    request.storageId,
-  ];
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
-  
-}
-
 export async function signTransferWithDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3, chainId: ChainId,) {
   const typedData = getTransferTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.HasDataStruct)
@@ -544,6 +570,13 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
   }
+}
+
+// ammpool join
+export function get_EddsaSig_JoinAmmPool(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
+  const typedData = getAmmJoinEcdsaTypedData(data, patch)
+  console.log('typedData:', typedData)
+  return eddsaSign(typedData, patch.eddsaKey)
 }
 
 export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
@@ -586,8 +619,9 @@ export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoo
   return typedData;
 }
 
-export function get_EddsaSig_JoinAmmPool(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
-  const typedData = getAmmJoinEcdsaTypedData(data, patch)
+// ammpool exit
+export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoolRequestPatch) {
+  const typedData = getAmmExitEcdsaTypedData(data, patch)
   console.log('typedData:', typedData)
   return eddsaSign(typedData, patch.eddsaKey)
 }
@@ -628,10 +662,4 @@ export function getAmmExitEcdsaTypedData(data: ExitAmmPoolRequest, patch: AmmPoo
     message: message,
   };
   return typedData;
-}
-
-export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoolRequestPatch) {
-  const typedData = getAmmExitEcdsaTypedData(data, patch)
-  console.log('typedData:', typedData)
-  return eddsaSign(typedData, patch.eddsaKey)
 }

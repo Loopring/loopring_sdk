@@ -4,7 +4,7 @@ import { ExchangeAPI } from '../api/exchange_api'
 
 import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest } from '../defs/loopring_defs'
 
-import { loopring_exported_account as acc, web3, } from './utils'
+import { loopring_exported_account as acc, web3, local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
@@ -89,31 +89,6 @@ describe('UserAPI test', function () {
             }
 
             const response = await api.updateUserApiKey(request, acc.apiKey, eddsakey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('updateAccount', async () => {
-        try {
-            const req: GetAccountRequest = {
-                owner: acc.address
-            }
-            const { accInfo } = await exchange.getAccount(req)
-
-            console.log('accInfo:', accInfo)
-
-            const request: UpdateAccountRequestV3 = {
-                exchange: acc.exchangeAddr,
-                owner: accInfo.owner,
-                accountId: accInfo.accountId,
-                publicKey: accInfo.publicKey,
-                maxFee: { tokenId: '0', volume: '10000000000' },
-                validUntil: VALID_UNTIL,
-                nonce: accInfo.nonce,
-            }
-            const response = await api.updateAccount(request, web3)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
@@ -325,6 +300,8 @@ describe('UserAPI test', function () {
         console.log(`nonce:${nonce}`)
         console.log(`storageId:${storageId}`)
 
+        // api.getUserOrderFeeRate
+
         try {
             const request: OriginTransferRequestV3 = {
                 exchange: acc.exchangeAddr,
@@ -344,15 +321,40 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitInternalTransfer(request, web3, ChainId.GORLI, ConnectorNames.Injected,
+            const response = await api.submitInternalTransfer(request, web3, 
+                ChainId.GORLI, ConnectorNames.Injected,
                 acc.eddsaKey, acc.apiKey, true)
 
             console.log(response)
 
         } catch (reason) {
-
             dumpError400(reason)
+        }
 
+    }, DEFAULT_TIMEOUT)
+
+    it('updateAccount', async () => {
+        try {
+            const req: GetAccountRequest = {
+                owner: acc.address
+            }
+            const { accInfo } = await exchange.getAccount(req)
+
+            console.log('accInfo:', accInfo)
+
+            const request: UpdateAccountRequestV3 = {
+                exchange: acc.exchangeAddr,
+                owner: accInfo.owner,
+                accountId: accInfo.accountId,
+                publicKey: accInfo.publicKey,
+                maxFee: { tokenId: '0', volume: '10000000000' },
+                validUntil: VALID_UNTIL,
+                nonce: accInfo.nonce,
+            }
+            const response = await api.updateAccount(request, local_web3(), ChainId.GORLI, ConnectorNames.Injected, true)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
         }
     }, DEFAULT_TIMEOUT)
 

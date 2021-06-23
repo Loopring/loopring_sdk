@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+#### v0.0.8
+    1) update UpdateAccount api.
+    2) add setChainId to BaseAPI.
+
 #### v0.0.7
     1) refine response arch;
     2) update interface defs.
