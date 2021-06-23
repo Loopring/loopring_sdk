@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+#### v0.0.7
+    1) refine response arch;
+    2) update interface defs.
+
 #### v0.0.6
     1) add ammpool rank api;
     2) fix deposit confliction;

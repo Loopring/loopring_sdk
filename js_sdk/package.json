@@ -55,7 +55,8 @@
     "build": "tsdx build",
     "start": "tsdx watch",
     "test": "tsdx test",
-    "prepublishOnly": "tsdx build"
+    "prepublishOnly": "tsdx build",
+    "deploy": "cd ..; yarn deploy; cd js_sdk"
   },
   "browserslist": {
     "production": [
