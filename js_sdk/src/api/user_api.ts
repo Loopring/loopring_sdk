@@ -285,10 +285,10 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let userBalances: {[key: number]: loopring_defs.UserBalanceInfo} = {}
+        let userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> = {}
 
-        raw_data.forEach((item: any) => {
-            userBalances[parseInt(item.tokenId)] = item
+        raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
+            userBalances[item.tokenId] = item
         })
 
         return {
@@ -312,7 +312,11 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        return {
+            userDepositHistory: raw_data as loopring_defs.UserDepositHistory,
+            raw_data,
+        }
 
     }
 
@@ -330,7 +334,10 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+        return {
+            userOnchainWithdrawalHistory: raw_data as loopring_defs.UserOnchainWithdrawalHistory,
+            raw_data,
+        }
 
     }
 
@@ -348,7 +355,11 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        return {
+            userTransferList: raw_data as loopring_defs.UserTransferList,
+            raw_data,
+        }
 
     }
 
@@ -366,7 +377,29 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        return raw_data
+
+        let trades : loopring_defs.UserTrade[] = []
+        raw_data.trades.forEach((item: any[]) => {
+            trades.push({
+                tradeTime: item[0],
+                tradeId: item[1],
+                side: item[2],
+                volume: item[3],
+                price: item[4],
+                market: item[5],
+                fee: item[6],
+            })
+        })
+
+        const userTrades: loopring_defs.UserTrades = {
+            totalNum: raw_data.totalNum,
+            trades
+        }
+        
+        return {
+            userTrades,
+            raw_data
+        }
 
     }
 

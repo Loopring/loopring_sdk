@@ -233,20 +233,27 @@ export class ExchangeAPI extends BaseAPI {
 
     }
 
-    private splitTokens(token: string, tokens: any) {
-        let tokenArray: any = token.split(SEP)
+    private splitTokens(token: string, tokens: LoopringMap<TokenInfo>) {
 
+        let tokenArray: any = []
         let tokenAddrArr: string[] = []
 
-        if (tokenArray.length <= 0 || (tokenArray.length === 1 && tokenArray[0] === '')) {
-            tokenArray = Reflect.ownKeys(tokens)
+        if (tokens) {
+
+            if (token) {
+                tokenArray = token.split(SEP)
+            }
+    
+            if (tokenArray.length <= 0 || (tokenArray.length === 1 && tokenArray[0] === '')) {
+                tokenArray = Reflect.ownKeys(tokens)
+            }
+    
+            tokenArray.forEach((item: string) => {
+                tokenAddrArr.push(tokens[item].address)
+            })
+    
+            token = tokenAddrArr.join(SEP)
         }
-
-        tokenArray.forEach((item: string) => {
-            tokenAddrArr.push(tokens[item].address)
-        })
-
-        token = tokenAddrArr.join(SEP)
 
         return {
             tokenArray,
@@ -257,7 +264,7 @@ export class ExchangeAPI extends BaseAPI {
     /*
     * Returns the balances of all supported tokens, including Ether.
     */
-    public async getTokenBalances(request: GetTokenBalancesRequest, tokens: any) {
+    public async getTokenBalances(request: GetTokenBalancesRequest, tokens: LoopringMap<TokenInfo>) {
 
         const {
             tokenArray,
@@ -275,7 +282,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let tokenBalances: LoopringMap<number> = {}
+        let tokenBalances: LoopringMap<string> = {}
 
         raw_data.data.forEach((_: any, index: number) => {
             tokenBalances[tokenArray[index]] = raw_data.data[index]
@@ -309,10 +316,10 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let tokenAllowances: LoopringMap<number> = {}
+        let tokenAllowances: LoopringMap<string> = {}
 
         raw_data.data.forEach((_: any, index: number) => {
-            tokenAllowances[tokenArray[index]] = parseInt(raw_data.data[index])
+            tokenAllowances[tokenArray[index]] = raw_data.data[index]
         })
 
         return {
@@ -435,8 +442,8 @@ export class ExchangeAPI extends BaseAPI {
                 base,
                 quote,
                 date_time: new Date(parseInt(item[1])),
-                base_token_volume: parseInt(item[2]),
-                quote_token_volume: parseInt(item[3]),
+                base_token_volume: item[2],
+                quote_token_volume: item[3],
                 open,
                 high: parseFloat(item[5]),
                 low: parseFloat(item[6]),
@@ -444,8 +451,8 @@ export class ExchangeAPI extends BaseAPI {
                 count: parseInt(item[8]),
                 bid: parseFloat(item[9]),
                 ask: parseFloat(item[10]),
-                base_token_amt: parseInt(item[11]),
-                quote_token_amt: parseInt(item[12]),
+                base_token_amt: item[11],
+                quote_token_amt: item[12],
                 change,
             }
             

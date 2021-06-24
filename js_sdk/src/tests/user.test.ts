@@ -14,6 +14,8 @@ import {
     GetUserOrderFeeRateRequest,
     GetUserFeeRateRequest,
     GetUserBalancesRequest,
+    GetUserDepositHistoryRequest,
+    GetUserOnchainWithdrawalHistoryRequest,
     GetUserApiKeyRequest,
     GetOrderDetailsRequest,
     GetUserTradesRequest,
@@ -105,14 +107,6 @@ describe('UserAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
-    it('getUserTranferList', async () => {
-        const request: GetUserTransferListRequest = {
-            accountId: acc.accountId,
-        }
-        const response = await api.getUserTranferList(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
     it('getUserTrades', async () => {
         const request: GetUserTradesRequest = {
             accountId: acc.accountId,
@@ -121,6 +115,7 @@ describe('UserAPI test', function () {
         }
         const response = await api.getUserTrades(request, acc.apiKey)
         console.log(response)
+        console.log(response.userTrades.trades)
     }, DEFAULT_TIMEOUT)
 
     it('getNextStorageId', async () => {
@@ -227,6 +222,48 @@ describe('UserAPI test', function () {
 
             const response = await api.getUserBalances(request, acc.apiKey)
             console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserDepositHistory', async () => {
+        try {
+            const request: GetUserDepositHistoryRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.getUserDepositHistory(request, acc.apiKey)
+            console.log(response)
+            console.log(response.userDepositHistory.transactions)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserOnchainWithdrawalHistory', async () => {
+        try {
+            const request: GetUserOnchainWithdrawalHistoryRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
+            console.log(response)
+            console.log(response.raw_data.transactions)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserTranferList', async () => {
+        try {
+            const request: GetUserTransferListRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.getUserTranferList(request, acc.apiKey)
+            console.log(response)
+            console.log(response.raw_data.transactions)
         } catch (reason) {
             dumpError400(reason)
         }

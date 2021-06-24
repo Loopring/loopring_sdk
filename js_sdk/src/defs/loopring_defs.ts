@@ -156,10 +156,10 @@ export interface TickerData {
     base: string | undefined
     quote: string | undefined
     date_time: Date
-    base_token_volume: number
-    quote_token_volume: number
-    base_token_amt: number
-    quote_token_amt: number
+    base_token_volume: string
+    quote_token_volume: string
+    base_token_amt: string
+    quote_token_amt: string
     open: number
     high: number
     low: number
@@ -815,6 +815,31 @@ export interface GetUserDepositHistoryRequest {
     offset?: number
 }
 
+export interface UserDepositHistoryTx {
+    id: number
+    hash: string
+    symbol: string
+    amount: string
+    txHash: string
+    status: TxStatus
+    progress: string
+    timestamp: number
+    blockNum: number
+    updatedAt: number
+}
+
+export interface UserDepositHistory {
+    totalNum: number
+    transactions: UserDepositHistoryTx[]
+}
+
+export interface UserOnchainWithdrawalHistoryTx extends UserDepositHistoryTx {}
+
+export interface UserOnchainWithdrawalHistory {
+    totalNum: number
+    transactions: UserOnchainWithdrawalHistoryTx[]
+}
+
 export interface GetUserOnchainWithdrawalHistoryRequest {
     accountId: number
     start?: number
@@ -837,6 +862,29 @@ export interface GetUserTransferListRequest {
     transferTypes?: string
 }
 
+export interface UserTransferRecord {
+    id: number
+    hash: string
+    txType: TxTypes
+    symbol: string
+    amount: string
+    senderAddress: string
+    receiver: number
+    receiverAddress: string
+    feeTokenSymbol: string
+    feeAmount: string
+    status: TxStatus
+    progress: string
+    timestamp: number
+    updatedAt: number
+    memo: string
+}
+
+export interface UserTransferList {
+    totalNum: number
+    transactions: UserTransferRecord[]
+}
+
 export interface GetUserTradesRequest {
     accountId: number
     market?: string
@@ -845,6 +893,13 @@ export interface GetUserTradesRequest {
     limit?: number
     fromId?: number
     fillTypes?: string
+}
+
+export interface UserTrade extends MarketTradeInfo {}
+
+export interface UserTrades {
+    totalNum: number
+    trades: UserTrade[]
 }
 
 export interface CancelOrderRequest {
