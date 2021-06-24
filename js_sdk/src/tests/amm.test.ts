@@ -26,7 +26,7 @@ const poolAddress = '0xfEB069407df0e1e4B365C10992F1bc16c078E34b'
 describe('AmmpoolAPI test', function () {
 
     beforeEach(() => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI(ChainId.GORLI)
         userApi = new UserAPI(ChainId.GORLI)
     })
 
@@ -69,12 +69,17 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot', async () => {
-        const request: GetAmmPoolSnapshotRequest = {
-            poolAddress
+        api = new AmmpoolAPI(ChainId.GORLI)
+        try {
+            const request: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            const response = await api.getAmmPoolSnapshot(request)
+            console.log(response)
+            console.log(response.raw_data.pooled)
+        } catch (reason) {
+            dumpError400(reason)
         }
-        const response = await api.getAmmPoolSnapshot(request, acc.apiKey)
-        console.log(response)
-        // console.log(response.data.pools[0])
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolBalances', async () => {
@@ -92,6 +97,7 @@ describe('AmmpoolAPI test', function () {
         }
         const response = await api.getAmmPoolTrades(request)
         console.log(response)
+        console.log(response.raw_data.trades[0])
     }, DEFAULT_TIMEOUT)
 
     it('getUserAmmPoolTxs', async () => {
@@ -101,6 +107,7 @@ describe('AmmpoolAPI test', function () {
             }
             const response = await api.getUserAmmPoolTxs(request, acc.apiKey)
             console.log(response)
+            console.log(response.raw_data.transactions[0])
         } catch(reason) {
             dumpError400(reason)
         }
@@ -162,12 +169,6 @@ describe('AmmpoolAPI test', function () {
                 sellTokenId: 4
             }
             const storageId = await userApi.getNextStorageId(request, acc.apiKey)
-            
-            const request_1: GetNextStorageIdRequest = {
-                accountId: acc.accountId, 
-                sellTokenId: 1
-            }
-            const storageId_1 = await userApi.getNextStorageId(request_1, acc.apiKey)
 
             const request2: ExitAmmPoolRequest = {
                 owner: acc.address,
@@ -176,7 +177,7 @@ describe('AmmpoolAPI test', function () {
                     unPooled: [{tokenId:"1", volume: "1000000000000000000000"}, {tokenId: "0", volume: "1000000000000000000"}, ],
                     burned: {tokenId: "4", volume: "100000"}
                 },
-                storageId: storageId_1.offchainId,
+                storageId: storageId.offchainId,
                 maxFee: '1000000000000000000',
             }
 

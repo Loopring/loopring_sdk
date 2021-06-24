@@ -2,6 +2,8 @@ import { ChainId } from "./web3_defs"
 
 export const VALID_UNTIL = 1700000000
 
+export const DEFAULT_TIMEOUT = 30000
+
 export enum ReqMethod {
     GET = 'GET',
     POST = 'POST',
@@ -98,12 +100,6 @@ export enum SIG_FLAG {
     ECDSA_SIG,
 }
 
-export const REFRESH_RATE = 1000
-
-export const REFRESH_RATE_SLOW = 15000
-
-export const DEFAULT_TIMEOUT = 30000
-
 export interface ReqOptions {
     baseUrl?: string
     apiKey?: string
@@ -136,6 +132,10 @@ export interface ReqParams {
     }
     eddsaSignature?: string
     ecdsaSignature?: string
+}
+
+export interface LoopringMap<T> {
+    [key: string]: T
 }
 
 export interface ExchangeInfo {
@@ -246,6 +246,16 @@ export interface AmmPoolStat {
     rewards: any[]
 }
 
+export interface AmmPoolActivityRule {
+    market: string
+    ruleType: string
+    rangeFrom: number
+    rangeTo: number
+    awardRules: any[]
+    maxSpread: number
+    topK: number
+}
+
 export interface AmmTrade {
     accountId: number
     orderHash: string
@@ -275,55 +285,39 @@ export interface AmmPoolInfoV3 {
     status: number
 }
 
-export interface AmmPoolInfoMap {
-    [key: string]: AmmPoolInfoV3
-}
-
 export interface TokenRelatedInfo {
     tokenId: string
     tokenList: string[]
 }
 
-export interface TokenPairs {
-    [key: string]: TokenRelatedInfo
+export interface AmmPoolConfResponse {
+    ammpools: LoopringMap<AmmPoolInfoV3>
+    pairs: LoopringMap<TokenRelatedInfo>
+    raw_data: any
 }
 
-export interface AmmPoolConfResponse {
-    ammpools: {
-        [key: string]: AmmPoolInfoV3
-    },
-    pairs: TokenPairs,
-    raw_data: any,
+export interface PooledMap {
+    [key: number]: TokenVolumeV3
 }
 
 export interface AmmPoolBalance {
-    poolName: string,
-    poolAddress: string,
-    pooled: any[],
-    lp: any,
-    risky: boolean,
-    pooledMap: {
-        [key: string]: any,
-    }
+    poolName: string
+    poolAddress: string
+    pooled: [TokenVolumeV3, TokenVolumeV3]
+    lp: any
+    risky: boolean
+    pooledMap: PooledMap
 }
 
 export interface AmmPoolBalancesResponse {
-    ammpoolsbalances: {
-        [key: string]: AmmPoolBalance
-    },
-    raw_data: any,
+    ammpoolsbalances: LoopringMap<FiatPriceInfo>
+    raw_data: any
 }
 
 export interface TokensResponse {
-    tokenSymbolMap: {
-        [key: string]: TokenInfo
-    },
-    tokenIdMap: {
-        [key: string]: TokenInfo
-    },
-    tokenAddressMap: {
-        [key: string]: TokenInfo
-    },
+    tokenSymbolMap: LoopringMap<TokenInfo>
+    tokenIdMap: LoopringMap<TokenInfo>
+    tokenAddressMap: LoopringMap<TokenInfo>
 
     getTokenInfoBySymbol: any,
     getTokenInfoById: any,
@@ -348,17 +342,15 @@ export interface MarketInfo {
 }
 
 export interface MarketsResponse {
-    hasMarket: any,
-    getExistedMarket: any,
-    markets: {
-        [key: string]: MarketInfo,
-    },
-    pairs: TokenPairs,
-    tokenArr: string[],
-    tokenArrStr: string,
-    marketArr: string[],
-    marketArrStr: string,
-    raw_data: any,
+    hasMarket: any
+    getExistedMarket: any
+    markets: LoopringMap<MarketInfo>
+    pairs: LoopringMap<TokenRelatedInfo>
+    tokenArr: string[]
+    tokenArrStr: string
+    marketArr: string[]
+    marketArrStr: string
+    raw_data: any
 }
 
 export interface TokenVolumeV3 {
@@ -397,6 +389,17 @@ export interface GetAmmUserRewardsRequest {
     owner: number // accountId
 }
 
+export interface AmmUserReward {
+    market: string,
+    feeRewards: [],
+    extraRewards: [],
+    currentRewards: [],
+}
+
+export interface AmmUserRewardMap {
+    [key: string]: AmmUserReward
+}
+
 export interface GetAmmPoolGameRankRequest {
     ammPoolMarket: string // symbol AMM-LRC-ETH
 }
@@ -408,6 +411,14 @@ export interface GetAmmPoolGameUserRankRequest {
 
 export interface GetAmmPoolSnapshotRequest {
     poolAddress: string
+}
+
+export interface AmmPoolSnapshot {
+    poolName: string,
+    poolAddress: string,
+    pooled: [TokenVolumeV3, TokenVolumeV3],
+    lp: TokenInfo,
+    risky: boolean
 }
 
 export interface AmmPoolRequestPatch {
@@ -428,6 +439,12 @@ export interface JoinAmmPoolRequest {
     ecdsaSignature?: string
 }
 
+export interface JoinAmmPoolResult {
+    hash: string
+    status: TxStatus
+    isIdempotent: boolean
+}
+
 export interface ExitAmmPoolRequest {
     owner: string
     poolAddress: string
@@ -439,10 +456,32 @@ export interface ExitAmmPoolRequest {
     ecdsaSignature?: string
 }
 
+export interface ExitAmmPoolResult {
+    hash: string
+    status: TxStatus
+    isIdempotent: boolean
+}
+
 export interface GetAmmPoolTradesRequest {
     ammPoolAddress: string
     limit?: number
     offset?: number
+}
+
+export interface AmmPoolTrade {
+    accountId: number
+    orderHash: string
+    market: string
+    side: Side
+    size: string
+    price: number
+    feeAmount: string
+    createdAt: number
+}
+
+export interface AmmPoolTrades {
+    totalNum: number
+    trades: AmmPoolTrade[]
 }
 
 export interface GetUserAmmPoolTxsRequest {
@@ -454,6 +493,31 @@ export interface GetUserAmmPoolTxsRequest {
     txTypes?: TxTypes
     txStatus?: TxStatus
     ammPoolAddress?: string
+}
+
+export interface PooledToken {
+    tokenId: number
+    amount: string
+    actualAmount: string
+    feeAmount: string
+}
+
+export interface AmmPoolTx {
+    hash: string
+    txType: string
+    txStatus: TxStatus
+    ammPoolAddress: string
+    ammLayerType: string
+    poolTokens: [PooledToken, PooledToken]
+    lpToken: PooledToken
+    createdAt: number
+    updatedAt: number
+}
+
+export interface UserAmmPoolTxs {
+    totalNum: number
+    transactions: AmmPoolTx[]
+
 }
 
 export interface GetFiatPriceRequest {

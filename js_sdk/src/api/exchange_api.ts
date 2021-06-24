@@ -1,10 +1,16 @@
 import { BaseAPI } from './base_api'
 
-import { ReqParams, SIG_FLAG, ReqMethod, TokenInfo, MarketTradeInfo, Side, FiatPriceInfo, } from '../defs/loopring_defs'
-
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
 import {
+    ReqParams, 
+    SIG_FLAG, 
+    ReqMethod, 
+    TokenInfo, 
+    MarketTradeInfo, 
+    Side, 
+    FiatPriceInfo, 
+    LoopringMap, 
     GetAccountRequest,
     GetCandlestickRequest,
     GetDepthRequest,
@@ -14,11 +20,11 @@ import {
     GetTokenBalancesRequest,
     GetAllowancesRequest,
     MarketInfo,
-    TokenPairs,
     ExchangeInfo, 
     TickerData, 
     DepthData, 
     Candlestick,
+    TokenRelatedInfo,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -118,7 +124,7 @@ export class ExchangeAPI extends BaseAPI {
             [key: string]: MarketInfo,
         } = {}
 
-        var pairs: TokenPairs = {}
+        var pairs: LoopringMap<TokenRelatedInfo> = {}
             
         raw_data.markets.forEach((item: any, index: number, array: any)=>{
             console.log(item)
@@ -196,9 +202,9 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
         
-        let tokenSymbolMap: {[key: string]: TokenInfo} = {}
-        let tokenIdMap: {[key: number]: TokenInfo} = {}
-        let tokenAddressMap: {[key: string]: TokenInfo} = {}
+        let tokenSymbolMap: LoopringMap<TokenInfo> = {}
+        let tokenIdMap: LoopringMap<TokenInfo> = {}
+        let tokenAddressMap: LoopringMap<TokenInfo> = {}
 
         raw_data.forEach((item: any) => {
             tokenSymbolMap[item.symbol] = item
@@ -269,7 +275,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let tokenBalances: { [key: string]: string } = {}
+        let tokenBalances: LoopringMap<number> = {}
 
         raw_data.data.forEach((_: any, index: number) => {
             tokenBalances[tokenArray[index]] = raw_data.data[index]
@@ -303,7 +309,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let tokenAllowances: { [key: string]: number } = {}
+        let tokenAllowances: LoopringMap<number> = {}
 
         raw_data.data.forEach((_: any, index: number) => {
             tokenAllowances[tokenArray[index]] = parseInt(raw_data.data[index])
@@ -407,7 +413,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data['tickers']
 
-        var tickMap: {[key: string]: TickerData} = {}
+        var tickMap: LoopringMap<TickerData> = {}
         var tickList: TickerData[] = []
         raw_data.forEach((item: any, ind: number, arr: any) => {
 
@@ -518,7 +524,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let fiatPrices: {[key: string]: FiatPriceInfo} = {}
+        let fiatPrices: LoopringMap<FiatPriceInfo> = {}
 
         raw_data.prices.forEach((item: FiatPriceInfo) => {
             fiatPrices[item.symbol] = item
@@ -545,7 +551,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let tokenPrices: { [key: string]: number} = {}
+        let tokenPrices: LoopringMap<number> = {}
 
         raw_data.data.forEach((item: any) => {
             tokenPrices[item.token] = parseFloat(item.price)

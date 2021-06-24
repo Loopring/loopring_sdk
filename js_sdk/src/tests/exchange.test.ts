@@ -21,7 +21,7 @@ let api: ExchangeAPI
 describe('ExchangeAPI test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI(ChainId.GORLI)
     })
 
     it('getAccount', async () => {

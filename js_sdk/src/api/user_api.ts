@@ -385,7 +385,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let userFreeRateMap : { [key: string]: loopring_defs.UserFeeRateInfo } = {}
+        let userFreeRateMap : loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> = {}
 
         raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
             userFreeRateMap[item.symbol] = item
@@ -415,10 +415,8 @@ export class UserAPI extends BaseAPI {
 
         const gasPrice = parseInt(raw_data.gasPrice)
 
-        const feeRate: loopring_defs.FeeRateInfo = raw_data.feeRate
-        
         return {
-            feeRate,
+            feeRate: raw_data.feeRate as loopring_defs.FeeRateInfo,
             gasPrice,
             raw_data,
         }
@@ -442,15 +440,15 @@ export class UserAPI extends BaseAPI {
 
         const gasPrice = parseInt(raw_data.gasPrice)
 
-        let fees: {[key: string]: loopring_defs.OffchainFeeInfo} = {}
+        let fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {}
 
         raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
             fees[item.token] = item
         })
 
         return {
-            gasPrice,
             fees,
+            gasPrice,
             raw_data,
         }
 
@@ -659,7 +657,8 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            raw_data
+            shouldSaveHWAddr,
+            raw_data,
         }
 
     }

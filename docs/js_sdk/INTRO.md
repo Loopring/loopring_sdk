@@ -8,7 +8,7 @@ Make sure you are using the original npm registry.
 ```
 
 ## Install
-    yarn add loopring_sdk
+    yarn add loopring-sdk
 
 ## Getting Started
 

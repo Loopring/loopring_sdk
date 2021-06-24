@@ -1,6 +1,9 @@
-# Changelog
+# CHANGELOG
 
 ### JS SDK Version ChangeLog
+
+#### v0.0.9
+    1) add interface definitions for APIs.
 
 #### v0.0.8
     1) update UpdateAccount api.

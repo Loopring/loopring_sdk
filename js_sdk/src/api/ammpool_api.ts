@@ -8,14 +8,23 @@ import {
     ExitAmmPoolRequest,
     VALID_UNTIL,
     AmmPoolRequestPatch,
-    AmmPoolInfoMap,
-    TokenPairs,
     AmmPoolBalance,
     AmmPoolStat,
     GetAmmPoolGameRankRequest,
     GetAmmPoolGameUserRankRequest,
     TokenVolumeV3,
     GameRankInfo,
+    AmmPoolSnapshot,
+    AmmUserReward,
+    AmmUserRewardMap,
+    AmmPoolActivityRule,
+    UserAmmPoolTxs,
+    AmmPoolTrades,
+    JoinAmmPoolResult,
+    ExitAmmPoolResult,
+    LoopringMap,
+    TokenRelatedInfo,
+    AmmPoolInfoV3,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -38,9 +47,9 @@ export class AmmpoolAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        let ammpools: AmmPoolInfoMap = {}
+        let ammpools: LoopringMap<AmmPoolInfoV3> = {}
 
-        let pairs: TokenPairs = {}
+        let pairs: LoopringMap<TokenRelatedInfo> = {}
 
         raw_data.pools.forEach((item: any) => {
 
@@ -95,9 +104,16 @@ export class AmmpoolAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
-        const raw_data = (await this.makeReq().request(reqParams)).data
+        const raw_data: AmmUserReward[] = (await this.makeReq().request(reqParams)).data
+
+        let ammUserRewardMap : AmmUserRewardMap = {}
+
+        raw_data.forEach((item: AmmUserReward) => {
+            ammUserRewardMap[item.market] = item
+        })
 
         return {
+            ammUserRewardMap,
             raw_data,
         }
 
@@ -163,10 +179,8 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        console.log('raw_data:', raw_data)
-
-        let activityRules: {[key: string]: AmmPoolStat} = {}
-        raw_data.data.forEach((item: any) => {
+        let activityRules: LoopringMap<AmmPoolActivityRule> = {}
+        raw_data.data.forEach((item: AmmPoolActivityRule) => {
             activityRules[item.market] = item
         })
 
@@ -191,8 +205,9 @@ export class AmmpoolAPI extends BaseAPI {
 
         console.log('raw_data:', raw_data)
 
-        let ammPoolStats: {[key: string]: AmmPoolStat} = {}
-        raw_data.data.forEach((item: any) => {
+        let ammPoolStats: LoopringMap<AmmPoolStat> = {}
+
+        raw_data.data.forEach((item: AmmPoolStat) => {
             ammPoolStats[item.market] = item
         })
 
@@ -205,12 +220,11 @@ export class AmmpoolAPI extends BaseAPI {
 
     /*
     */
-    public async getAmmPoolSnapshot(request: GetAmmPoolSnapshotRequest, apiKey: string) {
+    public async getAmmPoolSnapshot(request: GetAmmPoolSnapshotRequest) {
 
         const reqParams: ReqParams = {
             url: LOOPRING_URLs.GET_AMM_POOLS_SNAPSHOT,
             queryParams: request,
-            apiKey,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
         }
@@ -218,6 +232,7 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
+            ammPoolSnapshot: raw_data as AmmPoolSnapshot,
             raw_data,
         }
 
@@ -235,9 +250,7 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let ammpoolsbalances: {
-            [key: string]: AmmPoolBalance
-         } = {}
+        let ammpoolsbalances: LoopringMap<AmmPoolBalance> = {}
 
         raw_data.forEach((item: any) => {
 
@@ -279,7 +292,8 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            raw_data
+            userAmmPoolTxs: raw_data as UserAmmPoolTxs,
+            raw_data,
         }
 
     }
@@ -298,6 +312,7 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
+            ammPoolTrades: raw_data as AmmPoolTrades,
             raw_data
         }
 
@@ -325,7 +340,8 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            raw_data
+            joinAmmPoolResult: raw_data as JoinAmmPoolResult,
+            raw_data,
         }
 
     }
@@ -351,7 +367,10 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return raw_data
+        return {
+            exitAmmPoolResult: raw_data as ExitAmmPoolResult,
+            raw_data
+        }
 
     }
 
