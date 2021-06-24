@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+#### v0.0.10
+    1) update interface definitions for APIs.
+
 #### v0.0.9
     1) add interface definitions for APIs.
 
