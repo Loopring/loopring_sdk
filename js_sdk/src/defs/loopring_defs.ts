@@ -155,11 +155,12 @@ export interface TickerData {
     symbol: string
     base: string | undefined
     quote: string | undefined
-    date_time: Date
+    timestamp: number
+    datetime: Date
     base_token_volume: string
     quote_token_volume: string
-    base_token_amt: string
-    quote_token_amt: string
+    base_fee_amt: string
+    quote_fee_amt: string
     open: number
     high: number
     low: number
@@ -359,7 +360,7 @@ export interface TokenVolumeV3 {
      * @type {string}
      * @memberof TokenVolumeV3
      */
-    tokenId: string;
+    tokenId: string | number;
     /**
      * The volume of the token
      * @type {string}

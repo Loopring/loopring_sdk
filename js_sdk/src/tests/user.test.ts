@@ -2,7 +2,7 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest } from '../defs/loopring_defs'
+import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest, OrderType, SubmitOrderRequestV3 } from '../defs/loopring_defs'
 
 import { loopring_exported_account as acc, web3, local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
@@ -29,6 +29,7 @@ import {
 } from '../defs/loopring_defs'
 
 import * as sign_tools from '../api/sign/sign_tools'
+import { getTokenInfoBySymbol } from '../utils'
 
 let api: UserAPI
 
@@ -293,11 +294,11 @@ describe('UserAPI test', function () {
                 accountId: acc.accountId,
                 storageId: storageId.offchainId,
                 token: {
-                    tokenId: '1',
+                    tokenId: 1,
                     volume: '100000000000000000000',
                 },
                 maxFee: {
-                    tokenId: '1',
+                    tokenId: 1,
                     volume: '9400000000000000000',
                 },
                 extraData: '',
@@ -348,11 +349,11 @@ describe('UserAPI test', function () {
                 payeeId: 10392,
                 storageId: storageId.offchainId,
                 token: {
-                    tokenId: '1',
+                    tokenId: 1,
                     volume: '100000000000000000000',
                 },
                 maxFee: {
-                    tokenId: '1',
+                    tokenId: 1,
                     volume: '9400000000000000000',
                 },
                 validUntil: VALID_UNTIL,
@@ -393,6 +394,63 @@ describe('UserAPI test', function () {
         } catch (reason) {
             dumpError400(reason)
         }
+    }, DEFAULT_TIMEOUT)
+
+    it('submitOrder', async () => {
+        const request: GetNextStorageIdRequest = {
+            accountId: acc.accountId,
+            sellTokenId: 1
+        }
+        const storageId = await api.getNextStorageId(request, acc.apiKey)
+
+        const { accInfo } = await exchange.getAccount({
+            owner: acc.address
+        })
+
+        const { tokenSymbolMap } = await exchange.getTokens()
+
+        const baseToken = getTokenInfoBySymbol(tokenSymbolMap, 'LRC')
+
+        const quoteToken = getTokenInfoBySymbol(tokenSymbolMap, 'ETH')
+
+        if (!baseToken || !quoteToken) {
+            return
+        }
+
+        const { nonce } = accInfo
+        console.log(`nonce:${nonce}`)
+        console.log(`storageId:${storageId}`)
+
+        try {
+
+            const request: SubmitOrderRequestV3 = {
+                exchange: acc.exchangeAddr,
+                accountId: acc.accountId,
+                storageId: storageId.orderId,
+                sellToken: {
+                    tokenId: baseToken.tokenId,
+                    volume: '1000000000000000000'
+                },
+                buyToken: {
+                    tokenId: quoteToken.tokenId,
+                    volume: '1000000000000000000'
+                },
+                allOrNone: false,
+                validUntil: VALID_UNTIL,
+                maxFeeBips: 60,
+                fillAmountBOrS: false, // amm only false
+                orderType: OrderType.LimitOrder,
+                eddsaSignature: '',
+            }
+
+            const response = await api.submitOrder(request, acc.eddsaKey, acc.apiKey)
+
+            console.log(response)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+
     }, DEFAULT_TIMEOUT)
 
 })

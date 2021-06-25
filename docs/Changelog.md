@@ -2,6 +2,11 @@
 
 ### JS SDK Version ChangeLog
 
+
+### v0.0.11
+    1) update getTicker api. modify fields.
+    2) change TokenVolumeV3 def.
+
 #### v0.0.10
     1) update interface definitions for APIs.
 

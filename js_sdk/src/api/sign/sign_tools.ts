@@ -44,7 +44,8 @@ const transferMessage = 'Sign this message to authorize Loopring Pay: '
 
 const SNARK_SCALAR_FIELD = new BigInteger('21888242871839275222246405745257275088548364400416034343698204186575808495617', 10)
 
-export async function generateKeyPair(web3: any, address: string, exchangeAddress: string, keyNonce: number, walletType: ConnectorNames) {
+export async function generateKeyPair(web3: any, address: string, exchangeAddress: string, 
+  keyNonce: number, walletType: ConnectorNames = ConnectorNames.Injected) {
 
   const result = await personalSign(
     web3,

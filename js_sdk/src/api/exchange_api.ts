@@ -34,6 +34,13 @@ import { getBaseQuote } from '../utils/symbol_tools'
 
 const SEP = ','
 
+const checkAmt = (rawStr: string) => {
+    if (rawStr.trim() === '') {
+        return '0'
+    }
+    return rawStr
+}
+
 function getFeeMap(feeArr: any[], type: number = 0) {
     let feesMap: any = {}
 
@@ -127,7 +134,6 @@ export class ExchangeAPI extends BaseAPI {
         var pairs: LoopringMap<TokenRelatedInfo> = {}
             
         raw_data.markets.forEach((item: any, index: number, array: any)=>{
-            console.log(item)
             markets[item.market] = {
                 'baseTokenId': item.baseTokenId, 
                 'enabled': item.enabled, 
@@ -437,11 +443,14 @@ export class ExchangeAPI extends BaseAPI {
                 change = (close - open) / open
             }
 
+            const timestamp = parseInt(item[1])
+
             const tick: TickerData = {
                 symbol: item[0],
                 base,
                 quote,
-                date_time: new Date(parseInt(item[1])),
+                timestamp,
+                datetime: new Date(timestamp),
                 base_token_volume: item[2],
                 quote_token_volume: item[3],
                 open,
@@ -451,8 +460,8 @@ export class ExchangeAPI extends BaseAPI {
                 count: parseInt(item[8]),
                 bid: parseFloat(item[9]),
                 ask: parseFloat(item[10]),
-                base_token_amt: item[11],
-                quote_token_amt: item[12],
+                base_fee_amt: checkAmt(item[11]),
+                quote_fee_amt: checkAmt(item[12]),
                 change,
             }
             
