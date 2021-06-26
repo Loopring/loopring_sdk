@@ -21,15 +21,28 @@ let api: ExchangeAPI
 describe('ExchangeAPI test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI(ChainId.MAINNET)
     })
 
-    it('getAccount', async () => {
+    it('getAccount_Found', async () => {
+        api = new ExchangeAPI(ChainId.MAINNET)
         const request: GetAccountRequest = {
             owner: acc.address
         }
         const response = await api.getAccount(request)
         console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getAccount_Not_Found', async () => {
+        try {
+            const request: GetAccountRequest = {
+                owner: acc.address
+            }
+            const response = await api.getAccount(request)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, DEFAULT_TIMEOUT)
 
     it('getGasPrice', async () => {
@@ -104,6 +117,17 @@ describe('ExchangeAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getMarkets', async () => {
+        const response = await api.getMarkets()
+        console.log(response)
+        console.log(response.pairs.LRC.tokenList)
+
+        console.log('hasMarket LRC-ETH:', hasMarket(response.marketArr, 'LRC-ETH'))
+        console.log('market 1:', getExistedMarket(response.marketArr, 'LRC', 'ETH'))
+        console.log('market 2:', getExistedMarket(response.marketArr, 'ETH', 'LRC'))
+
+    }, DEFAULT_TIMEOUT)
+
     it('getMixMarkets', async () => {
         const response = await api.getMixMarkets()
         console.log(response)
@@ -130,8 +154,20 @@ describe('ExchangeAPI test', function () {
 
         const response = await api.getDepth(request)
         console.log(response)
-        console.log(response.depth.bids)
-        console.log(response.depth.asks)
+        
+    }, DEFAULT_TIMEOUT)
+
+    it('getMixDepth', async () => {
+
+        api = new ExchangeAPI(ChainId.MAINNET)
+
+        const request: GetDepthRequest = {
+            market: ['LRC-ETH']
+        }
+
+        const response = await api.getMixDepth(request)
+        console.log(response)
+        
     }, DEFAULT_TIMEOUT)
 
     it('getExchangeInfo', async () => {
@@ -153,6 +189,16 @@ describe('ExchangeAPI test', function () {
         const response = await api.getAllTickers()
         console.log(response)
 
+    }, DEFAULT_TIMEOUT)
+
+    it('getMixCandlestick', async () => {
+        const request: GetCandlestickRequest = {
+            market: 'LRC-ETH',
+            interval: TradingInterval.min15,
+            limit: 96,
+        }
+        const response = await api.getMixCandlestick(request)
+        console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getCandlestick', async () => {

@@ -3,6 +3,10 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.12
+    1) add missing function for APIs.
+    2) fix response arch of some APIs.
+
 ### v0.0.11
     1) update getTicker api. modify fields.
     2) change TokenVolumeV3 def.

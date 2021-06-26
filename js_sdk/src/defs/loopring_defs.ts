@@ -156,7 +156,6 @@ export interface TickerData {
     base: string | undefined
     quote: string | undefined
     timestamp: number
-    datetime: Date
     base_token_volume: string
     quote_token_volume: string
     base_fee_amt: string
@@ -179,7 +178,7 @@ export interface ABInfo {
 
 export interface DepthData {
     version: number
-    date_time: Date
+    timestamp: number
     bids: ABInfo[][]
     bids_prices: any[]
     bids_amtTotals: any[]
@@ -189,7 +188,7 @@ export interface DepthData {
 }
 
 export interface Candlestick {
-    timeStamp: number
+    timestamp: number
     txs: number
     open: number
     close: number
@@ -252,7 +251,7 @@ export interface AmmPoolActivityRule {
     ruleType: string
     rangeFrom: number
     rangeTo: number
-    awardRules: any[]
+    awardRules: TokenVolumeV3[]
     maxSpread: number
     topK: number
 }
@@ -392,9 +391,9 @@ export interface GetAmmUserRewardsRequest {
 
 export interface AmmUserReward {
     market: string,
-    feeRewards: [],
-    extraRewards: [],
-    currentRewards: [],
+    feeRewards: string[],
+    extraRewards: TokenVolumeV3[],
+    currentRewards: TokenVolumeV3[],
 }
 
 export interface AmmUserRewardMap {
@@ -480,11 +479,6 @@ export interface AmmPoolTrade {
     createdAt: number
 }
 
-export interface AmmPoolTrades {
-    totalNum: number
-    trades: AmmPoolTrade[]
-}
-
 export interface GetUserAmmPoolTxsRequest {
     accountId: number
     start?: number
@@ -513,12 +507,6 @@ export interface AmmPoolTx {
     lpToken: PooledToken
     createdAt: number
     updatedAt: number
-}
-
-export interface UserAmmPoolTxs {
-    totalNum: number
-    transactions: AmmPoolTx[]
-
 }
 
 export interface GetFiatPriceRequest {
@@ -591,6 +579,24 @@ export interface GetOffchainFeeAmtRequest {
     requestType: OffchainFeeReqType
     tokenSymbol?: string
     amount?: string
+}
+
+export interface OrderInfo {
+    minAmount: string
+    makerRate: number
+    takerRate: number
+}
+
+export interface TokenAmount {
+    tokenSymbol: string
+    discount: number
+    baseOrderInfo: OrderInfo
+    userOrderInfo: OrderInfo
+}
+
+export interface GetMinimumTokenAmtRequest {
+    accountId: number
+    market: string
 }
 
 export interface OffchainFeeInfo {
@@ -829,17 +835,7 @@ export interface UserDepositHistoryTx {
     updatedAt: number
 }
 
-export interface UserDepositHistory {
-    totalNum: number
-    transactions: UserDepositHistoryTx[]
-}
-
 export interface UserOnchainWithdrawalHistoryTx extends UserDepositHistoryTx {}
-
-export interface UserOnchainWithdrawalHistory {
-    totalNum: number
-    transactions: UserOnchainWithdrawalHistoryTx[]
-}
 
 export interface GetUserOnchainWithdrawalHistoryRequest {
     accountId: number
@@ -879,11 +875,6 @@ export interface UserTransferRecord {
     timestamp: number
     updatedAt: number
     memo: string
-}
-
-export interface UserTransferList {
-    totalNum: number
-    transactions: UserTransferRecord[]
 }
 
 export interface GetUserTradesRequest {

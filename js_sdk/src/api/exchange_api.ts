@@ -368,10 +368,14 @@ export class ExchangeAPI extends BaseAPI {
 
     }
 
+    public async getMixDepth(request: GetDepthRequest) {
+        return await this.getDepth(request, LOOPRING_URLs.GET_MIX_DEPTH)
+    }
+
     /*
     * Returns the order book of a given trading pair.
     */
-    public async getDepth(request: GetDepthRequest) {
+    public async getDepth(request: GetDepthRequest, url: string = LOOPRING_URLs.GET_DEPTH) {
 
         if (request?.level === undefined) {
             request.level = 2
@@ -383,7 +387,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const reqParams: ReqParams = {
             queryParams: request,
-            url: LOOPRING_URLs.GET_DEPTH,
+            url,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
         }
@@ -393,9 +397,11 @@ export class ExchangeAPI extends BaseAPI {
         const bids = genAB(raw_data['bids'], true)
         const asks = genAB(raw_data['asks'])
 
+        const timestamp = raw_data['timestamp']
+
         const depth: DepthData = {
             version: parseInt(raw_data['version']),
-            date_time: new Date(raw_data['timestamp']),
+            timestamp,
             bids: bids.ab_arr,
             bids_prices: bids.ab_prices,
             bids_amtTotals: bids.ab_amtTotals,
@@ -411,14 +417,18 @@ export class ExchangeAPI extends BaseAPI {
 
     }
 
+    public async getMixTicker(request: GetTickerRequest) {
+        return await this.getTicker(request, LOOPRING_URLs.GET_MIX_TICKER)
+    }
+
     /*
     * Gets a markets ticker. 
     * Generally speaking, a ticker in Loopring consists in data from the market taken last 24Hours.
     */
-    public async getTicker(request: GetTickerRequest) {
+    public async getTicker(request: GetTickerRequest, url: string = LOOPRING_URLs.GET_TICKER) {
 
         const reqParams: ReqParams = {
-            url: LOOPRING_URLs.GET_TICKER,
+            url,
             queryParams: request,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
@@ -450,7 +460,6 @@ export class ExchangeAPI extends BaseAPI {
                 base,
                 quote,
                 timestamp,
-                datetime: new Date(timestamp),
                 base_token_volume: item[2],
                 quote_token_volume: item[3],
                 open,
@@ -484,18 +493,21 @@ export class ExchangeAPI extends BaseAPI {
             market: marketArrStr
         }
 
-        return this.getTicker(request)
+        return this.getMixTicker(request)
 
     }
 
+    public async getMixCandlestick(request: GetCandlestickRequest) {
+        return await this.getCandlestick(request, LOOPRING_URLs.GET_MIX_CANDLESTICK)
+    }
+
     /*
-    * Gets a markets ticker. 
-    * Generally speaking, a ticker in Loopring consists in data from the market taken last 24Hours.
+    * Gets candlesticks. 
     */
-    public async getCandlestick(request: GetCandlestickRequest) {
+    public async getCandlestick(request: GetCandlestickRequest, url: string = LOOPRING_URLs.GET_CANDLESTICK) {
 
         const reqParams: ReqParams = {
-            url: LOOPRING_URLs.GET_CANDLESTICK,
+            url,
             queryParams: request,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
@@ -507,7 +519,7 @@ export class ExchangeAPI extends BaseAPI {
 
         raw_data.candlesticks.forEach((item: any, ind: number, arr: any) => {
             const candlestick: Candlestick = {
-                timeStamp: parseInt(item[0]),
+                timestamp: parseInt(item[0]),
                 txs: parseInt(item[1]),
                 open: parseFloat(item[2]),
                 close: parseFloat(item[3]),
@@ -613,6 +625,7 @@ export class ExchangeAPI extends BaseAPI {
         })
 
         return {
+            totalNum: raw_data.totalNum,
             marketTrades,
             raw_data,
         }

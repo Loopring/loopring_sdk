@@ -18,13 +18,13 @@ import {
     AmmUserReward,
     AmmUserRewardMap,
     AmmPoolActivityRule,
-    UserAmmPoolTxs,
-    AmmPoolTrades,
     JoinAmmPoolResult,
     ExitAmmPoolResult,
     LoopringMap,
     TokenRelatedInfo,
     AmmPoolInfoV3,
+    AmmPoolTrade,
+    AmmPoolTx,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -104,7 +104,7 @@ export class AmmpoolAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
-        const raw_data: AmmUserReward[] = (await this.makeReq().request(reqParams)).data
+        const raw_data: AmmUserReward[] = (await this.makeReq().request(reqParams)).data.data
 
         let ammUserRewardMap : AmmUserRewardMap = {}
 
@@ -292,7 +292,8 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            userAmmPoolTxs: raw_data as UserAmmPoolTxs,
+            totalNum: raw_data.totalNum,
+            userAmmPoolTxs: raw_data.transactions as AmmPoolTx[],
             raw_data,
         }
 
@@ -312,7 +313,8 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            ammPoolTrades: raw_data as AmmPoolTrades,
+            totalNum: raw_data.totalNum,
+            ammPoolTrades: raw_data.transactions as AmmPoolTrade[],
             raw_data
         }
 

@@ -141,9 +141,11 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
+        const totalNum : number = raw_data.totalNum
         const orders : loopring_defs.OrderDetail[] = raw_data.orders
         
         return {
+            totalNum,
             orders,
             raw_data,
         }
@@ -240,6 +242,7 @@ export class UserAPI extends BaseAPI {
         const userRegTxs: loopring_defs.UserRegTx[] = raw_data.transactions
 
         return {
+            totalNum: raw_data.totalNum,
             userRegTxs,
             raw_data,
         }
@@ -264,6 +267,7 @@ export class UserAPI extends BaseAPI {
         const userPwdResetTxs: loopring_defs.UserPwdResetTx[] = raw_data.transactions
 
         return {
+            totalNum: raw_data.totalNum,
             userPwdResetTxs,
             raw_data
         }
@@ -314,7 +318,8 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            userDepositHistory: raw_data as loopring_defs.UserDepositHistory,
+            totalNum: raw_data.totalNum,
+            userDepositHistory: raw_data.transactions as loopring_defs.UserDepositHistoryTx[],
             raw_data,
         }
 
@@ -335,7 +340,8 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
         return {
-            userOnchainWithdrawalHistory: raw_data as loopring_defs.UserOnchainWithdrawalHistory,
+            totalNum: raw_data.totalNum,
+            userOnchainWithdrawalHistory: raw_data as loopring_defs.UserOnchainWithdrawalHistoryTx[],
             raw_data,
         }
 
@@ -357,7 +363,8 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            userTransferList: raw_data as loopring_defs.UserTransferList,
+            totalNum: raw_data.totalNum,
+            userTransfers: raw_data.transactions as loopring_defs.UserTransferRecord[],
             raw_data,
         }
 
@@ -378,9 +385,9 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let trades : loopring_defs.UserTrade[] = []
+        let userTrades : loopring_defs.UserTrade[] = []
         raw_data.trades.forEach((item: any[]) => {
-            trades.push({
+            userTrades.push({
                 tradeTime: item[0],
                 tradeId: item[1],
                 side: item[2],
@@ -390,13 +397,9 @@ export class UserAPI extends BaseAPI {
                 fee: item[6],
             })
         })
-
-        const userTrades: loopring_defs.UserTrades = {
-            totalNum: raw_data.totalNum,
-            trades
-        }
         
         return {
+            totalNum: raw_data.totalNum,
             userTrades,
             raw_data
         }
@@ -404,6 +407,7 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
+    * deprecated
     * Returns the fee rate of users placing orders in specific markets
     */
     public async getUserFeeRate(request: loopring_defs.GetUserFeeRateRequest, apiKey: string) {
@@ -418,7 +422,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let userFreeRateMap : loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> = {}
+        let userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> = {}
 
         raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
             userFreeRateMap[item.symbol] = item
@@ -432,7 +436,7 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-    * Returns the fee rate of users placing orders in specific markets
+    * Returns the user order fee rate of users placing orders in specific markets
     */
     public async getUserOrderFeeRate(request: loopring_defs.GetUserOrderFeeRateRequest, apiKey: string) {
 
@@ -451,6 +455,34 @@ export class UserAPI extends BaseAPI {
         return {
             feeRate: raw_data.feeRate as loopring_defs.FeeRateInfo,
             gasPrice,
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Query current token minimum amount to place order based on users VIP level and max fee bips
+    */
+    public async getMinimumTokenAmt(request: loopring_defs.GetMinimumTokenAmtRequest, apiKey: string) {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const gasPrice = parseInt(raw_data.gasPrice)
+
+        const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] = raw_data.amounts
+
+        return {
+            amounts,
+            gasPrice,
+            cacheOverdueAt: raw_data.cacheOverdueAt,
             raw_data,
         }
 

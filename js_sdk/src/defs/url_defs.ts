@@ -19,18 +19,18 @@ export enum LOOPRING_URLs {
     GET_FIAT_PRICE = '/api/v3/price',
     GET_TRADES = '/api/v3/trade',
     POST_INTERNAL_TRANSFER = '/api/v3/transfer',
-    ACCOUNT_ACTION = '/api/v3/account', // get update
+    ACCOUNT_ACTION = '/api/v3/account', // get or update
     GET_USER_REG_TXS = '/api/v3/user/createInfo',
     GET_PWD_RESET_TXS = '/api/v3/user/updateInfo',
     GET_USER_EXCHANGE_BALANCES = '/api/v3/user/balances',
     GET_USER_DEPOSITS_HISTORY = '/api/v3/user/deposits',
-    WITHDRAWALS_ACTION = '/api/v3/user/withdrawals',
+    WITHDRAWALS_ACTION = '/api/v3/user/withdrawals', // post
     GET_USER_TRANFERS_LIST = '/api/v3/user/transfers',
     GET_USER_TRADE_HISTORY = '/api/v3/user/trades',
-    GET_USER_FEE_RATE = '/api/v3/user/feeRates',
+    GET_USER_FEE_RATE = '/api/v3/user/feeRates', // deprecated
     GET_USER_ORDER_FEE_RATE = '/api/v3/user/orderFee',
     GET_MINIMAL_ORDER_AMT = '/api/v3/user/orderAmount', // IGNORE for now.
-    GET_FEE_BASED_ORDER_AMT = '/api/v3/user/orderUserRateAmount',
+    GET_MINIMUM_TOKEN_AMT = '/api/v3/user/orderUserRateAmount',
     GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
     GET_GAS_PRICE = '/api/v3/eth/recommendedGasPrice',
 

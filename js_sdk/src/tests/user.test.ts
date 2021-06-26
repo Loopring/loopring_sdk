@@ -8,6 +8,7 @@ import { loopring_exported_account as acc, web3, local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
+    GetMinimumTokenAmtRequest,
     UpdateAccountRequestV3,
     UpdateUserApiKeyRequest,
     GetNextStorageIdRequest,
@@ -116,7 +117,6 @@ describe('UserAPI test', function () {
         }
         const response = await api.getUserTrades(request, acc.apiKey)
         console.log(response)
-        console.log(response.userTrades.trades)
     }, DEFAULT_TIMEOUT)
 
     it('getNextStorageId', async () => {
@@ -151,6 +151,22 @@ describe('UserAPI test', function () {
             }
             const response = await api.getUserOrderFeeRate(request, acc.apiKey)
             console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getMinimumTokenAmt', async () => {
+        try {
+            const request: GetMinimumTokenAmtRequest = {
+                accountId: acc.accountId,
+                market: 'LRC-ETH',
+            }
+            
+            const response = await api.getMinimumTokenAmt(request, acc.apiKey)
+            console.log(response)
+            console.log(response.raw_data.amounts)
+
         } catch (reason) {
             dumpError400(reason)
         }
@@ -236,7 +252,6 @@ describe('UserAPI test', function () {
 
             const response = await api.getUserDepositHistory(request, acc.apiKey)
             console.log(response)
-            console.log(response.userDepositHistory.transactions)
         } catch (reason) {
             dumpError400(reason)
         }
@@ -250,7 +265,6 @@ describe('UserAPI test', function () {
 
             const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
             console.log(response)
-            console.log(response.raw_data.transactions)
         } catch (reason) {
             dumpError400(reason)
         }
@@ -264,7 +278,6 @@ describe('UserAPI test', function () {
 
             const response = await api.getUserTranferList(request, acc.apiKey)
             console.log(response)
-            console.log(response.raw_data.transactions)
         } catch (reason) {
             dumpError400(reason)
         }
@@ -299,20 +312,15 @@ describe('UserAPI test', function () {
                 },
                 maxFee: {
                     tokenId: 1,
-                    volume: '9400000000000000000',
+                    volume: '11000000000000000000',
                 },
                 extraData: '',
                 minGas: 0,
                 validUntil: VALID_UNTIL,
             }
 
-            // const eddsa = sign_tools.get_EddsaSig_OffChainWithdraw(request, acc.eddsaKey)
-
-            // console.log('request:', JSON.stringify(request))
-            // console.log('eddsa:', eddsa)
-
             const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Injected,
-                acc.eddsaKey, acc.apiKey, false)
+                acc.eddsaKey, acc.apiKey, true)
 
             console.log(response)
 
