@@ -3,6 +3,10 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.13
+    1) change metamask.js to typescript.
+    2) fix missing params issue.
+
 ### v0.0.12
     1) add missing function for APIs.
     2) fix response arch of some APIs.
