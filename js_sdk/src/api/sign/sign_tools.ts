@@ -47,7 +47,7 @@ const SNARK_SCALAR_FIELD = new BigInteger('2188824287183927522224640574525727508
 export async function generateKeyPair(web3: any, address: string, exchangeAddress: string, 
   keyNonce: number, walletType: ConnectorNames = ConnectorNames.Injected) {
 
-  const result = await personalSign(
+  const result: any = await personalSign(
     web3,
     address, '',
     keyMessage + exchangeAddress + ' with key nonce: ' + keyNonce,
@@ -280,7 +280,7 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
 
       console.log('WithoutDataStruct hash:', hash)
 
-      const signature = await personalSign(web3, address, pwd, hash)
+      const signature: any = await personalSign(web3, address, pwd, hash)
 
       if (signature?.sig) {
         return {
@@ -662,5 +662,5 @@ export function getAmmExitEcdsaTypedData(data: ExitAmmPoolRequest, patch: AmmPoo
     },
     message: message,
   };
-  return typedData;
+  return typedData
 }

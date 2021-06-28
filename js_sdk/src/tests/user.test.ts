@@ -61,6 +61,8 @@ describe('UserAPI test', function () {
                     ConnectorNames.Injected,
                 )
 
+            console.log('eddsakey:', eddsakey.sk)
+
             const request: GetUserApiKeyRequest = {
                 accountId: acc.accountId,
             }
@@ -427,7 +429,7 @@ describe('UserAPI test', function () {
 
         const { nonce } = accInfo
         console.log(`nonce:${nonce}`)
-        console.log(`storageId:${storageId}`)
+        console.log(`storageId:${JSON.stringify(storageId)}`)
 
         try {
 

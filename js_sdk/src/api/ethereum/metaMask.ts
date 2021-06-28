@@ -14,6 +14,7 @@ import { ConnectorNames } from '../../defs/web3_defs'
 
 import { SigSuffix } from '../../defs/web3_defs'
 
+import Web3 from 'web3'
 /**
  * @description sign hash
  * @param web3
@@ -21,9 +22,9 @@ import { SigSuffix } from '../../defs/web3_defs'
  * @param hash
  * @returns {Promise.<*>}
  */
-export async function sign(web3, account, pwd, hash) {
+export async function sign(web3: any, account: string, pwd: string, hash: string) {
   return new Promise((resolve) => {
-    web3.eth.sign(hash, account, pwd, function (err, result) {
+    web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
       if (!err) {
         console.log('sig result', result);
         const r = result.slice(0, 66);
@@ -47,15 +48,15 @@ export async function sign(web3, account, pwd, hash) {
  * @param params
  * @returns {Promise.<*>}
  */
-export async function signEip712(web3, account, method, params) {
-  const response = await new Promise((resolve) => {
+export async function signEip712(web3: any, account: string, method: string, params: any) {
+  const response: any = await new Promise((resolve) => {
     web3.currentProvider.sendAsync(
       {
         method,
         params,
         account,
       },
-      function (err, result) {
+      function (err: any, result: any) {
         if (err) {
           resolve({ error: { message: err.message } });
           return;
@@ -85,27 +86,23 @@ export async function signEip712(web3, account, method, params) {
  * @param message
  * @returns {Promise}
  */
-export async function signMessage(web3, account, pwd, message) {
+export async function signMessage(web3: any, account: string, pwd: string, message: string) {
   const hash = toHex(hashPersonalMessage(keccak256(message)));
   return await sign(web3, account, pwd, hash);
 }
 
-export async function personalSign(web3, account, pwd, msg, walletType) {
+export async function personalSign(web3: any, account: string | undefined, pwd: string, msg: string, walletType: ConnectorNames = ConnectorNames.Injected) {
 
-  /*
-  console.log('personalSign web3:', web3)
-  console.log('personalSign account:', account)
-  console.log('personalSign pwd:', pwd)
-  console.log('personalSign:', msg)
-  console.log('personalSign:', walletType)
-  */
+  if (!account) {
+    return ({ error: 'personalSign got no account' });
+  }
  
   return new Promise((resolve) => {
-    web3.eth.personal.sign(msg, account, pwd, async function (err, result) {
+    web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
       if (!err) {
         // ecRecover not implemented in WalletLink
         if (walletType === ConnectorNames.WalletLink) {
-          const valid = await walletLinkValid(web3, account, msg, result);
+          const valid: any = await walletLinkValid(account, msg, result);
           if (valid.result) {
             resolve({ sig: result });
           } else {
@@ -115,7 +112,7 @@ export async function personalSign(web3, account, pwd, msg, walletType) {
         }
 
         if (walletType === ConnectorNames.Authereum) {
-          const valid = await authereumValid(web3, account, msg, result);
+          const valid: any = await authereumValid(web3, account, msg, result);
           if (valid.result) {
             resolve({ sig: result });
           } else {
@@ -124,11 +121,11 @@ export async function personalSign(web3, account, pwd, msg, walletType) {
           return;
         }
 
-        const valid = await ecRecover(web3, account, msg, result);
+        const valid: any = await ecRecover(web3, account, msg, result);
         if (valid.result) {
           resolve({ sig: result });
         } else {
-          const walletValid = await contractWalletValidate(
+          const walletValid: any = await contractWalletValidate(
             web3,
             account,
             msg,
@@ -138,7 +135,7 @@ export async function personalSign(web3, account, pwd, msg, walletType) {
           if (walletValid.result) {
             resolve({ sig: result });
           } else {
-            const walletValid2 = await contractWalletValidate2(
+            const walletValid2: any = await contractWalletValidate2(
               web3,
               account,
               msg,
@@ -148,13 +145,12 @@ export async function personalSign(web3, account, pwd, msg, walletType) {
             if (walletValid2.result) {
               resolve({ sig: result });
             } else {
-              const myKeyValid = await mykeyWalletValid(
+              const myKeyValid: any = await mykeyWalletValid(
                 web3,
                 account,
                 msg,
                 result
               );
-              // console.log(JSON.stringify(myKeyValid));
 
               if (myKeyValid.result) {
                 resolve({ sig: result });
@@ -169,9 +165,9 @@ export async function personalSign(web3, account, pwd, msg, walletType) {
   });
 }
 
-export async function ecRecover(web3, account, msg, sig) {
+export async function ecRecover(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
-    web3.eth.personal.ecRecover(msg, sig, function (err, address) {
+    web3.eth.personal.ecRecover(msg, sig, function (err: any, address: string) {
       if (!err)
         resolve({
           result: address.toLowerCase() === account.toLowerCase(),
@@ -184,7 +180,7 @@ export async function ecRecover(web3, account, msg, sig) {
   });
 }
 
-export async function contractWalletValidate(web3, account, msg, sig) {
+export async function contractWalletValidate(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const hash = hashPersonalMessage(toBuffer(msg));
     const data = ABI.Contracts.ContractWallet.encodeInputs(
@@ -200,7 +196,7 @@ export async function contractWalletValidate(web3, account, msg, sig) {
         to: account, // contract addr
         data: data,
       },
-      function (err, result) {
+      function (err: any, result: any) {
         if (!err) {
           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
             'isValidSignature(bytes,bytes)',
@@ -215,7 +211,7 @@ export async function contractWalletValidate(web3, account, msg, sig) {
   });
 }
 
-export async function contractWalletValidate2(web3, account, msg, sig) {
+export async function contractWalletValidate2(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const hash = hashPersonalMessage(toBuffer(msg));
     const data = ABI.Contracts.ContractWallet.encodeInputs(
@@ -231,7 +227,7 @@ export async function contractWalletValidate2(web3, account, msg, sig) {
         to: account, // contract addr
         data: data,
       },
-      function (err, result) {
+      function (err: any, result: any) {
         console.log(result);
         if (!err) {
           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
@@ -247,7 +243,7 @@ export async function contractWalletValidate2(web3, account, msg, sig) {
   });
 }
 
-export async function mykeyWalletValid(web3, account, msg, sig) {
+export async function mykeyWalletValid(web3: any, account: string, msg: string, sig: any) {
   const myKeyContract = '0xADc92d1fD878580579716d944eF3460E241604b7';
   return new Promise((resolve) => {
     web3.eth.call(
@@ -258,7 +254,7 @@ export async function mykeyWalletValid(web3, account, msg, sig) {
           _index: 3,
         }),
       },
-      function (err, res) {
+      function (err: any, res: any) {
         if (!err) {
           const signature = fromRpcSig(sig);
           const hash = hashPersonalMessage(keccak256(toBuffer(msg)));
@@ -281,7 +277,7 @@ export async function mykeyWalletValid(web3, account, msg, sig) {
 
 // Authereum account contract hashes the data in the validation function,
 // so we must send the data plain text.
-export async function authereumValid(web3, account, msg, sig) {
+export async function authereumValid(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const hash = toBuffer(msg);
     const data = ABI.Contracts.ContractWallet.encodeInputs(
@@ -297,7 +293,7 @@ export async function authereumValid(web3, account, msg, sig) {
         to: account, // contract addr
         data: data,
       },
-      function (err, result) {
+      function (err: any, result: any) {
         if (!err) {
           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
             'isValidSignature(bytes,bytes)',
@@ -312,7 +308,7 @@ export async function authereumValid(web3, account, msg, sig) {
   });
 }
 
-export async function walletLinkValid(web3, account, msg, sig) {
+export async function walletLinkValid(account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const signature = fromRpcSig(sig);
     const hash = hashPersonalMessage(toBuffer(msg));
@@ -332,10 +328,10 @@ export async function walletLinkValid(web3, account, msg, sig) {
  * @param rawTx
  * @returns {Promise.<*>}
  */
-export async function signEthereumTx(web3, account, rawTx) {
+export async function signEthereumTx(web3: any, account: string, rawTx: any) {
   const ethTx = new Transaction(rawTx);
   const hash = toHex(ethTx.hash(false));
-  const response = await sign(web3, account, hash);
+  const response: any = await sign(web3, account, '', hash);
   if (!response['error']) {
     const signature = response['result'];
     signature.v += ethTx.getChainId() * 2 + 8;
@@ -352,11 +348,11 @@ export async function signEthereumTx(web3, account, rawTx) {
  * @param tx
  * @returns {*}
  */
-export async function sendTransaction(web3, tx) {
+export async function sendTransaction(web3: any, tx: any) {
   delete tx.gasPrice;
   // delete tx.gas;
-  const response = await new Promise((resolve) => {
-    web3.eth.sendTransaction(tx, function (err, transactionHash) {
+  const response: any = await new Promise((resolve) => {
+    web3.eth.sendTransaction(tx, function (err: any, transactionHash: string) {
       if (!err) {
         resolve({ result: transactionHash });
       } else {
@@ -372,7 +368,7 @@ export async function sendTransaction(web3, tx) {
   }
 }
 
-export async function isContract(web3, address) {
+export async function isContract(web3: any, address: string) {
   const code = await web3.eth.getCode(address);
   return code && code.length > 2;
 }
