@@ -14,6 +14,12 @@ export enum SigPatchField {
     EddsaSignature = 'eddsaSignature',
 }
 
+export enum MarketStatus {
+    AMM = 1,
+    ORDER_BOOK = 2,
+    ALL = 3,
+}
+
 export enum TradeChannel {
     ORDER_BOOK = 'ORDER_BOOK', // 0
     AMM_POOL = 'AMM_POOL', // 1
@@ -339,6 +345,8 @@ export interface MarketInfo {
     orderbookAggLevels: number,
     precisionForPrice: number,
     quoteTokenId: number,
+    status?: MarketStatus,
+    createdAt?: number,
 }
 
 export interface MarketsResponse {

@@ -25,6 +25,7 @@ import {
     DepthData, 
     Candlestick,
     TokenRelatedInfo,
+    MarketStatus,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -132,17 +133,26 @@ export class ExchangeAPI extends BaseAPI {
         } = {}
 
         var pairs: LoopringMap<TokenRelatedInfo> = {}
+
+        const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS
             
         raw_data.markets.forEach((item: any, index: number, array: any)=>{
-            markets[item.market] = {
-                'baseTokenId': item.baseTokenId, 
-                'enabled': item.enabled, 
-                'market': item.market, 
-                'orderbookAggLevels': item.orderbookAggLevels, 
-                'precisionForPrice': item.precisionForPrice, 
-                'quoteTokenId': item.quoteTokenId, 
+            const marketInfo: MarketInfo = {
+                baseTokenId: item.baseTokenId, 
+                enabled: item.enabled, 
+                market: item.market, 
+                orderbookAggLevels: item.orderbookAggLevels, 
+                precisionForPrice: item.precisionForPrice, 
+                quoteTokenId: item.quoteTokenId, 
             }
 
+            if (isMix) {
+                marketInfo.status = item.status as MarketStatus
+                marketInfo.createdAt = parseInt(item.createdAt)
+            }
+
+            markets[item.market] = marketInfo
+            
             if (item.enabled) {
 
                 const market: string = item.market
