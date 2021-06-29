@@ -111,6 +111,7 @@ describe('AmmpoolAPI test', function () {
             }
             const response = await api.getAmmPoolTxs(request)
             console.log(response)
+            console.log(response.raw_data.data.bills)
         } catch (reason) {
             dumpError400(reason)
         }

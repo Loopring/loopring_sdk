@@ -486,7 +486,7 @@ export class ExchangeAPI extends BaseAPI {
                 change,
             }
             
-            tickMap[item[0]] = tick
+            tickMap[symbol] = tick
             tickList.push(tick)
         })
 
