@@ -12,6 +12,7 @@ import {
     VALID_UNTIL,
     AmmPoolRequestPatch,
     DEFAULT_TIMEOUT,
+    GetAmmPoolTxsRequest,
 } from '../defs/loopring_defs'
 
 import { loopring_exported_account as acc } from './utils'
@@ -101,6 +102,18 @@ describe('AmmpoolAPI test', function () {
         const response = await api.getAmmPoolTrades(request)
         console.log(response)
         console.log(response.raw_data.trades[0])
+    }, DEFAULT_TIMEOUT)
+
+    it('getAmmPoolTxs', async () => {
+        try {
+            const request: GetAmmPoolTxsRequest = {
+                poolAddress,
+            }
+            const response = await api.getAmmPoolTxs(request)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, DEFAULT_TIMEOUT)
 
     it('getUserAmmPoolTxs', async () => {

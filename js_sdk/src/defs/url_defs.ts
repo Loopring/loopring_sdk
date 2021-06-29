@@ -40,6 +40,7 @@ export enum LOOPRING_URLs {
     GET_AMM_POOL_STATS = '/api/v2/amm/poolsStats',
     POST_JOIN_AMM_POOL = '/api/v3/amm/join',
     POST_EXIT_AMM_POOL = '/api/v3/amm/exit',
+    GET_AMM_POOL_TXS = '/api/v3/amm/transactions',
     GET_USER_AMM_POOL_TXS = '/api/v3/amm/user/transactions',
     GET_AMM_POOL_TRADE_TXS = '/api/v3/amm/trades',
     GET_AMM_ACTIVITY_RULES = 'api/v3/sidecar/activityRules',

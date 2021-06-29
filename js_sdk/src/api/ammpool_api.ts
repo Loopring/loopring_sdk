@@ -25,6 +25,8 @@ import {
     AmmPoolInfoV3,
     AmmPoolTrade,
     AmmPoolTx,
+    GetAmmPoolTxsRequest,
+    UserAmmPoolTx,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -293,8 +295,29 @@ export class AmmpoolAPI extends BaseAPI {
 
         return {
             totalNum: raw_data.totalNum,
-            userAmmPoolTxs: raw_data.transactions as AmmPoolTx[],
+            userAmmPoolTxs: raw_data.transactions as UserAmmPoolTx[],
             raw_data,
+        }
+
+    }
+
+    /*
+    */
+    public async getAmmPoolTxs(request: GetAmmPoolTxsRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_AMM_POOL_TXS,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data.data.totalNum,
+            bills: raw_data.data.bills as AmmPoolTx[],
+            raw_data
         }
 
     }

@@ -89,14 +89,23 @@ export enum TransferType {
     transfer_red = 'transfer_red',
 }
 
+export enum BillType {
+    ORDER = 'order',
+    DEPOSIT = 'deposit',
+    ONCHAIN_WITHDRAWAL = 'onchain_withdrawal',
+    OFFCHAIN_WITHDRAWAL = 'offchain_withdrawal',
+    TRANSFER = 'transfer',
+    TRANSFER_RED = 'transfer_red',
+}
+
 export enum FilledType {
     dex = 'dex',
     amm = 'amm',
 }
 
 export enum TxTypes {
-    JOIN = 'join',
-    EXIT = 'exit',
+    JOIN = 'AMM_JOIN',
+    EXIT = 'AMM_EXIT',
 }
 
 export enum SIG_FLAG {
@@ -487,6 +496,38 @@ export interface AmmPoolTrade {
     createdAt: number
 }
 
+export interface GetAmmPoolTxsRequest {
+    poolAddress: string
+    billType?: BillType
+    start?: number
+    end?: number
+    limit?: number
+    offset?: number
+    tokenId?: number
+    income?: boolean
+    transferAddress?: string
+    fromAddress?: string
+}
+
+export interface AmmPoolTx {
+    id: number
+    from: string
+    to: string
+    token: string
+    amount: string
+    tokenF: string
+    amountF: string
+    status: TxStatus
+    txHash: string
+    billType: BillType
+    income: boolean
+    timestamp: number
+    memo: string
+    price: string
+    transferType: TransferType
+    label: string
+}
+
 export interface GetUserAmmPoolTxsRequest {
     accountId: number
     start?: number
@@ -505,9 +546,9 @@ export interface PooledToken {
     feeAmount: string
 }
 
-export interface AmmPoolTx {
+export interface UserAmmPoolTx {
     hash: string
-    txType: string
+    txType: TxTypes
     txStatus: TxStatus
     ammPoolAddress: string
     ammLayerType: string

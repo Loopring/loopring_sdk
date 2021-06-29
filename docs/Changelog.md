@@ -2,6 +2,8 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.15
+    1) add getAmmPoolTxs api.
 
 ### v0.0.13
     1) change metamask.js to typescript.
