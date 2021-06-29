@@ -453,10 +453,12 @@ export class ExchangeAPI extends BaseAPI {
             const open = parseFloat(item[4])
             const close = parseFloat(item[7])
 
+            const symbol = item[0].replace('COMBINE-', '')
+
             const {
                 base,
                 quote,
-            } = getBaseQuote(item[0])
+            } = getBaseQuote(symbol)
 
             let change = 0
             if (!isNaN(open) && !isNaN(close)) {
@@ -466,7 +468,7 @@ export class ExchangeAPI extends BaseAPI {
             const timestamp = parseInt(item[1])
 
             const tick: TickerData = {
-                symbol: item[0],
+                symbol,
                 base,
                 quote,
                 timestamp,

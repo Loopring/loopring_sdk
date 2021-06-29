@@ -175,6 +175,15 @@ describe('ExchangeAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getMixTicker', async () => {
+        api = new ExchangeAPI(ChainId.MAINNET)
+        const request: GetTickerRequest = {
+            market: 'LRC-ETH',
+        }
+        const response = await api.getMixTicker(request)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
     it('getTicker', async () => {
         api = new ExchangeAPI(ChainId.MAINNET)
         const request: GetTickerRequest = {

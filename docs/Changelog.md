@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.16
+    1) modify get getMixMarkets.
+
 ### v0.0.15
     1) add getAmmPoolTxs api.
 
