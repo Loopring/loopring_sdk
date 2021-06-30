@@ -26,6 +26,7 @@ import {
     Candlestick,
     TokenRelatedInfo,
     MarketStatus,
+    ABInfo,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -63,32 +64,39 @@ function getFeeMap(feeArr: any[], type: number = 0) {
 
 function genAB(data: any[], isReverse: boolean = false) {
 
-    var ab_arr: any[] = []
-    var amtTotal = 0
+    var ab_arr: ABInfo[] = []
+    let amtTotal: BigNumber = new BigNumber(0)
+    let volTotal: BigNumber = new BigNumber(0)
 
-    var ab_prices : any[] = []
-    var ab_amtTotals :any [] = []
+    var ab_prices : number[] = []
+    var ab_amtTotals :string[] = []
+    var ab_volTotals :string[] = []
     
-    data.forEach((item: any, ind: number, arr: any) => {
+    data.forEach((item: any) => {
         const price = parseFloat(item[0])
-        const amt = new BigNumber(item[1]).dividedBy(1e+18).toNumber()
-        amtTotal += amt
+        const amt = new BigNumber(item[1])
+        const vol = new BigNumber(item[2])
+        amtTotal = amtTotal.plus(amt)
+        volTotal = volTotal.plus(vol)
         ab_arr.push({
             price: price,
             amt: amt,
-            amtTotal: amtTotal,
+            amtTotal: amtTotal.toString(),
+            volTotal: volTotal.toString(),
         })
         ab_prices.push(price)
-        ab_amtTotals.push(amtTotal)
+        ab_amtTotals.push(amtTotal.toString())
+        ab_volTotals.push(volTotal.toString())
     })
 
     if (isReverse) {
         ab_arr.reverse()
         ab_prices.reverse()
         ab_amtTotals.reverse()
+        ab_volTotals.reverse()
     }
 
-    return { ab_arr, ab_prices, ab_amtTotals }
+    return { ab_arr, ab_prices, ab_amtTotals, ab_volTotals, }
 
 }
 
@@ -415,9 +423,11 @@ export class ExchangeAPI extends BaseAPI {
             bids: bids.ab_arr,
             bids_prices: bids.ab_prices,
             bids_amtTotals: bids.ab_amtTotals,
+            bids_volTotals: bids.ab_volTotals,
             asks: asks.ab_arr,
             asks_prices: asks.ab_prices,
             asks_amtTotals: asks.ab_amtTotals,
+            asks_volTotals: asks.ab_volTotals,
         }
 
         return {

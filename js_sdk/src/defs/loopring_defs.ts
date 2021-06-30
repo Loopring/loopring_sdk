@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js"
 import { ChainId } from "./web3_defs"
 
 export const VALID_UNTIL = 1700000000
@@ -187,19 +188,24 @@ export interface TickerData {
 
 export interface ABInfo {
     price: number
-    amt: number
-    amtTotal: number
+    amt: BigNumber
+    amtTotal: string
+    volTotal: string
 }
 
 export interface DepthData {
     version: number
     timestamp: number
-    bids: ABInfo[][]
-    bids_prices: any[]
-    bids_amtTotals: any[]
-    asks: ABInfo[][]
-    asks_prices: any[]
-    asks_amtTotals: any[]
+
+    bids: ABInfo[]
+    bids_prices: number[]
+    bids_amtTotals: string[]
+    bids_volTotals: string[]
+
+    asks: ABInfo[]
+    asks_prices: number[]
+    asks_amtTotals: string[]
+    asks_volTotals: string[]
 }
 
 export interface Candlestick {
