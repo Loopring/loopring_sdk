@@ -422,6 +422,7 @@ export interface GameRankInfo {
 
 export interface GetAmmUserRewardsRequest {
     owner: number // accountId
+    ammPoolMarkets?: string // pool-name list
 }
 
 export interface AmmUserReward {

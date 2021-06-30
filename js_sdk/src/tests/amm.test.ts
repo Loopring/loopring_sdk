@@ -37,8 +37,16 @@ describe('AmmpoolAPI test', function () {
         console.log(pairs)
     }, DEFAULT_TIMEOUT)
 
-    it('getAmmPoolUserRewards', async () => {
+    it('getAmmPoolUserRewards1', async () => {
         const response = await api.getAmmPoolUserRewards({ owner: acc.accountId })
+        console.log('getAmmPoolUserRewards:', response)
+        console.log('getAmmPoolUserRewards feeRewards:', response.raw_data[0].feeRewards)
+        console.log('getAmmPoolUserRewards extraRewards:', response.raw_data[0].extraRewards)
+        console.log('getAmmPoolUserRewards currentRewards:', response.raw_data[0].currentRewards)
+    }, DEFAULT_TIMEOUT)
+
+    it('getAmmPoolUserRewards2', async () => {
+        const response = await api.getAmmPoolUserRewards({ owner: acc.accountId, ammPoolMarkets: 'AMM-LRC-ETH' })
         console.log('getAmmPoolUserRewards:', response)
         console.log('getAmmPoolUserRewards feeRewards:', response.raw_data[0].feeRewards)
         console.log('getAmmPoolUserRewards extraRewards:', response.raw_data[0].extraRewards)

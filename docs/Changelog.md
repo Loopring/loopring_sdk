@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.20
+    1) modify getAmmPoolUserRewards. add ammPoolMarkets support.
+
 ### v0.0.19
     1) modify getDepth. add amt/vol Total stat support.
 
