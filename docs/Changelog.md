@@ -2,8 +2,13 @@
 
 ### JS SDK Version ChangeLog
 
+
+### v0.0.19
+    1) modify getDepth. add amt/vol Total stat support.
+
 ### v0.0.18
     1) modify getAmmPoolActivityRules. add support for grouping by ruleType and status.
+    2) modify getDepth. update response format.
 
 ### v0.0.16
     1) modify getMixMarkets.

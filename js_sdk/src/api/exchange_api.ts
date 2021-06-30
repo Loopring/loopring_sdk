@@ -96,7 +96,7 @@ function genAB(data: any[], isReverse: boolean = false) {
         ab_volTotals.reverse()
     }
 
-    return { ab_arr, ab_prices, ab_amtTotals, ab_volTotals, }
+    return { ab_arr, ab_prices, amtTotal, volTotal, ab_amtTotals, ab_volTotals, }
 
 }
 
@@ -424,10 +424,14 @@ export class ExchangeAPI extends BaseAPI {
             bids_prices: bids.ab_prices,
             bids_amtTotals: bids.ab_amtTotals,
             bids_volTotals: bids.ab_volTotals,
+            bids_amtTotal: bids.amtTotal.toString(),
+            bids_volTotal: bids.volTotal.toString(),
             asks: asks.ab_arr,
             asks_prices: asks.ab_prices,
             asks_amtTotals: asks.ab_amtTotals,
             asks_volTotals: asks.ab_volTotals,
+            asks_amtTotal: asks.amtTotal.toString(),
+            asks_volTotal: asks.volTotal.toString(),
         }
 
         return {

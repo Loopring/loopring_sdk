@@ -201,11 +201,15 @@ export interface DepthData {
     bids_prices: number[]
     bids_amtTotals: string[]
     bids_volTotals: string[]
+    bids_amtTotal: string
+    bids_volTotal: string
 
     asks: ABInfo[]
     asks_prices: number[]
     asks_amtTotals: string[]
     asks_volTotals: string[]
+    asks_amtTotal: string
+    asks_volTotal: string
 }
 
 export interface Candlestick {
