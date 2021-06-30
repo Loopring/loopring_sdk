@@ -27,6 +27,7 @@ import {
     AmmPoolTx,
     GetAmmPoolTxsRequest,
     UserAmmPoolTx,
+    AmmPoolActivityStatus,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -182,12 +183,66 @@ export class AmmpoolAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         let activityRules: LoopringMap<AmmPoolActivityRule> = {}
+
+        let groupByRuleType: LoopringMap<AmmPoolActivityRule[]> = {}
+
+        let groupByRuleTypeAndStatus: LoopringMap<LoopringMap<AmmPoolActivityRule[]>> = {}
+
+        let groupByActivityStatus: LoopringMap<AmmPoolActivityRule[]> = {}
+
+        const currentTs = new Date().getTime()
+
         raw_data.data.forEach((item: AmmPoolActivityRule) => {
+
+            const status = currentTs < item.rangeFrom ? AmmPoolActivityStatus.NotStarted 
+                : (currentTs >= item.rangeFrom && currentTs <= item.rangeTo) ? AmmPoolActivityStatus.InProgress 
+                : AmmPoolActivityStatus.EndOfGame
+            
+            item.status = status
+
             activityRules[item.market] = item
+
+            if (item.ruleType in groupByRuleType) {
+                const ruleList = groupByRuleType[item.ruleType]
+                ruleList.push(item)
+                groupByRuleType[item.ruleType] = ruleList
+            } else {
+                groupByRuleType[item.ruleType] = [item]
+            }
+
+            if (status in groupByActivityStatus) {
+                const ruleList = groupByActivityStatus[status]
+                ruleList.push(item)
+                groupByActivityStatus[status] = ruleList
+            } else {
+                groupByActivityStatus[status] = [item]
+            }
+
+            let ruleMap: LoopringMap<AmmPoolActivityRule[]> = {}
+
+            if (item.ruleType in groupByRuleTypeAndStatus) {
+                ruleMap = groupByRuleTypeAndStatus[item.ruleType]
+            } else {
+                ruleMap = {}
+            }
+
+            if (status in ruleMap) {
+                const ruleList = ruleMap[status]
+                ruleList.push(item)
+                ruleMap[status] = ruleList
+            } else {
+                ruleMap[status] = [item]
+            }
+
+            groupByRuleTypeAndStatus[item.ruleType] = ruleMap
+
         })
 
         return {
             activityRules,
+            groupByRuleType,
+            groupByActivityStatus,
+            groupByRuleTypeAndStatus,
             raw_data,
         }
 

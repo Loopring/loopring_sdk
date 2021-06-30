@@ -2,8 +2,11 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.18
+    1) modify getAmmPoolActivityRules. add support for grouping by ruleType and status.
+
 ### v0.0.16
-    1) modify get getMixMarkets.
+    1) modify getMixMarkets.
 
 ### v0.0.15
     1) add getAmmPoolTxs api.

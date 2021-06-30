@@ -267,6 +267,12 @@ export interface AmmPoolStat {
     rewards: any[]
 }
 
+export enum AmmPoolActivityStatus {
+    NotStarted = 'NotStarted',
+    InProgress = 'InProgress',
+    EndOfGame = 'EndOfGame',
+}
+
 export interface AmmPoolActivityRule {
     market: string
     ruleType: string
@@ -275,6 +281,8 @@ export interface AmmPoolActivityRule {
     awardRules: TokenVolumeV3[]
     maxSpread: number
     topK: number
+
+    status: AmmPoolActivityStatus
 }
 
 export interface AmmTrade {
