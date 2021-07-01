@@ -2,6 +2,8 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.21
+    1) add ruleType def to getAmmPoolActivityRules
 
 ### v0.0.20
     1) modify getAmmPoolUserRewards. add ammPoolMarkets support.

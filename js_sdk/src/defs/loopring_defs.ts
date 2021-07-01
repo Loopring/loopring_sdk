@@ -271,6 +271,11 @@ export interface AmmPoolStat {
     rewards: any[]
 }
 
+export enum RuleType {
+    AMM_MINING = 'AMM_MINING',
+    SWAP_VOLUME_RANKING = 'SWAP_VOLUME_RANKING',
+}
+
 export enum AmmPoolActivityStatus {
     NotStarted = 'NotStarted',
     InProgress = 'InProgress',
@@ -279,7 +284,7 @@ export enum AmmPoolActivityStatus {
 
 export interface AmmPoolActivityRule {
     market: string
-    ruleType: string
+    ruleType: RuleType
     rangeFrom: number
     rangeTo: number
     awardRules: TokenVolumeV3[]
