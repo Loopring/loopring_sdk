@@ -67,7 +67,6 @@ export class AmmpoolAPI extends BaseAPI {
             base = market.substring(ind + 1, ind2)
             quote = market.substring(ind2 + 1, market.length)
 
-
             if (!pairs[base]) {
                 pairs[base] = {
                     tokenId: item.tokens.pooled[0],
@@ -111,9 +110,11 @@ export class AmmpoolAPI extends BaseAPI {
 
         let ammUserRewardMap : AmmUserRewardMap = {}
 
-        raw_data.forEach((item: AmmUserReward) => {
-            ammUserRewardMap[item.market] = item
-        })
+        if (raw_data) {
+            raw_data.forEach((item: AmmUserReward) => {
+                ammUserRewardMap[item.market] = item
+            })
+        }
 
         return {
             ammUserRewardMap,

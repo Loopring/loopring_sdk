@@ -232,6 +232,20 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getUserBalances0', async () => {
+        try {
+            const request: GetUserBalancesRequest = {
+                accountId: acc.accountId,
+                tokens: '',
+            }
+
+            const response = await api.getUserBalances(request, acc.apiKey)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getUserBalances1', async () => {
         try {
             const request: GetUserBalancesRequest = {
