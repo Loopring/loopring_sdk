@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.24
+    1) update getAmmPoolGameUserRank response
+
 ### v0.0.23
     1) add isLpToken to TokenInfo struct
 

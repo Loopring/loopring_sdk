@@ -163,10 +163,10 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const userRankList: GameRankInfo[] = raw_data.data?.userRankList ? raw_data.data.userRankList : []
+        const userRank: GameRankInfo = raw_data.data
 
         return {
-            userRankList,
+            userRank,
             raw_data,
         }
 
