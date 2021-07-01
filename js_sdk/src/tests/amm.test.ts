@@ -58,10 +58,12 @@ describe('AmmpoolAPI test', function () {
         const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-VSP-ETH' })
         console.log('getAmmPoolGameRank:', response.raw_data)
         console.log('totalRewards:', response.totalRewards)
+        console.log('userRankList 1:', response.userRankList[0])
         console.log('userRankList:', response.userRankList[0].rewards)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolGameUserRank', async () => {
+        api = new AmmpoolAPI(ChainId.MAINNET)
         const response: any = await api.getAmmPoolGameUserRank({ owner: acc.address, 
             ammPoolMarket: 'AMM-VSP-ETH' }, acc.apiKey)
         console.log('getAmmPoolGameUserRank:', response.raw_data)

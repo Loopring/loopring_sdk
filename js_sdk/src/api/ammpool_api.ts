@@ -28,6 +28,7 @@ import {
     GetAmmPoolTxsRequest,
     UserAmmPoolTx,
     AmmPoolActivityStatus,
+    SortOrder,
 } from '../defs/loopring_defs'
 
 import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
@@ -169,6 +170,16 @@ export class AmmpoolAPI extends BaseAPI {
             raw_data,
         }
 
+    }
+
+    private getOrderList(lst: AmmPoolActivityRule[], order: SortOrder) {
+        return lst.sort((a: AmmPoolActivityRule, b: AmmPoolActivityRule) => {
+            if (order === SortOrder.ASC) {
+                return a.rangeFrom < b.rangeFrom ? 1 : 0
+            }
+
+            return a.rangeFrom > b.rangeFrom ? 1 : 0
+        })
     }
 
     /*

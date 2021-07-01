@@ -271,9 +271,15 @@ export interface AmmPoolStat {
     rewards: any[]
 }
 
+export enum SortOrder {
+    ASC = 0,
+    DESC = 1,
+}
+
 export enum RuleType {
     AMM_MINING = 'AMM_MINING',
     SWAP_VOLUME_RANKING = 'SWAP_VOLUME_RANKING',
+    ORDERBOOK_MINING = 'ORDERBOOK_MINING',
 }
 
 export enum AmmPoolActivityStatus {
@@ -421,7 +427,7 @@ export interface AmmPoolExitTokens {
 export interface GameRankInfo {
     address: string
     volume: string
-    rank: number,
+    rank: number
     rewards: TokenVolumeV3[]
 }
 
