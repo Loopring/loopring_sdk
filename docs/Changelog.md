@@ -2,6 +2,12 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.23
+    1) add isLpToken to TokenInfo struct
+
+### v0.0.22
+    1) fix GetDepthRequest param format issue
+
 ### v0.0.21
     1) add ruleType def to getAmmPoolActivityRules
 

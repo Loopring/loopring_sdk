@@ -243,19 +243,21 @@ export interface TokenInfo {
     symbol: string
     name: string
     address: string
-    decimals: number,
-    precision: number,
+    decimals: number
+    precision: number
     orderAmounts: {
         minimum: string
         maximum: string
         dust: string
-    },
-    fastWithdrawLimit: string,
+    }
+    fastWithdrawLimit: string
     gasAmounts: {
-        distribution: string,
+        distribution: string
         deposit: string
-    },
+    }
     enabled: boolean
+
+    isLpToken: boolean
 }
 
 export interface AmmPoolStat {
@@ -624,7 +626,7 @@ export interface GetAllowancesRequest {
 }
 
 export interface GetDepthRequest {
-    market: string[]
+    market: string
     level?: number
     limit?: number
 }

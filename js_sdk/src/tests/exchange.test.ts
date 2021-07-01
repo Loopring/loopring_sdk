@@ -149,7 +149,7 @@ describe('ExchangeAPI test', function () {
         api = new ExchangeAPI(ChainId.MAINNET)
 
         const request: GetDepthRequest = {
-            market: ['LRC-ETH']
+            market: 'LRC-ETH'
         }
 
         const response = await api.getDepth(request)
@@ -157,12 +157,25 @@ describe('ExchangeAPI test', function () {
         
     }, DEFAULT_TIMEOUT)
 
-    it('getMixDepth', async () => {
+    it('getMixDepth2', async () => {
 
         api = new ExchangeAPI(ChainId.MAINNET)
 
         const request: GetDepthRequest = {
-            market: ['LRC-ETH']
+            market: 'LRC-ETH,LRC-USDT'
+        }
+
+        const response = await api.getMixDepth(request)
+        console.log(response)
+        
+    }, DEFAULT_TIMEOUT)
+
+    it('getMixDepth1', async () => {
+
+        api = new ExchangeAPI(ChainId.MAINNET)
+
+        const request: GetDepthRequest = {
+            market: 'LRC-ETH'
         }
 
         const response = await api.getMixDepth(request)

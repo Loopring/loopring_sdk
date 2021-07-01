@@ -230,7 +230,12 @@ export class ExchangeAPI extends BaseAPI {
         let tokenIdMap: LoopringMap<TokenInfo> = {}
         let tokenAddressMap: LoopringMap<TokenInfo> = {}
 
-        raw_data.forEach((item: any) => {
+        raw_data.forEach((item: TokenInfo) => {
+            if (item.symbol.startsWith('LP-')) {
+                item.isLpToken = true
+            } else {
+                item.isLpToken = false
+            }
             tokenSymbolMap[item.symbol] = item
             tokenIdMap[item.tokenId] = item
             tokenAddressMap[item.address] = item
