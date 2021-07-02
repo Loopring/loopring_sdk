@@ -9,11 +9,13 @@ import {
     GetUserAmmPoolTxsRequest,
     JoinAmmPoolRequest,
     ExitAmmPoolRequest,
-    VALID_UNTIL,
     AmmPoolRequestPatch,
-    DEFAULT_TIMEOUT,
     GetAmmPoolTxsRequest,
 } from '../defs/loopring_defs'
+
+import { 
+    DEFAULT_TIMEOUT,
+} from '../defs/loopring_constants'
 
 import { loopring_exported_account as acc } from './utils'
 import { dumpError400 } from '../utils/network_tools'
@@ -88,8 +90,9 @@ describe('AmmpoolAPI test', function () {
     it('getAmmPoolStats', async () => {
         api = new AmmpoolAPI(ChainId.MAINNET)
         
-        const response: any = await api.getAmmPoolStats()
+        const response = await api.getAmmPoolStats()
         console.log('ammPoolStats:', response.ammPoolStats)
+        console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH'].rewards)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot', async () => {

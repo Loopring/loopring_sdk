@@ -6,7 +6,6 @@ import {
     GetUserAmmPoolTxsRequest,
     JoinAmmPoolRequest,
     ExitAmmPoolRequest,
-    VALID_UNTIL,
     AmmPoolRequestPatch,
     AmmPoolBalance,
     AmmPoolStat,
@@ -27,11 +26,16 @@ import {
     AmmPoolTx,
     GetAmmPoolTxsRequest,
     UserAmmPoolTx,
-    AmmPoolActivityStatus,
-    SortOrder,
+    ReqParams,
 } from '../defs/loopring_defs'
 
-import { ReqParams, SIG_FLAG, ReqMethod, } from '../defs/loopring_defs'
+import { VALID_UNTIL, } from '../defs/loopring_constants'
+
+import {
+    SIG_FLAG, ReqMethod, 
+    AmmPoolActivityStatus,
+    SortOrder,
+} from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 

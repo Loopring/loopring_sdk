@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.29
+    1) refine code arch. seperate enums and constants.
+
 ### v0.0.28
     1) fix TransferTxType def issue.
     2) fix AmmTxType def issue.

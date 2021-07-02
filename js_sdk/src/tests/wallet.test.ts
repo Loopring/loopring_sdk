@@ -1,10 +1,13 @@
 import { ChainId, } from '../defs/web3_defs'
 
 import { 
-    DEFAULT_TIMEOUT,
     GetTokenPricesRequest, 
     GetUserAssetsRequest, 
 } from '../defs/loopring_defs'
+
+import {
+    DEFAULT_TIMEOUT,
+} from '../defs/loopring_constants'
 
 import { dumpError400 } from '../utils/network_tools'
 

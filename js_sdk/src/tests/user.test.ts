@@ -2,12 +2,11 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest, GetUserAssetsRequest, OrderType, SubmitOrderRequestV3 } from '../defs/loopring_defs'
-
 import { loopring_exported_account as acc, web3, local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
+    GetAccountRequest, GetOrdersRequest, GetUserAssetsRequest, SubmitOrderRequestV3,
     GetMinimumTokenAmtRequest,
     UpdateAccountRequestV3,
     UpdateUserApiKeyRequest,
@@ -20,14 +19,23 @@ import {
     GetUserApiKeyRequest,
     GetOrderDetailsRequest,
     GetUserTradesRequest,
-    OffchainFeeReqType,
     OffChainWithdrawalRequestV3,
-    VALID_UNTIL,
     GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
-    FilledType,
     GetUserTransferListRequest,
 } from '../defs/loopring_defs'
+
+import { 
+    OffchainFeeReqType,
+    OrderType,
+    TradingInterval,
+    FilledType,
+} from '../defs/loopring_enums'
+
+import { 
+    VALID_UNTIL,
+    DEFAULT_TIMEOUT,
+} from '../defs/loopring_constants'
 
 import * as sign_tools from '../api/sign/sign_tools'
 import { getTokenInfoBySymbol } from '../utils'

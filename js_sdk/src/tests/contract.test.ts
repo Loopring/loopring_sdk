@@ -1,7 +1,9 @@
 import { ChainId } from '../defs/web3_defs'
 import * as contract from '../api/contract_api'
 
-import { DEFAULT_TIMEOUT } from '../defs/loopring_defs'
+import { 
+    DEFAULT_TIMEOUT,
+} from '../defs/loopring_constants'
 
 import { loopring_exported_account as acc, web3 } from './utils'
 
@@ -9,7 +11,6 @@ import { ExchangeAPI } from '../api/exchange_api'
 
 // start ganache-cli before
 // ganache-cli --debug --chainId=5 --account="0xadc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf,1000e+18" --secure --unlock "0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8"
-
 
 //const url = 'http://127.0.0.1:8545'
 
@@ -36,7 +37,8 @@ const lrc = {
         "distribution": "1230000",
         "deposit": "200000"
     },
-    "enabled": true
+    "enabled": true,
+    isLpToken: false,
 }
 
 const eth = {
@@ -57,7 +59,8 @@ const eth = {
         "distribution": "30000",
         "deposit": "100000"
     },
-    "enabled": true
+    "enabled": true,
+    isLpToken: false,
 }
 
 const gasPrice = 21

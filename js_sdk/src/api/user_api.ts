@@ -1,6 +1,8 @@
 import { BaseAPI } from './base_api'
 
-import { ReqParams, SIG_FLAG, ReqMethod, SigPatchField, } from '../defs/loopring_defs'
+import { ReqParams, } from '../defs/loopring_defs'
+
+import { SIG_FLAG, ReqMethod, SigPatchField, } from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 

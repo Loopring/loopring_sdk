@@ -1,5 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { DEFAULT_TIMEOUT, ReqParams, SIG_FLAG, ReqOptions, } from '../defs/loopring_defs'
+import { ReqParams, ReqOptions, } from '../defs/loopring_defs'
+
+import { SIG_FLAG, } from '../defs/loopring_enums'
+
+import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 
 import { getEdDSASig, getEdDSASigWithPoseidon, getEcDSASig, GetEcDSASigType, } from './sign/sign_tools'
 

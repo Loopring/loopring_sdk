@@ -1,6 +1,6 @@
 import { ChainId } from '../defs/web3_defs'
 import { Request, } from './request'
-import { DEFAULT_TIMEOUT, } from '../defs/loopring_defs'
+import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 
 const getBaseUrlByChainId = (id: ChainId) => {
     let baseUrl = ''

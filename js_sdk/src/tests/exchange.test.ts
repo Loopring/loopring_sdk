@@ -1,14 +1,22 @@
 import { dumpError400 } from '../utils/network_tools'
-import { TradingInterval,
+import {
     GetAccountRequest,
     GetCandlestickRequest,
     GetTokenBalancesRequest,
     GetAllowancesRequest,
     GetTickerRequest,
     GetDepthRequest,
-    DEFAULT_TIMEOUT,
     GetMarketTradesRequest,
 } from '../defs/loopring_defs'
+
+import { 
+    TradingInterval,
+} from '../defs/loopring_enums'
+
+import { 
+    DEFAULT_TIMEOUT,
+} from '../defs/loopring_constants'
+
 import { ChainId } from '../defs/web3_defs'
 import { ExchangeAPI } from '../api/exchange_api'
 
@@ -25,7 +33,7 @@ describe('ExchangeAPI test', function () {
     })
 
     it('getAccount_Found', async () => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI(ChainId.GORLI)
         const request: GetAccountRequest = {
             owner: acc.address
         }

@@ -2,13 +2,17 @@ import { BaseAPI } from './base_api'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
-import {
-    ReqParams, 
+import { 
     SIG_FLAG, 
     ReqMethod, 
+    Side, 
+    MarketStatus, 
+} from '../defs/loopring_enums'
+
+import {
+    ReqParams, 
     TokenInfo, 
     MarketTradeInfo, 
-    Side, 
     FiatPriceInfo, 
     LoopringMap, 
     GetAccountRequest,
@@ -25,7 +29,6 @@ import {
     DepthData, 
     Candlestick,
     TokenRelatedInfo,
-    MarketStatus,
     ABInfo,
 } from '../defs/loopring_defs'
 
