@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.28
+    1) fix TransferTxType def issue.
+    2) fix AmmTxType def issue.
+
 ### v0.0.27
     1) add walletApi support
     2) fix AmmPoolSnapshot struct bug

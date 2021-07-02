@@ -109,7 +109,13 @@ export enum FilledType {
     amm = 'amm',
 }
 
-export enum TxTypes {
+export enum TransferTxType {
+    TRANSFER = 'TRANSFER',
+    DEPOSIT = 'DEPOSIT',
+    WITHDRAW = 'WITHDRAW',
+}
+
+export enum AmmTxType {
     JOIN = 'AMM_JOIN',
     EXIT = 'AMM_EXIT',
 }
@@ -581,7 +587,7 @@ export interface GetUserAmmPoolTxsRequest {
     end?: number
     limit?: number
     offset?: number
-    txTypes?: TxTypes
+    txTypes?: string // combine of AmmTxType
     txStatus?: TxStatus
     ammPoolAddress?: string
 }
@@ -595,7 +601,7 @@ export interface PooledToken {
 
 export interface UserAmmPoolTx {
     hash: string
-    txType: TxTypes
+    txType: AmmTxType
     txStatus: TxStatus
     ammPoolAddress: string
     ammLayerType: string
@@ -952,13 +958,13 @@ export interface GetUserTransferListRequest {
     limit?: number
     tokenSymbol?: string
     offset?: number
-    transferTypes?: string
+    transferTypes?: string // transfer, transfer_red
 }
 
 export interface UserTransferRecord {
     id: number
     hash: string
-    txType: TxTypes
+    txType: TransferTxType
     symbol: string
     amount: string
     senderAddress: string
