@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.25
+    1) add walletApi support
+    2) fix AmmPoolSnapshot struct bug
+
 ### v0.0.24
     1) update getAmmPoolGameUserRank response
 

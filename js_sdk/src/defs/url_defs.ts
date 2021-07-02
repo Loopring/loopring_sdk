@@ -47,8 +47,11 @@ export enum LOOPRING_URLs {
     GET_AMMPOOL_USER_REWARDS = '/api/v2/amm/user/rewards',
     GET_AMMPOOL_GAME_RANK = '/api/v2/game/rank',
     GET_AMMPOOL_GAME_USER_RANK = '/api/v2/game/user/rank',
-    
-    GET_LATEST_TOKEN_PRICES = '/api/wallet/v3/latestTokenPrices',
 
     GET_WS_KEY = '/v3/ws/key',
+    
+    GET_USER_ASSETS = '/api/wallet/v3/userAssets',
+    GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',
+    GET_LATEST_TOKEN_PRICES = '/api/wallet/v3/latestTokenPrices',
+
 }

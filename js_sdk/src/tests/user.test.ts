@@ -2,7 +2,7 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest, OrderType, SubmitOrderRequestV3 } from '../defs/loopring_defs'
+import { DEFAULT_TIMEOUT, GetAccountRequest, GetOrdersRequest, GetUserAssetsRequest, OrderType, SubmitOrderRequestV3 } from '../defs/loopring_defs'
 
 import { loopring_exported_account as acc, web3, local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'

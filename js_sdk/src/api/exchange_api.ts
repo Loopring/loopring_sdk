@@ -597,33 +597,6 @@ export class ExchangeAPI extends BaseAPI {
     }
 
     /*
-    * Fetches, for all the tokens supported by Loopring, their fiat price.
-    * response: { [key: string]: <price> }  key is token address
-    */
-    public async getLatestTokenPrices() {
-
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.GET_LATEST_TOKEN_PRICES,
-            method: ReqMethod.GET,
-            sigFlag: SIG_FLAG.NO_SIG,
-        }
-
-        const raw_data = (await this.makeReq().request(reqParams)).data
-
-        let tokenPrices: LoopringMap<number> = {}
-
-        raw_data.data.forEach((item: any) => {
-            tokenPrices[item.token] = parseFloat(item.price)
-        })
-
-        return {
-            tokenPrices,
-            raw_data,
-        }
-
-    }
-
-    /*
     * Query trades with specified market
     */
     public async getMarketTrades(request: GetMarketTradesRequest) {

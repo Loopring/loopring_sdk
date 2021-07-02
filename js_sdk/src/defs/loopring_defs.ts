@@ -39,6 +39,11 @@ export enum FiatType {
     CNY = 'cny',
 }
 
+export enum Currency {
+    USD = 'usd',
+    CNY = 'cny',
+}
+
 export enum OffchainFeeReqType {
     ORDER,
     OFFCHAIN_WITHDRAWAL,
@@ -109,11 +114,38 @@ export enum TxTypes {
     EXIT = 'AMM_EXIT',
 }
 
+export enum SortOrder {
+    ASC = 0,
+    DESC = 1,
+}
+
+export enum RuleType {
+    AMM_MINING = 'AMM_MINING',
+    SWAP_VOLUME_RANKING = 'SWAP_VOLUME_RANKING',
+    ORDERBOOK_MINING = 'ORDERBOOK_MINING',
+}
+
+export enum AmmPoolActivityStatus {
+    NotStarted = 'NotStarted',
+    InProgress = 'InProgress',
+    EndOfGame = 'EndOfGame',
+}
+
 export enum SIG_FLAG {
     NO_SIG,
     EDDSA_SIG,
     EDDSA_SIG_POSEIDON,
     ECDSA_SIG,
+}
+
+export enum AssetType {
+    LEVEL_ONE = 0,
+    DEX = 1,
+}
+
+export enum IntervalType {
+    HOUR = 0,
+    DAY = 1,
 }
 
 export interface ReqOptions {
@@ -271,23 +303,6 @@ export interface AmmPoolStat {
     apyBips: string,
     isRecommended: boolean,
     rewards: any[]
-}
-
-export enum SortOrder {
-    ASC = 0,
-    DESC = 1,
-}
-
-export enum RuleType {
-    AMM_MINING = 'AMM_MINING',
-    SWAP_VOLUME_RANKING = 'SWAP_VOLUME_RANKING',
-    ORDERBOOK_MINING = 'ORDERBOOK_MINING',
-}
-
-export enum AmmPoolActivityStatus {
-    NotStarted = 'NotStarted',
-    InProgress = 'InProgress',
-    EndOfGame = 'EndOfGame',
 }
 
 export interface AmmPoolActivityRule {
@@ -466,7 +481,7 @@ export interface AmmPoolSnapshot {
     poolName: string,
     poolAddress: string,
     pooled: [TokenVolumeV3, TokenVolumeV3],
-    lp: TokenInfo,
+    lp: TokenVolumeV3,
     risky: boolean
 }
 
@@ -956,6 +971,34 @@ export interface UserTransferRecord {
     timestamp: number
     updatedAt: number
     memo: string
+}
+
+export interface UserAssetInfo {
+    amount: string
+    createdAt: number
+    createdAtStr: string
+}
+
+export interface GetUserAssetsRequest {
+    wallet: string
+    assetType?: AssetType
+    currency?: Currency
+
+    limit?: number
+    offset?: number
+}
+
+export interface TokenPriceInfo {
+    price: string
+    createdAt: number
+}
+
+export interface GetTokenPricesRequest {
+    token: string
+    intervalType?: IntervalType
+    currency?: Currency
+
+    limit?: number
 }
 
 export interface GetUserTradesRequest {
