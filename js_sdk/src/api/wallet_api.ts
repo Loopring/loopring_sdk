@@ -36,7 +36,7 @@ export class WalletAPI extends BaseAPI {
             assetSeries,
             timestampSeries,
             dateSeries,
-            userAssets: raw_data as loopring_defs.UserAssetInfo[],
+            userAssets: raw_data.data as loopring_defs.UserAssetInfo[],
             raw_data,
         }
 

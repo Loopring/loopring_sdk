@@ -56,6 +56,7 @@ describe('ExchangeAPI test', function () {
         }
         const response = await api.getMarketTrades(req)
         console.log(response)
+        console.log(response.raw_data.trades)
     }, DEFAULT_TIMEOUT)
 
     it('getRelayerCurrentTime', async () => {
@@ -70,11 +71,6 @@ describe('ExchangeAPI test', function () {
 
     it('getFiatPrice2', async () => {
         const response = await api.getFiatPrice({ legal: 'CNY' })
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getLatestTokenPrices', async () => {
-        const response = await api.getLatestTokenPrices()
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
