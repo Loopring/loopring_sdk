@@ -2,7 +2,7 @@
 
 ### JS SDK Version ChangeLog
 
-### v0.0.29
+### v0.0.30
     1) refine code arch. seperate enums and constants.
 
 ### v0.0.28
