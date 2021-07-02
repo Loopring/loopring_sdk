@@ -2,7 +2,7 @@
 
 ### JS SDK Version ChangeLog
 
-### v0.0.25
+### v0.0.26
     1) add walletApi support
     2) fix AmmPoolSnapshot struct bug
 
