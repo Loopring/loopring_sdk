@@ -184,6 +184,7 @@ describe('ExchangeAPI test', function () {
 
         const response = await api.getMixDepth(request)
         console.log(response)
+        console.log(response.depth.bids)
         
     }, DEFAULT_TIMEOUT)
 

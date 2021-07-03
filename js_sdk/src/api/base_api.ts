@@ -1,4 +1,4 @@
-import { ChainId } from '../defs/web3_defs'
+import { ChainId } from '../defs'
 import { Request, } from './request'
 import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 

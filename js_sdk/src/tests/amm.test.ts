@@ -110,8 +110,10 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolBalances', async () => {
+        api = new AmmpoolAPI(ChainId.MAINNET)
         const response = await api.getAmmPoolBalances()
-        console.log(response)
+        
+        console.log(response.ammpoolsbalances['AMM-LRC-ETH'].poolAddress)
         console.log(response.ammpoolsbalances['AMM-LRC-ETH'].pooled)
         console.log(response.ammpoolsbalances['AMM-LRC-ETH'].lp)
         console.log(response.ammpoolsbalances['AMM-LRC-ETH'].pooledMap)

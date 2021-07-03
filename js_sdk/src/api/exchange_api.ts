@@ -83,7 +83,8 @@ function genAB(data: any[], isReverse: boolean = false) {
         volTotal = volTotal.plus(vol)
         ab_arr.push({
             price: price,
-            amt: amt,
+            amt: amt.toString(),
+            vol: vol.toString(),
             amtTotal: amtTotal.toString(),
             volTotal: volTotal.toString(),
         })
@@ -159,6 +160,8 @@ export class ExchangeAPI extends BaseAPI {
 
             if (isMix) {
                 marketInfo.status = item.status as MarketStatus
+                marketInfo.isSwapEnabled = marketInfo.status === MarketStatus.ALL 
+                    || marketInfo.status === MarketStatus.AMM
                 marketInfo.createdAt = parseInt(item.createdAt)
             }
 
@@ -404,7 +407,7 @@ export class ExchangeAPI extends BaseAPI {
     public async getDepth(request: GetDepthRequest, url: string = LOOPRING_URLs.GET_DEPTH) {
 
         if (request?.level === undefined) {
-            request.level = 2
+            request.level = 0
         }
 
         if (request?.limit === undefined) {

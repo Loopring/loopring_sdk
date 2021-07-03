@@ -98,7 +98,8 @@ export interface TickerData {
 
 export interface ABInfo {
     price: number
-    amt: BigNumber
+    amt: string
+    vol: string
     amtTotal: string
     volTotal: string
 }
@@ -279,6 +280,7 @@ export interface MarketInfo {
     precisionForPrice: number,
     quoteTokenId: number,
     status?: MarketStatus,
+    isSwapEnabled?: boolean,
     createdAt?: number,
 }
 
