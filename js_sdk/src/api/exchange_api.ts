@@ -140,9 +140,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        var markets: {
-            [key: string]: MarketInfo,
-        } = {}
+        var markets: LoopringMap<MarketInfo> = {}
 
         var pairs: LoopringMap<TokenRelatedInfo> = {}
 

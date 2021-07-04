@@ -8,7 +8,7 @@ import { AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from 
 
 import { MarketStatus } from '../defs/loopring_enums'
 
-import { getBaseQuote } from './symbol_tools'
+import { getBaseQuote, getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
 
 export const BIG0 = fm.toBig(0)
 
@@ -343,10 +343,12 @@ function getOutputOrderbook(input: string, feeBips: string, isAtoB: boolean) {
     return output
 }
 
-export function getOutputAmount(base: string, quote: string, market: string, 
+export function getOutputAmount(base: string, quote: string, marketArr: string[], 
     input: string, isAtoB: boolean, feeBips: string, 
     tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, 
     depth: DepthData, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
+
+    const { market } = getExistedMarket(marketArr, base, quote)
 
     if (isEmpty(input) || isEmpty(feeBips) || isEmpty(market)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
@@ -365,8 +367,26 @@ export function getOutputAmount(base: string, quote: string, market: string,
 
     let exceedDepth = false
 
-    const reserveIn = ammPoolSnapshot?.pooled[0].volume ?? '0'
-    const reserveOut = ammPoolSnapshot?.pooled[1].volume ?? '0'
+    const baseToken = getTokenInfoBySymbol(tokenMap, base)
+    const quoteToken = getTokenInfoBySymbol(tokenMap, quote)
+
+    const coinA = ammPoolSnapshot?.pooled[0]
+
+    const coinB = ammPoolSnapshot?.pooled[1]
+
+    let reserveIn = '0'
+    let reserveOut = '0'
+
+    if (baseToken?.tokenId !== undefined && quoteToken?.tokenId !== undefined 
+        && coinA?.tokenId !== undefined && coinB?.tokenId !== undefined ) {
+        if (baseToken?.tokenId === coinA?.tokenId) {
+            reserveIn = coinA.volume
+            reserveOut = coinB.volume
+        } else {
+            reserveIn = coinB.volume
+            reserveOut = coinA.volume
+        }
+    }
 
     console.log('reserveIn:', reserveIn, ' reserveOut:', reserveOut)
 
@@ -376,7 +396,7 @@ export function getOutputAmount(base: string, quote: string, market: string,
         // asks_volTotal -> asksQuoteSizeShown
         const amountInWei = toWEI(tokenMap, base, input)
 
-        console.log('a2b amountInWei:', amountInWei)
+        console.log(`a2b(${base}) amountInWei:`, amountInWei)
 
         if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
             exceedDepth = true
@@ -430,6 +450,8 @@ export function getOutputAmount(base: string, quote: string, market: string,
         let amountSBint = BIG0
 
         const amountB: string = toWEI(tokenMap, quote, input)
+
+        console.log(`b2a exceedDepth:${exceedDepth} amountB:${amountB}`)
 
         if (exceedDepth) {
             if (marketInfo.isSwapEnabled) {
