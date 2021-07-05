@@ -415,9 +415,63 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
     } else {
         if (!isReverse) {
-            remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
+            
+            for (let i = 0; i < bids.length; i++) {
+                const abInfo: ABInfo = bids[i]
+                const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
+                const consume: string = fm.toBig(remain).gte(fm.toBig(placed)) ? placed : remain
+
+                if (fm.toBig(consume).lte(BIG0)) {
+                    break
+                }
+
+                console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
+
+                console.log('remain:', remain, 'placed:', placed, ' consume:', consume)
+                
+                const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(baseToken.decimals))
+                const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
+
+                if (fm.toBig(consume).eq(volValue)) {
+                    output = fm.toBig(output).plus(volValue).toString()
+                } else {
+                    output = fm.toBig(output).plus(fm.toBig(consume).div(volValue).times(amtValue)).toString()
+                }
+
+                remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
+
+                console.log('2 output:', output, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString(), ' remain:', remain)
+
+            }
 
         } else {
+            remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
+
+            for (let i = 0; i < depth.asks.length; i++) {
+                const abInfo: ABInfo = depth.asks[i]
+
+                console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
+
+                const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.amt)) ? abInfo.amt : remain
+
+                console.log('consume:', consume)
+
+                if (fm.toBig(consume).lte(BIG0)) {
+                    break
+                }
+                
+                const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
+
+                if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
+                    output = fm.toBig(output).plus(volValue).toString()
+                } else {
+                    output = fm.toBig(output).plus(fm.toBig(consume).div(fm.toBig(abInfo.amt)).times(volValue)).toString()
+                }
+
+                console.log('output:', output, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
+
+                remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
+            }
             
         }
 

@@ -192,7 +192,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1', 'ETH', 'LRC', false)
+            await initAll('10000', 'ETH', 'LRC', false)
             
             checkResult()
 
