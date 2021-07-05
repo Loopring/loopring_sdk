@@ -4,7 +4,7 @@ import * as fm from './formatter'
 
 import BigNumber from 'bignumber.js'
 
-import { AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
+import { AmmPoolInfoV3, AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
 
 import { MarketStatus } from '../defs/loopring_enums'
 
@@ -325,7 +325,7 @@ function getAmountInWithFeeBips(amountOut: string, feeBips: string, reserveIn: s
     const feeBipsBig = fm.toBig(feeBips)
 
     const numerator = reserveInBig.times(amountOutBig).times(BIG10K)
-    const denominator = reserveOutBig.times(amountOutBig).times(BIG10K.minus(feeBipsBig))
+    const denominator = (reserveOutBig.minus(amountOutBig)).times(BIG10K.minus(feeBipsBig))
 
     return numerator.div(denominator).plus(BIG1)
 }
@@ -343,23 +343,22 @@ function getOutputOrderbook(input: string, feeBips: string, isAtoB: boolean) {
     return output
 }
 
-export function getOutputAmount(base: string, quote: string, marketArr: string[], 
-    input: string, isAtoB: boolean, feeBips: string, 
-    tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, 
-    depth: DepthData, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
+export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean, 
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData, 
+    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
 
-    const { market } = getExistedMarket(marketArr, base, quote)
+    const { market, amm, } = getExistedMarket(marketArr, base, quote)
 
-    if (isEmpty(input) || isEmpty(feeBips) || isEmpty(market)
+    if (isEmpty(input) || isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
 
-        console.log('1', isEmpty(input), isEmpty(feeBips), isEmpty(market),
+        console.log('1', input, isEmpty(input), isEmpty(market),
          Object.keys(marketMap).indexOf(market))
         
         return undefined
     }
 
-    const { base: baseRaw, quote: quoteRaw } = getBaseQuote(market)
+    const feeBips = ammpools[amm as string].feeBips.toString()
 
     const marketInfo: MarketInfo = marketMap[market]
 
@@ -374,6 +373,8 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
 
     const coinB = ammPoolSnapshot?.pooled[1]
 
+    let isReverse = false
+
     let reserveIn = '0'
     let reserveOut = '0'
 
@@ -385,6 +386,7 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
         } else {
             reserveIn = coinB.volume
             reserveOut = coinA.volume
+            isReverse = true
         }
     }
 
@@ -403,7 +405,7 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
             console.log('2')
         } else {
 
-            if (base === baseRaw) {
+            if (!isReverse) {
                 exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_amtTotal))
                 console.log('3 amountInWei:', amountInWei, ' bids_amtTotal:', depth.bids_amtTotal)
             } else {
@@ -439,7 +441,9 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
         } else {
             const amountInWei = toWEI(tokenMap, quote, input)
 
-            if (base === baseRaw) {
+            console.log(`b2a(${quote}) amountInWei:`, amountInWei)
+
+            if (!isReverse) {
                 exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_volTotal))
             } else {
                 exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_amtTotal))
@@ -451,7 +455,7 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
 
         const amountB: string = toWEI(tokenMap, quote, input)
 
-        console.log(`b2a exceedDepth:${exceedDepth} amountB:${amountB}`)
+        console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
 
         if (exceedDepth) {
             if (marketInfo.isSwapEnabled) {
@@ -461,8 +465,12 @@ export function getOutputAmount(base: string, quote: string, marketArr: string[]
             amountSBint = fm.toBig(toWEI(tokenMap, base, getOutputOrderbook(input, feeBips, isAtoB)))
         }
 
+        console.log('got amountSBint:', amountSBint.toString(), amountSBint.gt(BIG0))
+
         if (amountSBint.gt(BIG0)) {
-            return fromWEI(tokenMap, base, amountSBint)
+            const temp = fromWEI(tokenMap, base, amountSBint.toString())
+            console.log('temp:', temp)
+            return temp
         }
 
         return '0'

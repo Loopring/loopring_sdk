@@ -30,7 +30,6 @@ let base: string
 let quote: string
 let marketArr: string[]
 let market: string = 'LRC-ETH'
-let amm_market: string = 'AMM-LRC-ETH'
 let isAtoB: boolean
 
 const AMM_LRC_ETH_poolAddress = '0x18920d6e6fb7ebe057a4dd9260d6d95845c95036'
@@ -44,6 +43,8 @@ let depth: DepthData
 let ammpools: LoopringMap<AmmPoolInfoV3>
 
 let ammPoolSnapshot: AmmPoolSnapshot
+
+let input: string
 
 const init = async() => {
 
@@ -68,12 +69,22 @@ const init = async() => {
     }
 }
 
-const initAll = async(_base: string, _quote: string, _isAtoB: boolean = true) => {
+const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: boolean = true) => {
+    input = _input
     base = _base
     quote = _quote
     isAtoB = _isAtoB
 
     await init()
+}
+
+const checkResult = () => {
+    
+    const output = getOutputAmount(input, base, quote, isAtoB, marketArr, 
+        tokenMap, marketMap, depth, ammpools, ammPoolSnapshot)
+
+    console.log('LRC_ETH_a2b_exceedDepth output:', output)
+
 }
 
 describe('swap_calc_utils', function () {
@@ -88,16 +99,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('LRC', 'ETH')
-
-            let input = '1000000'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('LRC_ETH_a2b_exceedDepth output:', output)
+            await initAll('1000000', 'LRC', 'ETH')
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -108,16 +112,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('LRC', 'ETH', false)
-
-            let input = '1000000'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('LRC_ETH_a2b_exceedDepth output:', output)
+            await initAll('100', 'LRC', 'ETH', false)
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -128,16 +125,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('LRC', 'ETH')
-
-            let input = '100'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('LRC_ETH_a2b_not_exceedDepth output:', output)
+            await initAll('100', 'LRC', 'ETH')
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -148,16 +138,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('LRC', 'ETH', false)
-
-            let input = '1'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('LRC_ETH_a2b_not_exceedDepth output:', output)
+            await initAll('1', 'LRC', 'ETH', false)
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -168,16 +151,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('ETH', 'LRC')
-
-            let input = '1000000'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('ETH_LRC_a2b_exceedDepth output:', output)
+            await initAll('1000000', 'ETH', 'LRC')
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -188,16 +164,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('ETH', 'LRC', false)
-
-            let input = '1000000'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('ETH_LRC_a2b_exceedDepth output:', output)
+            await initAll('1000000', 'ETH', 'LRC', false)
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -208,16 +177,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('ETH', 'LRC')
-
-            let input = '1'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('ETH_LRC_a2b_exceedDepth output:', output)
+            await initAll('1', 'ETH', 'LRC')
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
@@ -228,16 +190,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('ETH', 'LRC', false)
-
-            let input = '1'
-
-            const feeBips = ammpools[amm_market].feeBips
-    
-            const output = getOutputAmount(base, quote, marketArr, input, isAtoB, feeBips.toString(), 
-                tokenMap, marketMap, depth, ammPoolSnapshot)
-
-            console.log('ETH_LRC_a2b_exceedDepth output:', output)
+            await initAll('1', 'ETH', 'LRC', false)
+            
+            checkResult()
 
         } catch (reason) {
             dumpError400(reason)
