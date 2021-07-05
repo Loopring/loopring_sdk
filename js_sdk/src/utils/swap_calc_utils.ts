@@ -1,24 +1,19 @@
-import { utils } from 'ethers'
-
 import * as fm from './formatter'
-
-import BigNumber from 'bignumber.js'
 
 import { ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
 
-import { MarketStatus } from '../defs/loopring_enums'
+import { getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
+import BigNumber from 'bignumber.js'
 
-import { getBaseQuote, getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
+const BIG0 = fm.toBig(0)
 
-export const BIG0 = fm.toBig(0)
+const BIG1 = fm.toBig(1)
 
-export const BIG1 = fm.toBig(1)
+const BIG10 = fm.toBig(10)
 
-export const BIG10 = fm.toBig(10)
+const BIG10K = fm.toBig(10000)
 
-export const BIG10K = fm.toBig(10000)
-
-export const MULTI_FACTOR = 10000
+const MULTI_FACTOR = 10000
 
 export const getToken = (tokens: any, token: any) => {
     if (!tokens) {
@@ -184,108 +179,6 @@ export function toWEI(tokens: any, symbol: any, value: any, rm: any = 3) {
     return fm.toBig(value)
         .times('1e' + tokenInfo.decimals)
         .toFixed(0, rm)
-}
-
-export const getAmountOut = (amt: any, ammpools: any, ammPoolsBalances: any, tokens: any,
-    base: any, quote: any, takerRate: number, currentPrice: number) => {
-
-    if (amt === undefined) {
-        amt = 0
-    }
-
-    const { ammBalance, feeBips, } = getAmmInfo(ammpools, ammPoolsBalances, base, quote)
-
-    const { tokenInfo: baseTokenInfo, reserve: reserveIn } = getTokenInfoByToken(ammBalance, tokens, base)
-    const { tokenInfo: quoteTokenInfo, reserve: reserveOut } = getTokenInfoByToken(ammBalance, tokens, quote)
-
-    const amountIn = getAmt(amt, baseTokenInfo)
-    const feeBipsFactor = fm.toBig(MULTI_FACTOR - feeBips)
-    const amountInWithFee = amountIn.times(feeBipsFactor)
-    const numerator = amountInWithFee.times(reserveOut)
-    const denominator = reserveIn.times(MULTI_FACTOR).plus(amountInWithFee)
-    const amountOutInWei: any = numerator.dividedBy(denominator)
-
-    let quoteAmt: any = fromWEI(tokens, quote, amountOutInWei)
-
-    const _amount1ApplyOrderFeeInWei = applyOrderFee(tokens, quote, quoteAmt, takerRate + feeBips)
-
-    let _amount1ApplyOrderFee = Number(fromWEI(tokens, quote, _amount1ApplyOrderFeeInWei))
-
-    let priceImpact = 0
-    if (_amount1ApplyOrderFee < 0) {
-        _amount1ApplyOrderFee = 0
-        quoteAmt = null
-    } else {
-        const newPrice = Number(quoteAmt) / Number(amt)
-        priceImpact = (newPrice - currentPrice) / currentPrice
-    }
-
-    return {
-        quoteAmt,
-        _amount1ApplyOrderFeeInWei,
-        _amount1ApplyOrderFee,
-        priceImpact,
-    }
-
-}
-
-export const getAmountOut_Reverse = (amt: any, ammpools: any, ammPoolsBalances: any, tokens: any,
-    base: any, quote: any, takerRate: number, currentPrice: number) => {
-
-    if (amt === undefined) {
-        amt = 0
-    }
-    
-    const { ammBalance, feeBips, } = getAmmInfo(ammpools, ammPoolsBalances, base, quote)
-
-    const { tokenInfo: baseTokenInfo, reserve: reserveIn } = getTokenInfoByToken(ammBalance, tokens, base)
-    const { tokenInfo: quoteTokenInfo, reserve: reserveOut } = getTokenInfoByToken(ammBalance, tokens, quote)
-
-    const amountOut = getAmt(amt, quoteTokenInfo)
-
-    if (amountOut.gt(reserveOut)) {
-        return {
-            baseAmt: 0,
-            _amount1ApplyOrderFeeInWei: 0,
-            _amount1ApplyOrderFee: 0,
-            priceImpact: 0,
-            hasError: false,
-        }
-    }
-
-    const numerator = amountOut.times(reserveIn).times(MULTI_FACTOR)
-    const feeBipsFactor = fm.toBig(MULTI_FACTOR - feeBips)
-
-    // If amountOut is larger than reserveOut?
-    // It's handled before getAmountOut_reserve
-    const reserveOutSubAmountOut = reserveOut.minus(amountOut)
-
-    const denominator = feeBipsFactor.times(reserveOutSubAmountOut)
-    const amountInInWei = numerator.dividedBy(denominator)
-
-    let baseAmt: any = fromWEI(tokens, quote, amountInInWei)
-
-    const _amount1ApplyOrderFeeInWei = applyOrderFee(tokens, quote, amt, takerRate + feeBips)
-
-    let _amount1ApplyOrderFee = Number(fromWEI(tokens, quote, _amount1ApplyOrderFeeInWei))
-
-    let priceImpact = 0
-    if (_amount1ApplyOrderFee < 0) {
-        _amount1ApplyOrderFee = 0
-        baseAmt = null
-    } else {
-        const newPrice = Number(amt) / Number(baseAmt)
-        priceImpact = (newPrice - currentPrice) / currentPrice
-    }
-
-    return {
-        baseAmt,
-        _amount1ApplyOrderFeeInWei,
-        _amount1ApplyOrderFee,
-        priceImpact,
-        hasError: false,
-    }
-
 }
 
 export function isEmpty(input: any) {
@@ -480,17 +373,14 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     return output
 }
 
-export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean, 
-    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData, 
+export function getReserveInfo(base: string, quote: string,
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, 
     ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
 
     const { market, amm, } = getExistedMarket(marketArr, base, quote)
 
-    if (isEmpty(input) || isEmpty(market) || isEmpty(amm)
+    if (isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
-
-        console.log('1', input, isEmpty(input), isEmpty(market),
-         Object.keys(marketMap).indexOf(market))
         
         return undefined
     }
@@ -499,18 +389,14 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
     const marketInfo: MarketInfo = marketMap[market]
 
-    input = input.trim()
-
-    let exceedDepth = false
-
     const baseToken = getTokenInfoBySymbol(tokenMap, base)
     const quoteToken = getTokenInfoBySymbol(tokenMap, quote)
+
+    let isReverse = false
 
     const coinA = ammPoolSnapshot?.pooled[0]
 
     const coinB = ammPoolSnapshot?.pooled[1]
-
-    let isReverse = false
 
     let reserveIn = '0'
     let reserveOut = '0'
@@ -526,6 +412,44 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
             isReverse = true
         }
     }
+
+    return {
+        reserveIn,
+        reserveOut,
+        baseToken,
+        quoteToken,
+        coinA,
+        coinB,
+        isReverse,
+        feeBips,
+        marketInfo,
+    }
+
+}
+
+export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean, 
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData, 
+    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
+
+        const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
+
+        if (!reserveInfo) {
+            return '0'
+        }
+
+        const {
+            reserveIn,
+            reserveOut,
+            baseToken,
+            quoteToken,
+            isReverse,
+            feeBips,
+            marketInfo,
+        } = reserveInfo
+
+    input = input.trim()
+
+    let exceedDepth = false
 
     console.log('reserveIn:', reserveIn, ' reserveOut:', reserveOut)
 
@@ -610,5 +534,81 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
     }
 
     return output
+
+}
+
+export function getMinReceived(amountBOut: string, slipBips: string) {
+    return fm.toBig(amountBOut).times(BIG10K.minus(fm.toBig(slipBips))).div(BIG10K).toString()
+}
+
+function getPriceImpactStr(curPrice: string, toPrice: string) {
+
+    if (!curPrice || !toPrice) {
+        return '0'
+    }
+
+    const toPriceBig = fm.toBig(toPrice)
+
+    if (toPriceBig.eq(BIG0)) {
+        return '0'
+    }
+
+    const percent = fm.toBig(curPrice).div(toPriceBig)
+
+    return BIG1.minus(percent).abs().times(100).toString()
+
+}
+
+export function getCurPrice(reserveIn: string, reserveOut: string) {
+    if (!reserveIn || !reserveOut) {
+        return '0'
+    }
+
+    reserveIn = reserveIn.trim()
+    reserveOut = reserveOut.trim()
+
+    const reserveInBig = fm.toBig(reserveIn)
+    const reserveOutBig = fm.toBig(reserveOut)
+
+    if (reserveInBig.eq(BIG0)) {
+        return '0'
+    }
+
+    return reserveOutBig.div(reserveInBig).toString()
+
+}
+
+export function getToPrice(amountS: string, amountB: string) {
+    if (!amountS || !amountB) {
+        return '0'
+    }
+
+    amountS = amountS.trim()
+    amountB = amountB.trim()
+
+    const amountSBig = fm.toBig(amountS)
+    const amountBBig = fm.toBig(amountB)
+
+    if (amountSBig.eq(BIG0)) {
+        return '0'
+    }
+
+    return amountBBig.div(amountSBig).toString()
+}
+
+export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: string, feeBips: string , takerFee: number) {
+    let amountB: BigNumber = getAmountOutWithFeeBips(amountS, feeBips, reserveIn, reserveOut)
+    amountB = amountB.times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K)
+    const curPrice = getCurPrice(reserveIn, reserveOut)
+    const toPrice = getToPrice(amountS, amountB.toString())
+
+    return getPriceImpactStr(curPrice, toPrice)
+}
+
+export function updatePriceImpact(baseAmt: string, quoteAmt: string, feeBips: string) {
+
+    if (isEmpty(baseAmt) || isEmpty(quoteAmt) || isEmpty(feeBips)) {
+        return undefined
+    }
 
 }
