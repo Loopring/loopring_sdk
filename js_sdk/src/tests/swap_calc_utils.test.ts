@@ -83,7 +83,7 @@ const checkResult = () => {
     const output = getOutputAmount(input, base, quote, isAtoB, marketArr, 
         tokenMap, marketMap, depth, ammpools, ammPoolSnapshot)
 
-    console.log('LRC_ETH_a2b_exceedDepth output:', output)
+    console.log(' output:', output)
 
 }
 
@@ -162,11 +162,11 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('LRC_ETH_b2a_not_ExceedDepth', async () => {
+    it('ETH_LRC_a2b_not_ExceedDepth', async () => {
 
         try {
 
-            await initAll('1', 'LRC', 'ETH', false)
+            await initAll('0.1', 'ETH', 'LRC')
             
             checkResult()
 
@@ -175,11 +175,11 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('ETH_LRC_a2b_not_ExceedDepth', async () => {
+    it('LRC_ETH_b2a_not_ExceedDepth', async () => {
 
         try {
 
-            await initAll('1', 'ETH', 'LRC')
+            await initAll('1', 'LRC', 'ETH', false)
             
             checkResult()
 
