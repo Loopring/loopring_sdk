@@ -121,37 +121,11 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('LRC_ETH_a2b_not_exceedDepth', async () => {
-
-        try {
-
-            await initAll('100', 'LRC', 'ETH')
-            
-            checkResult()
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
-
-    it('LRC_ETH_b2a_not_exceedDepth', async () => {
-
-        try {
-
-            await initAll('1', 'LRC', 'ETH', false)
-            
-            checkResult()
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
-
     it('ETH_LRC_a2b_exceedDepth', async () => {
 
         try {
 
-            await initAll('1000000', 'ETH', 'LRC')
+            await initAll('1000', 'ETH', 'LRC')
             
             checkResult()
 
@@ -164,7 +138,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1000000', 'ETH', 'LRC', false)
+            await initAll('5000000', 'ETH', 'LRC', false)
             
             checkResult()
 
@@ -173,7 +147,35 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('ETH_LRC_a2b_not_exceedDepth', async () => {
+    // --------------------------------------------------
+
+    it('LRC_ETH_a2b_not_ExceedDepth', async () => {
+
+        try {
+
+            await initAll('200', 'LRC', 'ETH')
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_b2a_not_ExceedDepth', async () => {
+
+        try {
+
+            await initAll('1', 'LRC', 'ETH', false)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('ETH_LRC_a2b_not_ExceedDepth', async () => {
 
         try {
 
@@ -186,7 +188,7 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('ETH_LRC_b2a_not_exceedDepth', async () => {
+    it('ETH_LRC_b2a_not_ExceedDepth', async () => {
 
         try {
 

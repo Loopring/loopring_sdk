@@ -77,8 +77,8 @@ function genAB(data: any[], isReverse: boolean = false) {
     
     data.forEach((item: any) => {
         const price = parseFloat(item[0])
-        const amt = new BigNumber(item[1])
-        const vol = new BigNumber(item[2])
+        const amt = new BigNumber(item[1]) // base amt
+        const vol = new BigNumber(item[2]) // quote vol
         amtTotal = amtTotal.plus(amt)
         volTotal = volTotal.plus(vol)
         ab_arr.push({

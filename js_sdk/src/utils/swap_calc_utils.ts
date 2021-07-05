@@ -4,7 +4,7 @@ import * as fm from './formatter'
 
 import BigNumber from 'bignumber.js'
 
-import { AmmPoolInfoV3, AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
+import { ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
 
 import { MarketStatus } from '../defs/loopring_enums'
 
@@ -177,6 +177,7 @@ export function fromWEI(tokens: any, symbol: any, valueInWEI: any, precision?: a
 export function toWEI(tokens: any, symbol: any, value: any, rm: any = 3) {
     const tokenInfo = getToken(tokens, symbol)
     if (typeof tokenInfo === 'undefined') {
+        console.log('symbol got: undefined info')
         return '0'
     }
 
@@ -330,13 +331,63 @@ function getAmountInWithFeeBips(amountOut: string, feeBips: string, reserveIn: s
     return numerator.div(denominator).plus(BIG1)
 }
 
-function getOutputOrderbook(input: string, feeBips: string, isAtoB: boolean) {
+function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quoteToken: TokenInfo | undefined, 
+    feeBips: string, isAtoB: boolean, isReverse: boolean, depth: DepthData) {
+
     let output: string  = "0"
     let remain: string  = input
 
+    const bids = depth.bids.reverse()
+
+    console.log('bids:', bids)
+
+    if (!baseToken || !quoteToken) {
+        return output
+    }
+    
+    //amt is size. vol is volume
+
     if (isAtoB) {
+        remain = fm.toBig(remain).times(BIG10.pow(baseToken.decimals)).toString()
+        if (!isReverse) {
+
+            for (let i = 0; i < bids.length; i++) {
+                const abInfo: ABInfo = bids[i]
+
+                console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
+
+                const consume: string = fm.toBig(remain).gt(fm.toBig(abInfo.amt)) ? abInfo.amt : remain
+
+                console.log('consume:', consume)
+
+                if (fm.toBig(consume).lte(BIG0)) {
+                    break
+                }
+                
+                const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
+
+                if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
+                    output = fm.toBig(output).plus(volValue).toString()
+                } else {
+                    output = fm.toBig(output).plus(fm.toBig(consume).div(fm.toBig(abInfo.amt)).times(volValue)).toString()
+                }
+
+                console.log('output:', output, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
+
+                remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
+            }
+
+        } else {
+
+        }
 
     } else {
+        remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
+        if (!isReverse) {
+
+        } else {
+            
+        }
 
     }
 
@@ -392,6 +443,8 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
     console.log('reserveIn:', reserveIn, ' reserveOut:', reserveOut)
 
+    let output = '0'
+
     if (isAtoB) {
 
         // bids_amtTotal -> bidsSizeShown
@@ -415,21 +468,16 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
         }
 
-        let amountB = BIG0
         console.log('5 exceedDepth:', exceedDepth, ' isSwapEnabled:', marketInfo.isSwapEnabled)
 
         if (exceedDepth) {
             if (marketInfo.isSwapEnabled) {
-                amountB = getAmountOutWithFeeBips(amountInWei, feeBips, reserveIn, reserveOut)
-                console.log('5.1 amountB:', amountB.toString())
+                const amountB = getAmountOutWithFeeBips(amountInWei, feeBips, reserveIn, reserveOut)
+                output = fromWEI(tokenMap, base, amountB.toString())
             }
         } else {
-            const outputOB = getOutputOrderbook(input, feeBips, isAtoB)
-            console.log('6 outputOB:', outputOB)
-            amountB = fm.toBig(toWEI(tokenMap, base, outputOB))
+            output = getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)
         }
-
-        return fromWEI(tokenMap, quote, amountB)
 
     } else {
 
@@ -462,19 +510,17 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
                 amountSBint = getAmountInWithFeeBips(amountB, feeBips, reserveIn, reserveOut)
             }
         } else {
-            amountSBint = fm.toBig(toWEI(tokenMap, base, getOutputOrderbook(input, feeBips, isAtoB)))
+            amountSBint = fm.toBig(toWEI(tokenMap, base, getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)))
         }
 
         console.log('got amountSBint:', amountSBint.toString(), amountSBint.gt(BIG0))
 
         if (amountSBint.gt(BIG0)) {
-            const temp = fromWEI(tokenMap, base, amountSBint.toString())
-            console.log('temp:', temp)
-            return temp
+            output = fromWEI(tokenMap, base, amountSBint.toString())
         }
 
-        return '0'
-
     }
+
+    return output
 
 }
