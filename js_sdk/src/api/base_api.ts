@@ -7,7 +7,7 @@ const getBaseUrlByChainId = (id: ChainId) => {
 
     switch (id) {
         case ChainId.MAINNET:
-            baseUrl = 'https://api3.loopring.io'
+            baseUrl = 'https://api.loopring.network'
             break
         default:
             baseUrl = 'https://uat2.loopring.io'

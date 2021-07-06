@@ -34,6 +34,20 @@ describe('WalletApi', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getUserAssets_TESTNET', async () => {
+        try {
+            api = new WalletAPI(ChainId.GORLI)
+            const request: GetUserAssetsRequest = {
+                wallet: ''
+            }
+
+            const response = await api.getUserAssets(request)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getTokenPrices', async () => {
         try {
             const request: GetTokenPricesRequest = {

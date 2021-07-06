@@ -1,3 +1,5 @@
+import { OrderStatus, Side } from "./loopring_enums"
+
 export interface WsProps {
     topics: any[],
     needApiKey: boolean,
@@ -10,31 +12,55 @@ export enum WsOps {
 }
 
 export enum WsTopicType {
-    Account = 'account',
-    Order = 'order',
-    OrderBook = 'orderbook',
-    Trade = 'trade',
-    Ticker = 'ticker',
-    Candlestick = 'candlestick',
-    Ammpool = 'ammpool',
+    account = 'account',
+    order = 'order',
+    orderBook = 'orderbook',
+    trade = 'trade',
+    ticker = 'ticker',
+    candlestick = 'candlestick',
+    ammpool = 'ammpool',
 }
 
 export const getAccountArg = () => {
     return {
-        topic: WsTopicType.Account,
+        topic: WsTopicType.account,
     }
+}
+
+export interface WsAccount {
+    accountId: number
+    totalAmount: string
+    tokenId: number
+    amountLocked: string
 }
 
 export const getOrderArg = (market: string) => {
     return {
-        topic: WsTopicType.Order,
+        topic: WsTopicType.order,
         market,
     }
 }
 
-export const geOrderBookArg = (market: string, level: number) => {
+export interface WsOrder {
+    hash: string
+    clientOrderId: string
+    size: string
+    volume: string
+    price: string
+    filledSize: string
+    filledVolume: string
+    filledFee: string
+    status: OrderStatus
+    createdAt: string
+    validSince: string
+    validUntil: string
+    side: Side
+    market: string
+}
+
+export const getOrderBookArg = (market: string, level: number) => {
     return {
-        topic: WsTopicType.OrderBook,
+        topic: WsTopicType.orderBook,
         market,
         level,
     }
@@ -42,28 +68,28 @@ export const geOrderBookArg = (market: string, level: number) => {
 
 export const getTradeArg = (market: string) => {
     return {
-        topic: WsTopicType.Trade,
+        topic: WsTopicType.trade,
         market,
     }
 }
 
 export const getTickerArg = (market: string) => {
     return {
-        topic: WsTopicType.Ticker,
+        topic: WsTopicType.ticker,
         market,
     }
 }
 
 export const getCandlestickArg = (market: string) => {
     return {
-        topic: WsTopicType.Candlestick,
+        topic: WsTopicType.candlestick,
         market,
     }
 }
 
 export const getAmmpoolArg = (poolAddress: string) => {
     return {
-        topic: WsTopicType.Ammpool,
+        topic: WsTopicType.ammpool,
         snapshot: true,
         poolAddress,
     }

@@ -28,11 +28,15 @@ export class WalletAPI extends BaseAPI {
         let timestampSeries : number[] = []
         let dateSeries : string[] = []
 
-        raw_data.data.forEach((item: loopring_defs.UserAssetInfo) => {
-            assetSeries.push(item.amount)
-            timestampSeries.push(item.createdAt)
-            dateSeries.push(item.createdAtStr)
-        })
+        if (raw_data.data) {
+
+            raw_data.data.forEach((item: loopring_defs.UserAssetInfo) => {
+                assetSeries.push(item.amount)
+                timestampSeries.push(item.createdAt)
+                dateSeries.push(item.createdAtStr)
+            })
+
+        }
         
         return {
             assetSeries,
