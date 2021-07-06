@@ -607,7 +607,7 @@ function getPriceImpactStr(curPrice: string, toPrice: string) {
         return '0'
     }
 
-    const percent = fm.toBig(curPrice).div(toPriceBig)
+    const percent = fm.toBig(toPriceBig).div(curPrice)
 
     return BIG1.minus(percent).abs().times(100).toString()
 
@@ -656,6 +656,8 @@ export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: s
     const curPrice = getCurPrice(reserveIn, reserveOut)
     const toPrice = getToPrice(amountS, amountB.toString())
 
+    console.log('curPrice:', curPrice, ' toPrice:', toPrice)
+
     return getPriceImpactStr(curPrice, toPrice)
 }
 
@@ -673,7 +675,7 @@ export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: 
     }
 
     if (exceedDepth) {
-        priceImpact = getPriceImpact(reverseIn, reverseOut, amountS, feeBips, takerFee)
+        priceImpact = getPriceImpact(reverseIn, reverseOut, amountS, feeBips, '0')
     } else {
         if (!depth.mid_price) {
             return '0'
