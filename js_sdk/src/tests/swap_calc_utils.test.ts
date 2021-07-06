@@ -149,11 +149,24 @@ describe('swap_calc_utils', function () {
 
     // --------------------------------------------------
 
-    it('LRC_ETH_a2b_not_ExceedDepth', async () => {
+    it('LRC_ETH_a2b_not_ExceedDepth0', async () => {
 
         try {
 
             await initAll('200', 'LRC', 'ETH')
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_a2b_not_ExceedDepth1', async () => {
+
+        try {
+
+            await initAll('3', 'LRC', 'ETH')
             
             checkResult()
 

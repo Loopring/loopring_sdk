@@ -664,7 +664,11 @@ export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: s
 export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: string, reverseOut: string, amountS: string, 
     feeBips: string, takerFee: string, isReversed: boolean, exceedDepth: boolean, depth: DepthData) {
 
-    console.log('updatePriceImpact:', ' baseAmt:', baseAmt, ' quoteAmt:', quoteAmt, '\n reverseIn:', reverseIn, 
+    console.debug('asks_prices:', depth.asks_prices)
+    console.debug('bids_prices:', depth.bids_prices)
+    console.debug('mid_price:', depth.mid_price)
+
+    console.debug('updatePriceImpact:', ' baseAmt:', baseAmt, ' quoteAmt:', quoteAmt, '\n reverseIn:', reverseIn, 
     ' reverseOut:', reverseOut, ' amountS:', amountS, '\n feeBips:', feeBips, ' takerFee:', takerFee, 
     ' isReversed:', isReversed, ' exceedDepth:', exceedDepth)
 
@@ -680,6 +684,11 @@ export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: 
         if (!depth.mid_price) {
             return '0'
         }
+
+        const toPrice = getToPrice(baseAmt, quoteAmt)
+        console.log('toPrice:', toPrice)
+        priceImpact = getPriceImpactStr(depth.mid_price.toString(), toPrice);
+
     }
 
     return priceImpact
