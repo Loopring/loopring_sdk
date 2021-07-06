@@ -22,7 +22,8 @@ const chainId = ChainId.MAINNET
 
 const TIMEOUT = 60000
 
-let userApi: UserAPI
+let slipBips = '200'
+
 let exchangeApi:ExchangeAPI
 let ammApi: AmmpoolAPI
 
@@ -90,7 +91,6 @@ const checkResult = () => {
 describe('swap_calc_utils', function () {
 
     beforeEach(async() => {
-        userApi = new UserAPI(chainId)
         exchangeApi = new ExchangeAPI(chainId)
         ammApi = new AmmpoolAPI(chainId)
     }, TIMEOUT)

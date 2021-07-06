@@ -74,6 +74,8 @@ function genAB(data: any[], isReverse: boolean = false) {
     var ab_prices : number[] = []
     var ab_amtTotals :string[] = []
     var ab_volTotals :string[] = []
+
+    let best = 0
     
     data.forEach((item: any) => {
         const price = parseFloat(item[0])
@@ -100,7 +102,7 @@ function genAB(data: any[], isReverse: boolean = false) {
         ab_volTotals.reverse()
     }
 
-    return { ab_arr, ab_prices, amtTotal, volTotal, ab_amtTotals, ab_volTotals, }
+    return { ab_arr, ab_prices, amtTotal, volTotal, ab_amtTotals, ab_volTotals, best, }
 
 }
 
@@ -426,9 +428,12 @@ export class ExchangeAPI extends BaseAPI {
 
         const timestamp = raw_data['timestamp']
 
+        const mid_price = (bids.ab_prices[bids.ab_prices.length - 1] + asks.ab_prices[0]) / 2
+
         const depth: DepthData = {
             version: parseInt(raw_data['version']),
             timestamp,
+            mid_price,
             bids: bids.ab_arr,
             bids_prices: bids.ab_prices,
             bids_amtTotals: bids.ab_amtTotals,

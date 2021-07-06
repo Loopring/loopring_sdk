@@ -169,16 +169,17 @@ export function fromWEI(tokens: any, symbol: any, valueInWEI: any, precision?: a
 }
 
 
-export function toWEI(tokens: any, symbol: any, value: any, rm: any = 3) {
+export function toWEI(tokens: any, symbol: any, value: any, rm: any = undefined) {
     const tokenInfo = getToken(tokens, symbol)
     if (typeof tokenInfo === 'undefined') {
         console.log('symbol got: undefined info')
         return '0'
     }
 
-    return fm.toBig(value)
+    const bigN = fm.toBig(value)
         .times('1e' + tokenInfo.decimals)
-        .toFixed(0, rm)
+
+    return !rm ? bigN.toString() : bigN.toFixed(0, rm)
 }
 
 export function isEmpty(input: any) {
@@ -429,12 +430,15 @@ export function getReserveInfo(base: string, quote: string,
 
 export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean, 
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData, 
-    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
+    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined, 
+    takerFee: string = '6', slipBips: string = '200') {
+
+        console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
         const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
 
         if (!reserveInfo) {
-            return '0'
+            return undefined
         }
 
         const {
@@ -451,9 +455,20 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
     let exceedDepth = false
 
+    console.log(reserveInfo)
+
     console.log('reserveIn:', reserveIn, ' reserveOut:', reserveOut)
 
     let output = '0'
+
+    let amountS = '0'
+
+    let amountBOutWithoutFee = '0'
+
+    let amountBOut = '0'
+
+    let baseAmt = '0'
+    let quoteAmt = '0'
 
     if (isAtoB) {
 
@@ -488,6 +503,16 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
         } else {
             output = getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)
         }
+
+        amountBOutWithoutFee = toWEI(tokenMap, quote, output)
+        amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toString())
+
+        amountS = toWEI(tokenMap, base, input)
+
+        baseAmt = input
+        quoteAmt = output
+
+        console.log('amountS:', amountS)
 
     } else {
 
@@ -529,11 +554,40 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
         if (amountSBint.gt(BIG0)) {
             output = fromWEI(tokenMap, base, amountSBint.toString())
+
+            amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toString())
+            amountBOutWithoutFee = toWEI(tokenMap, quote, output)
         }
+
+        amountS = amountSBint.toString()
+
+        baseAmt = output
+        quoteAmt = input
 
     }
 
-    return output
+    const amountBOutSlip = getMinReceived(amountBOut, slipBips)
+
+    const priceImpact = updatePriceImpact(baseAmt, quoteAmt, reserveIn, reserveOut, amountS, 
+        feeBips, takerFee, isReverse, exceedDepth, depth)
+
+    return {
+        isAtoB,
+        isReverse,
+        output,
+
+        baseAmt,
+        quoteAmt,
+
+        amountS,
+
+        amountBOut,
+        amountBOutWithoutFee,
+        amountBOutSlip,
+
+        priceImpact,
+
+    }
 
 }
 
@@ -596,7 +650,7 @@ export function getToPrice(amountS: string, amountB: string) {
     return amountBBig.div(amountSBig).toString()
 }
 
-export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: string, feeBips: string , takerFee: number) {
+export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: string, feeBips: string, takerFee: string) {
     let amountB: BigNumber = getAmountOutWithFeeBips(amountS, feeBips, reserveIn, reserveOut)
     amountB = amountB.times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K)
     const curPrice = getCurPrice(reserveIn, reserveOut)
@@ -605,10 +659,31 @@ export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: s
     return getPriceImpactStr(curPrice, toPrice)
 }
 
-export function updatePriceImpact(baseAmt: string, quoteAmt: string, feeBips: string) {
+export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: string, reverseOut: string, amountS: string, 
+    feeBips: string, takerFee: string, isReversed: boolean, exceedDepth: boolean, depth: DepthData) {
 
-    if (isEmpty(baseAmt) || isEmpty(quoteAmt) || isEmpty(feeBips)) {
-        return undefined
+    console.log('updatePriceImpact:', ' baseAmt:', baseAmt, ' quoteAmt:', quoteAmt, '\n reverseIn:', reverseIn, 
+    ' reverseOut:', reverseOut, ' amountS:', amountS, '\n feeBips:', feeBips, ' takerFee:', takerFee, 
+    ' isReversed:', isReversed, ' exceedDepth:', exceedDepth)
+
+    let priceImpact = '0'
+
+    if (isEmpty(reverseIn) || isEmpty(reverseOut) || isEmpty(feeBips)) {
+        return '0'
     }
 
+    if (exceedDepth) {
+        priceImpact = getPriceImpact(reverseIn, reverseOut, amountS, feeBips, takerFee)
+    } else {
+        if (!depth.mid_price) {
+            return '0'
+        }
+    }
+
+    return priceImpact
+
+}
+
+export function updateAmountOutSlip(amountBOut: string, slipBips: string) {
+    const amountBOutSlip = getMinReceived(amountBOut, slipBips)
 }

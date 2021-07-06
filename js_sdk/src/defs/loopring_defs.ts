@@ -107,6 +107,8 @@ export interface ABInfo {
 export interface DepthData {
     version: number
     timestamp: number
+    
+    mid_price: number
 
     bids: ABInfo[]
     bids_prices: number[]
