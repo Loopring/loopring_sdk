@@ -4,3 +4,4 @@ tsconfig.tsbuildinfo
 dist
 _book
 notes.java
+.DS_Store
