@@ -205,7 +205,7 @@ describe('UserAPI test', function () {
             const request: GetOffchainFeeAmtRequest = {
                 accountId: acc.accountId,
                 tokenSymbol: 'ETH',
-                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+                requestType: OffchainFeeReqType.TRANSFER,
             }
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
