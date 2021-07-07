@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.37
+    1) add getAllMixTickers function to exchangeApi.
+
 ### v0.0.36
     1) fix swap calc bug.
 

@@ -211,6 +211,27 @@ describe('ExchangeAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getAllMixTickers0', async () => {
+
+        const response = await api.getAllMixTickers()
+        console.log(response.tickMap)
+
+    }, DEFAULT_TIMEOUT)
+
+    it('getAllMixTickers1', async () => {
+
+        const response = await api.getAllMixTickers('AMM-LRC-ETH')
+        console.log(response.tickMap)
+
+    }, DEFAULT_TIMEOUT)
+
+    it('getAllMixTickers2', async () => {
+
+        const response = await api.getAllMixTickers('AMM-LRC-ETH,LRC-ETH')
+        console.log(response.tickMap)
+
+    }, DEFAULT_TIMEOUT)
+
     it('getAllTickers', async () => {
 
         const response = await api.getAllTickers()

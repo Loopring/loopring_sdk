@@ -525,15 +525,40 @@ export class ExchangeAPI extends BaseAPI {
         }
 
     }
-    public async getAllTickers() {
+    
+    public async getAllMixTickers(markets: string | undefined = undefined) {
 
-        const { marketArrStr } = await this.getMarkets()
+        if (!markets) {
+
+            const { marketArrStr } = await this.getMixMarkets()
+
+            markets = marketArrStr
+
+        }
 
         const request: GetTickerRequest = {
-            market: marketArrStr
+            market: markets
         }
 
         return this.getMixTicker(request)
+
+    }
+
+    public async getAllTickers(markets: string | undefined = undefined) {
+
+        if (!markets) {
+
+            const { marketArrStr } = await this.getMarkets()
+
+            markets = marketArrStr
+
+        }
+
+        const request: GetTickerRequest = {
+            market: markets
+        }
+
+        return this.getTicker(request)
 
     }
 
