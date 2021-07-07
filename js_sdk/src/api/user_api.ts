@@ -170,6 +170,7 @@ export class UserAPI extends BaseAPI {
             orderRequest.validUntil,
             orderRequest.maxFeeBips,
             orderRequest.fillAmountBOrS ? 1 : 0,
+            0,
         ]
 
         const reqParams: ReqParams = {

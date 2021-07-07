@@ -22,7 +22,7 @@ import { ExchangeAPI } from '../api/exchange_api'
 
 import { loopring_exported_account as acc } from './utils'
 
-import { hasMarket, getPair, getExistedMarket, } from '../utils/symbol_tools'
+import { hasMarket, getExistedMarket, } from '../utils/symbol_tools'
 
 let api: ExchangeAPI
 
@@ -189,6 +189,8 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getExchangeInfo', async () => {
+
+        api = new ExchangeAPI(ChainId.GORLI)
         const response = await api.getExchangeInfo()
         console.log(response)
     }, DEFAULT_TIMEOUT)
