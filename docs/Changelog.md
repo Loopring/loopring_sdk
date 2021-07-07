@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.36
+    1) fix swap calc bug.
+
 ### v0.0.30
     1) refine code arch. seperate enums and constants.
 

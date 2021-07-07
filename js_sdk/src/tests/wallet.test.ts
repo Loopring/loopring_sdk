@@ -24,7 +24,9 @@ describe('WalletApi', function () {
     it('getUserAssets', async () => {
         try {
             const request: GetUserAssetsRequest = {
-                wallet: '0xeF041462825bFdF79b2f1f02A70b2753cB5b1516'
+                wallet: '0xeF041462825bFdF79b2f1f02A70b2753cB5b1516',
+                offset: 10,
+                limit: 10,
             }
 
             const response = await api.getUserAssets(request)

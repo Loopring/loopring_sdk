@@ -149,7 +149,7 @@ describe('swap_calc_utils', function () {
 
     // --------------------------------------------------
 
-    it('LRC_ETH_a2b_not_ExceedDepth0', async () => {
+    it('LRC_ETH_a2b_not_ExceedDepth200', async () => {
 
         try {
 
@@ -162,7 +162,20 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('LRC_ETH_a2b_not_ExceedDepth1', async () => {
+    it('LRC_ETH_a2b_not_ExceedDepth15000', async () => {
+
+        try {
+
+            await initAll('15000', 'LRC', 'ETH')
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_a2b_not_ExceedDepth3', async () => {
 
         try {
 
@@ -175,7 +188,7 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('ETH_LRC_a2b_not_ExceedDepth', async () => {
+    it('ETH_LRC_a2b_not_ExceedDepth0_1', async () => {
 
         try {
 
@@ -188,7 +201,20 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('LRC_ETH_b2a_not_ExceedDepth', async () => {
+    it('ETH_LRC_a2b_not_ExceedDepth5', async () => {
+
+        try {
+
+            await initAll('5', 'ETH', 'LRC')
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_b2a_not_ExceedDepth1', async () => {
 
         try {
 
@@ -201,7 +227,7 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('ETH_LRC_b2a_not_ExceedDepth', async () => {
+    it('ETH_LRC_b2a_not_ExceedDepth_10000', async () => {
 
         try {
 
