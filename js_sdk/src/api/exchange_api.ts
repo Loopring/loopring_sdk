@@ -30,6 +30,7 @@ import {
     Candlestick,
     TokenRelatedInfo,
     ABInfo,
+    GetEthBalancesRequest,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -234,6 +235,7 @@ export class ExchangeAPI extends BaseAPI {
         
         let tokenSymbolMap: LoopringMap<TokenInfo> = {}
         let tokenIdMap: LoopringMap<TokenInfo> = {}
+        let tokenIdIndex: LoopringMap<string> = {}
         let tokenAddressMap: LoopringMap<TokenInfo> = {}
 
         raw_data.forEach((item: TokenInfo) => {
@@ -244,6 +246,7 @@ export class ExchangeAPI extends BaseAPI {
             }
             tokenSymbolMap[item.symbol] = item
             tokenIdMap[item.tokenId] = item
+            tokenIdIndex[item.tokenId] = item.symbol
             tokenAddressMap[item.address] = item
         })
 
@@ -254,6 +257,7 @@ export class ExchangeAPI extends BaseAPI {
         return {
             tokenSymbolMap,
             tokenIdMap,
+            tokenIdIndex,
             tokenAddressMap,
 
             tokenSymbolArr,
@@ -299,6 +303,26 @@ export class ExchangeAPI extends BaseAPI {
     /*
     * Returns the balances of all supported tokens, including Ether.
     */
+    public async getEthBalances(request: GetEthBalancesRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_ETH_BALANCES,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Returns the balances of all supported tokens, including Ether.
+    */
     public async getTokenBalances(request: GetTokenBalancesRequest, tokens: LoopringMap<TokenInfo>) {
 
         const {
@@ -307,6 +331,8 @@ export class ExchangeAPI extends BaseAPI {
         } = this.splitTokens(request.token, tokens)
 
         request.token = token
+
+        console.log('request.token:', request.token)
 
         const reqParams: ReqParams = {
             queryParams: request,

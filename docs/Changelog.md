@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.41
+    1) add getEthBalances function.
+
 ### v0.0.39
     1) fix swap_calc_utils format bug.
 

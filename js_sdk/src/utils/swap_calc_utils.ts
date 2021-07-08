@@ -1,6 +1,10 @@
 import * as fm from './formatter'
 
-import { ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData, LoopringMap, MarketInfo, TokenInfo, } from '../defs/loopring_defs'
+import {
+    AmmTxType, ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData,
+    ExitAmmPoolRequest, JoinAmmPoolRequest, LoopringMap, MarketInfo, OffchainFeeInfo,
+    TokenInfo, TokenRelatedInfo, TokenVolumeV3,
+} from '../defs'
 
 import { getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
 import BigNumber from 'bignumber.js'
@@ -194,7 +198,7 @@ function getAmountOutWithFeeBips(amountIn: string, feeBips: string, reserveIn: s
     const amountInBig = fm.toBig(amountIn)
     const reserveInBig = fm.toBig(reserveIn)
     const reserveOutBig = fm.toBig(reserveOut)
-    
+
     if (amountInBig.lt(BIG0) || reserveInBig.lt(BIG0) || reserveOutBig.lt(BIG0)) {
         return BIG0
     }
@@ -212,7 +216,7 @@ function getAmountInWithFeeBips(amountOut: string, feeBips: string, reserveIn: s
     const amountOutBig = fm.toBig(amountOut)
     const reserveInBig = fm.toBig(reserveIn)
     const reserveOutBig = fm.toBig(reserveOut)
-    
+
     if (amountOutBig.lt(BIG0) || reserveInBig.lt(BIG0) || reserveOutBig.lt(BIG0)) {
         return BIG0
     }
@@ -225,11 +229,11 @@ function getAmountInWithFeeBips(amountOut: string, feeBips: string, reserveIn: s
     return numerator.div(denominator).plus(BIG1)
 }
 
-function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quoteToken: TokenInfo | undefined, 
+function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quoteToken: TokenInfo | undefined,
     feeBips: string, isAtoB: boolean, isReverse: boolean, depth: DepthData) {
 
-    let output: string  = "0"
-    let remain: string  = input
+    let output: string = "0"
+    let remain: string = input
 
     const bids = depth.bids.reverse()
 
@@ -260,7 +264,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 if (fm.toBig(consume).lte(BIG0)) {
                     break
                 }
-                
+
                 const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
 
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
@@ -290,7 +294,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
 
                 // console.log('remain:', remain, 'placed:', placed, ' consume:', consume)
-                
+
                 const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(baseToken.decimals))
 
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.vol))) {
@@ -310,7 +314,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     } else {
         if (!isReverse) {
             remain = fm.toBig(remain).times(BIG10.pow(baseToken.decimals)).toString()
-            
+
             for (let i = 0; i < bids.length; i++) {
                 const abInfo: ABInfo = bids[i]
                 // const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
@@ -324,7 +328,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
 
                 // console.log('remain:', remain, 'placed:', placed, ' consume:', consume)
-                
+
                 const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(baseToken.decimals))
 
                 if (fm.toBig(consume).eq(abInfo.vol)) {
@@ -352,7 +356,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 if (fm.toBig(consume).lte(BIG0)) {
                     break
                 }
-                
+
                 const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
 
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
@@ -365,7 +369,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
             }
-            
+
         }
 
     }
@@ -374,14 +378,14 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 }
 
 export function getReserveInfo(base: string, quote: string,
-    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, 
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>,
     ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
 
     const { market, amm, } = getExistedMarket(marketArr, base, quote)
 
     if (isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
-        
+
         return undefined
     }
 
@@ -401,8 +405,8 @@ export function getReserveInfo(base: string, quote: string,
     let reserveIn = '0'
     let reserveOut = '0'
 
-    if (baseToken?.tokenId !== undefined && quoteToken?.tokenId !== undefined 
-        && coinA?.tokenId !== undefined && coinB?.tokenId !== undefined ) {
+    if (baseToken?.tokenId !== undefined && quoteToken?.tokenId !== undefined
+        && coinA?.tokenId !== undefined && coinB?.tokenId !== undefined) {
         if (baseToken?.tokenId === coinA?.tokenId) {
             reserveIn = coinA.volume
             reserveOut = coinB.volume
@@ -427,30 +431,30 @@ export function getReserveInfo(base: string, quote: string,
 
 }
 
-export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean, 
-    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData, 
-    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined, 
+export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean,
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
+    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined,
     takerFee: string = '6', slipBips: string = '200') {
 
-        // console.log(`getOutputAmount market: ${base} / ${quote}`)
+    // console.log(`getOutputAmount market: ${base} / ${quote}`)
 
-        // console.log('ammPoolSnapshot:', ammPoolSnapshot)
+    // console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
-        const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
+    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
 
-        if (!reserveInfo) {
-            return undefined
-        }
+    if (!reserveInfo) {
+        return undefined
+    }
 
-        const {
-            reserveIn,
-            reserveOut,
-            baseToken,
-            quoteToken,
-            isReverse,
-            feeBips,
-            marketInfo,
-        } = reserveInfo
+    const {
+        reserveIn,
+        reserveOut,
+        baseToken,
+        quoteToken,
+        isReverse,
+        feeBips,
+        marketInfo,
+    } = reserveInfo
 
     input = input.trim()
 
@@ -540,7 +544,7 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
                 amountSBint = getAmountInWithFeeBips(amountB, feeBips, reserveIn, reserveOut)
             }
         } else {
-            const outputOrderbook = getOutputOrderbook(input, baseToken, quoteToken, feeBips, 
+            const outputOrderbook = getOutputOrderbook(input, baseToken, quoteToken, feeBips,
                 isAtoB, isReverse, depth)
             amountSBint = fm.toBig(toWEI(tokenMap, base, outputOrderbook))
         }
@@ -697,7 +701,7 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string, amo
 
 }
 
-export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: string, reverseOut: string, amountS: string, 
+export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: string, reverseOut: string, amountS: string,
     feeBips: string, takerFee: string, isReversed: boolean, exceedDepth: boolean, depth: DepthData) {
 
     // console.debug('asks_prices:', depth.asks_prices)
@@ -733,4 +737,115 @@ export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: 
 
 export function updateAmountOutSlip(amountBOut: string, slipBips: string) {
     const amountBOutSlip = getMinReceived(amountBOut, slipBips)
+}
+
+export function ammPoolCalc(rawVal: string, isAtoB: boolean, coinA: TokenVolumeV3, coinB: TokenVolumeV3) {
+
+    const coinA_Vol_BIG = fm.toBig(coinA.volume)
+    const coinB_Vol_BIG = fm.toBig(coinB.volume)
+
+    let output = BIG0
+
+    let ratio = BIG0
+
+    if (isAtoB) {
+
+        if (!coinA_Vol_BIG.eq(BIG0)) {
+            ratio = fm.toBig(rawVal).div(coinA_Vol_BIG)
+            output = ratio.times(coinB_Vol_BIG)
+        }
+
+
+    } else {
+
+        if (!coinB_Vol_BIG.eq(BIG0)) {
+            ratio = fm.toBig(rawVal).div(coinB_Vol_BIG)
+            output = ratio.times(coinA_Vol_BIG)
+        }
+
+    }
+
+    return {
+        output: output.toFixed(0, 0),
+        ratio,
+    }
+}
+
+export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
+    slippageTolerance: string, owner: string,
+    coinAOffchainId: number, coinBOffchainId: number, fees: LoopringMap<OffchainFeeInfo>,
+    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>) {
+
+    const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0]
+    const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1]
+
+    const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]]
+    const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
+
+    const fee = fees[quoteToken.symbol].fee
+
+    rawVal = fm.toBig(rawVal).times(BIG10.pow(isAtoB ? baseToken.decimals : quoteToken.decimals)).toFixed(0, 0)
+
+    const { output, ratio, } = ammPoolCalc(rawVal, isAtoB, coinA, coinB)
+
+    const volA = isAtoB ? rawVal : output
+    const volB = isAtoB ? output : rawVal
+
+    const volLp = fm.toBig(ammPoolSnapshot.lp.volume).times(ratio).times(BIG1.minus(fm.toBig(slippageTolerance))).toFixed(0, 0)
+
+    let request: JoinAmmPoolRequest = {
+        owner,
+        poolAddress: ammConf.address,
+        joinTokens: {
+            pooled: [{ tokenId: coinA.tokenId, volume: volA, }, { tokenId: coinB.tokenId, volume: volB, },],
+            minimumLp: { tokenId: ammPoolSnapshot.lp.tokenId, volume: volLp, },
+        },
+        storageIds: [coinAOffchainId, coinBOffchainId,],
+        fee,
+    }
+
+    return {
+        request,
+    }
+}
+
+export function makeExitAmmPoolRequest(rawVal: string, slippageTolerance: string, owner: string,
+    offchainId: number, fees: LoopringMap<OffchainFeeInfo>,
+    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>) {
+
+    const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp
+    const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]]
+
+    const burnedVol = fm.toBig(rawVal).times(BIG10.pow(lpToken.decimals)).toFixed(0, 0)
+
+    const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0]
+    const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1]
+
+    const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
+
+    const maxFee = fees[quoteToken.symbol].fee
+
+    const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume)
+
+    const rest = BIG1.minus(fm.toBig(slippageTolerance))
+
+    const volA = ratio.times(coinA.volume).times(rest).toFixed(0, 0)
+    const volB = ratio.times(coinB.volume).times(rest).toFixed(0, 0)
+
+    let request: ExitAmmPoolRequest = {
+        owner,
+        poolAddress: ammConf.address,
+        exitTokens: {
+            unPooled: [{ tokenId: coinA.tokenId, volume: volA, }, { tokenId: coinB.tokenId, volume: volB, },],
+            burned: { tokenId: ammPoolSnapshot.lp.tokenId, volume: burnedVol, },
+        },
+        storageId: offchainId,
+        maxFee,
+    }
+
+    return {
+        request,
+    }
 }

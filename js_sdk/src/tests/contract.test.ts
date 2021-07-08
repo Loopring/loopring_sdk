@@ -63,7 +63,7 @@ const eth = {
     isLpToken: false,
 }
 
-const gasPrice = 21
+const gasPrice = 30
 
 const gasLimit = 200000
 
@@ -118,7 +118,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.deposit(web3, acc.address, acc.exchangeAddr, 
-            eth, 0.1, 0, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            eth, 0.1, 0, gasPrice, parseInt(eth.gasAmounts.deposit), ChainId.GORLI, nonce, true)
 
         console.log(`nonce: ${nonce} deposit_ETH: ${response}`)
     }, DEFAULT_TIMEOUT)

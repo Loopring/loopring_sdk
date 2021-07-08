@@ -1,5 +1,5 @@
 import { ChainId } from '../defs/web3_defs'
-import { AmmpoolAPI } from '../api/ammpool_api'
+import { AmmpoolAPI, ExchangeAPI, UserAPI, } from '../api'
 
 import { 
     GetNextStorageIdRequest,
@@ -7,22 +7,22 @@ import {
     GetAmmPoolSnapshotRequest, 
     GetAmmPoolTradesRequest,
     GetUserAmmPoolTxsRequest,
-    JoinAmmPoolRequest,
     ExitAmmPoolRequest,
     AmmPoolRequestPatch,
     GetAmmPoolTxsRequest,
-} from '../defs/loopring_defs'
+    OffchainFeeReqType,
 
-import { 
     DEFAULT_TIMEOUT,
-} from '../defs/loopring_constants'
+    AmmTxType,
+} from '../defs'
 
 import { loopring_exported_account as acc } from './utils'
 import { dumpError400 } from '../utils/network_tools'
-import { UserAPI } from '../api/user_api'
+import { makeExitAmmPoolRequest, makeJoinAmmPoolRequest } from '../utils'
 
 let userApi: UserAPI
 let api: AmmpoolAPI
+let exchangeApi: ExchangeAPI
 
 const testAddress = '0xd4bd7c71b6d4a09217ccc713f740d6ed8f4ea0cd'
 
@@ -33,6 +33,7 @@ describe('AmmpoolAPI test', function () {
     beforeEach(() => {
         api = new AmmpoolAPI(ChainId.GORLI)
         userApi = new UserAPI(ChainId.GORLI)
+        exchangeApi = new ExchangeAPI(ChainId.GORLI)
     })
 
     it('getAmmPoolConf', async () => {
@@ -159,7 +160,14 @@ describe('AmmpoolAPI test', function () {
 
             const { ammpools } = await api.getAmmPoolConf()
 
-            console.log('tokens:', ammpools['AMM-LRC-ETH'].tokens)
+            const tokenSymbol = 'AMM-LRC-ETH'
+
+            const ammInfo = ammpools[tokenSymbol]
+
+            const request1: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            const { ammPoolSnapshot } = await api.getAmmPoolSnapshot(request1)
             
             const request: GetNextStorageIdRequest = {
                 accountId: acc.accountId, 
@@ -173,26 +181,33 @@ describe('AmmpoolAPI test', function () {
             }
             const storageId_1 = await userApi.getNextStorageId(request_1, acc.apiKey)
 
-            const request2: JoinAmmPoolRequest = {
-                owner: acc.address,
-                poolAddress,
-                joinTokens: {
-                    pooled: [{tokenId:"1", volume: "1000000000000000000000"}, {tokenId: "0", volume: "1000000000000000000"}, ],
-                    minimumLp: {tokenId: "4", volume: "100000"}
-                },
-                storageIds: [storageId_1.offchainId, storageId.offchainId, ],
-                fee: '1000000000000000000',
-            }
+            console.log('getOffchainFeeAmt 1')
+
+            const { fees } = await userApi.getOffchainFeeAmt({tokenSymbol: 'ETH', requestType: OffchainFeeReqType.AMM_JOIN, accountId: acc.accountId}, acc.apiKey)
+            
+            const fee = fees['ETH']
+            console.log('getOffchainFeeAmt 2', fee)
+
+            const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
+
+            const { request: res3 } = makeJoinAmmPoolRequest('500', true, 
+            '0.001', acc.address, 
+            storageId_1.offchainId, storageId.offchainId, fees, 
+            ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex)
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GORLI,
-                ammName: 'LRCETH-Pool',
+                ammName: ammInfo.name,
                 poolAddress,
                 eddsaKey: acc.eddsaKey
             }
 
-            const response = await api.joinAmmPool(request2, patch, acc.apiKey)
+            console.log('res3:', res3)
+            console.log('res3 pooled:', res3.joinTokens.pooled)
+
+            const response = await api.joinAmmPool(res3, patch, acc.apiKey)
             console.log(response)
+
         } catch(reason) {
             dumpError400(reason)
         }
@@ -203,7 +218,16 @@ describe('AmmpoolAPI test', function () {
 
             const { ammpools } = await api.getAmmPoolConf()
 
-            console.log('tokens:', ammpools['AMM-LRC-ETH'].tokens)
+            const tokenSymbol = 'AMM-LRC-ETH'
+
+            const ammInfo = ammpools[tokenSymbol]
+
+            const request1: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            const { ammPoolSnapshot } = await api.getAmmPoolSnapshot(request1)
+
+            const { fees } = await userApi.getOffchainFeeAmt({tokenSymbol: 'ETH', requestType: OffchainFeeReqType.AMM_EXIT, accountId: acc.accountId}, acc.apiKey)
             
             const request: GetNextStorageIdRequest = {
                 accountId: acc.accountId, 
@@ -211,16 +235,10 @@ describe('AmmpoolAPI test', function () {
             }
             const storageId = await userApi.getNextStorageId(request, acc.apiKey)
 
-            const request2: ExitAmmPoolRequest = {
-                owner: acc.address,
-                poolAddress,
-                exitTokens: {
-                    unPooled: [{tokenId:"1", volume: "1000000000000000000000"}, {tokenId: "0", volume: "1000000000000000000"}, ],
-                    burned: {tokenId: "4", volume: "100000"}
-                },
-                storageId: storageId.offchainId,
-                maxFee: '1000000000000000000',
-            }
+            const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
+
+            const { request: req3 } = makeExitAmmPoolRequest('10', '0.001', acc.address,
+            storageId.offchainId, fees, ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex)
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GORLI,
@@ -229,7 +247,10 @@ describe('AmmpoolAPI test', function () {
                 eddsaKey: acc.eddsaKey
             }
 
-            const response = await api.exitAmmPool(request2, patch, acc.apiKey)
+            console.log('req3:', req3)
+            console.log('res3 unPooled:', req3.exitTokens.unPooled)
+
+            const response = await api.exitAmmPool(req3, patch, acc.apiKey)
             console.log(response)
         } catch(reason) {
             dumpError400(reason)

@@ -106,14 +106,14 @@ export async function getNonce(web3: Web3, addr: string) {
     return -1
 }
 
-export async function sendRawTx(web3: any, from: string, to: string, value: any, data: any, 
+export async function sendRawTx(web3: any, from: string, to: string, value: string, data: any, 
     chainId: ChainId, nonce: number, gasPrice: any, gas: number, sendByMetaMask: boolean = false) {
 
     checkWeb3(web3)
 
-    const gasPrice2 = fm.fromGWEI(gasPrice).toString()
+    const gasPrice2 = fm.fromGWEI(gasPrice).toFixed(0, 0)
 
-    console.log(' gasPrice2:', gasPrice2)
+    console.log('sendRawTx gasPrice2:', gasPrice2, sendByMetaMask)
 
     const rawTx = {
         from,
@@ -125,6 +125,8 @@ export async function sendRawTx(web3: any, from: string, to: string, value: any,
         gasPrice: gasPrice2,
         gas,
     }
+
+    console.log('sendRawTx rawTx:', rawTx)
 
     const response = sendByMetaMask
         ? await sendTransaction(web3, rawTx)

@@ -512,6 +512,10 @@ export interface MarketTradeInfo {
     fee: string
 }
 
+export interface GetEthBalancesRequest {
+    owner: string
+}
+
 export interface GetTokenBalancesRequest {
     owner: string
     token: string

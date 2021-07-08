@@ -463,29 +463,27 @@ describe('UserAPI test', function () {
             return
         }
 
-        const { nonce } = accInfo
-        console.log(`nonce:${nonce}`)
         console.log(`storageId:${JSON.stringify(storageId)}`)
 
         try {
 
             const request: SubmitOrderRequestV3 = {
                 exchange: acc.exchangeAddr,
-                accountId: acc.accountId,
+                accountId: accInfo.accountId,
                 storageId: storageId.orderId,
                 sellToken: {
                     tokenId: baseToken.tokenId,
-                    volume: '1000000000000000000'
+                    volume: '100000000000000000000'
                 },
                 buyToken: {
                     tokenId: quoteToken.tokenId,
-                    volume: '1000000000000000000'
+                    volume: '63074132800000000'
                 },
                 allOrNone: false,
                 validUntil: VALID_UNTIL,
                 maxFeeBips: 60,
                 fillAmountBOrS: false, // amm only false
-                orderType: OrderType.LimitOrder,
+                orderType: OrderType.ClassAmm,
                 eddsaSignature: '',
             }
 

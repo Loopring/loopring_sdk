@@ -6,6 +6,7 @@ export enum LOOPRING_URLs {
     GET_MULTI_ORDERS = '/api/v3/orders',
     GET_MARKETS = '/api/v3/exchange/markets',
     GET_TOKENS = '/api/v3/exchange/tokens',
+    GET_ETH_BALANCES = '/api/v3/eth/balances',
     GET_TOKEN_BALANCES = '/api/v3/eth/tokenBalances',
     GET_ALLOWANCES = '/api/v3/eth/allowances',
     GET_EXCHANGE_INFO = '/api/v3/exchange/info',

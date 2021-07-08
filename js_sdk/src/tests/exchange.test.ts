@@ -7,6 +7,7 @@ import {
     GetTickerRequest,
     GetDepthRequest,
     GetMarketTradesRequest,
+    GetEthBalancesRequest,
 } from '../defs/loopring_defs'
 
 import { 
@@ -100,14 +101,53 @@ describe('ExchangeAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getTokenBalances', async () => {
+    it('getEthBalances', async () => {
+        try {
+
+            api = new ExchangeAPI(ChainId.GORLI)
+
+            const request: GetEthBalancesRequest = {
+                owner: acc.address,
+            }
+
+            const response = await api.getEthBalances(request)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getTokenBalances1', async () => {
 
         console.log('getTokenBalances acc.address:', acc.address)
         try {
 
             const tokens = await api.getTokens()
 
-            console.log('tokens:', tokens.tokenSymbolMap)
+            console.log('tokens:', tokens.tokenSymbolMap['ETH'])
+
+            const request: GetTokenBalancesRequest = {
+                owner: acc.address,
+                token: tokens.tokenSymbolMap['ETH'].address,
+            }
+
+            const response = await api.getTokenBalances(request, tokens.tokenSymbolMap)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getTokenBalances0', async () => {
+
+        api = new ExchangeAPI(ChainId.GORLI)
+
+        console.log('getTokenBalances acc.address:', acc.address)
+        try {
+
+            const tokens = await api.getTokens()
+
+            // console.log('tokens:', tokens.tokenSymbolMap)
 
             const request: GetTokenBalancesRequest = {
                 owner: acc.address,
@@ -198,10 +238,10 @@ describe('ExchangeAPI test', function () {
     it('getMixTicker', async () => {
         api = new ExchangeAPI(ChainId.MAINNET)
         const request: GetTickerRequest = {
-            market: 'LRC-ETH',
+            market: ["LRC-ETH", "ETH-DAI", "ETH-USDT", "DAI-USDT", "LRC-USDT", "LRC-USDC", "USDC-USDT", "WBTC-USDT", "WBTC-USDC", "WBTC-DAI", "VSP-ETH", "DPI-ETH", "NIOX-ETH", "WETH-ETH", "VSP-DAI", "SMARTCREDIT-ETH", "ETH-USDC", "WBTC-ETH", "UNI-ETH", "LINK-ETH", "KP3R-ETH", "YFI-ETH", "YFII-ETH", "MCB-ETH", "AC-ETH", "HBTC-USDT", "1INCH-ETH", "AC-USDT", "VETH-ETH", "WOO-USDT", "HBTC-ETH", "CEL-ETH", "BEL-ETH", "OBTC-ETH", "ENJ-ETH", "AMP-ETH"].join(','),
         }
         const response = await api.getMixTicker(request)
-        console.log(response)
+        console.log(response.tickMap["DAI-USDT"])
     }, DEFAULT_TIMEOUT)
 
     it('getTicker', async () => {
