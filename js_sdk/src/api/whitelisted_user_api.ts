@@ -46,28 +46,6 @@ export class WhitelistedUserAPI extends BaseAPI {
     }
 
     /*
-    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
-    */
-    public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, eddsaKey: string) {
-    
-            // request.eddsaSignature = sign_tools.getEDD(request, privateKey)
-
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.ACCOUNT_ACTION,
-            bodyParams: request,
-            method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
-        }
-
-        const raw_data = (await this.makeReq().request(reqParams)).data
-
-        return {
-            raw_data,
-        }
-
-    }
-
-    /*
     * Submit offchain withdraw request
     */
     public async submitInternalTransfer(request: loopring_defs.OriginTransferRequestV3, 

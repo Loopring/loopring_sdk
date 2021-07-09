@@ -182,6 +182,24 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getOffchainFeeAmt0', async () => {
+        try {
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'LRC',
+                amount: '1000000000000000000',
+            }
+            const type = OffchainFeeReqType.ORDER
+            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+            console.log(response)
+            console.log('fees:', response.raw_data.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getOffchainFeeAmt1', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
@@ -418,6 +436,7 @@ describe('UserAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('updateAccount', async () => {
+        api = new UserAPI(ChainId.GORLI)
         try {
             const req: GetAccountRequest = {
                 owner: acc.address
@@ -435,7 +454,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
                 nonce: accInfo.nonce,
             }
-            const response = await api.updateAccount(request, local_web3(), ChainId.GORLI, ConnectorNames.Injected, true)
+            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.Injected, true)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
