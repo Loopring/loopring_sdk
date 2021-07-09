@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.45
+    1) update make join/exit request
+
 ### v0.0.43
     1) update getEthBalances response.
 

@@ -773,15 +773,20 @@ export function ammPoolCalc(rawVal: string, isAtoB: boolean, coinA: TokenVolumeV
 
 export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     slippageTolerance: string, owner: string,
-    coinAOffchainId: number, coinBOffchainId: number, fees: LoopringMap<OffchainFeeInfo>,
+    fees: LoopringMap<OffchainFeeInfo>,
     ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
-    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>) {
+    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>, 
+    coinAOffchainId: number = 0, coinBOffchainId: number = 0) {
 
     const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0]
     const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1]
 
     const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]]
     const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
+
+    console.log('ammConf:', ammConf)
+    console.log('fees:', fees)
+    console.log('quoteToken:', quoteToken)
 
     const fee = fees[quoteToken.symbol].fee
 
@@ -792,7 +797,9 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     const volA = isAtoB ? rawVal : output
     const volB = isAtoB ? output : rawVal
 
-    const volLp = fm.toBig(ammPoolSnapshot.lp.volume).times(ratio).times(BIG1.minus(fm.toBig(slippageTolerance))).toFixed(0, 0)
+    const rest = BIG1.minus(fm.toBig(slippageTolerance))
+
+    const volLp = fm.toBig(ammPoolSnapshot.lp.volume).times(ratio).times(rest).toFixed(0, 0)
 
     let request: JoinAmmPoolRequest = {
         owner,
@@ -811,28 +818,29 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
 }
 
 export function makeExitAmmPoolRequest(rawVal: string, slippageTolerance: string, owner: string,
-    offchainId: number, fees: LoopringMap<OffchainFeeInfo>,
+    fees: LoopringMap<OffchainFeeInfo>,
     ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
-    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>) {
+    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>,
+    offchainId: number = 0) {
 
     const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp
     const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]]
 
     const burnedVol = fm.toBig(rawVal).times(BIG10.pow(lpToken.decimals)).toFixed(0, 0)
 
+    const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume)
+
     const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0]
     const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1]
-
-    const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
-
-    const maxFee = fees[quoteToken.symbol].fee
-
-    const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume)
 
     const rest = BIG1.minus(fm.toBig(slippageTolerance))
 
     const volA = ratio.times(coinA.volume).times(rest).toFixed(0, 0)
     const volB = ratio.times(coinB.volume).times(rest).toFixed(0, 0)
+
+    const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
+
+    const maxFee = fees[quoteToken.symbol].fee
 
     let request: ExitAmmPoolRequest = {
         owner,
