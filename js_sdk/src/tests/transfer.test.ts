@@ -206,14 +206,16 @@ describe('Transfer test', function () {
 
             const { apiKey } = await userApi.getUserApiKey(request, eddkeyWhitelisted)
 
-            // step 4 get storageId
+            console.log('apiKey:', apiKey)
+
+            // step 3 get storageId
             const request2: GetNextStorageIdRequest = {
                 accountId: accInfo.accountId,
                 sellTokenId: 1
             }
             const storageId = await userApi.getNextStorageId(request2, apiKey)
 
-            // step 5 transfer
+            // step 4 transfer
             const request3: OriginTransferRequestV3 = {
                 exchange: exchangeInfo.exchangeAddress,
                 payerAddr: addressWhitlisted,

@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.43
+    1) update getEthBalances response.
+
 ### v0.0.41
     1) add getEthBalances function.
 

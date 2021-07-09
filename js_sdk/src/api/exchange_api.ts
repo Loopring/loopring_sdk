@@ -314,7 +314,10 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
+        const ethBalance = raw_data.data
+
         return {
+            ethBalance,
             raw_data,
         }
 
