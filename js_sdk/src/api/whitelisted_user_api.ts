@@ -1,0 +1,94 @@
+import { BaseAPI } from './base_api'
+
+import { ReqParams, } from '../defs/loopring_defs'
+
+import { SIG_FLAG, ReqMethod, SigPatchField, } from '../defs/loopring_enums'
+
+import { LOOPRING_URLs, } from '../defs/url_defs'
+
+import { ChainId, SigSuffix } from '../defs/web3_defs'
+
+import * as loopring_defs from '../defs/loopring_defs'
+
+import { ConnectorNames } from '../defs/web3_defs'
+
+import { sleep } from '../utils/network_tools'
+import { isContract } from './ethereum/metaMask'
+import Web3 from 'web3'
+
+import * as sign_tools from './sign/sign_tools'
+
+export class WhitelistedUserAPI extends BaseAPI {
+
+    /*
+    * Submit offchain withdraw request
+    */
+
+    public async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
+        eddsaKey: string, apiKey: string) {
+
+        request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.WITHDRAWALS_ACTION,
+            bodyParams: request,
+            apiKey,
+            method: ReqMethod.POST,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
+    */
+    public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, eddsaKey: string) {
+    
+            // request.eddsaSignature = sign_tools.getEDD(request, privateKey)
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.ACCOUNT_ACTION,
+            bodyParams: request,
+            method: ReqMethod.POST,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Submit offchain withdraw request
+    */
+    public async submitInternalTransfer(request: loopring_defs.OriginTransferRequestV3, 
+        eddsaKey: string, apiKey: string) {
+
+        request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
+            bodyParams: request,
+            apiKey,
+            method: ReqMethod.POST,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+
+    }
+
+}

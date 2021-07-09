@@ -23,7 +23,7 @@ export class UserAPI extends BaseAPI {
     /*
     * Get the ApiKey associated with the user's account.
     */
-    public async getUserApiKey(request: loopring_defs.GetUserApiKeyRequest, PrivateKey: string) {
+    public async getUserApiKey(request: loopring_defs.GetUserApiKeyRequest, eddsaKey: string) {
 
         const dataToSig: Map<string, any> = new Map()
 
@@ -38,7 +38,7 @@ export class UserAPI extends BaseAPI {
             sigObj:
             {
                 dataToSig,
-                PrivateKey,
+                PrivateKey: eddsaKey,
             }
         }
 
@@ -58,7 +58,7 @@ export class UserAPI extends BaseAPI {
     * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
     */
     public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest, 
-        apiKey: string, PrivateKey: string) {
+        apiKey: string, eddsaKey: string) {
 
         const dataToSig: Map<string, any> = new Map()
 
@@ -73,7 +73,7 @@ export class UserAPI extends BaseAPI {
             sigObj:
             {
                 dataToSig,
-                PrivateKey,
+                PrivateKey: eddsaKey,
             }
         }
 
@@ -528,7 +528,7 @@ export class UserAPI extends BaseAPI {
 
     public async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
         web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        privateKey: string, apiKey: string, isHardwareAddress: boolean) {
+        eddsaKey: string, apiKey: string, isHardwareAddress: boolean) {
 
         let shouldSaveHWAddr = false
 
@@ -575,7 +575,7 @@ export class UserAPI extends BaseAPI {
 
         console.log('submitOffchainWithdraw ecdsaSignature:', ecdsaSignature)
 
-        request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, privateKey)
+        request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
         
         console.log('submitOffchainWithdraw .eddsaSignature:', request.eddsaSignature)
 
@@ -602,7 +602,7 @@ export class UserAPI extends BaseAPI {
     */
     public async submitInternalTransfer(request: loopring_defs.OriginTransferRequestV3, 
         web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        privateKey: string, apiKey: string, isHardwareAddress: boolean) {
+        eddsaKey: string, apiKey: string, isHardwareAddress: boolean) {
 
         let shouldSaveHWAddr = false
 
@@ -647,7 +647,7 @@ export class UserAPI extends BaseAPI {
 
         console.log('submitInternalTransfer ecdsaSignature:', ecdsaSignature)
 
-        request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, privateKey)
+        request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
 
         const reqParams: ReqParams = {
             url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
