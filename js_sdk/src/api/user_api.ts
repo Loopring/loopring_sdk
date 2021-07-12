@@ -306,7 +306,7 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-    * Returns user's Ether and token balances on exchange.
+    * Returns user's deposit records.
     */
     public async getUserDepositHistory(request: loopring_defs.GetUserDepositHistoryRequest, apiKey: string) {
 
@@ -334,7 +334,7 @@ export class UserAPI extends BaseAPI {
     public async getUserOnchainWithdrawalHistory(request: loopring_defs.GetUserOnchainWithdrawalHistoryRequest, apiKey: string) {
 
         const reqParams: ReqParams = {
-            url: LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
+            url: LOOPRING_URLs.WITHDRAWALS_ACTION,
             queryParams: request,
             apiKey,
             method: ReqMethod.GET,

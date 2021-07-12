@@ -182,7 +182,7 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getOffchainFeeAmt0', async () => {
+    it('getOffchainFeeAmt_fast', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
                 accountId: acc.accountId,
@@ -200,13 +200,12 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getOffchainFeeAmt1', async () => {
+    it('getOffchainFeeAmt_std', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
                 accountId: acc.accountId,
                 requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
                 tokenSymbol: 'LRC',
-                amount: '1000000000000000000',
             }
             const type = OffchainFeeReqType.ORDER
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
@@ -320,7 +319,7 @@ describe('UserAPI test', function () {
             }
 
             const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
-            console.log(response)
+            console.log(response.userOnchainWithdrawalHistory)
         } catch (reason) {
             dumpError400(reason)
         }
