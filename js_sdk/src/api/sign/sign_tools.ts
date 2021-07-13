@@ -161,7 +161,7 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
 
   const hash = (new BigInteger(sha256(message).toString(), 16).mod(SNARK_SCALAR_FIELD)).toFormat(0, 0, {})
 
-  console.log('message:', message, ' hash:', hash)
+  // console.log('message:', message, ' hash:', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -174,7 +174,7 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
   const hasher = Poseidon.createHash(inputs.length + 1, 6, 53)
   const hash = hasher(inputs).toString(10)
 
-  console.log('getEdDSASigWithPoseidon hash:', hash)
+  // console.log('getEdDSASigWithPoseidon hash:', hash)
 
   return genSigWithPadding(PrivateKey, hash)
 
@@ -225,10 +225,9 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
       typedData,
       account,
     ]);
-    console.log('eth_signTypedData response hash', response);
     return response;
   } catch (err) {
-    console.log('err', err);
+    console.error('err', err);
   }
 }
 
@@ -238,10 +237,10 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
   const msgParams = JSON.stringify(typedData)
   const params = [address, msgParams]
 
-  console.log('typedData:', typedData)
-  console.log('address:', address, ' type:', type)
+  // console.log('typedData:', typedData)
+  // console.log('address:', address, ' type:', type)
 
-  console.log('getEcDSASig params:', JSON.stringify(params))
+  // console.log('getEcDSASig params:', JSON.stringify(params))
 
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
@@ -277,12 +276,10 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
 
     case GetEcDSASigType.WithoutDataStruct:
 
-      console.log('enter WithoutDataStruct--->', typedData)
-
       let hash: any = sigUtil.TypedDataUtils.sign(typedData)
       hash = fm.toHex(hash)
 
-      console.log('WithoutDataStruct hash:', hash)
+      // console.log('WithoutDataStruct hash:', hash)
 
       const signature: any = await personalSign(web3, address, pwd, hash)
 
@@ -395,9 +392,6 @@ export function get_EddsaSig_OffChainWithdraw(request: OffChainWithdrawalRequest
     ).slice(0, 20)
 
   const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
-
-  console.log('onchainDataHash:', onchainDataHash)
-  console.log('orderHashStr:', orderHashStr)
 
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
@@ -567,13 +561,11 @@ export async function signTransferWithDataStructureForContract(web3: Web3, owner
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData))
 
-  console.log('hash:', hash)
-
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
 
   const signature = EdDSA.sign(eddsaKey, sigHash)
 
-  console.log('sigHash:', sigHash, ' signature:', signature)
+  // console.log('sigHash:', sigHash, ' signature:', signature)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -585,7 +577,6 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
 // ammpool join
 export function get_EddsaSig_JoinAmmPool(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
   const typedData = getAmmJoinEcdsaTypedData(data, patch)
-  console.log('typedData:', typedData)
   return eddsaSign(typedData, patch.eddsaKey)
 }
 
@@ -599,7 +590,7 @@ export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoo
     validUntil: data.validUntil,
   };
 
-  console.log('message:', message)
+  // console.log('message:', message)
   const typedData = {
     types: {
       EIP712Domain: [
@@ -632,7 +623,6 @@ export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoo
 // ammpool exit
 export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoolRequestPatch) {
   const typedData = getAmmExitEcdsaTypedData(data, patch)
-  console.log('typedData:', typedData)
   return eddsaSign(typedData, patch.eddsaKey)
 }
 

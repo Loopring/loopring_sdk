@@ -26,7 +26,6 @@ export async function sign(web3: any, account: string, pwd: string, hash: string
   return new Promise((resolve) => {
     web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
       if (!err) {
-        console.log('sig result', result);
         const r = result.slice(0, 66);
         const s = addHexPrefix(result.slice(66, 130));
         let v = toNumber(addHexPrefix(result.slice(130, 132)));
@@ -173,7 +172,7 @@ export async function ecRecover(web3: any, account: string, msg: string, sig: an
           result: address.toLowerCase() === account.toLowerCase(),
         });
       else {
-        console.log('in web3.eth.personal.ecRecover', err, address);
+        console.error('in web3.eth.personal.ecRecover', err, address);
         resolve({ error: err });
       }
     });

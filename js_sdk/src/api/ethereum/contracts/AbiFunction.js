@@ -54,7 +54,6 @@ export default class AbiFunction {
   parseInputs(inputs = {}) {
     return this.inputs.map(({ name, type }) => {
       if (inputs[name] === undefined) {
-        console.log('inputs', inputs);
         throw new Error(`Parameter ${name} of type ${type} is required!`);
       }
       return inputs[name];

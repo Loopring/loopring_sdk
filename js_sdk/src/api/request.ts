@@ -151,8 +151,6 @@ export class Request {
 
         const optInOne = { ...this.baseOptions, ...{ headers }, ...localVarRequestOptions, url: this.baseOptions.baseURL + urlPathStr}
 
-        // console.log('optInOne:', optInOne)
-
         return await this._axios.request(optInOne)
 
     }

@@ -173,7 +173,7 @@ export function getWithdrawTypedData(data) {
 export function getWithdrawEcdsaSig(data) {
   const typedData = getWithdrawTypedData(data);
   let hash = sigUtil.TypedDataUtils.sign(typedData);
-  console.log('hash', fm.toHex(hash));
+  // console.log('hash', fm.toHex(hash));
   return fm.toHex(hash);
 }
 

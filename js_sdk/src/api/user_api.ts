@@ -538,17 +538,16 @@ export class UserAPI extends BaseAPI {
         if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
             try {
                 // signOffchainWithdrawWithDataStructure
-                console.log('1. signOffchainWithdrawWithDataStructure')
+                // console.log('1. signOffchainWithdrawWithDataStructure')
                 const result = (await sign_tools.signOffchainWithdrawWithDataStructure(web3, request.owner, request, chainId))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
             } catch (err) {
 
                 if (err.message.indexOf('Not supported on this device') !== -1) {
-                    console.log('catch err', err)
                     await sleep(1500)
                     shouldSaveHWAddr = true
                     // signOffchainWithdrawWithoutDataStructure
-                    console.log('2. signOffchainWithdrawWithoutDataStructure')
+                    // console.log('2. signOffchainWithdrawWithoutDataStructure')
                     const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                 }
@@ -561,23 +560,19 @@ export class UserAPI extends BaseAPI {
 
             if (isContractCheck) {
                 // signOffchainWithdrawWithDataStructureForContract
-                console.log('3. signOffchainWithdrawWithDataStructureForContract')
+                // console.log('3. signOffchainWithdrawWithDataStructureForContract')
                 const result = (await sign_tools.signOffchainWithdrawWithDataStructureForContract(web3, request.owner, request, chainId))
                 ecdsaSignature = result.ecdsaSig
             } else {
                 // signOffchainWithdrawWithoutDataStructure
-                console.log('4. signOffchainWithdrawWithoutDataStructure 2')
+                // console.log('4. signOffchainWithdrawWithoutDataStructure 2')
                 const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
             }
 
         }
 
-        console.log('submitOffchainWithdraw ecdsaSignature:', ecdsaSignature)
-
         request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
-        
-        console.log('submitOffchainWithdraw .eddsaSignature:', request.eddsaSignature)
 
         const reqParams: ReqParams = {
             url: LOOPRING_URLs.WITHDRAWALS_ACTION,
@@ -611,17 +606,16 @@ export class UserAPI extends BaseAPI {
         if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
             try {
                 // signOffchainWithdrawWithDataStructure
-                console.log('1. signTransferWithDataStructure')
+                // console.log('1. signTransferWithDataStructure')
                 const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
             } catch (err) {
 
                 if (err.message.indexOf('Not supported on this device') !== -1) {
-                    console.log('catch err', err)
                     await sleep(1500)
                     shouldSaveHWAddr = true
                     // signOffchainWithdrawWithoutDataStructure
-                    console.log('2. signTransferWithoutDataStructure')
+                    // console.log('2. signTransferWithoutDataStructure')
                     const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                 }
@@ -633,19 +627,17 @@ export class UserAPI extends BaseAPI {
 
             if (isContractCheck) {
                 // signOffchainWithdrawWithDataStructureForContract
-                console.log('3. signTransferWithDataStructureForContract')
+                // console.log('3. signTransferWithDataStructureForContract')
                 const result = (await sign_tools.signTransferWithDataStructureForContract(web3, request.payerAddr, request, chainId))
                 ecdsaSignature = result.ecdsaSig
             } else {
                 // signOffchainWithdrawWithoutDataStructure
-                console.log('4. signTransferWithoutDataStructure 2')
+                // console.log('4. signTransferWithoutDataStructure 2')
                 const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
             }
 
         }
-
-        console.log('submitInternalTransfer ecdsaSignature:', ecdsaSignature)
 
         request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
 
@@ -679,16 +671,16 @@ export class UserAPI extends BaseAPI {
     
             if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
                 try {
-                    console.log('1. signUpdateAccountWithDataStructure')
+                    // console.log('1. signUpdateAccountWithDataStructure')
                     const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 } catch (err) {
     
                     if (err.message.indexOf('Not supported on this device') !== -1) {
-                        console.log('catch err', err)
+                        console.error('catch err', err)
                         await sleep(1500)
                         shouldSaveHWAddr = true
-                        console.log('2. signUpdateAccountWithoutDataStructure')
+                        // console.log('2. signUpdateAccountWithoutDataStructure')
                         const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
                         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                     }
@@ -699,18 +691,16 @@ export class UserAPI extends BaseAPI {
                 const isContractCheck = await isContract(web3, request.owner)
     
                 if (isContractCheck) {
-                    console.log('3. signUpdateAccountWithDataStructureForContract')
+                    // console.log('3. signUpdateAccountWithDataStructureForContract')
                     const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig
                 } else {
-                    console.log('4. signUpdateAccountWithDataStructure_2')
+                    // console.log('4. signUpdateAccountWithDataStructure_2')
                     const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                 }
     
             }
-    
-            console.log('signUpdateAccount ecdsaSignature:', ecdsaSignature)
     
             // request.eddsaSignature = sign_tools.getEDD(request, privateKey)
 

@@ -276,8 +276,6 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        console.log('raw_data:', raw_data)
-
         let ammPoolStats: LoopringMap<AmmPoolStat> = {}
 
         raw_data.data.forEach((item: AmmPoolStat) => {

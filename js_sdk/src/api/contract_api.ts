@@ -36,7 +36,6 @@ export async function sign(web3: Web3, account: string, hash: string) {
     return new Promise((resolve) => {
         web3.eth.sign(hash, account, function (err: any, result: any) {
             if (!err) {
-                console.log('sig result', result)
                 const r = result.slice(0, 66)
                 const s = fm.addHexPrefix(result.slice(66, 130))
                 let v = fm.toNumber(fm.addHexPrefix(result.slice(130, 132)))
@@ -72,7 +71,7 @@ export async function sign(web3: Web3, account: string, hash: string) {
         return response;
     } else {
         const error = response['error']['message']
-        console.log('sendTransaction got error:', response['error'])
+        console.error('sendTransaction got error:', response['error'])
         throw new Error(error)
     }
 }
@@ -95,7 +94,7 @@ export async function signEthereumTx(web3: any, account: any, rawTx: any) {
         return { result: fm.toHex(ethTx.serialize()) }
     } else {
         const error = response['error']['message']
-        console.log('sendTransaction got error:', response['error'])
+        console.error('sendTransaction got error:', response['error'])
         throw new Error(error)
     }
 }
@@ -113,8 +112,6 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
 
     const gasPrice2 = fm.fromGWEI(gasPrice).toFixed(0, 0)
 
-    console.log('sendRawTx gasPrice2:', gasPrice2, sendByMetaMask)
-
     const rawTx = {
         from,
         to,
@@ -125,8 +122,6 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
         gasPrice: gasPrice2,
         gas,
     }
-
-    console.log('sendRawTx rawTx:', rawTx)
 
     const response = sendByMetaMask
         ? await sendTransaction(web3, rawTx)
@@ -202,16 +197,6 @@ export async function approveMax(
     nonce: number,
     sendByMetaMask: boolean = false
 ) {
-
-    console.log('approveMax:',
-        owner,
-        tokenAddress,
-        depositAddress,
-        gasPrice,
-        gasLimit,
-        chainId,
-        nonce,
-        sendByMetaMask)
 
     return await approve(web3, owner, tokenAddress, depositAddress, 
         ApproveVal.Max,
