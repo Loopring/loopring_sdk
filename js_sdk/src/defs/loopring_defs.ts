@@ -24,6 +24,7 @@ import {
     RuleType,
     AmmPoolActivityStatus,
     SIG_FLAG,
+    WithdrawalTypes,
 } from './loopring_enums'
 
 export interface ReqOptions {
@@ -817,7 +818,24 @@ export interface UserDepositHistoryTx {
     updatedAt: number
 }
 
-export interface UserOnchainWithdrawalHistoryTx extends UserDepositHistoryTx {}
+export interface UserOnchainWithdrawalHistoryTx {
+    id: number,
+    txType: WithdrawalTypes,
+    hash: string,
+    symbol: string,
+    amount: string,
+    txHash: string,
+    feeTokenSymbol: string,
+    feeAmount: string,
+    status: TxStatus,
+    progress: string,
+    timestamp: number,
+    blockNum: number,
+    updatedAt: number,
+    distributeHash: string,
+    requestId: number,
+    fastStatus: string
+}
 
 export interface GetUserOnchainWithdrawalHistoryRequest {
     accountId: number

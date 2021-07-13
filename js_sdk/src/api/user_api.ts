@@ -344,7 +344,7 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
         return {
             totalNum: raw_data.totalNum,
-            userOnchainWithdrawalHistory: raw_data as loopring_defs.UserOnchainWithdrawalHistoryTx[],
+            userOnchainWithdrawalHistory: raw_data.transactions as loopring_defs.UserOnchainWithdrawalHistoryTx[],
             raw_data,
         }
 

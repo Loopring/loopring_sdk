@@ -299,7 +299,17 @@ describe('ExchangeAPI test', function () {
 
     }, DEFAULT_TIMEOUT)
 
-    it('getMixCandlestick', async () => {
+    it('getMixCandlestickAMM', async () => {
+        const request: GetCandlestickRequest = {
+            market: 'AMM-LRC-ETH',
+            interval: TradingInterval.min15,
+            limit: 96,
+        }
+        const response = await api.getMixCandlestick(request)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getMixCandlestickNORMAL', async () => {
         const request: GetCandlestickRequest = {
             market: 'LRC-ETH',
             interval: TradingInterval.min15,

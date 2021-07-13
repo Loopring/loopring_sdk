@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.50
+    1) update getUserOnchainWithdrawalHistory response
+    
 ### v0.0.48
     1) add tags to AccountInfo
     2) fix covertPublickey issue.

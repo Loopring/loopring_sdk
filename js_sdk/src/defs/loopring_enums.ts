@@ -79,6 +79,12 @@ export enum Side {
     Sell = 'SELL',
 }
 
+export enum WithdrawalTypes {
+    OFFCHAIN_WITHDRAWAL = 'OFFCHAIN_WITHDRAWAL',
+    ONCHAIN_WITHDRAWAL = 'ONCHAIN_WITHDRAWAL',
+    FORCE_WITHDRAWAL = 'FORCE_WITHDRAWAL',
+}
+
 export enum TransferType {
     transfer = 'transfer',
     transfer_red = 'transfer_red',

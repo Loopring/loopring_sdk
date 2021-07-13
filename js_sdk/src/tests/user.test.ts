@@ -182,6 +182,22 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getOffchainFeeAmt_up', async () => {
+        try {
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                requestType: OffchainFeeReqType.UPDATE_ACCOUNT,
+            }
+            const type = OffchainFeeReqType.ORDER
+            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+            console.log(response)
+            console.log('fees:', response.raw_data.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getOffchainFeeAmt_fast', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
