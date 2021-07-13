@@ -56,9 +56,13 @@ export async function generateKeyPair(web3: any, address: string, exchangeAddres
 
   if (!result.error) {
     const keyPair = EdDSA.generateKeyPair(ethUtil.sha256(fm.toBuffer((result.sig))))
+    const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)))
+    const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)))
     const sk = toHex(toBig(keyPair.secretKey))
     return {
       keyPair,
+      formatedPx,
+      formatedPy,
       sk,
     }
   } else {
@@ -304,6 +308,10 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
   throw Error('getEcDSASig unsupported switch case:' + type)
 }
 
+export function convertPublicKey2(pk: PublicKey) {
+  return new BN(EdDSA.pack(pk.x, pk.y), 16)
+}
+
 export function convertPublicKey(pk: PublicKey) {
   const publicKeyX = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.x)))
   const publicKeyY = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.y)))
@@ -319,7 +327,7 @@ export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, cha
     accountID: data.accountId,
     feeTokenID: data.maxFee.tokenId,
     maxFee: data.maxFee.volume,
-    publicKey: convertPublicKey(data.publicKey),
+    publicKey: fm.addHexPrefix(convertPublicKey2(data.publicKey).toString(16)),
     validUntil: data.validUntil,
     nonce: data.nonce,
   }

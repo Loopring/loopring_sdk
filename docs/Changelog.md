@@ -2,6 +2,11 @@
 
 ### JS SDK Version ChangeLog
 
+
+### v0.0.48
+    1) add tags to AccountInfo
+    2) fix covertPublickey issue.
+
 ### v0.0.45
     1) update make join/exit request
 

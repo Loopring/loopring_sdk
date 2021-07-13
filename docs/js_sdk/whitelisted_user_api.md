@@ -4,6 +4,11 @@
 
 ```javascript
     // step 1. get account info
+
+            let addressWhitlisted = '0x35405E1349658BcA12810d0f879Bf6c5d89B512C'
+
+            let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
+
             const { accInfo } = await exchange.getAccount({owner: addressWhitlisted})
 
             console.log('accInfo:', accInfo)

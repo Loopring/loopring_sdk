@@ -1,9 +1,12 @@
+import { PublicKey } from "./loopring_defs"
+
 export interface AccountInfo {
     accountId: number
-    publicKey: any
     owner: string
-    nonce: number
     fronzen: boolean
+    publicKey: PublicKey
+    tags: string
+    nonce: number
 }
 
 export const POLLING_INTERVAL = 10000
