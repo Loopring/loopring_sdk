@@ -357,6 +357,7 @@ export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, cha
 
 export async function signUpdateAccountWithDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
   const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
+  // console.log('typedData:', typedData)
   const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.HasDataStruct)
   return result
 }

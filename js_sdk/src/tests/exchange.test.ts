@@ -33,6 +33,15 @@ describe('ExchangeAPI test', function () {
         api = new ExchangeAPI(ChainId.MAINNET)
     })
 
+    it('getAccount_Found3', async () => {
+        api = new ExchangeAPI(ChainId.GORLI)
+        const request: GetAccountRequest = {
+            owner: "0x01cb603BD2120cc88601fe43d405aBCCAA6cc46F"
+        }
+        const response = await api.getAccount(request)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+    
     it('getAccount_Found', async () => {
         api = new ExchangeAPI(ChainId.GORLI)
         const request: GetAccountRequest = {

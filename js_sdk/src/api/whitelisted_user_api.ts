@@ -22,9 +22,9 @@ export class WhitelistedUserAPI extends BaseAPI {
 
     /*
     * Submit offchain withdraw request
+    * not supported for now.
     */
-
-    public async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
+    private async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
         eddsaKey: string, apiKey: string) {
 
         request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)

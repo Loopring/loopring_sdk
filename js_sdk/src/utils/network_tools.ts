@@ -2,7 +2,7 @@ export const dumpError400 = (reason: any, src: string = '') => {
     if (src) {
         console.log('src:', src)
     }
-    if (reason.response) {
+    if (reason?.response) {
         console.log(reason.response.data)
     } else {
         console.log(reason.message)

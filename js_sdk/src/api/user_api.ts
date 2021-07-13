@@ -703,7 +703,7 @@ export class UserAPI extends BaseAPI {
                     const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig
                 } else {
-                    console.log('4. signUpdateAccountWithDataStructure 2')
+                    console.log('4. signUpdateAccountWithDataStructure_2')
                     const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                 }

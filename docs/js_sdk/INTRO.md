@@ -19,6 +19,8 @@ Make sure you are using the original npm registry.
     const exchangeApi: ExchangeAPI = new ExchangeAPI(ChainId.GORLI)
     const exchangeApi: AmmpoolAPI = new AmmpoolAPI(ChainId.GORLI)
     const wsAPI: WsAPI = new WsAPI(ChainId.GORLI)
+    const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI)
+    const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI)
 ```
 
 #### Examples:(Transfer Process)

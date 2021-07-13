@@ -14,6 +14,8 @@
     * [Contract](./js_sdk/contract_api.md)
     * [Exchange](./js_sdk/exchange_api.md)
     * [User](./js_sdk/user_api.md)
+    * [Whitelisted User](./js_sdk/whitelisted_user_api.md)
+    * [Wallet](./js_sdk/wallet_api.md)
     * [WS REST](./js_sdk/ws_api.md)
     * [Websocket](./js_sdk/websocket_api.md)
 

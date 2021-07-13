@@ -335,8 +335,6 @@ export class ExchangeAPI extends BaseAPI {
 
         request.token = token
 
-        console.log('request.token:', request.token)
-
         const reqParams: ReqParams = {
             queryParams: request,
             url: LOOPRING_URLs.GET_TOKEN_BALANCES,
