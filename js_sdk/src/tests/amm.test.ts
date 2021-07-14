@@ -18,7 +18,7 @@ import {
 
 import { loopring_exported_account as acc } from './utils'
 import { dumpError400 } from '../utils/network_tools'
-import { makeExitAmmPoolRequest, makeJoinAmmPoolRequest } from '../utils'
+import { makeExitAmmPoolRequest, makeExitAmmPoolRequest2, makeJoinAmmPoolRequest } from '../utils'
 
 let userApi: UserAPI
 let api: AmmpoolAPI
@@ -213,7 +213,7 @@ describe('AmmpoolAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('exitAmmPool', async () => {
+    it('exitAmmPool1', async () => {
         try {
 
             const { ammpools } = await api.getAmmPoolConf()
@@ -237,7 +237,51 @@ describe('AmmpoolAPI test', function () {
 
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
-            const { request: req3 } = makeExitAmmPoolRequest('10', '0.001', acc.address,
+            const { request: req3 } = makeExitAmmPoolRequest('200', true, '0.001', acc.address,
+            fees, ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
+
+            const patch: AmmPoolRequestPatch = {
+                chainId: ChainId.GORLI,
+                ammName: 'LRCETH-Pool',
+                poolAddress,
+                eddsaKey: acc.eddsaKey
+            }
+
+            console.log('req3:', req3)
+            console.log('res3 unPooled:', req3.exitTokens.unPooled)
+
+            const response = await api.exitAmmPool(req3, patch, acc.apiKey)
+            console.log(response)
+        } catch(reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('exitAmmPool2', async () => {
+        try {
+
+            const { ammpools } = await api.getAmmPoolConf()
+
+            const tokenSymbol = 'AMM-LRC-ETH'
+
+            const ammInfo = ammpools[tokenSymbol]
+
+            const request1: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            const { ammPoolSnapshot } = await api.getAmmPoolSnapshot(request1)
+
+            const { fees } = await userApi.getOffchainFeeAmt({tokenSymbol: 'ETH', requestType: OffchainFeeReqType.AMM_EXIT, accountId: acc.accountId}, acc.apiKey)
+            
+            const request: GetNextStorageIdRequest = {
+                accountId: acc.accountId, 
+                sellTokenId: 4
+            }
+            const storageId = await userApi.getNextStorageId(request, acc.apiKey)
+
+            const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
+
+            const { request: req3 } = makeExitAmmPoolRequest2('10', '0.001', acc.address,
             fees, ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {

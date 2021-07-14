@@ -784,9 +784,9 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]]
     const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
 
-    console.log('ammConf:', ammConf)
-    console.log('fees:', fees)
-    console.log('quoteToken:', quoteToken)
+    // console.log('ammConf:', ammConf)
+    // console.log('fees:', fees)
+    // console.log('quoteToken:', quoteToken)
 
     const fee = fees[quoteToken.symbol].fee
 
@@ -817,7 +817,55 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     }
 }
 
-export function makeExitAmmPoolRequest(rawVal: string, slippageTolerance: string, owner: string,
+export function makeExitAmmPoolRequest(rawVal: string, isAtoB: boolean, slippageTolerance: string, 
+    owner: string,
+    fees: LoopringMap<OffchainFeeInfo>,
+    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>,
+    offchainId: number = 0) {
+
+    const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp
+    const tokenA: TokenVolumeV3 = ammPoolSnapshot.pooled[0]
+    const tokenB: TokenVolumeV3 = ammPoolSnapshot.pooled[1]
+
+    const tokenA_TV: TokenInfo = tokenMap[idIdx[tokenA.tokenId]]
+    const tokenB_TV: TokenInfo = tokenMap[idIdx[tokenB.tokenId]]
+    const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]]
+
+    const rest = BIG1.minus(fm.toBig(slippageTolerance))
+
+    const decimals = isAtoB ? tokenA_TV.decimals : tokenB_TV.decimals
+
+    const rawWithDecimals = fm.toBig(rawVal).times('1e' + decimals)
+
+    const ratio = fm.toBig(rawWithDecimals).div(isAtoB ? tokenA.volume: tokenB.volume)
+
+    const burnedVol = fm.toBig(lpTokenVol.volume).times(ratio).toFixed(0, 0)
+
+    const volA = (isAtoB ? rawWithDecimals : fm.toBig(tokenA.volume)
+        .times(ratio)).times(rest).toFixed(0, 0)
+
+    const volB = (isAtoB ? fm.toBig(tokenB.volume).times(ratio) : rawWithDecimals).times(rest).toFixed(0, 0)
+
+    const maxFee = fees[tokenB_TV.symbol].fee
+
+    let request: ExitAmmPoolRequest = {
+        owner,
+        poolAddress: ammConf.address,
+        exitTokens: {
+            unPooled: [{ tokenId: tokenA.tokenId, volume: volA, }, { tokenId: tokenB.tokenId, volume: volB, },],
+            burned: { tokenId: ammPoolSnapshot.lp.tokenId, volume: burnedVol, },
+        },
+        storageId: offchainId,
+        maxFee,
+    }
+
+    return {
+        request,
+    }
+}
+
+export function makeExitAmmPoolRequest2(rawVal: string, slippageTolerance: string, owner: string,
     fees: LoopringMap<OffchainFeeInfo>,
     ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
     tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>,
@@ -826,7 +874,7 @@ export function makeExitAmmPoolRequest(rawVal: string, slippageTolerance: string
     const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp
     const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]]
 
-    const burnedVol = fm.toBig(rawVal).times(BIG10.pow(lpToken.decimals)).toFixed(0, 0)
+    const burnedVol = fm.toBig(rawVal).times('1e' + lpToken.decimals).toFixed(0, 0)
 
     const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume)
 

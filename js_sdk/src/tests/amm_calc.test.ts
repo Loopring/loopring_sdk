@@ -19,7 +19,7 @@ import {
 
 import { dumpError400 } from '../utils/network_tools'
 
-import { ammPoolCalc, getOutputAmount, makeExitAmmPoolRequest, makeJoinAmmPoolRequest } from '../utils/swap_calc_utils'
+import { ammPoolCalc, getOutputAmount, makeExitAmmPoolRequest, makeExitAmmPoolRequest2, makeJoinAmmPoolRequest } from '../utils/swap_calc_utils'
 
 import * as sdk from '..'
 
@@ -125,10 +125,48 @@ describe('amm_calc', function () {
 
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
-            const { request: res } = makeExitAmmPoolRequest('100', '0.001', acc.address, fees, 
+            const { request: res } = makeExitAmmPoolRequest2('100', '0.001', acc.address, fees, 
                 ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
 
             console.log('res:', res)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('make_new_exit_request', async () => {
+        const api = new AmmpoolAPI(ChainId.GORLI)
+        const userApi = new UserAPI(ChainId.GORLI)
+        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        try {
+
+            const { ammpools } = await api.getAmmPoolConf()
+
+            const request: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            
+            const response = await api.getAmmPoolSnapshot(request)
+            console.log(response.raw_data.pooled)
+
+            const request2: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                requestType: OffchainFeeReqType.AMM_JOIN,
+                tokenSymbol: 'ETH',
+            }
+
+            const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey)
+
+            console.log('---fees:', fees)
+
+            const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
+
+            const { request: res } = makeExitAmmPoolRequest('100', true, '0.001', acc.address, fees, 
+                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+
+            console.log('res:', res)
+            console.log('res:', res.exitTokens)
 
         } catch (reason) {
             dumpError400(reason)
