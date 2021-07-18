@@ -1870,6 +1870,11 @@
   dependencies:
     bignumber.js "*"
 
+"@types/bluebird@*":
+  version "3.5.36"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.36.tgz#00d9301d4dc35c2f6465a8aec634bb533674c652"
+  integrity sha512-HBNx4lhkxN7bx6P0++W8E289foSu8kO8GCk2unhuVggO+cE7rh9DhZUyPhUxNRG9m+5B5BTKxZQ5ZP92x/mx9Q==
+
 "@types/bn.js@*":
   version "5.1.0"
   resolved "https://registry.nlark.com/@types/bn.js/download/@types/bn.js-5.1.0.tgz#32c5d271503a12653c62cf4d2b45e6eab8cebc68"
@@ -1883,6 +1888,11 @@
   integrity sha1-wwbHDZNYquozzU7aCSp0K5UFlnw=
   dependencies:
     "@types/node" "*"
+
+"@types/caseless@*":
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.2.tgz#f65d3d6389e01eeb458bd54dc8f52b95a9463bc8"
+  integrity sha512-6ckxMjBBD8URvjB6J3NcnuAn5Pkl7t3TizAg+xdlzzQGSPSmBcXf8KoIH0ua/i+tio+ZRUHEXp0HEmvaR4kt0w==
 
 "@types/classnames@^2.2.11":
   version "2.3.1"
@@ -2062,6 +2072,24 @@
   resolved "https://registry.nlark.com/@types/prettier/download/@types/prettier-2.3.0.tgz#2e8332cc7363f887d32ec5496b207d26ba8052bb"
   integrity sha1-LoMyzHNj+IfTLsVJayB9JrqAUrs=
 
+"@types/request-promise@^4.1.48":
+  version "4.1.48"
+  resolved "https://registry.yarnpkg.com/@types/request-promise/-/request-promise-4.1.48.tgz#46f4225a58cefaa342c87fe5f2efb8ad3cb2c2e3"
+  integrity sha512-sLsfxfwP5G3E3U64QXxKwA6ctsxZ7uKyl4I28pMj3JvV+ztWECRns73GL71KMOOJME5u1A5Vs5dkBqyiR1Zcnw==
+  dependencies:
+    "@types/bluebird" "*"
+    "@types/request" "*"
+
+"@types/request@*", "@types/request@^2.48.6":
+  version "2.48.6"
+  resolved "https://registry.yarnpkg.com/@types/request/-/request-2.48.6.tgz#2300e7fc443108f79efa90e3bdf34c6d60fa89d8"
+  integrity sha512-vrZaV3Ij7j/l/3hz6OttZFtpRCu7zlq7XgkYHJP6FwVEAZkGQ095WqyJV08/GlW9eyXKVcp/xmtruHm8eHpw1g==
+  dependencies:
+    "@types/caseless" "*"
+    "@types/node" "*"
+    "@types/tough-cookie" "*"
+    form-data "^2.5.0"
+
 "@types/resolve@1.17.1":
   version "1.17.1"
   resolved "https://registry.nlark.com/@types/resolve/download/@types/resolve-1.17.1.tgz?cache=0&sync_timestamp=1621242987076&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fresolve%2Fdownload%2F%40types%2Fresolve-1.17.1.tgz#3afd6ad8967c77e4376c598a82ddd58f46ec45d6"
@@ -2085,6 +2113,11 @@
   version "2.0.0"
   resolved "https://registry.nlark.com/@types/stack-utils/download/@types/stack-utils-2.0.0.tgz?cache=0&sync_timestamp=1621243830923&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fstack-utils%2Fdownload%2F%40types%2Fstack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha1-cDZkC04hzC8lmugmzoQ9J32tjP8=
+
+"@types/tough-cookie@*":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.1.tgz#8f80dd965ad81f3e1bc26d6f5c727e132721ff40"
+  integrity sha512-Y0K95ThC3esLEYD6ZuqNek29lNX2EM1qxV8y2FTLUB0ff5wWrk7az+mLrnNFUnaXcgKye22+sFBRXOgpPILZNg==
 
 "@types/yargs-parser@*":
   version "20.2.0"
@@ -6183,6 +6216,15 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.npm.taobao.org/forever-agent/download/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
+
+form-data@^2.5.0:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"
+  integrity sha512-m21N3WOmEEURgk6B9GLOE4RuWOFf28Lhh9qGYeNlGq4VDXUlJy2th2slBNU8Gp8EzloYZOibZJ7t5ecIrFSjVA==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.6"
+    mime-types "^2.1.12"
 
 form-data@^3.0.0:
   version "3.0.1"
@@ -10545,6 +10587,16 @@ request-promise-native@^1.0.7:
   resolved "https://registry.npm.taobao.org/request-promise-native/download/request-promise-native-1.0.9.tgz#e407120526a5efdc9a39b28a5679bf47b9d9dc28"
   integrity sha1-5AcSBSal79yaObKKVnm/R7nZ3Cg=
   dependencies:
+    request-promise-core "1.1.4"
+    stealthy-require "^1.1.1"
+    tough-cookie "^2.3.3"
+
+request-promise@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-4.2.6.tgz#7e7e5b9578630e6f598e3813c0f8eb342a27f0a2"
+  integrity sha512-HCHI3DJJUakkOr8fNoCc73E5nU5bqITjOYFMDrKHYOXWXrgD/SBaC7LjwuPymUprRyuF06UK7hd/lMHkmUXglQ==
+  dependencies:
+    bluebird "^3.5.0"
     request-promise-core "1.1.4"
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
