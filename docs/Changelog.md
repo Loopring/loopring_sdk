@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.54
+    1) update swap calc response
+
 ### v0.0.50
     1) update getUserOnchainWithdrawalHistory response
     

@@ -431,175 +431,6 @@ export function getReserveInfo(base: string, quote: string,
 
 }
 
-export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean,
-    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
-    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined,
-    takerFee: string = '6', slipBips: string = '200') {
-
-    // console.log(`getOutputAmount market: ${base} / ${quote}`)
-
-    // console.log('ammPoolSnapshot:', ammPoolSnapshot)
-
-    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
-
-    if (!reserveInfo) {
-        return undefined
-    }
-
-    const {
-        reserveIn,
-        reserveOut,
-        baseToken,
-        quoteToken,
-        isReverse,
-        feeBips,
-        marketInfo,
-    } = reserveInfo
-
-    input = input.trim()
-
-    let exceedDepth = false
-
-    // console.log('input:', input, 'reserveIn:', reserveIn, ' reserveOut:', reserveOut)
-
-    let output = '0'
-
-    let amountS = '0'
-
-    let amountBOutWithoutFee = '0'
-
-    let amountBOut = '0'
-
-    let baseAmt = '0'
-    let quoteAmt = '0'
-
-    if (isAtoB) {
-
-        // bids_amtTotal -> bidsSizeShown
-        // asks_volTotal -> asksQuoteSizeShown
-        const amountInWei = toWEI(tokenMap, base, input, 0)
-
-        // console.log('isAtoB amountInWei:', amountInWei)
-
-        if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
-            exceedDepth = true
-            console.log('2')
-        } else {
-
-            if (!isReverse) {
-                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_amtTotal))
-                // console.log('3 amountInWei:', amountInWei, ' bids_amtTotal:', depth.bids_amtTotal)
-            } else {
-                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_volTotal))
-                // console.log('4 amountInWei:', amountInWei, ' asks_volTotal:', depth.asks_volTotal)
-            }
-
-        }
-
-        // console.log(`a2b(input:${input})  exceedDepth:`, exceedDepth, ' isSwapEnabled:', marketInfo.isSwapEnabled)
-
-        if (exceedDepth) {
-            if (marketInfo.isSwapEnabled) {
-                const amountB = getAmountOutWithFeeBips(amountInWei, feeBips, reserveIn, reserveOut)
-                output = fromWEI(tokenMap, quote, amountB.toFixed(0, 0))
-            }
-        } else {
-            output = getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)
-        }
-
-        amountBOutWithoutFee = toWEI(tokenMap, quote, output, 0)
-        amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toString(), 0)
-
-        amountS = toWEI(tokenMap, base, input, 0)
-
-        baseAmt = input
-        quoteAmt = output
-
-    } else {
-
-        // asks_amtTotal -> asksSizeShown
-        // bids_volTotal -> bidsQuoteSizeShown
-
-        if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
-            exceedDepth = true
-        } else {
-            const amountInWei = toWEI(tokenMap, quote, input, 0)
-
-            if (!isReverse) {
-                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_volTotal))
-            } else {
-                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_amtTotal))
-            }
-
-        }
-
-        let amountSBint = BIG0
-
-        const amountB: string = toWEI(tokenMap, quote, input, 0)
-
-        // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
-
-        if (exceedDepth) {
-            if (marketInfo.isSwapEnabled) {
-                amountSBint = getAmountInWithFeeBips(amountB, feeBips, reserveIn, reserveOut)
-            }
-        } else {
-            const outputOrderbook = getOutputOrderbook(input, baseToken, quoteToken, feeBips,
-                isAtoB, isReverse, depth)
-            amountSBint = fm.toBig(toWEI(tokenMap, base, outputOrderbook))
-        }
-
-        if (amountSBint.gt(BIG0)) {
-            output = fromWEI(tokenMap, base, amountSBint.toString())
-
-            amountBOutWithoutFee = fm.toBig(amountB).toFixed(0, 0)
-            // amountBOutWithoutFee = amountB
-            amountBOut = fm.toBig(amountB).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toFixed(0, 0)
-        }
-
-        //  LRC / ETH b -> a
-
-        amountS = amountSBint.toFixed(0, 0)
-
-        // console.log('got amountSBint:', amountSBint.toString(), amountSBint.gt(BIG0), ' amountBOut:', amountBOut.toString())
-
-        baseAmt = output
-        quoteAmt = input
-
-    }
-
-    const amountBOutSlip = getMinReceived(amountBOut, slipBips)
-
-    const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, amountS, amountBOut,
-        feeBips, takerFee, isAtoB, isReverse, exceedDepth, depth)
-
-    // const priceImpact = updatePriceImpact(baseAmt, quoteAmt, reserveIn, reserveOut, amountS, 
-    //      feeBips, takerFee, isReverse, exceedDepth, depth)
-
-    return {
-        isAtoB,
-        isReverse,
-        output,
-
-        baseAmt,
-        quoteAmt,
-
-        amountS,
-
-        amountBOut,
-        amountBOutWithoutFee,
-        amountBOutSlip,
-
-        priceImpact,
-
-    }
-
-}
-
-export function getMinReceived(amountBOut: string, slipBips: string) {
-    return fm.toBig(amountBOut).times(BIG10K.minus(fm.toBig(slipBips))).div(BIG10K).toFixed(0, 0)
-}
-
 function getPriceImpactStr(curPrice: string, toPrice: string) {
 
     if (!curPrice || !toPrice) {
@@ -735,8 +566,185 @@ export function updatePriceImpact(baseAmt: string, quoteAmt: string, reverseIn: 
 
 }
 
-export function updateAmountOutSlip(amountBOut: string, slipBips: string) {
-    const amountBOutSlip = getMinReceived(amountBOut, slipBips)
+export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean,
+    marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
+    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined,
+    takerFee: string = '6', slipBips: string = '100') {
+
+    // console.log(`getOutputAmount market: ${base} / ${quote}`)
+
+    // console.log('ammPoolSnapshot:', ammPoolSnapshot)
+
+    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
+
+    if (!reserveInfo) {
+        return undefined
+    }
+
+    const {
+        reserveIn,
+        reserveOut,
+        baseToken,
+        quoteToken,
+        isReverse,
+        feeBips,
+        marketInfo,
+    } = reserveInfo
+
+    input = input.trim()
+
+    let exceedDepth = false
+
+    // console.log('input:', input, 'reserveIn:', reserveIn, ' reserveOut:', reserveOut)
+
+    let output = '0'
+
+    let amountS = '0'
+
+    let amountBOutWithoutFee = '0'
+
+    let amountBOut = '0'
+
+    let baseAmt = '0'
+    let quoteAmt = '0'
+
+    let minimumDecimal = 0
+
+    if (isAtoB) {
+
+        // bids_amtTotal -> bidsSizeShown
+        // asks_volTotal -> asksQuoteSizeShown
+        const amountInWei = toWEI(tokenMap, base, input, 0)
+
+        // console.log('isAtoB amountInWei:', amountInWei)
+
+        if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
+            exceedDepth = true
+            console.log('2')
+        } else {
+
+            if (!isReverse) {
+                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_amtTotal))
+                // console.log('3 amountInWei:', amountInWei, ' bids_amtTotal:', depth.bids_amtTotal)
+            } else {
+                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_volTotal))
+                // console.log('4 amountInWei:', amountInWei, ' asks_volTotal:', depth.asks_volTotal)
+            }
+
+        }
+
+        // console.log(`a2b(input:${input})  exceedDepth:`, exceedDepth, ' isSwapEnabled:', marketInfo.isSwapEnabled)
+
+        if (exceedDepth) {
+            if (marketInfo.isSwapEnabled) {
+                const amountB = getAmountOutWithFeeBips(amountInWei, feeBips, reserveIn, reserveOut)
+                output = fromWEI(tokenMap, quote, amountB.toFixed(0, 0))
+            }
+        } else {
+            output = getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)
+        }
+
+        amountBOutWithoutFee = toWEI(tokenMap, quote, output, 0)
+        amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toString(), 0)
+
+        amountS = toWEI(tokenMap, base, input, 0)
+
+        baseAmt = input
+        quoteAmt = output
+
+        minimumDecimal = quoteToken?.decimals as number
+
+    } else {
+
+        // asks_amtTotal -> asksSizeShown
+        // bids_volTotal -> bidsQuoteSizeShown
+
+        if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
+            exceedDepth = true
+        } else {
+            const amountInWei = toWEI(tokenMap, quote, input, 0)
+
+            if (!isReverse) {
+                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_volTotal))
+            } else {
+                exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_amtTotal))
+            }
+
+        }
+
+        let amountSBint = BIG0
+
+        const amountB: string = toWEI(tokenMap, quote, input, 0)
+
+        // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
+
+        if (exceedDepth) {
+            if (marketInfo.isSwapEnabled) {
+                amountSBint = getAmountInWithFeeBips(amountB, feeBips, reserveIn, reserveOut)
+            }
+        } else {
+            const outputOrderbook = getOutputOrderbook(input, baseToken, quoteToken, feeBips,
+                isAtoB, isReverse, depth)
+            amountSBint = fm.toBig(toWEI(tokenMap, base, outputOrderbook))
+        }
+
+        if (amountSBint.gt(BIG0)) {
+            output = fromWEI(tokenMap, base, amountSBint.toString())
+
+            amountBOutWithoutFee = fm.toBig(amountB).toFixed(0, 0)
+            // amountBOutWithoutFee = amountB
+            amountBOut = fm.toBig(amountB).times(BIG10K.minus(fm.toBig(takerFee))).div(BIG10K).toFixed(0, 0)
+        }
+
+        //  LRC / ETH b -> a
+
+        amountS = amountSBint.toFixed(0, 0)
+
+        // console.log('got amountSBint:', amountSBint.toString(), amountSBint.gt(BIG0), ' amountBOut:', amountBOut.toString())
+
+        baseAmt = output
+        quoteAmt = input
+
+        minimumDecimal = baseToken?.decimals as number
+
+    }
+
+    const amountBOutSlip = getMinReceived(amountBOut, minimumDecimal, slipBips)
+
+    const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, amountS, amountBOut,
+        feeBips, takerFee, isAtoB, isReverse, exceedDepth, depth)
+
+    // const priceImpact = updatePriceImpact(baseAmt, quoteAmt, reserveIn, reserveOut, amountS, 
+    //      feeBips, takerFee, isReverse, exceedDepth, depth)
+
+    return {
+        slipBips,
+        isAtoB,
+        isReverse,
+        output,
+
+        baseAmt,
+        quoteAmt,
+
+        amountS,
+
+        amountBOut,
+        amountBOutWithoutFee,
+        
+        amountBOutSlip,
+
+        priceImpact,
+
+    }
+
+}
+
+export function getMinReceived(amountBOut: string, minimumDecimal: number, slipBips: string) {
+    const minReceived = fm.toBig(amountBOut).times(BIG10K.minus(fm.toBig(slipBips))).div(BIG10K)
+    return {
+        minReceived: minReceived.toFixed(0, 0),
+        minReceivedVal: minReceived.div('1e' + minimumDecimal).toString()
+    }
 }
 
 export function ammPoolCalc(rawVal: string, isAtoB: boolean, coinA: TokenVolumeV3, coinB: TokenVolumeV3) {

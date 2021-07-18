@@ -16,13 +16,13 @@ import {
 
 import { dumpError400 } from '../utils/network_tools'
 
-import { getOutputAmount } from '../utils/swap_calc_utils'
+import { getMinReceived, getOutputAmount } from '../utils/swap_calc_utils'
 
 const chainId = ChainId.MAINNET
 
 const TIMEOUT = 60000
 
-let slipBips = '200'
+let slipBips = '100'
 
 let exchangeApi:ExchangeAPI
 let ammApi: AmmpoolAPI
@@ -81,7 +81,7 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
 
 const checkResult = () => {
     
-    const output = getOutputAmount(input, base, quote, isAtoB, marketArr, 
+    const output: any = getOutputAmount(input, base, quote, isAtoB, marketArr, 
         tokenMap, marketMap, depth, ammpools, ammPoolSnapshot)
 
     console.log(' output:', output)
