@@ -2,7 +2,8 @@ import { ChainId, dumpError400, ExchangeAPI } from ".."
 import fs from 'fs'
 import axios from 'axios'
 import path from 'path'
-import { utils } from 'ethers'
+
+import {web3} from './utils'
 
 const TIMEOUT = 30000
 let exchangeApi: ExchangeAPI
@@ -64,7 +65,7 @@ describe('get_imgs', function () {
     
                     console.log('handling ' + fileName)
 
-                    const addr = utils.getAddress(tokenInfo.address)
+                    const addr = web3.utils.toChecksumAddress(tokenInfo.address)
     
                     let url = `https://exchange.loopring.io/assets/images/ethereum/assets/${addr}/logo.png`
 
