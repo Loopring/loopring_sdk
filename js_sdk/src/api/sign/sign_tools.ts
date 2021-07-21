@@ -296,6 +296,8 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
         address as string,
         msgParams
       )
+
+      // console.log('-->ecdsa:', signEip712Result)
       return {
         ecdsaSig: signEip712Result,
       }

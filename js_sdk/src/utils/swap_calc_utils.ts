@@ -176,7 +176,6 @@ export function fromWEI(tokens: any, symbol: any, valueInWEI: any, precision?: a
 export function toWEI(tokens: any, symbol: any, value: any, rm: any = undefined) {
     const tokenInfo = getToken(tokens, symbol)
     if (typeof tokenInfo === 'undefined') {
-        console.log('symbol got: undefined info')
         return '0'
     }
 
@@ -237,12 +236,12 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
     const bids = depth.bids.reverse()
 
-    console.log('bids:', bids[0])
-    console.log('bids last:', bids[bids.length - 1])
-    console.log('asks:', depth.asks[0])
-    console.log('asks last:', depth.asks[depth.asks.length - 1])
+    // console.log('bids:', bids[0])
+    // console.log('bids last:', bids[bids.length - 1])
+    // console.log('asks:', depth.asks[0])
+    // console.log('asks last:', depth.asks[depth.asks.length - 1])
 
-    console.log(`isAtoB:${isAtoB} isReverse:${isReverse}`)
+    // console.log(`isAtoB:${isAtoB} isReverse:${isReverse}`)
 
     if (!baseToken || !quoteToken) {
         return output
@@ -620,7 +619,6 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
         if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
             exceedDepth = true
-            console.log('2')
         } else {
 
             if (!isReverse) {

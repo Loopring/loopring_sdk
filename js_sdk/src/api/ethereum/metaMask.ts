@@ -166,16 +166,19 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
 
 export async function ecRecover(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
-    web3.eth.personal.ecRecover(msg, sig, function (err: any, address: string) {
-      if (!err)
-        resolve({
-          result: address.toLowerCase() === account.toLowerCase(),
-        });
-      else {
-        console.error('in web3.eth.personal.ecRecover', err, address);
-        resolve({ error: err });
-      }
-    });
+    try {
+      web3.eth.personal.ecRecover(msg, sig, function (err: any, address: string) {
+        if (!err)
+          resolve({
+            result: address.toLowerCase() === account.toLowerCase(),
+          });
+        else {
+          resolve({ error: err });
+        }
+      });
+    } catch (reason) {
+      resolve({ error: reason });
+    }
   });
 }
 
@@ -227,7 +230,6 @@ export async function contractWalletValidate2(web3: any, account: string, msg: s
         data: data,
       },
       function (err: any, result: any) {
-        console.log(result);
         if (!err) {
           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
             'isValidSignature(bytes32,bytes)',
