@@ -1,11 +1,11 @@
 export const dumpError400 = (reason: any, src: string = '') => {
     if (src) {
-        console.log('src:', src)
+        console.debug('src:', src)
     }
     if (reason?.response) {
-        console.log(reason.response.data)
+        console.error(reason.response.data)
     } else {
-        console.log(reason.message)
+        console.error(reason.message)
     }
 }
 
