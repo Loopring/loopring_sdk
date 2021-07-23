@@ -17,8 +17,9 @@ import {
 import { dumpError400 } from '../utils/network_tools'
 
 import { getMinReceived, getOutputAmount } from '../utils/swap_calc_utils'
+import { getExistedMarket } from '../utils'
 
-const chainId = ChainId.MAINNET
+const chainId = ChainId.GORLI
 
 const TIMEOUT = 60000
 
@@ -30,7 +31,7 @@ let ammApi: AmmpoolAPI
 let base: string
 let quote: string
 let marketArr: string[]
-let market: string = 'LRC-ETH'
+
 let isAtoB: boolean
 
 const AMM_LRC_ETH_poolAddress = '0x18920d6e6fb7ebe057a4dd9260d6d95845c95036'
@@ -47,9 +48,12 @@ let ammPoolSnapshot: AmmPoolSnapshot
 
 let input: string
 
-const init = async() => {
+const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
     try {
+
+        exchangeApi = new ExchangeAPI(chainId)
+        ammApi = new AmmpoolAPI(chainId)
 
         tokenMap = (await exchangeApi.getTokens()).tokenSymbolMap
     
@@ -58,41 +62,46 @@ const init = async() => {
         marketMap = marketAll.markets
 
         marketArr = marketAll.marketArr as string[]
+
+        let { amm } = getExistedMarket(marketArr, base, quote)
+
+        const market = amm as string
     
         depth = (await exchangeApi.getMixDepth({ market })).depth
     
         ammpools = (await ammApi.getAmmPoolConf()).ammpools
+
+        const ammPoolInfo = ammpools[market]
     
-        ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: AMM_LRC_ETH_poolAddress})).ammPoolSnapshot
+        ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: ammPoolInfo.address})).ammPoolSnapshot
     
     } catch (reason) {
         dumpError400(reason)
     }
 }
 
-const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: boolean = true) => {
+const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: boolean = true, chainId = ChainId.MAINNET) => {
     input = _input
     base = _base
     quote = _quote
+
     isAtoB = _isAtoB
 
-    await init()
+    await init(chainId)
 }
 
-const checkResult = () => {
+const checkResult = (takerRate = '8', slipBips = '100') => {
     
     const output: any = getOutputAmount(input, base, quote, isAtoB, marketArr, 
-        tokenMap, marketMap, depth, ammpools, ammPoolSnapshot)
+        tokenMap, marketMap, depth, ammpools, ammPoolSnapshot, takerRate, slipBips)
 
-    console.log(' output:', output)
+    console.log('base:', base, ' quote:', quote, ' output:', output)
 
 }
 
 describe('swap_calc_utils', function () {
 
     beforeEach(async() => {
-        exchangeApi = new ExchangeAPI(chainId)
-        ammApi = new AmmpoolAPI(chainId)
     }, TIMEOUT)
 
     it('LRC_ETH_a2b_exceedDepth', async () => {
@@ -234,6 +243,60 @@ describe('swap_calc_utils', function () {
             await initAll('10000', 'ETH', 'LRC', false)
             
             checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    //-------
+
+    it('ETH_USDT_a2b', async () => {
+
+        try {
+
+            await initAll('0.2', 'ETH', 'USDT', true, ChainId.GORLI)
+            
+            checkResult('8', '10')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('ETH_USDT_b2a', async () => {
+
+        try {
+
+            await initAll('1000', 'ETH', 'USDT', false, ChainId.GORLI)
+            
+            checkResult('8', '10')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('USDT_ETH_a2b', async () => {
+
+        try {
+
+            await initAll('1000', 'USDT', 'ETH', true, ChainId.GORLI)
+            
+            checkResult('10', '10')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('USDT_ETH_b2a', async () => {
+
+        try {
+
+            await initAll('0.2', 'USDT', 'ETH', false, ChainId.GORLI)
+            
+            checkResult('10', '10')
 
         } catch (reason) {
             dumpError400(reason)

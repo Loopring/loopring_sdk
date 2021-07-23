@@ -247,10 +247,12 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
         return output
     }
 
-    //amt is size. vol is volume
+    //amt is size(base ETH). vol is volume(quote USDT)
 
     if (isAtoB) {
         if (!isReverse) {
+            //ETH -> USDT
+
             remain = fm.toBig(remain).times(BIG10.pow(baseToken.decimals)).toString()
 
             for (let i = 0; i < bids.length; i++) {
@@ -272,19 +274,23 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                     output = fm.toBig(output).plus(fm.toBig(consume).div(fm.toBig(abInfo.amt)).times(volValue)).toString()
                 }
 
-                // console.log('1__', i, ' output:', output, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
+                console.log('1__', i, ' output:', output, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
             }
 
         } else {
-            remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
+            // USDT -> ETH
+            // isAtoB = true, isReverse = false
+
+            console.log('---> 2 baseToken:', baseToken, ' remain:', remain)
+
+            remain = fm.toBig(remain).times(BIG10.pow(baseToken.decimals)).toString()
 
             for (let i = 0; i < depth.asks.length; i++) {
                 const abInfo: ABInfo = depth.asks[i]
                 // const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
-                const placed: string = abInfo.vol
-                const consume: string = fm.toBig(remain).gte(fm.toBig(placed)) ? placed : remain
+                const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.vol)) ? abInfo.vol : remain
 
                 if (fm.toBig(consume).lte(BIG0)) {
                     break
@@ -292,9 +298,9 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
 
-                // console.log('remain:', remain, 'placed:', placed, ' consume:', consume)
+                // console.log('remain:', remain, ' abInfo.vol:', abInfo.vol, ' consume:', consume)
 
-                const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(baseToken.decimals))
+                const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(quoteToken.decimals))
 
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.vol))) {
                     output = fm.toBig(output).plus(amtValue).toString()
@@ -312,13 +318,17 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
     } else {
         if (!isReverse) {
-            remain = fm.toBig(remain).times(BIG10.pow(baseToken.decimals)).toString()
+            // ETH <- USDT
+
+            console.log('---> baseToken:', baseToken)
+
+            remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
 
             for (let i = 0; i < bids.length; i++) {
                 const abInfo: ABInfo = bids[i]
                 // const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
-                const placed: string = abInfo.vol
-                const consume: string = fm.toBig(remain).gte(fm.toBig(placed)) ? placed : remain
+                
+                const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.vol)) ? abInfo.vol : remain
 
                 if (fm.toBig(consume).lte(BIG0)) {
                     break
@@ -326,7 +336,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
 
-                // console.log('remain:', remain, 'placed:', placed, ' consume:', consume)
+                // console.log('remain:', remain, 'abInfo.vol:', abInfo.vol, ' consume:', consume)
 
                 const amtValue = fm.toBig(abInfo.amt).div(BIG10.pow(baseToken.decimals))
 
@@ -338,11 +348,13 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
 
-                // console.log('3__', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
+                console.log('3__', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
 
             }
 
         } else {
+            // USDT <- ETH
+
             remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
 
             for (let i = 0; i < depth.asks.length; i++) {
@@ -356,7 +368,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                     break
                 }
 
-                const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals))
+                const volValue = fm.toBig(abInfo.vol).div(BIG10.pow(baseToken.decimals))
 
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
                     output = fm.toBig(output).plus(volValue).toString()
@@ -491,12 +503,11 @@ export function getPriceImpact(reserveIn: string, reserveOut: string, amountS: s
     const curPrice = getCurPrice(reserveIn, reserveOut)
     const toPrice = getToPrice(amountS, amountB.toString())
 
-    // console.log('curPrice:', curPrice, ' toPrice:', toPrice)
-
     return getPriceImpactStr(curPrice, toPrice)
 }
 
-export function updatePriceImpact_new(reverseIn: string, reverseOut: string, amountS: string, amountBOut: string,
+export function updatePriceImpact_new(reverseIn: string, reverseOut: string, 
+    amountS: string, sellDecimal: number, amountBOut: string, buyDecimal: number,
     feeBips: string, takerFee: string, isAtoB: boolean, isReversed: boolean, exceedDepth: boolean, depth: DepthData) {
 
     // console.debug('asks_prices:', depth.asks_prices)
@@ -521,9 +532,13 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string, amo
         }
 
         // LRC / ETH !isReversed isAtoB 
+        const coinADecimal = !isReversed ? sellDecimal : buyDecimal
+        const coinBDecimal = !isReversed ? buyDecimal : sellDecimal
+        const curPrice = fm.toBig(depth.mid_price).times('1e' + coinBDecimal).div('1e' + coinADecimal).toString()
         const toPrice = !isReversed ? getToPrice(amountS, amountBOut) : getToPrice(amountBOut, amountS)
-        // console.log('updatePriceImpact_new toPrice:', toPrice)
-        priceImpact = getPriceImpactStr(depth.mid_price.toString(), toPrice);
+        // console.log('updatePriceImpact_new isReversed:', isReversed, ' amountS:', amountS, ' amountBOut:', amountBOut)
+        console.log('updatePriceImpact_new toPrice:', toPrice, ' curPrice:', curPrice)
+        priceImpact = getPriceImpactStr(curPrice, toPrice)
 
     }
 
@@ -709,16 +724,19 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
     const amountBOutSlip = getMinReceived(amountBOut, minimumDecimal, slipBips)
 
-    const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, amountS, amountBOut,
+    const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, 
+        amountS, baseToken?.decimals as number, amountBOut, quoteToken?.decimals as number,
         feeBips, takerFee, isAtoB, isReverse, exceedDepth, depth)
 
-    // const priceImpact = updatePriceImpact(baseAmt, quoteAmt, reserveIn, reserveOut, amountS, 
-    //      feeBips, takerFee, isReverse, exceedDepth, depth)
-
     return {
-        slipBips,
-        isAtoB,
+        exceedDepth,
         isReverse,
+        isAtoB,
+
+        slipBips,
+        takerFee,
+        feeBips,
+
         output,
 
         baseAmt,

@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.60
+    1) fix swap calc utils bug
+
 ### v0.0.59
     1) add amountMap to getMinimumTokenAmt
 
