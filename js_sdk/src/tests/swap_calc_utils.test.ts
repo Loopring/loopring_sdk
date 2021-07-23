@@ -91,6 +91,14 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
 }
 
 const checkResult = (takerRate = '8', slipBips = '100') => {
+
+    if (input !== '0' && input !== '0.') {
+        let { amm } = getExistedMarket(marketArr, base, quote)
+
+        console.log(input, '*', base, quote, isAtoB, depth.mid_price, 
+        ammpools[ amm as string].tokens.pooled, ammPoolSnapshot?.pooled, takerRate, slipBips)
+
+    }
     
     const output: any = getOutputAmount(input, base, quote, isAtoB, marketArr, 
         tokenMap, marketMap, depth, ammpools, ammPoolSnapshot, takerRate, slipBips)
@@ -257,7 +265,7 @@ describe('swap_calc_utils', function () {
 
             await initAll('0.2', 'ETH', 'USDT', true, ChainId.GORLI)
             
-            checkResult('8', '10')
+            checkResult('8', '50')
 
         } catch (reason) {
             dumpError400(reason)
