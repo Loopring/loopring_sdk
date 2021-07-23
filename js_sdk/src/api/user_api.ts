@@ -482,8 +482,15 @@ export class UserAPI extends BaseAPI {
 
         const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] = raw_data.amounts
 
+        const amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount> = {}
+
+        amounts.forEach((item: loopring_defs.TokenAmount) => {
+            amountMap[item.tokenSymbol] = item
+        })
+
         return {
             amounts,
+            amountMap,
             gasPrice,
             cacheOverdueAt: raw_data.cacheOverdueAt,
             raw_data,

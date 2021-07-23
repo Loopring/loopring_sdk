@@ -82,6 +82,12 @@ describe('AmmpoolAPI test', function () {
         console.log('userRank:', response.userRank)
     }, DEFAULT_TIMEOUT)
 
+    it('getAmmPoolActivityRules_Mainnet', async () => {
+        api = new AmmpoolAPI(ChainId.MAINNET)
+        const response = await api.getAmmPoolActivityRules()
+        console.log('getAmmPoolActivityRules:', response)
+    }, DEFAULT_TIMEOUT)
+
     it('getAmmPoolActivityRules', async () => {
         const response = await api.getAmmPoolActivityRules()
         console.log('getAmmPoolActivityRules:', response)

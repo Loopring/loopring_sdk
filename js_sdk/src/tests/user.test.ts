@@ -166,6 +166,22 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getMinimumTokenAmt_AMM', async () => {
+        try {
+            const request: GetMinimumTokenAmtRequest = {
+                accountId: acc.accountId,
+                market: 'AMM-LRC-ETH',
+            }
+            
+            const response = await api.getMinimumTokenAmt(request, acc.apiKey)
+            console.log(response)
+            console.log(response.raw_data.amounts)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getMinimumTokenAmt', async () => {
         try {
             const request: GetMinimumTokenAmtRequest = {
