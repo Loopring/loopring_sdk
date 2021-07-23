@@ -1,6 +1,6 @@
 {
   "name": "loopring-sdk",
-  "version": "0.0.62",
+  "version": "0.0.64",
   "author": "leochan007",
   "description": "Loopring SDK",
   "private": false,
@@ -49,7 +49,7 @@
     "start": "tsdx watch",
     "test": "tsdx test",
     "test_calc": "tsdx test src/tests/swap_calc_utils.test.ts",
-    "prepublishOnly": "tsdx build",
+    "prepublishOnly": "NODE_ENV=production tsdx build",
     "deploy": "cd ..; yarn deploy; cd js_sdk"
   },
   "browserslist": {
