@@ -38,13 +38,16 @@ import {
 } from '../defs/loopring_constants'
 
 import * as sign_tools from '../api/sign/sign_tools'
-import { getTokenInfoBySymbol } from '../utils'
+import { getTokenInfoBySymbol, toBig } from '../utils'
 
 let api: UserAPI
 
 let exchange: ExchangeAPI
 
 let orderHash = process.env.ORDER_HASH ? process.env.ORDER_HASH : ''
+
+let mainAcc = parseInt(process.env.MAINNET_ACC ? process.env.MAINNET_ACC: '')
+let mainApiKey = process.env.MAINNET_APIKEY ? process.env.MAINNET_APIKEY: ''
 
 describe('UserAPI test', function () {
 
@@ -226,6 +229,65 @@ describe('UserAPI test', function () {
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
             console.log('fees:', response.raw_data.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOffchainFeeAmt_with_amt', async () => {
+        try {
+            api = new UserAPI(ChainId.MAINNET)
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: mainAcc,
+                amount: toBig('1e+19').toString(),
+                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'LRC',
+            }
+            const type = OffchainFeeReqType.ORDER
+            const response = await api.getOffchainFeeAmt(request, mainApiKey)
+            
+            console.log('-----------------\nMAINNET:', request)
+            console.log('fees:', response.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOffchainFeeAmt_with_amt3', async () => {
+        try {
+            api = new UserAPI(ChainId.MAINNET)
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: mainAcc,
+                amount: toBig('1').toString(),
+                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'LRC',
+            }
+            const type = OffchainFeeReqType.ORDER
+            const response = await api.getOffchainFeeAmt(request, mainApiKey)
+
+            console.log('-----------------\nMAINNET:', request)
+            console.log('fees:', response.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOffchainFeeAmt_with_amt2', async () => {
+        try {
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                amount: toBig('1e+19').toString(),
+                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'LRC',
+            }
+            const type = OffchainFeeReqType.ORDER
+            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+
+            console.log('-----------------\nGORLI:', request)
+            console.log('fees:', response.fees)
 
         } catch (reason) {
             dumpError400(reason)
