@@ -40,6 +40,7 @@ export enum GetEcDSASigType {
 }
 
 const keyMessage = 'Sign this message to access Loopring Exchange: '
+
 const transferMessage = 'Sign this message to authorize Loopring Pay: '
 
 const SNARK_SCALAR_FIELD = new BigInteger('21888242871839275222246405745257275088548364400416034343698204186575808495617', 10)
@@ -232,7 +233,7 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
 }
 
 export async function getEcDSASig(web3: any, typedData: any, address: string | undefined,
-  type: GetEcDSASigType, pwd: string = '') {
+  type: GetEcDSASigType, pwd: string = '', walletType?: ConnectorNames) {
 
   const msgParams = JSON.stringify(typedData)
   const params = [address, msgParams]
@@ -281,7 +282,11 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
 
       // console.log('WithoutDataStruct hash:', hash)
 
-      const signature: any = await personalSign(web3, address, pwd, hash)
+      if (!walletType) {
+        throw Error('no walletType set!')
+      }
+
+      const signature: any = await personalSign(web3, address, pwd, hash, walletType)
 
       if (signature?.sig) {
         return {
@@ -297,7 +302,6 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
         msgParams
       )
 
-      // console.log('-->ecdsa:', signEip712Result)
       return {
         ecdsaSig: signEip712Result,
       }
@@ -369,9 +373,10 @@ export async function signUpdateAccountWithDataStructure(web3: Web3, bodyParams:
   return result
 }
 
-export async function signUpdateAccountWithoutDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, chainId: ChainId) {
+export async function signUpdateAccountWithoutDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, 
+  chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
-  const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.WithoutDataStruct)
+  const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
   return result
 }
 
@@ -467,9 +472,10 @@ export async function signOffchainWithdrawWithDataStructure(web3: Web3, owner: s
   return result
 }
 
-export async function signOffchainWithdrawWithoutDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3, chainId: ChainId) {
+export async function signOffchainWithdrawWithoutDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3, 
+  chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getWithdrawTypedData(bodyParams, chainId)
-  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
   return result
 }
 
@@ -548,9 +554,10 @@ export async function signTransferWithDataStructure(web3: Web3, owner: string, b
   return result
 }
 
-export async function signTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3, chainId: ChainId) {
+export async function signTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3, 
+  chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getTransferTypedData(bodyParams, chainId)
-  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
   return result
 }
 

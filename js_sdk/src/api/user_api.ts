@@ -18,6 +18,10 @@ import Web3 from 'web3'
 
 import * as sign_tools from './sign/sign_tools'
 
+const NOT_SUPPORT_ERROR = 'Not supported on this device'
+
+const WAIT_TIME = 1500
+
 export class UserAPI extends BaseAPI {
 
     /*
@@ -535,14 +539,12 @@ export class UserAPI extends BaseAPI {
 
     public async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
         web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        eddsaKey: string, apiKey: string, isHardwareAddress: boolean) {
-
-        let shouldSaveHWAddr = false
+        eddsaKey: string, apiKey: string) {
 
         let ecdsaSignature = undefined
 
         // metamask not import hw wallet.
-        if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
+        if (walletType === ConnectorNames.Injected) {
             try {
                 // signOffchainWithdrawWithDataStructure
                 // console.log('1. signOffchainWithdrawWithDataStructure')
@@ -550,16 +552,16 @@ export class UserAPI extends BaseAPI {
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
             } catch (err) {
 
-                if (err.message.indexOf('Not supported on this device') !== -1) {
-                    await sleep(1500)
-                    shouldSaveHWAddr = true
+                if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
+                    await sleep(WAIT_TIME)
+                    
                     // signOffchainWithdrawWithoutDataStructure
                     // console.log('2. signOffchainWithdrawWithoutDataStructure')
-                    const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId))
+                    const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                } else {
+                    throw err
                 }
-                
-                throw err
             }
         } else {
 
@@ -573,7 +575,7 @@ export class UserAPI extends BaseAPI {
             } else {
                 // signOffchainWithdrawWithoutDataStructure
                 // console.log('4. signOffchainWithdrawWithoutDataStructure 2')
-                const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId))
+                const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
             }
 
@@ -593,7 +595,6 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            shouldSaveHWAddr,
             raw_data,
         }
 
@@ -604,29 +605,30 @@ export class UserAPI extends BaseAPI {
     */
     public async submitInternalTransfer(request: loopring_defs.OriginTransferRequestV3, 
         web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        eddsaKey: string, apiKey: string, isHardwareAddress: boolean) {
-
-        let shouldSaveHWAddr = false
+        eddsaKey: string, apiKey: string) {
 
         let ecdsaSignature = undefined
 
-        if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
+        if (walletType === ConnectorNames.Injected) {
             try {
                 // signOffchainWithdrawWithDataStructure
                 // console.log('1. signTransferWithDataStructure')
                 const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                // console.log('1. result.ecdsaSig:', result.ecdsaSig)
             } catch (err) {
 
-                if (err.message.indexOf('Not supported on this device') !== -1) {
-                    await sleep(1500)
-                    shouldSaveHWAddr = true
+                if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
+                    await sleep(WAIT_TIME)
+
                     // signOffchainWithdrawWithoutDataStructure
                     // console.log('2. signTransferWithoutDataStructure')
-                    const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId))
+                    const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                    // console.log('2. result.ecdsaSig:', result.ecdsaSig)
+                } else {
+                    throw err
                 }
-                throw err
             }
         } else {
 
@@ -637,14 +639,17 @@ export class UserAPI extends BaseAPI {
                 // console.log('3. signTransferWithDataStructureForContract')
                 const result = (await sign_tools.signTransferWithDataStructureForContract(web3, request.payerAddr, request, chainId))
                 ecdsaSignature = result.ecdsaSig
+                // console.log('3. result.ecdsaSig:', result.ecdsaSig)
             } else {
                 // signOffchainWithdrawWithoutDataStructure
-                // console.log('4. signTransferWithoutDataStructure 2')
-                const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId))
+                // console.log('4. signTransferWithoutDataStructure 4')
+                const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
                 ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                // console.log('4. result.ecdsaSig:', result.ecdsaSig)
             }
 
         }
+        // console.log('ecdsaSignature:', ecdsaSignature)
 
         request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
 
@@ -660,7 +665,6 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            shouldSaveHWAddr,
             raw_data,
         }
 
@@ -670,28 +674,25 @@ export class UserAPI extends BaseAPI {
     * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
     */
     public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, web3: Web3, 
-        chainId: ChainId, walletType: ConnectorNames, isHardwareAddress: boolean = false) {
-
-            let shouldSaveHWAddr = false
+        chainId: ChainId, walletType: ConnectorNames) {
     
             let ecdsaSignature = undefined
     
-            if (walletType === ConnectorNames.Injected && !isHardwareAddress) {
+            if (walletType === ConnectorNames.Injected) {
                 try {
                     // console.log('1. signUpdateAccountWithDataStructure')
                     const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 } catch (err) {
     
-                    if (err.message.indexOf('Not supported on this device') !== -1) {
-                        console.error('catch err', err)
-                        await sleep(1500)
-                        shouldSaveHWAddr = true
+                    if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
+                        await sleep(WAIT_TIME)
                         // console.log('2. signUpdateAccountWithoutDataStructure')
-                        const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
+                        const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
                         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                    } else {
+                        throw err
                     }
-                    throw err
                 }
             } else {
     
@@ -703,7 +704,7 @@ export class UserAPI extends BaseAPI {
                     ecdsaSignature = result.ecdsaSig
                 } else {
                     // console.log('4. signUpdateAccountWithDataStructure_2')
-                    const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId))
+                    const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
                 }
     
@@ -722,7 +723,6 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            shouldSaveHWAddr,
             raw_data,
         }
 

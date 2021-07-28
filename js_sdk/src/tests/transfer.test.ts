@@ -179,7 +179,7 @@ describe('Transfer test', function () {
 
             const response = await userApi.submitInternalTransfer(request3, web3, 
                 ChainId.GORLI, ConnectorNames.Injected,
-                eddsakey.sk, apiKey, true)
+                eddsakey.sk, apiKey)
             
             console.log(response)
 

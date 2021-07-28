@@ -2,6 +2,7 @@ import {
   ecrecover,
   fromRpcSig,
   hashPersonalMessage,
+  keccak,
   keccak256,
   pubToAddress,
 } from 'ethereumjs-util'
@@ -11,8 +12,6 @@ import { addHexPrefix, toBuffer, toHex, toNumber } from '../../utils/formatter'
 import ABI from './contracts'
 
 import { ConnectorNames } from '../../defs/web3_defs'
-
-import { SigSuffix } from '../../defs/web3_defs'
 
 import Web3 from 'web3'
 /**
@@ -90,27 +89,26 @@ export async function signMessage(web3: any, account: string, pwd: string, messa
   return await sign(web3, account, pwd, hash);
 }
 
-export async function personalSign(web3: any, account: string | undefined, pwd: string, msg: string, walletType: ConnectorNames = ConnectorNames.Injected) {
+export async function personalSign(web3: any, account: string | undefined, pwd: string, msg: string, walletType: ConnectorNames) {
 
   if (!account) {
     return ({ error: 'personalSign got no account' });
   }
- 
+
   return new Promise((resolve) => {
     web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
+      // console.log('msg:', msg)
+      // console.log('walletType:', walletType, ' personal result:', result)
       if (!err) {
-        // ecRecover not implemented in WalletLink
         if (walletType === ConnectorNames.WalletLink) {
           const valid: any = await walletLinkValid(account, msg, result);
           if (valid.result) {
             resolve({ sig: result });
           } else {
-            resolve({ error: 'Failed to valid using WalletLink' });
+            resolve({ error: 'Failed to valid using WalletLink/Trezor' });
           }
           return;
-        }
-
-        if (walletType === ConnectorNames.Authereum) {
+        } else if (walletType === ConnectorNames.Authereum) {
           const valid: any = await authereumValid(web3, account, msg, result);
           if (valid.result) {
             resolve({ sig: result });
@@ -120,7 +118,14 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
           return;
         }
 
-        const valid: any = await ecRecover(web3, account, msg, result);
+        // console.log('try to exc ecRecover !!!')
+
+        // const valid: any = await ecRecover(web3, account, msg, result);
+        // console.log('ecRecover valid:', valid)
+
+        const valid: any = await ecRecover2(account, msg, result)
+        // console.log('ecRecover2 valid:', valid)
+
         if (valid.result) {
           resolve({ sig: result });
         } else {
@@ -154,17 +159,48 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
               if (myKeyValid.result) {
                 resolve({ sig: result });
               } else {
-                resolve({ error: 'invalid sig' });
+                resolve({ error: 'invalid sig at last!' });
               }
             }
           }
         }
-      } else resolve({ error: err });
+      } else {
+        resolve({ error: 'personalSign last:' + err });
+      }
     });
   });
 }
 
-export async function ecRecover(web3: any, account: string, msg: string, sig: any) {
+export async function ecRecover2(account: string, message: string, signature: any) {
+
+  var messageBuffer = Buffer.from(message, 'utf8')
+
+  signature = signature.split('x')[1]
+
+  const parts = [
+    Buffer.from(`\x19Ethereum Signed Message:\n${messageBuffer.length}`, "utf8"),
+    messageBuffer
+  ]
+  
+  const totalHash = keccak(Buffer.concat(parts))
+
+  var r = Buffer.from(signature.substring(0, 64), 'hex')
+  var s = Buffer.from(signature.substring(64, 128), 'hex')
+  var v = parseInt(signature.substring(128, 130))
+
+  if (v <= 1) v += 27
+
+  var pub = ecrecover(totalHash, v, r, s)
+
+  var recoveredAddress = '0x' + pubToAddress(pub).toString('hex')
+
+  return new Promise((resolve) => resolve({
+    result: account.toLowerCase() === recoveredAddress.toLowerCase(),
+  }))
+
+}
+
+export async function ecRecover(web3: Web3, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     try {
       web3.eth.personal.ecRecover(msg, sig, function (err: any, address: string) {
@@ -173,11 +209,11 @@ export async function ecRecover(web3: any, account: string, msg: string, sig: an
             result: address.toLowerCase() === account.toLowerCase(),
           });
         else {
-          resolve({ error: err });
+          resolve({ error: 'ecRecover 1:' + err });
         }
       });
     } catch (reason) {
-      resolve({ error: reason });
+      resolve({ error: 'ecRecover 2:' + reason });
     }
   });
 }
@@ -303,7 +339,7 @@ export async function authereumValid(web3: any, account: string, msg: string, si
           resolve({
             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
           });
-        } else resolve({ error: err });
+        } else resolve({ error: 'authereumValid:' + err });
       }
     );
   });

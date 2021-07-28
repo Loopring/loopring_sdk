@@ -5,7 +5,7 @@ import { SIG_FLAG, } from '../defs/loopring_enums'
 
 import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 
-import { getEdDSASig, getEdDSASigWithPoseidon, getEcDSASig, GetEcDSASigType, } from './sign/sign_tools'
+import { getEdDSASig, getEdDSASigWithPoseidon, } from './sign/sign_tools'
 
 /**
  *
@@ -104,11 +104,6 @@ export class Request {
         
         switch(params.sigFlag) {
             case SIG_FLAG.NO_SIG:
-                break
-            case SIG_FLAG.ECDSA_SIG:
-                const obj = params.sigObj
-                const type = obj?.hasDataStruct ? GetEcDSASigType.HasDataStruct : GetEcDSASigType.WithoutDataStruct
-                sig = await getEcDSASig(obj?.web3, obj?.dataToSig, obj?.owner, type, obj?.pwd)
                 break
             case SIG_FLAG.EDDSA_SIG_POSEIDON:
                 const sigObjPoseidon = params.sigObj

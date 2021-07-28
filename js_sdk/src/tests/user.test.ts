@@ -469,7 +469,7 @@ describe('UserAPI test', function () {
             }
 
             const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Injected,
-                acc.eddsaKey, acc.apiKey, true)
+                acc.eddsaKey, acc.apiKey)
 
             console.log(response)
 
@@ -518,7 +518,7 @@ describe('UserAPI test', function () {
 
             const response = await api.submitInternalTransfer(request, web3, 
                 ChainId.GORLI, ConnectorNames.Injected,
-                acc.eddsaKey, acc.apiKey, true)
+                acc.eddsaKey, acc.apiKey)
 
             console.log(response)
 
@@ -547,7 +547,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
                 nonce: accInfo.nonce,
             }
-            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.Injected, true)
+            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.Injected)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
