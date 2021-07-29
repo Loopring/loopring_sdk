@@ -173,7 +173,7 @@ describe('UserAPI test', function () {
         try {
             const request: GetMinimumTokenAmtRequest = {
                 accountId: acc.accountId,
-                market: 'AMM-LRC-ETH',
+                market: 'AMM-ETH-USDT',
             }
             
             const response = await api.getMinimumTokenAmt(request, acc.apiKey)

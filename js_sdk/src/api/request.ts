@@ -62,11 +62,12 @@ export class Request {
             headers: {
                 // 'Accept': '*/*',
                 // 'Accept-Encoding': 'gzip, deflate, br', 
+                'feeVersion': 'v2',
                 'Content-Type': 'application/json'
             },
 
             validateStatus: function (status: any) {
-                if (status >=200 && status < 300) {
+                if (status >= 200 && status < 300) {
                     return true
                 }
                 return false

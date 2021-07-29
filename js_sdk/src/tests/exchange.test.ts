@@ -203,7 +203,8 @@ describe('ExchangeAPI test', function () {
 
     it('getTokens', async () => {
         const response = await api.getTokens()
-        console.log(response)
+        // console.log(response)
+        console.log(response.raw_data[0].orderAmounts)
     }, DEFAULT_TIMEOUT)
 
     it('getDepth', async () => {

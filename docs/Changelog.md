@@ -2,6 +2,8 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.67
+    1) add feeVersion: v2 to request's header.
 
 ### v0.0.60
     1) fix swap calc utils bug
