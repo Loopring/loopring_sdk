@@ -129,6 +129,28 @@ export class ExchangeAPI extends BaseAPI {
             raw_data,
         }
     }
+    
+    public async getRecommendedMarkets() {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_RECOMENDED_MARKETS,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        let recommended = []
+
+        if (raw_data?.recommended) {
+            recommended = raw_data.recommended.split(',')
+        }
+
+        return {
+            recommended,
+            raw_data,
+        }
+    }
 
     /*
     * Returns the configurations of all supported markets (trading pairs)

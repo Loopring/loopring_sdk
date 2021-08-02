@@ -32,7 +32,15 @@ describe('ExchangeAPI test', function () {
     beforeEach(() => {
         api = new ExchangeAPI(ChainId.MAINNET)
     })
-    0x527784464d31c47e7567cA5a8D7BC719e5Ce2bE6
+    
+    it('getRecommendedMarkets', async () => {
+        api = new ExchangeAPI(ChainId.GORLI)
+        
+        const response = await api.getRecommendedMarkets()
+        console.log(response)
+        
+    }, DEFAULT_TIMEOUT)
+    
     it('getAccount_Found4', async () => {
         api = new ExchangeAPI(ChainId.GORLI)
         const request: GetAccountRequest = {

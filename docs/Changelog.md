@@ -2,6 +2,10 @@
 
 ### JS SDK Version ChangeLog
 
+
+### v0.0.68
+    1) add getRecommendedMarkets to exchange api.
+
 ### v0.0.67
     1) add feeVersion: v2 to request's header.
 

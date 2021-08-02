@@ -35,6 +35,8 @@ export enum LOOPRING_URLs {
     GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
     GET_GAS_PRICE = '/api/v3/eth/recommendedGasPrice',
 
+    GET_RECOMENDED_MARKETS = '/api/v3/exchange/recommended',
+
     GET_AMM_POOLS_CONF = '/api/v3/amm/pools',
     GET_AMM_POOLS_SNAPSHOT = '/api/v3/amm/balance',
     GET_AMM_POOLS_BALANCES = '/api/v3/amm/balances',
