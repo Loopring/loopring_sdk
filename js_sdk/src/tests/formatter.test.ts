@@ -1,3 +1,4 @@
+import { LoopringErrorCode } from '../defs'
 import { convertPublicKey, convertPublicKey2, PublicKey, } from '..'
 
 import * as fm from '../utils/formatter'
@@ -7,8 +8,16 @@ const TIMEOUT = 30000
 describe('formatter test', function () {
 
     beforeEach(async() => {
+    }, TIMEOUT)
+
+    it('enum_test', async () => {
+        
+        console.log(LoopringErrorCode[100000])
+        console.log(LoopringErrorCode[200000])
 
     }, TIMEOUT)
+
+    
 
     it('formatter1', async () => {
         const px = fm.formatEddsaKey('4966334643155205117396087046889763297010019574817548934733242435404623801022')
