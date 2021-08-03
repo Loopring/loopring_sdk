@@ -524,7 +524,7 @@ export interface GetTokenBalancesRequest {
 
 export interface GetAllowancesRequest {
     owner: string
-    token: string
+    token: string // tokenAddress
 }
 
 export interface GetDepthRequest {

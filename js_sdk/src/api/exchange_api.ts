@@ -733,8 +733,18 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
+        let accInfo: AccountInfo | undefined = undefined
+        let error: any
+
+        if (raw_data?.resultInfo) {
+            error = raw_data?.resultInfo
+        } else {
+            accInfo = raw_data as AccountInfo
+        }
+
         return {
-            accInfo: raw_data as AccountInfo,
+            accInfo,
+            error,
             raw_data,
         }
 

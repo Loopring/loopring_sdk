@@ -3,8 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
-### v0.0.70
+### v0.0.71
     1) add error_code defs.
+    2) update account and ammpoolsnapshot response.
 
 ### v0.0.69
     1) add status === 400 to status validation.

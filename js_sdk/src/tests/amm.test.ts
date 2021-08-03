@@ -14,6 +14,7 @@ import {
 
     DEFAULT_TIMEOUT,
     AmmTxType,
+    AmmPoolSnapshot,
 } from '../defs'
 
 import { loopring_exported_account as acc } from './utils'
@@ -100,6 +101,15 @@ describe('AmmpoolAPI test', function () {
         const response = await api.getAmmPoolStats()
         console.log('ammPoolStats:', response.ammPoolStats)
         console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH'].rewards)
+    }, DEFAULT_TIMEOUT)
+
+    it('getAmmPoolSnapshot_correct', async () => {
+            const request: GetAmmPoolSnapshotRequest = {
+                poolAddress
+            }
+            const response = await api.getAmmPoolSnapshot(request)
+            console.log(response)
+            console.log(response.raw_data.pooled)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot_err', async () => {
@@ -194,7 +204,7 @@ describe('AmmpoolAPI test', function () {
 
             const { request: res3 } = makeJoinAmmPoolRequest('500', true, 
             '0.001', acc.address, fees,
-            ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex,
+            ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex,
             storageId_1.offchainId, storageId.offchainId)
 
             const patch: AmmPoolRequestPatch = {
@@ -240,7 +250,7 @@ describe('AmmpoolAPI test', function () {
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: req3 } = makeExitAmmPoolRequest('200', true, '0.001', acc.address,
-            fees, ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
+            fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GORLI,
@@ -284,7 +294,7 @@ describe('AmmpoolAPI test', function () {
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: req3 } = makeExitAmmPoolRequest2('10', '0.001', acc.address,
-            fees, ammInfo, ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
+            fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GORLI,

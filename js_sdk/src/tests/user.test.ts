@@ -68,7 +68,7 @@ describe('UserAPI test', function () {
                     web3,
                     acc.address,
                     acc.exchangeAddr,
-                    accInfo.nonce - 1,
+                    accInfo?.nonce as number - 1,
                     ConnectorNames.Injected,
                 )
 
@@ -97,7 +97,7 @@ describe('UserAPI test', function () {
                     web3,
                     acc.address,
                     acc.exchangeAddr,
-                    accInfo.nonce - 1,
+                    accInfo?.nonce as number - 1,
                     ConnectorNames.Injected,
                 )
 
@@ -443,6 +443,10 @@ describe('UserAPI test', function () {
             owner: acc.address
         })
 
+        if (!accInfo) {
+            return
+        }
+
         const { nonce } = accInfo
 
         const extraData = Buffer.from('').toString()
@@ -491,6 +495,10 @@ describe('UserAPI test', function () {
             owner: acc.address
         })
 
+        if (!accInfo) {
+            return
+        }
+
         const { nonce } = accInfo
         console.log(`nonce:${nonce}`)
         console.log(`storageId:${storageId}`)
@@ -536,6 +544,10 @@ describe('UserAPI test', function () {
             }
             const { accInfo } = await exchange.getAccount(req)
 
+            if (!accInfo) {
+                return
+            }
+
             console.log('accInfo:', accInfo)
 
             const request: UpdateAccountRequestV3 = {
@@ -564,6 +576,10 @@ describe('UserAPI test', function () {
         const { accInfo } = await exchange.getAccount({
             owner: acc.address
         })
+
+        if (!accInfo) {
+            return
+        }
 
         const { tokenSymbolMap } = await exchange.getTokens()
 

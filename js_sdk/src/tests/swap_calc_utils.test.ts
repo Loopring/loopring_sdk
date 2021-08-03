@@ -73,7 +73,7 @@ const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
         const ammPoolInfo = ammpools[market]
     
-        ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: ammPoolInfo.address})).ammPoolSnapshot
+        ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: ammPoolInfo.address})).ammPoolSnapshot as AmmPoolSnapshot
     
     } catch (reason) {
         dumpError400(reason)

@@ -302,8 +302,18 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
+        let ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined
+        let error: any
+
+        if (raw_data?.resultInfo) {
+            error = raw_data?.resultInfo
+        } else {
+            ammPoolSnapshot = raw_data
+        }
+
         return {
-            ammPoolSnapshot: raw_data as AmmPoolSnapshot,
+            ammPoolSnapshot,
+            error,
             raw_data,
         }
 

@@ -81,6 +81,15 @@ describe('ExchangeAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getMarketTrades_err', async () => {
+        const req: GetMarketTradesRequest = {
+            market: 'LRC-ETH_Not_Existed'
+        }
+        const response = await api.getMarketTrades(req)
+        console.log(response)
+        console.log(response.raw_data.trades)
+    }, DEFAULT_TIMEOUT)
+
     it('getMarketTrades', async () => {
         const req: GetMarketTradesRequest = {
             market: 'LRC-ETH'

@@ -9,6 +9,7 @@ import {
     GetAmmPoolSnapshotRequest,
     GetOffchainFeeAmtRequest,
     OffchainFeeReqType,
+    TokenVolumeV3,
 } from '../defs'
 
 import {
@@ -47,10 +48,10 @@ describe('amm_calc', function () {
 
             const covertVal = sdk.toBig('1e+20').toFixed(0, 0)
 
-            const coinA_TV = response.ammPoolSnapshot.pooled[0]
-            const coinB_TV = response.ammPoolSnapshot.pooled[1]
+            const coinA_TV = response.ammPoolSnapshot?.pooled[0]
+            const coinB_TV = response.ammPoolSnapshot?.pooled[1]
 
-            const output = sdk.ammPoolCalc(covertVal, true, coinA_TV, coinB_TV)
+            const output = sdk.ammPoolCalc(covertVal, true, coinA_TV as TokenVolumeV3, coinB_TV as TokenVolumeV3)
 
             console.log('covertVal:', covertVal)
             console.log('output:', output)
@@ -89,7 +90,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeJoinAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0, 0)
+                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0, 0)
 
             console.log('res:', res)
 
@@ -126,7 +127,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeExitAmmPoolRequest2('100', '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
 
             console.log('res:', res)
 
@@ -163,7 +164,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeExitAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
 
             console.log('res:', res)
             console.log('res:', res.exitTokens)

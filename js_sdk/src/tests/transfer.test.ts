@@ -89,6 +89,10 @@ describe('Transfer test', function () {
 
             const { accInfo } = await exchange.getAccount({owner: addressWhitlisted})
 
+            if (!accInfo) {
+                return
+            }
+
             const { exchangeInfo } = await exchange.getExchangeInfo()
 
             console.log('accInfo:', accInfo)
@@ -127,6 +131,10 @@ describe('Transfer test', function () {
 
             // step 1. get account info
             const { accInfo } = await exchange.getAccount({owner: address})
+
+            if (!accInfo) {
+                return
+            }
 
             const { exchangeInfo } = await exchange.getExchangeInfo()
 
@@ -194,6 +202,10 @@ describe('Transfer test', function () {
 
             // step 1. get account info
             const { accInfo } = await exchange.getAccount({owner: addressWhitlisted})
+
+            if (!accInfo) {
+                return
+            }
 
             console.log('accInfo:', accInfo)
 
