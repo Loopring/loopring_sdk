@@ -2,7 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
-
+### v0.0.69
+    1) add status === 400 to status validation.
+    
 ### v0.0.68
     1) add getRecommendedMarkets to exchange api.
 

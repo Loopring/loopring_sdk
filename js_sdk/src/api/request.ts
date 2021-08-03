@@ -67,7 +67,7 @@ export class Request {
             },
 
             validateStatus: function (status: any) {
-                if (status >= 200 && status < 300) {
+                if ((status >= 200 && status < 300) || (status === 400)) {
                     return true
                 }
                 return false

@@ -102,18 +102,14 @@ describe('AmmpoolAPI test', function () {
         console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH'].rewards)
     }, DEFAULT_TIMEOUT)
 
-    it('getAmmPoolSnapshot', async () => {
-        api = new AmmpoolAPI(ChainId.GORLI)
-        try {
+    it('getAmmPoolSnapshot_err', async () => {
+        api = new AmmpoolAPI(ChainId.MAINNET)
             const request: GetAmmPoolSnapshotRequest = {
                 poolAddress
             }
             const response = await api.getAmmPoolSnapshot(request)
             console.log(response)
             console.log(response.raw_data.pooled)
-        } catch (reason) {
-            dumpError400(reason)
-        }
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolBalances', async () => {

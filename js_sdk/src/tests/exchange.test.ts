@@ -10,11 +10,11 @@ import {
     GetEthBalancesRequest,
 } from '../defs/loopring_defs'
 
-import { 
+import {
     TradingInterval,
 } from '../defs/loopring_enums'
 
-import { 
+import {
     DEFAULT_TIMEOUT,
 } from '../defs/loopring_constants'
 
@@ -32,15 +32,15 @@ describe('ExchangeAPI test', function () {
     beforeEach(() => {
         api = new ExchangeAPI(ChainId.MAINNET)
     })
-    
+
     it('getRecommendedMarkets', async () => {
         api = new ExchangeAPI(ChainId.GORLI)
-        
+
         const response = await api.getRecommendedMarkets()
         console.log(response)
-        
+
     }, DEFAULT_TIMEOUT)
-    
+
     it('getAccount_Found4', async () => {
         api = new ExchangeAPI(ChainId.GORLI)
         const request: GetAccountRequest = {
@@ -58,7 +58,7 @@ describe('ExchangeAPI test', function () {
         const response = await api.getAccount(request)
         console.log(response)
     }, DEFAULT_TIMEOUT)
-    
+
     it('getAccount_Found', async () => {
         api = new ExchangeAPI(ChainId.GORLI)
         const request: GetAccountRequest = {
@@ -69,15 +69,11 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAccount_Not_Found', async () => {
-        try {
-            const request: GetAccountRequest = {
-                owner: acc.address
-            }
-            const response = await api.getAccount(request)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
+        const request: GetAccountRequest = {
+            owner: acc.address
         }
+        const response = await api.getAccount(request)
+        console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getGasPrice', async () => {
@@ -110,7 +106,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAllowances', async () => {
-        
+
         try {
 
             const request: GetAllowancesRequest = {
@@ -225,7 +221,7 @@ describe('ExchangeAPI test', function () {
 
         const response = await api.getDepth(request)
         console.log(response)
-        
+
     }, DEFAULT_TIMEOUT)
 
     it('getMixDepth2', async () => {
@@ -238,7 +234,7 @@ describe('ExchangeAPI test', function () {
 
         const response = await api.getMixDepth(request)
         console.log(response)
-        
+
     }, DEFAULT_TIMEOUT)
 
     it('getMixDepth1', async () => {
@@ -252,7 +248,7 @@ describe('ExchangeAPI test', function () {
         const response = await api.getMixDepth(request)
         console.log(response)
         console.log(response.depth.bids)
-        
+
     }, DEFAULT_TIMEOUT)
 
     it('getExchangeInfo', async () => {
