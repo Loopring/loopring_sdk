@@ -2,6 +2,8 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.73
+    1) add getAmmAssetHistory function.
 
 ### v0.0.71
     1) add error_code defs.

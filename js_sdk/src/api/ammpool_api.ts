@@ -27,6 +27,7 @@ import {
     GetAmmPoolTxsRequest,
     UserAmmPoolTx,
     ReqParams,
+    GetAmmAssetRequest,
 } from '../defs/loopring_defs'
 
 import { VALID_UNTIL, } from '../defs/loopring_constants'
@@ -259,6 +260,32 @@ export class AmmpoolAPI extends BaseAPI {
             groupByRuleType,
             groupByActivityStatus,
             groupByRuleTypeAndStatus,
+            raw_data,
+        }
+
+    }
+
+    /*
+    */
+    public async getAmmAssetHistory(request: GetAmmAssetRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_AMM_ASSET_HISTORY,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const poolAddress = raw_data.poolAddress
+        const market = raw_data.market
+        const dataSeries = raw_data.data
+
+        return {
+            poolAddress,
+            market,
+            dataSeries,
             raw_data,
         }
 

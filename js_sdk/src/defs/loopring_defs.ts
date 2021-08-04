@@ -351,6 +351,11 @@ export interface GetAmmPoolGameRankRequest {
     ammPoolMarket: string // symbol AMM-LRC-ETH
 }
 
+export interface GetAmmAssetRequest {
+    poolAddress: string
+    limit?: number
+}
+
 export interface GetAmmPoolGameUserRankRequest {
     owner: string // address
     ammPoolMarket: string // symbol AMM-LRC-ETH

@@ -76,6 +76,12 @@ describe('AmmpoolAPI test', function () {
         console.log('userRankList:', response.userRankList[0].rewards)
     }, DEFAULT_TIMEOUT)
 
+    it('getAmmAssetHistory', async () => {
+        const response = await api.getAmmAssetHistory({ poolAddress, })
+        console.log('getAmmAssetHistory dataSeries:', response)
+        // console.log('getAmmAssetHistory:', response.raw_data.data[0].tokens)
+    }, DEFAULT_TIMEOUT)
+
     it('getAmmPoolGameUserRank', async () => {
         const response = await api.getAmmPoolGameUserRank({ owner: testAddress, 
             ammPoolMarket: 'LRC-ETH' }, acc.apiKey)
