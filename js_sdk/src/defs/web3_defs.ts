@@ -7,7 +7,7 @@ export const NetworkContextName = 'NETWORK'
 
 export enum ConnectorNames {
     Unknown = 'Unknown',
-    Injected = 'Injected',
+    MetaMask = 'MetaMask',
     Network = 'Network',
     WalletConnect = 'WalletConnect',
     WalletLink = 'WalletLink',

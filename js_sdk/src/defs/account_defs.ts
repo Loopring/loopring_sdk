@@ -7,6 +7,7 @@ export interface AccountInfo {
     publicKey: PublicKey
     tags: string
     nonce: number
+    keyNonce: number
 }
 
 export const POLLING_INTERVAL = 10000

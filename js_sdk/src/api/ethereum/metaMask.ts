@@ -8,12 +8,13 @@ import {
 } from 'ethereumjs-util'
 import Transaction from 'ethereumjs-tx'
 
+import Web3 from 'web3'
+
 import { addHexPrefix, toBuffer, toHex, toNumber } from '../../utils/formatter'
 import ABI from './contracts'
 
 import { ConnectorNames } from '../../defs/web3_defs'
-
-import Web3 from 'web3'
+import { myLog } from '../../utils/log_tools'
 /**
  * @description sign hash
  * @param web3
@@ -159,7 +160,7 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
               if (myKeyValid.result) {
                 resolve({ sig: result });
               } else {
-                resolve({ error: 'invalid sig at last!' });
+                resolve({ error: 'myKeyValid sig at last!' });
               }
             }
           }
@@ -175,6 +176,9 @@ export async function ecRecover2(account: string, message: string, signature: an
 
   var messageBuffer = Buffer.from(message, 'utf8')
 
+  // console.log('message:', message)
+  // console.log('signature raw:', signature)
+
   signature = signature.split('x')[1]
 
   const parts = [
@@ -186,13 +190,23 @@ export async function ecRecover2(account: string, message: string, signature: an
 
   var r = Buffer.from(signature.substring(0, 64), 'hex')
   var s = Buffer.from(signature.substring(64, 128), 'hex')
-  var v = parseInt(signature.substring(128, 130))
+
+  var old_v = Number(addHexPrefix(signature.substring(128, 130)))
+
+  // console.log('signature.substring(128, 130):', signature.substring(128, 130), 
+  //   addHexPrefix(signature.substring(128, 130)), 'old_v:', old_v)
+  
+  let v = old_v
 
   if (v <= 1) v += 27
 
   var pub = ecrecover(totalHash, v, r, s)
 
   var recoveredAddress = '0x' + pubToAddress(pub).toString('hex')
+
+  if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
+    myLog('v:', v, 'old_v:', old_v, ' recoveredAddress:', recoveredAddress)
+  }
 
   return new Promise((resolve) => resolve({
     result: account.toLowerCase() === recoveredAddress.toLowerCase(),

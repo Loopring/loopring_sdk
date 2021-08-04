@@ -103,7 +103,7 @@ describe('Transfer test', function () {
                     addressWhitlisted,
                     exchangeInfo.exchangeAddress,
                     accInfo.nonce - 1,
-                    ConnectorNames.Injected,
+                    ConnectorNames.MetaMask,
                 )
 
             console.log('eddsakey:', eddsakey.sk)
@@ -147,7 +147,7 @@ describe('Transfer test', function () {
                     address,
                     exchangeInfo.exchangeAddress,
                     accInfo.nonce - 1,
-                    ConnectorNames.Injected,
+                    ConnectorNames.MetaMask,
                 )
 
             console.log('eddsakey:', eddsakey.sk)
@@ -186,7 +186,7 @@ describe('Transfer test', function () {
             }
 
             const response = await userApi.submitInternalTransfer(request3, web3, 
-                ChainId.GORLI, ConnectorNames.Injected,
+                ChainId.GORLI, ConnectorNames.MetaMask,
                 eddsakey.sk, apiKey)
             
             console.log(response)
