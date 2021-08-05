@@ -81,11 +81,15 @@ const makeRequestParamStr = (request: Map<string, any>) => {
 
   const keys = Object.keys(Object.fromEntries(request))
 
-  keys.forEach((key: string) => {
-    const value = request.get(key)
-    if (value !== undefined && value !== '')
-      paramlist.push(encodeURIComponent(`${key}=${value}`))
-  })
+  if (keys) {
+
+    keys.forEach((key: string) => {
+      const value = request.get(key)
+      if (value !== undefined && value !== '')
+        paramlist.push(encodeURIComponent(`${key}=${value}`))
+    })
+
+  }
 
   return paramlist.join('&')
 

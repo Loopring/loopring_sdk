@@ -2,31 +2,31 @@ import { BaseAPI } from './base_api'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
-import { 
-    SIG_FLAG, 
-    ReqMethod, 
-    Side, 
-    MarketStatus, 
+import {
+    SIG_FLAG,
+    ReqMethod,
+    Side,
+    MarketStatus,
 } from '../defs/loopring_enums'
 
 import {
-    ReqParams, 
-    TokenInfo, 
-    MarketTradeInfo, 
-    FiatPriceInfo, 
-    LoopringMap, 
+    ReqParams,
+    TokenInfo,
+    MarketTradeInfo,
+    FiatPriceInfo,
+    LoopringMap,
     GetAccountRequest,
     GetCandlestickRequest,
     GetDepthRequest,
     GetTickerRequest,
-    GetMarketTradesRequest, 
+    GetMarketTradesRequest,
     GetFiatPriceRequest,
     GetTokenBalancesRequest,
     GetAllowancesRequest,
     MarketInfo,
-    ExchangeInfo, 
-    TickerData, 
-    DepthData, 
+    ExchangeInfo,
+    TickerData,
+    DepthData,
     Candlestick,
     TokenRelatedInfo,
     ABInfo,
@@ -50,18 +50,21 @@ const checkAmt = (rawStr: string) => {
 function getFeeMap(feeArr: any[], type: number = 0) {
     let feesMap: any = {}
 
-    feeArr.forEach((item: any, index: number, array: any)=>{
-        let key = ''
-        switch(type) {
-            case 1:
-                key = item.type
-                break
-            default:
-                key = item.token
-        }
-        // feesMap[key] = new BigNumber(item.fee)
-        feesMap[key] = item.fee
-    })
+    if (feeArr instanceof Array) {
+        feeArr.forEach((item: any, index: number, array: any) => {
+            let key = ''
+            switch (type) {
+                case 1:
+                    key = item.type
+                    break
+                default:
+                    key = item.token
+            }
+            // feesMap[key] = new BigNumber(item.fee)
+            feesMap[key] = item.fee
+        })
+    }
+
 
     return feesMap
 }
@@ -72,29 +75,31 @@ function genAB(data: any[], isReverse: boolean = false) {
     let amtTotal: BigNumber = new BigNumber(0)
     let volTotal: BigNumber = new BigNumber(0)
 
-    var ab_prices : number[] = []
-    var ab_amtTotals :string[] = []
-    var ab_volTotals :string[] = []
+    var ab_prices: number[] = []
+    var ab_amtTotals: string[] = []
+    var ab_volTotals: string[] = []
 
     let best = 0
-    
-    data.forEach((item: any) => {
-        const price = parseFloat(item[0])
-        const amt = new BigNumber(item[1]) // base amt
-        const vol = new BigNumber(item[2]) // quote vol
-        amtTotal = amtTotal.plus(amt)
-        volTotal = volTotal.plus(vol)
-        ab_arr.push({
-            price: price,
-            amt: amt.toString(),
-            vol: vol.toString(),
-            amtTotal: amtTotal.toString(),
-            volTotal: volTotal.toString(),
+
+    if (data instanceof Array) {
+        data.forEach((item: any) => {
+            const price = parseFloat(item[0])
+            const amt = new BigNumber(item[1]) // base amt
+            const vol = new BigNumber(item[2]) // quote vol
+            amtTotal = amtTotal.plus(amt)
+            volTotal = volTotal.plus(vol)
+            ab_arr.push({
+                price: price,
+                amt: amt.toString(),
+                vol: vol.toString(),
+                amtTotal: amtTotal.toString(),
+                volTotal: volTotal.toString(),
+            })
+            ab_prices.push(price)
+            ab_amtTotals.push(amtTotal.toString())
+            ab_volTotals.push(volTotal.toString())
         })
-        ab_prices.push(price)
-        ab_amtTotals.push(amtTotal.toString())
-        ab_volTotals.push(volTotal.toString())
-    })
+    }
 
     if (isReverse) {
         ab_arr.reverse()
@@ -129,7 +134,7 @@ export class ExchangeAPI extends BaseAPI {
             raw_data,
         }
     }
-    
+
     public async getRecommendedMarkets() {
 
         const reqParams: ReqParams = {
@@ -170,54 +175,58 @@ export class ExchangeAPI extends BaseAPI {
         var pairs: LoopringMap<TokenRelatedInfo> = {}
 
         const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS
-            
-        raw_data.markets.forEach((item: any, index: number, array: any)=>{
-            const marketInfo: MarketInfo = {
-                baseTokenId: item.baseTokenId, 
-                enabled: item.enabled, 
-                market: item.market, 
-                orderbookAggLevels: item.orderbookAggLevels, 
-                precisionForPrice: item.precisionForPrice, 
-                quoteTokenId: item.quoteTokenId, 
-            }
 
-            if (isMix) {
-                marketInfo.status = item.status as MarketStatus
-                marketInfo.isSwapEnabled = marketInfo.status === MarketStatus.ALL 
-                    || marketInfo.status === MarketStatus.AMM
-                marketInfo.createdAt = parseInt(item.createdAt)
-            }
-
-            markets[item.market] = marketInfo
-            
-            if (item.enabled) {
-
-                const market: string = item.market
-                const ind = market.indexOf('-')
-                const base = market.substring(0, ind)
-                const quote = market.substring(ind + 1, market.length)
-    
-                if (!pairs[base]) {
-                    pairs[base] = {
-                        tokenId: item.baseTokenId,
-                        tokenList: [quote],
-                    }
-                } else {
-                    pairs[base].tokenList = [...pairs[base].tokenList, quote]
-                }
-    
-                if (!pairs[quote]) {
-                    pairs[quote] = {
-                        tokenId: item.quoteTokenId,
-                        tokenList: [base],
-                    }
-                } else {
-                    pairs[quote].tokenList = [...pairs[quote].tokenList, base]
+        if (raw_data?.markets instanceof Array) {
+            raw_data.markets.forEach((item: any) => {
+                const marketInfo: MarketInfo = {
+                    baseTokenId: item.baseTokenId,
+                    enabled: item.enabled,
+                    market: item.market,
+                    orderbookAggLevels: item.orderbookAggLevels,
+                    precisionForPrice: item.precisionForPrice,
+                    quoteTokenId: item.quoteTokenId,
                 }
 
-            }
+                if (isMix) {
+                    marketInfo.status = item.status as MarketStatus
+                    marketInfo.isSwapEnabled = marketInfo.status === MarketStatus.ALL
+                        || marketInfo.status === MarketStatus.AMM
+                    marketInfo.createdAt = parseInt(item.createdAt)
+                }
 
-        })
+                markets[item.market] = marketInfo
+
+                if (item.enabled) {
+
+                    const market: string = item.market
+                    const ind = market.indexOf('-')
+                    const base = market.substring(0, ind)
+                    const quote = market.substring(ind + 1, market.length)
+
+                    if (!pairs[base]) {
+                        pairs[base] = {
+                            tokenId: item.baseTokenId,
+                            tokenList: [quote],
+                        }
+                    } else {
+                        pairs[base].tokenList = [...pairs[base].tokenList, quote]
+                    }
+
+                    if (!pairs[quote]) {
+                        pairs[quote] = {
+                            tokenId: item.quoteTokenId,
+                            tokenList: [base],
+                        }
+                    } else {
+                        pairs[quote].tokenList = [...pairs[quote].tokenList, base]
+                    }
+
+                }
+
+            })
+
+        }
+
 
         const marketArr = Reflect.ownKeys(markets)
 
@@ -254,23 +263,26 @@ export class ExchangeAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        
+
         let tokenSymbolMap: LoopringMap<TokenInfo> = {}
         let tokenIdMap: LoopringMap<TokenInfo> = {}
         let tokenIdIndex: LoopringMap<string> = {}
         let tokenAddressMap: LoopringMap<TokenInfo> = {}
 
-        raw_data.forEach((item: TokenInfo) => {
-            if (item.symbol.startsWith('LP-')) {
-                item.isLpToken = true
-            } else {
-                item.isLpToken = false
-            }
-            tokenSymbolMap[item.symbol] = item
-            tokenIdMap[item.tokenId] = item
-            tokenIdIndex[item.tokenId] = item.symbol
-            tokenAddressMap[item.address] = item
-        })
+        if (raw_data instanceof Array) {
+            raw_data.forEach((item: TokenInfo) => {
+                if (item.symbol.startsWith('LP-')) {
+                    item.isLpToken = true
+                } else {
+                    item.isLpToken = false
+                }
+                tokenSymbolMap[item.symbol] = item
+                tokenIdMap[item.tokenId] = item
+                tokenIdIndex[item.tokenId] = item.symbol
+                tokenAddressMap[item.address] = item
+            })
+        }
+
 
         let tokenSymbolArr = Reflect.ownKeys(tokenSymbolMap)
         let tokenIdArr = Reflect.ownKeys(tokenIdMap)
@@ -304,15 +316,15 @@ export class ExchangeAPI extends BaseAPI {
             if (token) {
                 tokenArray = token.split(SEP)
             }
-    
+
             if (tokenArray.length <= 0 || (tokenArray.length === 1 && tokenArray[0] === '')) {
                 tokenArray = Reflect.ownKeys(tokens)
             }
-    
+
             tokenArray.forEach((item: string) => {
                 tokenAddrArr.push(tokens[item].address)
             })
-    
+
             token = tokenAddrArr.join(SEP)
         }
 
@@ -368,9 +380,11 @@ export class ExchangeAPI extends BaseAPI {
 
         let tokenBalances: LoopringMap<string> = {}
 
-        raw_data.data.forEach((_: any, index: number) => {
-            tokenBalances[tokenArray[index]] = raw_data.data[index]
-        })
+        if (raw_data?.data instanceof Array) {
+            raw_data.data.forEach((_: any, index: number) => {
+                tokenBalances[tokenArray[index]] = raw_data.data[index]
+            })
+        }
 
         return {
             tokenBalances,
@@ -402,9 +416,11 @@ export class ExchangeAPI extends BaseAPI {
 
         let tokenAllowances: LoopringMap<string> = {}
 
-        raw_data.data.forEach((_: any, index: number) => {
-            tokenAllowances[tokenArray[index]] = raw_data.data[index]
-        })
+        if (raw_data?.data instanceof Array) {
+            raw_data.data.forEach((_: any, index: number) => {
+                tokenAllowances[tokenArray[index]] = raw_data.data[index]
+            })
+        }
 
         return {
             tokenAllowances,
@@ -471,7 +487,7 @@ export class ExchangeAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        
+
         const bids = genAB(raw_data['bids'], true)
         const asks = genAB(raw_data['asks'])
 
@@ -525,47 +541,50 @@ export class ExchangeAPI extends BaseAPI {
 
         var tickMap: LoopringMap<TickerData> = {}
         var tickList: TickerData[] = []
-        raw_data.forEach((item: any, ind: number, arr: any) => {
 
-            const open = parseFloat(item[4])
-            const close = parseFloat(item[7])
-
-            const symbol = item[0].replace('COMBINE-', '')
-
-            const {
-                base,
-                quote,
-            } = getBaseQuote(symbol)
-
-            let change = 0
-            if (!isNaN(open) && !isNaN(close)) {
-                change = (close - open) / open
-            }
-
-            const timestamp = parseInt(item[1])
-
-            const tick: TickerData = {
-                symbol,
-                base,
-                quote,
-                timestamp,
-                base_token_volume: item[2],
-                quote_token_volume: item[3],
-                open,
-                high: parseFloat(item[5]),
-                low: parseFloat(item[6]),
-                close,
-                count: parseInt(item[8]),
-                bid: parseFloat(item[9]),
-                ask: parseFloat(item[10]),
-                base_fee_amt: checkAmt(item[11]),
-                quote_fee_amt: checkAmt(item[12]),
-                change,
-            }
-            
-            tickMap[symbol] = tick
-            tickList.push(tick)
-        })
+        if (raw_data instanceof Array) {
+            raw_data.forEach((item: any, ind: number, arr: any) => {
+    
+                const open = parseFloat(item[4])
+                const close = parseFloat(item[7])
+    
+                const symbol = item[0].replace('COMBINE-', '')
+    
+                const {
+                    base,
+                    quote,
+                } = getBaseQuote(symbol)
+    
+                let change = 0
+                if (!isNaN(open) && !isNaN(close)) {
+                    change = (close - open) / open
+                }
+    
+                const timestamp = parseInt(item[1])
+    
+                const tick: TickerData = {
+                    symbol,
+                    base,
+                    quote,
+                    timestamp,
+                    base_token_volume: item[2],
+                    quote_token_volume: item[3],
+                    open,
+                    high: parseFloat(item[5]),
+                    low: parseFloat(item[6]),
+                    close,
+                    count: parseInt(item[8]),
+                    bid: parseFloat(item[9]),
+                    ask: parseFloat(item[10]),
+                    base_fee_amt: checkAmt(item[11]),
+                    quote_fee_amt: checkAmt(item[12]),
+                    change,
+                }
+    
+                tickMap[symbol] = tick
+                tickList.push(tick)
+            })
+        }
 
         return {
             tickMap,
@@ -574,7 +593,7 @@ export class ExchangeAPI extends BaseAPI {
         }
 
     }
-    
+
     public async getAllMixTickers(markets: string | undefined = undefined) {
 
         if (!markets) {
@@ -631,19 +650,22 @@ export class ExchangeAPI extends BaseAPI {
 
         var candlesticks: Candlestick[] = []
 
-        raw_data.candlesticks.forEach((item: any, ind: number, arr: any) => {
-            const candlestick: Candlestick = {
-                timestamp: parseInt(item[0]),
-                txs: parseInt(item[1]),
-                open: parseFloat(item[2]),
-                close: parseFloat(item[3]),
-                high: parseFloat(item[4]),
-                low: parseFloat(item[5]),
-                baseVol: item[6],
-                quoteVol: item[7],
-            }
-            candlesticks.push(candlestick)
-        })
+        if (raw_data?.candlesticks instanceof Array) {
+            raw_data.candlesticks.forEach((item: any) => {
+                const candlestick: Candlestick = {
+                    timestamp: parseInt(item[0]),
+                    txs: parseInt(item[1]),
+                    open: parseFloat(item[2]),
+                    close: parseFloat(item[3]),
+                    high: parseFloat(item[4]),
+                    low: parseFloat(item[5]),
+                    baseVol: item[6],
+                    quoteVol: item[7],
+                }
+                candlesticks.push(candlestick)
+            })
+        }
+
 
         return {
             candlesticks,
@@ -668,9 +690,13 @@ export class ExchangeAPI extends BaseAPI {
 
         let fiatPrices: LoopringMap<FiatPriceInfo> = {}
 
-        raw_data.prices.forEach((item: FiatPriceInfo) => {
-            fiatPrices[item.symbol] = item
-        })
+        if (raw_data?.prices instanceof Array) {
+
+            raw_data.prices.forEach((item: FiatPriceInfo) => {
+                fiatPrices[item.symbol] = item
+            })
+
+        }
 
         return {
             fiatPrices,
@@ -699,17 +725,20 @@ export class ExchangeAPI extends BaseAPI {
 
         let marketTrades: MarketTradeInfo[] = []
 
-        raw_data.trades.forEach((item: any) => {
-            marketTrades.push({
-                tradeTime: parseInt(item[0]),
-                tradeId: item[1],
-                side: item[2] as Side,
-                volume: item[3],
-                price: item[4],
-                market: item[5],
-                fee: item[6]
+        if (raw_data?.trades instanceof Array) {
+            raw_data.trades.forEach((item: any) => {
+                marketTrades.push({
+                    tradeTime: parseInt(item[0]),
+                    tradeId: item[1],
+                    side: item[2] as Side,
+                    volume: item[3],
+                    price: item[4],
+                    market: item[5],
+                    fee: item[6]
+                })
             })
-        })
+        }
+
 
         return {
             totalNum: raw_data.totalNum,

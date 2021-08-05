@@ -17,6 +17,7 @@ import { isContract } from './ethereum/metaMask'
 import Web3 from 'web3'
 
 import * as sign_tools from './sign/sign_tools'
+import { type } from 'os'
 
 const NOT_SUPPORT_ERROR = 'Not supported on this device'
 
@@ -298,9 +299,13 @@ export class UserAPI extends BaseAPI {
 
         let userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> = {}
 
-        raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-            userBalances[item.tokenId] = item
-        })
+        if (raw_data instanceof Array) {
+
+            raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
+                userBalances[item.tokenId] = item
+            })
+
+        }
 
         return {
             userBalances,
@@ -393,17 +398,20 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         let userTrades : loopring_defs.UserTrade[] = []
-        raw_data.trades.forEach((item: any[]) => {
-            userTrades.push({
-                tradeTime: item[0],
-                tradeId: item[1],
-                side: item[2],
-                volume: item[3],
-                price: item[4],
-                market: item[5],
-                fee: item[6],
+
+        if (raw_data?.trades instanceof Array) {
+            raw_data.trades.forEach((item: any[]) => {
+                userTrades.push({
+                    tradeTime: item[0],
+                    tradeId: item[1],
+                    side: item[2],
+                    volume: item[3],
+                    price: item[4],
+                    market: item[5],
+                    fee: item[6],
+                })
             })
-        })
+        }
         
         return {
             totalNum: raw_data.totalNum,
@@ -431,9 +439,13 @@ export class UserAPI extends BaseAPI {
 
         let userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> = {}
 
-        raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
-            userFreeRateMap[item.symbol] = item
-        })
+        if (raw_data instanceof Array) {
+
+            raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
+                userFreeRateMap[item.symbol] = item
+            })
+
+        }
         
         return {
             userFreeRateMap,
@@ -484,13 +496,17 @@ export class UserAPI extends BaseAPI {
 
         const gasPrice = parseInt(raw_data.gasPrice)
 
-        const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] = raw_data.amounts
+        const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] = raw_data?.amounts
 
         const amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount> = {}
 
-        amounts.forEach((item: loopring_defs.TokenAmount) => {
-            amountMap[item.tokenSymbol] = item
-        })
+        if (amounts instanceof Array) {
+
+            amounts.forEach((item: loopring_defs.TokenAmount) => {
+                amountMap[item.tokenSymbol] = item
+            })
+
+        }
 
         return {
             amounts,
@@ -521,9 +537,11 @@ export class UserAPI extends BaseAPI {
 
         let fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {}
 
-        raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
-            fees[item.token] = item
-        })
+        if (raw_data?.fees instanceof Array) {
+            raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
+                fees[item.token] = item
+            })
+        }
 
         return {
             fees,
@@ -544,7 +562,7 @@ export class UserAPI extends BaseAPI {
         let ecdsaSignature = undefined
 
         // metamask not import hw wallet.
-        if (walletType === ConnectorNames.Injected) {
+        if (walletType === ConnectorNames.MetaMask) {
             try {
                 // signOffchainWithdrawWithDataStructure
                 // console.log('1. signOffchainWithdrawWithDataStructure')
@@ -609,7 +627,7 @@ export class UserAPI extends BaseAPI {
 
         let ecdsaSignature = undefined
 
-        if (walletType === ConnectorNames.Injected) {
+        if (walletType === ConnectorNames.MetaMask) {
             try {
                 // signOffchainWithdrawWithDataStructure
                 // console.log('1. signTransferWithDataStructure')
@@ -678,7 +696,7 @@ export class UserAPI extends BaseAPI {
     
             let ecdsaSignature = undefined
     
-            if (walletType === ConnectorNames.Injected) {
+            if (walletType === ConnectorNames.MetaMask) {
                 try {
                     // console.log('1. signUpdateAccountWithDataStructure')
                     const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))

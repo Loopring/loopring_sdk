@@ -60,38 +60,41 @@ export class AmmpoolAPI extends BaseAPI {
 
         let pairs: LoopringMap<TokenRelatedInfo> = {}
 
-        raw_data.pools.forEach((item: any) => {
-
-            const market: string = item.market
-            ammpools[market] = item
-
-            let base = ''
-            let quote = ''
-
-            const ind = market.indexOf('-')
-            const ind2 = market.lastIndexOf('-')
-            base = market.substring(ind + 1, ind2)
-            quote = market.substring(ind2 + 1, market.length)
-
-            if (!pairs[base]) {
-                pairs[base] = {
-                    tokenId: item.tokens.pooled[0],
-                    tokenList: [quote],
+        if (raw_data?.pools instanceof Array) {
+            raw_data.pools.forEach((item: any) => {
+    
+                const market: string = item.market
+                ammpools[market] = item
+    
+                let base = ''
+                let quote = ''
+    
+                const ind = market.indexOf('-')
+                const ind2 = market.lastIndexOf('-')
+                base = market.substring(ind + 1, ind2)
+                quote = market.substring(ind2 + 1, market.length)
+    
+                if (!pairs[base]) {
+                    pairs[base] = {
+                        tokenId: item.tokens.pooled[0],
+                        tokenList: [quote],
+                    }
+                } else {
+                    pairs[base].tokenList = [...pairs[base].tokenList, quote]
                 }
-            } else {
-                pairs[base].tokenList = [...pairs[base].tokenList, quote]
-            }
-
-            if (!pairs[quote]) {
-                pairs[quote] = {
-                    tokenId: item.tokens.pooled[1],
-                    tokenList: [base],
+    
+                if (!pairs[quote]) {
+                    pairs[quote] = {
+                        tokenId: item.tokens.pooled[1],
+                        tokenList: [base],
+                    }
+                } else {
+                    pairs[quote].tokenList = [...pairs[quote].tokenList, base]
                 }
-            } else {
-                pairs[quote].tokenList = [...pairs[quote].tokenList, base]
-            }
+    
+            })
+        }
 
-        })
 
         return {
             ammpools,
@@ -116,7 +119,7 @@ export class AmmpoolAPI extends BaseAPI {
 
         let ammUserRewardMap : AmmUserRewardMap = {}
 
-        if (raw_data) {
+        if (raw_data instanceof Array) {
             raw_data.forEach((item: AmmUserReward) => {
                 ammUserRewardMap[item.market] = item
             })
@@ -209,51 +212,56 @@ export class AmmpoolAPI extends BaseAPI {
 
         const currentTs = new Date().getTime()
 
-        raw_data.data.forEach((item: AmmPoolActivityRule) => {
+        if (raw_data?.data instanceof Array) {
 
-            const status = currentTs < item.rangeFrom ? AmmPoolActivityStatus.NotStarted 
-                : (currentTs >= item.rangeFrom && currentTs <= item.rangeTo) ? AmmPoolActivityStatus.InProgress 
-                : AmmPoolActivityStatus.EndOfGame
-            
-            item.status = status
+            raw_data.data.forEach((item: AmmPoolActivityRule) => {
+    
+                const status = currentTs < item.rangeFrom ? AmmPoolActivityStatus.NotStarted 
+                    : (currentTs >= item.rangeFrom && currentTs <= item.rangeTo) ? AmmPoolActivityStatus.InProgress 
+                    : AmmPoolActivityStatus.EndOfGame
+                
+                item.status = status
+    
+                activityRules[item.market] = item
+    
+                if (item.ruleType in groupByRuleType) {
+                    const ruleList = groupByRuleType[item.ruleType]
+                    ruleList.push(item)
+                    groupByRuleType[item.ruleType] = ruleList
+                } else {
+                    groupByRuleType[item.ruleType] = [item]
+                }
+    
+                if (status in groupByActivityStatus) {
+                    const ruleList = groupByActivityStatus[status]
+                    ruleList.push(item)
+                    groupByActivityStatus[status] = ruleList
+                } else {
+                    groupByActivityStatus[status] = [item]
+                }
+    
+                let ruleMap: LoopringMap<AmmPoolActivityRule[]> = {}
+    
+                if (item.ruleType in groupByRuleTypeAndStatus) {
+                    ruleMap = groupByRuleTypeAndStatus[item.ruleType]
+                } else {
+                    ruleMap = {}
+                }
+    
+                if (status in ruleMap) {
+                    const ruleList = ruleMap[status]
+                    ruleList.push(item)
+                    ruleMap[status] = ruleList
+                } else {
+                    ruleMap[status] = [item]
+                }
+    
+                groupByRuleTypeAndStatus[item.ruleType] = ruleMap
+    
+            })
 
-            activityRules[item.market] = item
+        }
 
-            if (item.ruleType in groupByRuleType) {
-                const ruleList = groupByRuleType[item.ruleType]
-                ruleList.push(item)
-                groupByRuleType[item.ruleType] = ruleList
-            } else {
-                groupByRuleType[item.ruleType] = [item]
-            }
-
-            if (status in groupByActivityStatus) {
-                const ruleList = groupByActivityStatus[status]
-                ruleList.push(item)
-                groupByActivityStatus[status] = ruleList
-            } else {
-                groupByActivityStatus[status] = [item]
-            }
-
-            let ruleMap: LoopringMap<AmmPoolActivityRule[]> = {}
-
-            if (item.ruleType in groupByRuleTypeAndStatus) {
-                ruleMap = groupByRuleTypeAndStatus[item.ruleType]
-            } else {
-                ruleMap = {}
-            }
-
-            if (status in ruleMap) {
-                const ruleList = ruleMap[status]
-                ruleList.push(item)
-                ruleMap[status] = ruleList
-            } else {
-                ruleMap[status] = [item]
-            }
-
-            groupByRuleTypeAndStatus[item.ruleType] = ruleMap
-
-        })
 
         return {
             activityRules,
@@ -301,13 +309,15 @@ export class AmmpoolAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
 
-        const raw_data = (await this.makeReq().request(reqParams)).data
+        let raw_data = (await this.makeReq().request(reqParams)).data
 
         let ammPoolStats: LoopringMap<AmmPoolStat> = {}
 
-        raw_data.data.forEach((item: AmmPoolStat) => {
-            ammPoolStats[item.market] = item
-        })
+        if (raw_data?.data instanceof Array) {
+            raw_data.data.forEach((item: AmmPoolStat) => {
+                ammPoolStats[item.market] = item
+            })
+        }
 
         return {
             ammPoolStats,
@@ -360,23 +370,29 @@ export class AmmpoolAPI extends BaseAPI {
 
         let ammpoolsbalances: LoopringMap<AmmPoolBalance> = {}
 
-        raw_data.forEach((item: any) => {
+        if (raw_data instanceof Array) {
+            raw_data.forEach((item: any) => {
+    
+                let tempPooled: any = {}
 
-            let tempPooled: any = {}
+                if (item?.pooled instanceof Array) {
+    
+                    item.pooled.forEach((item2: any) => {
+                        tempPooled[item2.tokenId] = item2
+                    })
 
-            item.pooled.forEach((item2: any) => {
-                tempPooled[item2.tokenId] = item2
+                }
+    
+                item.pooledMap = tempPooled
+    
+                let poolName = item.poolName
+                if (poolName.indexOf('LRCETH') >= 0) {
+                    poolName = 'AMM-LRC-ETH'
+                }
+    
+                ammpoolsbalances[poolName] = item
             })
-
-            item.pooledMap = tempPooled
-
-            let poolName = item.poolName
-            if (poolName.indexOf('LRCETH') >= 0) {
-                poolName = 'AMM-LRC-ETH'
-            }
-
-            ammpoolsbalances[poolName] = item
-        })
+        }
 
         return {
             ammpoolsbalances,

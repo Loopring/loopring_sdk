@@ -2,8 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
-### v0.0.74
+### v0.0.75
     1) add getAmmAssetHistory function.
+    2) fix null pointer exceptions.
 
 ### v0.0.71
     1) add error_code defs.

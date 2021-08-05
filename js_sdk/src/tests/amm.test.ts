@@ -106,7 +106,7 @@ describe('AmmpoolAPI test', function () {
         
         const response = await api.getAmmPoolStats()
         console.log('ammPoolStats:', response.ammPoolStats)
-        console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH'].rewards)
+        console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH']?.rewards)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot_correct', async () => {

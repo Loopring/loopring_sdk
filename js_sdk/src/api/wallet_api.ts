@@ -25,10 +25,10 @@ export class WalletAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         let assetSeries: string[] = []
-        let timestampSeries : number[] = []
-        let dateSeries : string[] = []
+        let timestampSeries: number[] = []
+        let dateSeries: string[] = []
 
-        if (raw_data.data) {
+        if (raw_data?.data instanceof Array) {
 
             raw_data.data.forEach((item: loopring_defs.UserAssetInfo) => {
                 assetSeries.push(item.amount)
@@ -37,7 +37,7 @@ export class WalletAPI extends BaseAPI {
             })
 
         }
-        
+
         return {
             assetSeries,
             timestampSeries,
@@ -64,13 +64,17 @@ export class WalletAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         let priceSeries: string[] = []
-        let timestampSeries : number[] = []
+        let timestampSeries: number[] = []
 
-        raw_data.data.forEach((item: loopring_defs.TokenPriceInfo) => {
-            priceSeries.push(item.price)
-            timestampSeries.push(item.createdAt)
-        })
-        
+        if (raw_data?.data instanceof Array) {
+
+            raw_data.data.forEach((item: loopring_defs.TokenPriceInfo) => {
+                priceSeries.push(item.price)
+                timestampSeries.push(item.createdAt)
+            })
+
+        }
+
         return {
             tokenPrices: raw_data.data as loopring_defs.TokenPriceInfo[],
             priceSeries,
@@ -96,9 +100,12 @@ export class WalletAPI extends BaseAPI {
 
         let tokenPrices: loopring_defs.LoopringMap<number> = {}
 
-        raw_data.data.forEach((item: any) => {
-            tokenPrices[item.token] = parseFloat(item.price)
-        })
+        if (raw_data?.data instanceof Array) {
+
+            raw_data.data.forEach((item: any) => {
+                tokenPrices[item.token] = parseFloat(item.price)
+            })
+        }
 
         return {
             tokenPrices,
