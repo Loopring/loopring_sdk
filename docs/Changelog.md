@@ -2,7 +2,7 @@
 
 ### JS SDK Version ChangeLog
 
-### v0.0.73
+### v0.0.74
     1) add getAmmAssetHistory function.
 
 ### v0.0.71
