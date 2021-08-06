@@ -193,9 +193,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return {
-            raw_data
-        }
+        return this.returnTxHash(raw_data)
 
     }
 
@@ -551,6 +549,26 @@ export class UserAPI extends BaseAPI {
 
     }
 
+    private returnTxHash(raw_data: any) {
+
+        let hash = undefined
+
+        let errInfo = undefined
+
+        if (raw_data?.hash) {
+            hash = raw_data.hash
+        } else if (raw_data?.resultInfo) {
+            errInfo = raw_data.resultInfo
+        }
+
+        return {
+            hash,
+            errInfo,
+            raw_data,
+        }
+
+    }
+
     /*
     * Submit offchain withdraw request
     */
@@ -612,9 +630,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return {
-            raw_data,
-        }
+        return this.returnTxHash(raw_data)
 
     }
 
@@ -682,9 +698,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return {
-            raw_data,
-        }
+        return this.returnTxHash(raw_data)
 
     }
 
@@ -740,9 +754,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        return {
-            raw_data,
-        }
+        return this.returnTxHash(raw_data)
 
     }
 

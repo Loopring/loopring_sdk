@@ -2,6 +2,11 @@
 
 ### JS SDK Version ChangeLog
 
+
+### v0.0.78
+    1) add GetLiquidityMiningUserHistory
+    2) update response of submitOrder, updateAccount transfer and withdraw
+
 ### v0.0.75
     1) add getAmmAssetHistory function.
     2) fix null pointer exceptions.

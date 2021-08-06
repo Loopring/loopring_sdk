@@ -15,6 +15,7 @@ import {
     DEFAULT_TIMEOUT,
     AmmTxType,
     AmmPoolSnapshot,
+    GetLiquidityMiningUserHistoryRequest,
 } from '../defs'
 
 import { loopring_exported_account as acc } from './utils'
@@ -116,6 +117,26 @@ describe('AmmpoolAPI test', function () {
             const response = await api.getAmmPoolSnapshot(request)
             console.log(response)
             console.log(response.raw_data.pooled)
+    }, DEFAULT_TIMEOUT)
+
+    it('getLiquidityMiningUserHistory_OK', async () => {
+            const request: GetLiquidityMiningUserHistoryRequest = {
+                accountId: acc.accountId,
+                start: 0,
+                end: new Date().getTime()
+            }
+            const response = await api.getLiquidityMiningUserHistory(request)
+            console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getLiquidityMiningUserHistory_No_data', async () => {
+            const request: GetLiquidityMiningUserHistoryRequest = {
+                accountId: 10084,
+                start: 0,
+                end: new Date().getTime()
+            }
+            const response = await api.getLiquidityMiningUserHistory(request)
+            console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot_err', async () => {

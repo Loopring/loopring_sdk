@@ -493,6 +493,20 @@ export interface UserAmmPoolTx {
     updatedAt: number
 }
 
+export interface GetLiquidityMiningUserHistoryRequest {
+    accountId: number
+    start?: number
+    end?: number
+}
+
+export interface UserMiningInfo {
+    account_id: number
+    market: string
+    start: number
+    end: number
+    awards: TokenVolumeV3[]
+}
+
 export interface GetFiatPriceRequest {
     legal: string
 }

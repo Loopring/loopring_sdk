@@ -69,7 +69,7 @@ describe('UserAPI test', function () {
                     acc.address,
                     acc.exchangeAddr,
                     accInfo?.nonce as number - 1,
-                    ConnectorNames.Injected,
+                    ConnectorNames.MetaMask,
                 )
 
             console.log('eddsakey:', eddsakey.sk)
@@ -98,7 +98,7 @@ describe('UserAPI test', function () {
                     acc.address,
                     acc.exchangeAddr,
                     accInfo?.nonce as number - 1,
-                    ConnectorNames.Injected,
+                    ConnectorNames.MetaMask,
                 )
 
             const request: UpdateUserApiKeyRequest = {
@@ -472,7 +472,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Injected,
+            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Trezor,
                 acc.eddsaKey, acc.apiKey)
 
             console.log(response)
@@ -525,7 +525,7 @@ describe('UserAPI test', function () {
             }
 
             const response = await api.submitInternalTransfer(request, web3, 
-                ChainId.GORLI, ConnectorNames.Injected,
+                ChainId.GORLI, ConnectorNames.MetaMask,
                 acc.eddsaKey, acc.apiKey)
 
             console.log(response)
@@ -559,7 +559,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
                 nonce: accInfo.nonce,
             }
-            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.Injected)
+            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.MetaMask)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
