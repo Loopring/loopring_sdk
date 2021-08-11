@@ -18,7 +18,7 @@ let api: WalletAPI
 describe('WalletApi', function () {
 
     beforeEach(async() => {
-        api = new WalletAPI(ChainId.MAINNET)
+        api = new WalletAPI({chainId: ChainId.MAINNET})
     })
 
     it('getUserAssets', async () => {
@@ -38,7 +38,7 @@ describe('WalletApi', function () {
 
     it('getUserAssets_TESTNET', async () => {
         try {
-            api = new WalletAPI(ChainId.GORLI)
+            api = new WalletAPI({ chainId: ChainId.GOERLI })
             const request: GetUserAssetsRequest = {
                 wallet: ''
             }

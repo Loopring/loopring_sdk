@@ -64,9 +64,9 @@ let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e
 describe('Transfer test', function () {
 
     beforeEach(async() => {
-        userApi = new UserAPI(ChainId.GORLI)
-        exchange = new ExchangeAPI(ChainId.GORLI)
-        whitelistedUserApi = new WhitelistedUserAPI(ChainId.GORLI)
+        userApi = new UserAPI({ chainId: ChainId.GOERLI })
+        exchange = new ExchangeAPI({ chainId: ChainId.GOERLI })
+        whitelistedUserApi = new WhitelistedUserAPI({ chainId: ChainId.GOERLI })
     })
 
     it('getAccountWhitelisted', async () => {
@@ -186,7 +186,7 @@ describe('Transfer test', function () {
             }
 
             const response = await userApi.submitInternalTransfer(request3, web3, 
-                ChainId.GORLI, ConnectorNames.MetaMask,
+                ChainId.GOERLI, ConnectorNames.MetaMask,
                 eddsakey.sk, apiKey)
             
             console.log(response)

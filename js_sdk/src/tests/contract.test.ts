@@ -70,7 +70,7 @@ const gasLimit = 200000
 describe('contract test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
     })
 
     it('approveZero_LRC test', async () => {
@@ -78,7 +78,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.approveZero(web3, acc.address, lrc.address, 
-            acc.depositAddr, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            acc.depositAddr, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} approveZero: ${response}`)
     }, DEFAULT_TIMEOUT)
@@ -88,7 +88,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.approveMax(web3, acc.address, lrc.address, 
-            acc.depositAddr, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            acc.depositAddr, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} approveMax: ${response}`)
     }, DEFAULT_TIMEOUT)
@@ -98,7 +98,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.approveMax(web3, acc.address, eth.address, 
-            acc.depositAddr, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            acc.depositAddr, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} approveMax: ${response}`)
     }, DEFAULT_TIMEOUT)
@@ -108,7 +108,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.deposit(web3, acc.address, acc.exchangeAddr, 
-            lrc, 1, 0, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            lrc, 1, 0, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} deposit_LRC: ${response}`)
     }, DEFAULT_TIMEOUT)
@@ -118,7 +118,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.deposit(web3, acc.address, acc.exchangeAddr, 
-            eth, 0.1, 0, gasPrice, parseInt(eth.gasAmounts.deposit), ChainId.GORLI, nonce, true)
+            eth, 0.1, 0, gasPrice, parseInt(eth.gasAmounts.deposit), ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} deposit_ETH: ${response}`)
     }, DEFAULT_TIMEOUT)
@@ -128,7 +128,7 @@ describe('contract test', function () {
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.forceWithdrawal(web3, acc.address, acc.accountId, acc.exchangeAddr, 
-            eth, 0, gasPrice, gasLimit, ChainId.GORLI, nonce, true)
+            eth, 0, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
         console.log(`nonce: ${nonce} deposit_ETH: ${response}`)
     }, DEFAULT_TIMEOUT)

@@ -39,7 +39,7 @@ const baseOptions = {
 describe('get_imgs', function () {
 
     beforeEach(async () => {
-        exchangeApi = new ExchangeAPI(ChainId.MAINNET)
+        exchangeApi = new ExchangeAPI({ chainId: ChainId.MAINNET })
     }, TIMEOUT)
 
     it('get_imgs', async () => {

@@ -33,9 +33,9 @@ const poolAddress = '0xfEB069407df0e1e4B365C10992F1bc16c078E34b'
 describe('AmmpoolAPI test', function () {
 
     beforeEach(() => {
-        api = new AmmpoolAPI(ChainId.GORLI)
-        userApi = new UserAPI(ChainId.GORLI)
-        exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
+        userApi = new UserAPI({ chainId: ChainId.GOERLI })
+        exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
     })
 
     it('getAmmPoolConf', async () => {
@@ -69,7 +69,7 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolGameRank', async () => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-VSP-ETH' })
         console.log('getAmmPoolGameRank:', response.raw_data)
         console.log('totalRewards:', response.totalRewards)
@@ -91,7 +91,7 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolActivityRules_Mainnet', async () => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         const response = await api.getAmmPoolActivityRules()
         console.log('getAmmPoolActivityRules:', response)
     }, DEFAULT_TIMEOUT)
@@ -103,7 +103,7 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolStats', async () => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         
         const response = await api.getAmmPoolStats()
         console.log('ammPoolStats:', response.ammPoolStats)
@@ -140,7 +140,7 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolSnapshot_err', async () => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
             const request: GetAmmPoolSnapshotRequest = {
                 poolAddress
             }
@@ -150,7 +150,7 @@ describe('AmmpoolAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolBalances', async () => {
-        api = new AmmpoolAPI(ChainId.MAINNET)
+        api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         const response = await api.getAmmPoolBalances()
         
         console.log(response.ammpoolsbalances['AMM-LRC-ETH'].poolAddress)
@@ -235,7 +235,7 @@ describe('AmmpoolAPI test', function () {
             storageId_1.offchainId, storageId.offchainId)
 
             const patch: AmmPoolRequestPatch = {
-                chainId: ChainId.GORLI,
+                chainId: ChainId.GOERLI,
                 ammName: ammInfo.name,
                 poolAddress,
                 eddsaKey: acc.eddsaKey
@@ -280,7 +280,7 @@ describe('AmmpoolAPI test', function () {
             fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
-                chainId: ChainId.GORLI,
+                chainId: ChainId.GOERLI,
                 ammName: 'LRCETH-Pool',
                 poolAddress,
                 eddsaKey: acc.eddsaKey
@@ -324,7 +324,7 @@ describe('AmmpoolAPI test', function () {
             fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
-                chainId: ChainId.GORLI,
+                chainId: ChainId.GOERLI,
                 ammName: 'LRCETH-Pool',
                 poolAddress,
                 eddsaKey: acc.eddsaKey

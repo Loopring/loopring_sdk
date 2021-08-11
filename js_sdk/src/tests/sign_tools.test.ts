@@ -16,7 +16,7 @@ describe('sign_tools', function () {
 
     it('personalSign1', async () => {
 
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
         const addr = acc.address
 
@@ -32,7 +32,7 @@ describe('sign_tools', function () {
 
     it('personalSign2', async () => {
 
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
         const addr = '0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079'
 
@@ -54,7 +54,7 @@ describe('sign_tools', function () {
 
     it('personalSign3', async () => {
 
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
         const addr = '0x8cdc4B6C1FA234AE54c53e56376359bFC497f2e6'
         

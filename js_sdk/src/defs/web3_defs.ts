@@ -1,6 +1,6 @@
 export enum ChainId {
     MAINNET = 1,
-    GORLI = 5,
+    GOERLI = 5,
 }
 
 export const NetworkContextName = 'NETWORK'

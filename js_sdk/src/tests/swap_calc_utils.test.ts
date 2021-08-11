@@ -19,7 +19,7 @@ import { dumpError400 } from '../utils/network_tools'
 import { getMinReceived, getOutputAmount } from '../utils/swap_calc_utils'
 import { getExistedMarket } from '../utils'
 
-const chainId = ChainId.GORLI
+const chainId = ChainId.GOERLI
 
 const TIMEOUT = 60000
 
@@ -52,8 +52,8 @@ const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
     try {
 
-        exchangeApi = new ExchangeAPI(chainId)
-        ammApi = new AmmpoolAPI(chainId)
+        exchangeApi = new ExchangeAPI({chainId})
+        ammApi = new AmmpoolAPI({chainId})
 
         tokenMap = (await exchangeApi.getTokens()).tokenSymbolMap
     
@@ -263,7 +263,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('0.2', 'ETH', 'USDT', true, ChainId.GORLI)
+            await initAll('0.2', 'ETH', 'USDT', true, ChainId.GOERLI)
             
             checkResult('8', '50')
 
@@ -276,7 +276,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1000', 'ETH', 'USDT', false, ChainId.GORLI)
+            await initAll('1000', 'ETH', 'USDT', false, ChainId.GOERLI)
             
             checkResult('8', '10')
 
@@ -289,7 +289,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1000', 'USDT', 'ETH', true, ChainId.GORLI)
+            await initAll('1000', 'USDT', 'ETH', true, ChainId.GOERLI)
             
             checkResult('10', '10')
 
@@ -302,7 +302,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('0.2', 'USDT', 'ETH', false, ChainId.GORLI)
+            await initAll('0.2', 'USDT', 'ETH', false, ChainId.GOERLI)
             
             checkResult('10', '10')
 

@@ -8,7 +8,7 @@ let api: WsAPI
 describe('WsAPI test', function () {
 
     beforeEach(() => {
-        api = new WsAPI(ChainId.GORLI)
+        api = new WsAPI({chainId: ChainId.GOERLI})
     })
 
     it('getWsKey', async () => {

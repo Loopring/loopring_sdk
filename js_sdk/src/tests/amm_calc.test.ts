@@ -38,7 +38,7 @@ describe('amm_calc', function () {
     }, TIMEOUT)
 
     it('amm_calc_test', async () => {
-        const api = new AmmpoolAPI(ChainId.GORLI)
+        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
         try {
             const request: GetAmmPoolSnapshotRequest = {
                 poolAddress
@@ -63,9 +63,9 @@ describe('amm_calc', function () {
     }, TIMEOUT)
 
     it('make_join_request', async () => {
-        const api = new AmmpoolAPI(ChainId.GORLI)
-        const userApi = new UserAPI(ChainId.GORLI)
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
+        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
         try {
 
             const { ammpools } = await api.getAmmPoolConf()
@@ -100,9 +100,9 @@ describe('amm_calc', function () {
     }, TIMEOUT)
 
     it('make_exit_request', async () => {
-        const api = new AmmpoolAPI(ChainId.GORLI)
-        const userApi = new UserAPI(ChainId.GORLI)
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
+        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
         try {
 
             const { ammpools } = await api.getAmmPoolConf()
@@ -137,9 +137,9 @@ describe('amm_calc', function () {
     }, TIMEOUT)
 
     it('make_new_exit_request', async () => {
-        const api = new AmmpoolAPI(ChainId.GORLI)
-        const userApi = new UserAPI(ChainId.GORLI)
-        const exchangeApi = new ExchangeAPI(ChainId.GORLI)
+        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
+        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
+        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
         try {
 
             const { ammpools } = await api.getAmmPoolConf()

@@ -758,4 +758,21 @@ export class UserAPI extends BaseAPI {
 
     }
 
+    public async SetReferrer(request: loopring_defs.SetReferrerRequest) {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.SET_REFERRER,
+            bodyParams: request,
+            method: ReqMethod.POST,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+
+    }
+
 }

@@ -52,8 +52,8 @@ let mainApiKey = process.env.MAINNET_APIKEY ? process.env.MAINNET_APIKEY: ''
 describe('UserAPI test', function () {
 
     beforeEach(async() => {
-        api = new UserAPI(ChainId.GORLI)
-        exchange = new ExchangeAPI(ChainId.GORLI)
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        exchange = new ExchangeAPI({ chainId: ChainId.GOERLI })
     })
 
     it('getUserApiKey', async () => {
@@ -237,7 +237,7 @@ describe('UserAPI test', function () {
 
     it('getOffchainFeeAmt_with_amt', async () => {
         try {
-            api = new UserAPI(ChainId.MAINNET)
+            api = new UserAPI({ chainId: ChainId.MAINNET })
             const request: GetOffchainFeeAmtRequest = {
                 accountId: mainAcc,
                 amount: toBig('1e+19').toString(),
@@ -257,7 +257,7 @@ describe('UserAPI test', function () {
 
     it('getOffchainFeeAmt_with_amt3', async () => {
         try {
-            api = new UserAPI(ChainId.MAINNET)
+            api = new UserAPI({ chainId: ChainId.MAINNET })
             const request: GetOffchainFeeAmtRequest = {
                 accountId: mainAcc,
                 amount: toBig('1').toString(),
@@ -472,7 +472,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GORLI, ConnectorNames.Trezor,
+            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GOERLI, ConnectorNames.Trezor,
                 acc.eddsaKey, acc.apiKey)
 
             console.log(response)
@@ -525,7 +525,7 @@ describe('UserAPI test', function () {
             }
 
             const response = await api.submitInternalTransfer(request, web3, 
-                ChainId.GORLI, ConnectorNames.MetaMask,
+                ChainId.GOERLI, ConnectorNames.MetaMask,
                 acc.eddsaKey, acc.apiKey)
 
             console.log(response)
@@ -537,7 +537,7 @@ describe('UserAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('updateAccount', async () => {
-        api = new UserAPI(ChainId.GORLI)
+        api = new UserAPI({ chainId: ChainId.GOERLI })
         try {
             const req: GetAccountRequest = {
                 owner: acc.address
@@ -559,7 +559,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
                 nonce: accInfo.nonce,
             }
-            const response = await api.updateAccount(request, web3, ChainId.GORLI, ConnectorNames.MetaMask)
+            const response = await api.updateAccount(request, web3, ChainId.GOERLI, ConnectorNames.MetaMask)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)

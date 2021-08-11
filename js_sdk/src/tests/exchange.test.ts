@@ -30,11 +30,11 @@ let api: ExchangeAPI
 describe('ExchangeAPI test', function () {
 
     beforeEach(() => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
     })
 
     it('getRecommendedMarkets', async () => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
         const response = await api.getRecommendedMarkets()
         console.log(response)
@@ -42,7 +42,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAccount_Found4', async () => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const request: GetAccountRequest = {
             owner: "0x527784464d31c47e7567cA5a8D7BC719e5Ce2bE6"
         }
@@ -51,7 +51,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAccount_Found3', async () => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const request: GetAccountRequest = {
             owner: "0x01cb603BD2120cc88601fe43d405aBCCAA6cc46F"
         }
@@ -60,7 +60,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getAccount_Found', async () => {
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const request: GetAccountRequest = {
             owner: acc.address
         }
@@ -135,7 +135,7 @@ describe('ExchangeAPI test', function () {
     it('getEthBalances', async () => {
         try {
 
-            api = new ExchangeAPI(ChainId.GORLI)
+            api = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
             const request: GetEthBalancesRequest = {
                 owner: acc.address,
@@ -171,7 +171,7 @@ describe('ExchangeAPI test', function () {
 
     it('getTokenBalances0', async () => {
 
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
         console.log('getTokenBalances acc.address:', acc.address)
         try {
@@ -222,7 +222,7 @@ describe('ExchangeAPI test', function () {
 
     it('getDepth', async () => {
 
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
         const request: GetDepthRequest = {
             market: 'LRC-ETH'
@@ -235,7 +235,7 @@ describe('ExchangeAPI test', function () {
 
     it('getMixDepth2', async () => {
 
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
         const request: GetDepthRequest = {
             market: 'LRC-ETH,LRC-USDT'
@@ -248,7 +248,7 @@ describe('ExchangeAPI test', function () {
 
     it('getMixDepth1', async () => {
 
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
         const request: GetDepthRequest = {
             market: 'LRC-ETH'
@@ -262,13 +262,13 @@ describe('ExchangeAPI test', function () {
 
     it('getExchangeInfo', async () => {
 
-        api = new ExchangeAPI(ChainId.GORLI)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
         const response = await api.getExchangeInfo()
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getMixTicker', async () => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
         const request: GetTickerRequest = {
             market: ["LRC-ETH", "ETH-DAI", "ETH-USDT", "DAI-USDT", "LRC-USDT", "LRC-USDC", "USDC-USDT", "WBTC-USDT", "WBTC-USDC", "WBTC-DAI", "VSP-ETH", "DPI-ETH", "NIOX-ETH", "WETH-ETH", "VSP-DAI", "SMARTCREDIT-ETH", "ETH-USDC", "WBTC-ETH", "UNI-ETH", "LINK-ETH", "KP3R-ETH", "YFI-ETH", "YFII-ETH", "MCB-ETH", "AC-ETH", "HBTC-USDT", "1INCH-ETH", "AC-USDT", "VETH-ETH", "WOO-USDT", "HBTC-ETH", "CEL-ETH", "BEL-ETH", "OBTC-ETH", "ENJ-ETH", "AMP-ETH"].join(','),
         }
@@ -277,7 +277,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getTicker', async () => {
-        api = new ExchangeAPI(ChainId.MAINNET)
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
         const request: GetTickerRequest = {
             market: 'LRC-ETH',
         }
@@ -334,6 +334,7 @@ describe('ExchangeAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getCandlestick', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const request: GetCandlestickRequest = {
             market: 'LRC-ETH',
             interval: TradingInterval.min15,

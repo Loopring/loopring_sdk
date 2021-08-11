@@ -10,25 +10,41 @@ const getBaseUrlByChainId = (id: ChainId) => {
             baseUrl = 'https://api.loopring.network'
             break
         default:
-            baseUrl = 'https://uat2.loopring.io'
+            baseUrl = 'https://api.uat.loopring.pro'
     }
 
     return baseUrl
 }
 
+export interface InitParam {
+    chainId?: ChainId
+    baseUrl?: string
+}
+
 export class BaseAPI {
 
-    private baseUrl: string
+    private baseUrl: string = ''
     private timeout: number
 
-    public constructor(chainId: ChainId, timeout: number = DEFAULT_TIMEOUT) {
-        this.baseUrl = ''
-        this.setChainId(chainId)
+    public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
+        if (param.baseUrl) {
+            this.baseUrl = param.baseUrl
+        } else if (param.chainId !== undefined) {
+            this.setChainId(param.chainId)
+        } else {
+            this.setChainId(ChainId.GOERLI)
+        }
+
+        console.log('url:', this.baseUrl)
         this.timeout = timeout
     }
 
     public setChainId(chainId: ChainId) {
         this.baseUrl = getBaseUrlByChainId(chainId)
+    }
+
+    public setBaseUrl(baseUrl: string) {
+        this.baseUrl = baseUrl
     }
 
     protected makeReq(): Request {

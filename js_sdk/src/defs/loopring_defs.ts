@@ -331,6 +331,14 @@ export interface GameRankInfo {
     rewards: TokenVolumeV3[]
 }
 
+export interface SetReferrerRequest {
+    address: string
+    referrer: number
+    promotionCode: string
+    publicKeyX: string
+    publicKeyY: string
+}
+
 export interface GetAmmUserRewardsRequest {
     owner: number // accountId
     ammPoolMarkets?: string // pool-name list

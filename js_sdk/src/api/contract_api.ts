@@ -168,7 +168,7 @@ export async function approveZero(
     depositAddress: string,
     gasPrice: number,
     gasLimit: number,
-    chainId: ChainId = ChainId.GORLI,
+    chainId: ChainId = ChainId.GOERLI,
     nonce: number,
     sendByMetaMask: boolean = false
 ) {
@@ -193,7 +193,7 @@ export async function approveMax(
     depositAddress: string,
     gasPrice: number,
     gasLimit: number,
-    chainId: ChainId = ChainId.GORLI,
+    chainId: ChainId = ChainId.GOERLI,
     nonce: number,
     sendByMetaMask: boolean = false
 ) {
@@ -216,7 +216,7 @@ export async function approveMax(
     fee: number,
     gasPrice: number,
     gasLimit: number,
-    chainId: ChainId = ChainId.GORLI,
+    chainId: ChainId = ChainId.GOERLI,
     nonce: number,
     sendByMetaMask: boolean = false
 ) {
@@ -256,7 +256,7 @@ export async function approveMax(
     fee: number,
     gasPrice: number,
     gasLimit: number,
-    chainId: ChainId = ChainId.GORLI,
+    chainId: ChainId = ChainId.GOERLI,
     nonce: number,
     sendByMetaMask: boolean = false
 ) {
