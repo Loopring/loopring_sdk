@@ -3,6 +3,10 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.81
+    1) change init method of BaseApi.
+    2) update response of some apis.
+
 ### v0.0.78
     1) add GetLiquidityMiningUserHistory
     2) update response of submitOrder, updateAccount transfer and withdraw

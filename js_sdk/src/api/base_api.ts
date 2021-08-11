@@ -35,7 +35,6 @@ export class BaseAPI {
             this.setChainId(ChainId.GOERLI)
         }
 
-        console.log('url:', this.baseUrl)
         this.timeout = timeout
     }
 
