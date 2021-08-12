@@ -6,9 +6,6 @@ export enum LOOPRING_URLs {
     GET_MULTI_ORDERS = '/api/v3/orders',
     GET_MARKETS = '/api/v3/exchange/markets',
     GET_TOKENS = '/api/v3/exchange/tokens',
-    GET_ETH_BALANCES = '/api/v3/eth/balances',
-    GET_TOKEN_BALANCES = '/api/v3/eth/tokenBalances',
-    GET_ALLOWANCES = '/api/v3/eth/allowances',
     GET_EXCHANGE_INFO = '/api/v3/exchange/info',
     GET_MIX_MARKETS = '/api/v3/mix/markets',
     GET_DEPTH = '/api/v3/depth',
@@ -33,7 +30,13 @@ export enum LOOPRING_URLs {
     GET_MINIMAL_ORDER_AMT = '/api/v3/user/orderAmount', // IGNORE for now.
     GET_MINIMUM_TOKEN_AMT = '/api/v3/user/orderUserRateAmount',
     GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
+
+    GET_ALLOWANCES = '/api/v3/eth/allowances',
+    GET_ETH_NONCE = '/api/v3/eth/nonce',
+    GET_ETH_BALANCES = '/api/v3/eth/balances',
+    GET_TOKEN_BALANCES = '/api/v3/eth/tokenBalances',
     GET_GAS_PRICE = '/api/v3/eth/recommendedGasPrice',
+    GET_GAS_PRICE_RANGE = '/api/v3/eth/recommendedGasPriceRange',
 
     GET_RECOMENDED_MARKETS = '/api/v3/exchange/recommended',
 

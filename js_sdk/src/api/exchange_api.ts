@@ -31,6 +31,7 @@ import {
     TokenRelatedInfo,
     ABInfo,
     GetEthBalancesRequest,
+    GetEthNonceRequest,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -348,7 +349,7 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const ethBalance = raw_data.data
+        const ethBalance = raw_data.amount
 
         return {
             ethBalance,
@@ -380,9 +381,9 @@ export class ExchangeAPI extends BaseAPI {
 
         let tokenBalances: LoopringMap<string> = {}
 
-        if (raw_data?.data instanceof Array) {
-            raw_data.data.forEach((_: any, index: number) => {
-                tokenBalances[tokenArray[index]] = raw_data.data[index]
+        if (raw_data?.amount instanceof Array) {
+            raw_data.amount.forEach((_: any, index: number) => {
+                tokenBalances[tokenArray[index]] = raw_data.amount[index]
             })
         }
 
@@ -416,9 +417,9 @@ export class ExchangeAPI extends BaseAPI {
 
         let tokenAllowances: LoopringMap<string> = {}
 
-        if (raw_data?.data instanceof Array) {
-            raw_data.data.forEach((_: any, index: number) => {
-                tokenAllowances[tokenArray[index]] = raw_data.data[index]
+        if (raw_data?.allowances instanceof Array) {
+            raw_data.allowances.forEach((_: any, index: number) => {
+                tokenAllowances[tokenArray[index]] = raw_data.allowances[index]
             })
         }
 
@@ -780,7 +781,28 @@ export class ExchangeAPI extends BaseAPI {
     }
 
     /*
-    * Returns data associated with the user's exchange account.
+    */
+    public async getEthNonce(request: GetEthNonceRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_ETH_NONCE,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const nonce = raw_data?.nonce
+
+        return {
+            nonce,
+            raw_data
+        }
+
+    }
+
+    /*
     */
     public async getGasPrice() {
 
@@ -792,10 +814,31 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const gasPrice = raw_data?.data
+        const gasPrice = raw_data?.price
 
         return {
             gasPrice,
+            raw_data
+        }
+
+    }
+
+    /*
+    */
+    public async getGasPriceRange() {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_GAS_PRICE_RANGE,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const gasPriceRanges = raw_data?.ranges
+
+        return {
+            gasPriceRanges,
             raw_data
         }
 

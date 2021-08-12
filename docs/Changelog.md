@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 
+### v0.0.82
+    1) update response of some apis according to backend's change.
+
 ### v0.0.81
     1) change init method of BaseApi.
     2) update response of some apis.

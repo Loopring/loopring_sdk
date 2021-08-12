@@ -576,6 +576,10 @@ export interface GetAccountRequest {
     owner: string
 }
 
+export interface GetEthNonceRequest {
+    owner: string
+}
+
 export interface GetUserApiKeyRequest {
     accountId: number
 }

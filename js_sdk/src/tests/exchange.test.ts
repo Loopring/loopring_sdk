@@ -8,6 +8,7 @@ import {
     GetDepthRequest,
     GetMarketTradesRequest,
     GetEthBalancesRequest,
+    GetEthNonceRequest,
 } from '../defs/loopring_defs'
 
 import {
@@ -76,8 +77,24 @@ describe('ExchangeAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getEthNonce', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+        const req: GetEthNonceRequest = {
+            owner: acc.address
+        }
+        const response = await api.getEthNonce(req)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
     it('getGasPrice', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const response = await api.getGasPrice()
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getGasPriceRange', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+        const response = await api.getGasPriceRange()
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
@@ -117,6 +134,7 @@ describe('ExchangeAPI test', function () {
     it('getAllowances', async () => {
 
         try {
+            api = new ExchangeAPI({ chainId: ChainId.GOERLI })
 
             const request: GetAllowancesRequest = {
                 owner: acc.address,
@@ -132,7 +150,23 @@ describe('ExchangeAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getEthBalances', async () => {
+    it('getEthBalances2', async () => {
+        try {
+
+            api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+
+            const request: GetEthBalancesRequest = {
+                owner: '0xBB2F3A6b7B8ec7A7bAcfbF5dC8aebBCB00dBD76B',
+            }
+
+            const response = await api.getEthBalances(request)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getEthBalances1', async () => {
         try {
 
             api = new ExchangeAPI({ chainId: ChainId.GOERLI })
