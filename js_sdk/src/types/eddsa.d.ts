@@ -5,5 +5,3 @@ declare module 'ffjavascript'
 declare module 'blake-hash'
 
 declare module 'circomlib'
-
-declare module 'ethereumjs-tx'

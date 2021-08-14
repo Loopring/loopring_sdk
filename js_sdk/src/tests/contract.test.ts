@@ -73,7 +73,7 @@ describe('contract test', function () {
         api = new ExchangeAPI({ chainId: ChainId.GOERLI })
     })
 
-    it('approveZero_LRC test', async () => {
+    it('approveZero_LRC', async () => {
 
         const nonce = await contract.getNonce(web3, acc.address)
 
@@ -83,7 +83,7 @@ describe('contract test', function () {
         console.log(`nonce: ${nonce} approveZero: ${response}`)
     }, DEFAULT_TIMEOUT)
 
-    it('approveMax_LRC test', async () => {
+    it('approveMax_LRC', async () => {
 
         const nonce = await contract.getNonce(web3, acc.address)
 

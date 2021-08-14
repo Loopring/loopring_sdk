@@ -6,14 +6,14 @@ import {
   keccak256,
   pubToAddress,
 } from 'ethereumjs-util'
-import Transaction from 'ethereumjs-tx'
+import Transaction from '@ethereumjs/tx'
 
 import Web3 from 'web3'
 
 import { addHexPrefix, toBuffer, toHex, toNumber } from '../../utils/formatter'
 import ABI from './contracts'
 
-import { ConnectorNames } from '../../defs/web3_defs'
+import { ChainId, ConnectorNames } from '../../defs/web3_defs'
 import { myLog } from '../../utils/log_tools'
 /**
  * @description sign hash
@@ -379,13 +379,13 @@ export async function walletLinkValid(account: string, msg: string, sig: any) {
  * @param rawTx
  * @returns {Promise.<*>}
  */
-export async function signEthereumTx(web3: any, account: string, rawTx: any) {
-  const ethTx = new Transaction(rawTx);
-  const hash = toHex(ethTx.hash(false));
+export async function signEthereumTx(web3: any, account: string, rawTx: any, chainId: ChainId) {
+  const ethTx = Transaction.Transaction.fromSerializedTx(rawTx);
+  const hash = toHex(ethTx.hash());
   const response: any = await sign(web3, account, '', hash);
   if (!response['error']) {
     const signature = response['result'];
-    signature.v += ethTx.getChainId() * 2 + 8;
+    signature.v += chainId * 2 + 8;
     Object.assign(ethTx, signature);
     return { result: toHex(ethTx.serialize()) };
   } else {

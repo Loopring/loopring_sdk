@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import Transaction from 'ethereumjs-tx'
+import Transaction from '@ethereumjs/tx'
 
 import { ChainId } from '../defs/web3_defs'
 
@@ -83,14 +83,14 @@ export async function sign(web3: Web3, account: string, hash: string) {
  * @param rawTx
  * @returns {Promise.<*>}
  */
-export async function signEthereumTx(web3: any, account: any, rawTx: any) {
-    const ethTx = new Transaction(rawTx)
-    const hash = fm.toHex(ethTx.hash(false))
+export async function signEthereumTx(web3: any, account: any, rawTx: any, chainId: ChainId) {
+    const ethTx = Transaction.Transaction.fromSerializedTx(rawTx)
+    const hash = fm.toHex(ethTx.hash())
     const response: any = await sign(web3, account, hash)
     if (!response['error']) {
         const signature = response['result']
-        signature.v += ethTx.getChainId() * 2 + 8
-        Object.assign(ethTx, signature);
+        signature.v += chainId * 2 + 8
+        Object.assign(ethTx, signature)
         return { result: fm.toHex(ethTx.serialize()) }
     } else {
         const error = response['error']['message']
@@ -125,7 +125,7 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
 
     const response = sendByMetaMask
         ? await sendTransaction(web3, rawTx)
-        : await signEthereumTx(web3, from, rawTx)
+        : await signEthereumTx(web3, from, rawTx, chainId)
     return response['result']
 }
 
