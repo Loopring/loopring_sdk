@@ -328,7 +328,7 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            totalNum: raw_data.totalNum,
+            totalNum: raw_data?.totalNum,
             userDepositHistory: raw_data.transactions as loopring_defs.UserDepositHistoryTx[],
             raw_data,
         }
@@ -350,7 +350,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
         return {
-            totalNum: raw_data.totalNum,
+            totalNum: raw_data?.totalNum,
             userOnchainWithdrawalHistory: raw_data.transactions as loopring_defs.UserOnchainWithdrawalHistoryTx[],
             raw_data,
         }
@@ -373,8 +373,39 @@ export class UserAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            totalNum: raw_data.totalNum,
+            totalNum: raw_data?.totalNum,
             userTransfers: raw_data.transactions as loopring_defs.UserTransferRecord[],
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Get user txs
+    */
+    public async getUserTxs(request: loopring_defs.GetUserTxsRequest, apiKey: string) {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_USER_TXS,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        let userTxs : loopring_defs.UserTx[] = []
+
+        if (raw_data?.transactions instanceof Array) {
+            raw_data.transactions.forEach((item: loopring_defs.UserTx) => {
+                userTxs.push(item)
+            })
+        }
+        
+        return {
+            totalNum: raw_data?.totalNum,
+            userTxs,
             raw_data,
         }
 

@@ -25,6 +25,7 @@ export enum LOOPRING_URLs {
     WITHDRAWALS_ACTION = '/api/v3/user/withdrawals', // post get
     GET_USER_TRANFERS_LIST = '/api/v3/user/transfers',
     GET_USER_TRADE_HISTORY = '/api/v3/user/trades',
+    GET_USER_TXS = '/api/v3/user/transactions',
     GET_USER_FEE_RATE = '/api/v3/user/feeRates', // deprecated
     GET_USER_ORDER_FEE_RATE = '/api/v3/user/orderFee',
     GET_MINIMAL_ORDER_AMT = '/api/v3/user/orderAmount', // IGNORE for now.

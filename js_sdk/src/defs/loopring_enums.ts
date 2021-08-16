@@ -85,6 +85,13 @@ export enum WithdrawalTypes {
     FORCE_WITHDRAWAL = 'FORCE_WITHDRAWAL',
 }
 
+export enum UserTxTypes {
+    DEPOSIT = 'deposit',
+    TRANSFER = 'transfer',
+    ONCHAIN_WITHDRAWAL = 'onchain_withdrawal',
+    FORCE_WITHDRAWAL = 'force_withdrawal',
+}
+
 export enum TransferType {
     transfer = 'transfer',
     transfer_red = 'transfer_red',

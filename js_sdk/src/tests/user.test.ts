@@ -23,6 +23,7 @@ import {
     GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
     GetUserTransferListRequest,
+    GetUserTxsRequest,
 } from '../defs/loopring_defs'
 
 import { 
@@ -119,6 +120,15 @@ describe('UserAPI test', function () {
 
     it('getUserPwdResetTxs', async () => {
         const response = await api.getUserPwdResetTxs({accountId: acc.accountId}, acc.apiKey)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserTxs', async () => {
+        const request: GetUserTxsRequest = {
+            accountId: acc.accountId,
+            tokenSymbol: 'ETH',
+        }
+        const response = await api.getUserTxs(request, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 

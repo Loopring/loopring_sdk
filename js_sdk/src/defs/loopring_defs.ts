@@ -25,6 +25,7 @@ import {
     AmmPoolActivityStatus,
     SIG_FLAG,
     WithdrawalTypes,
+    UserTxTypes,
 } from './loopring_enums'
 
 export interface ReqOptions {
@@ -934,6 +935,40 @@ export interface GetTokenPricesRequest {
     currency?: Currency
 
     limit?: number
+}
+
+export interface GetUserTxsRequest {
+    accountId: number
+    tokenSymbol?: string
+    start?: number
+    end?: number
+    offset?: number
+    limit?: number
+    types?: UserTxTypes[] | string
+}
+
+export interface UserTx {
+    id: number
+    txType: string
+    hash: string
+    symbol: string
+    amount: string
+    receiver: number,
+    txHash: string
+    feeTokenSymbol: string
+    feeAmount: string
+    status: TxStatus
+    progress: string
+    timestamp: number
+    blockNum: number
+    updatedAt: number
+    distributeHash: string
+    receiverAddress: string
+    senderAddress: string
+    memo: string
+    requestId: number
+    fastStatus: string
+    recipient: string
 }
 
 export interface GetUserTradesRequest {

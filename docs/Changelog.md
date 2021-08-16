@@ -2,6 +2,8 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.86
+    1) add getUserTxs api. 
 
 ### v0.0.82
     1) update response of some apis according to backend's change.
