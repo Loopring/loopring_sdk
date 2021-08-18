@@ -3,6 +3,9 @@
 ### JS SDK Version ChangeLog
 
 ### v0.0.86
+    1) fix no amm swap calc issue.
+
+### v0.0.85
     1) add getUserTxs api. 
 
 ### v0.0.82

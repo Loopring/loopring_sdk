@@ -397,11 +397,12 @@ export function getReserveInfo(base: string, quote: string,
 
     if (isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
-
         return undefined
     }
 
-    const feeBips = ammpools[amm as string].feeBips.toString()
+    let feeBips: string | number = ammpools[amm as string]?.feeBips
+
+    feeBips = feeBips ? feeBips.toString() : '0'
 
     const marketInfo: MarketInfo = marketMap[market]
 

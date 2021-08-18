@@ -93,10 +93,27 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
 const checkResult = (takerRate = '8', slipBips = '100') => {
 
     if (input !== '0' && input !== '0.') {
-        let { amm } = getExistedMarket(marketArr, base, quote)
+        let { amm, market } = getExistedMarket(marketArr, base, quote)
+
+        const hasMarket = !!marketMap[market as string]
+
+        console.log('marketMap hasMarket:', hasMarket)
+
+        const marketItem = marketMap[market as string]
+
+        console.log('marketMap:', marketItem)
+
+        console.log('amm :', amm, market)
+        console.log('keys :', Object.keys(ammpools))
+
+        const hasMarket2 = !!ammpools[amm as string]
+
+        console.log('ammpools hasMarket2:', hasMarket2)
+
+        console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
         console.log(input, '*', base, quote, isAtoB, depth.mid_price, 
-        ammpools[ amm as string].tokens.pooled, ammPoolSnapshot?.pooled, takerRate, slipBips)
+        ammpools[ amm as string]?.tokens?.pooled, ammPoolSnapshot?.pooled, takerRate, slipBips)
 
     }
     
@@ -110,6 +127,58 @@ const checkResult = (takerRate = '8', slipBips = '100') => {
 describe('swap_calc_utils', function () {
 
     beforeEach(async() => {
+    }, TIMEOUT)
+
+    it('DAI_USDT_a2b_1', async () => {
+
+        try {
+
+            await initAll('100', 'DAI', 'USDT', true)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('DAI_USDT_a2b_exceedDepth_2', async () => {
+
+        try {
+
+            await initAll('100000', 'DAI', 'USDT', true)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('DAI_USDT_a2b_exceedDepth_3', async () => {
+
+        try {
+
+            await initAll('1000000', 'DAI', 'USDT', true)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('DAI_USDT_b2a_1', async () => {
+
+        try {
+
+            await initAll('50', 'DAI', 'USDT', false)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, TIMEOUT)
 
     it('LRC_ETH_a2b_exceedDepth', async () => {
