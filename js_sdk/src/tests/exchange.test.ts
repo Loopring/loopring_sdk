@@ -272,7 +272,7 @@ describe('ExchangeAPI test', function () {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
         const request: GetDepthRequest = {
-            market: 'LRC-ETH,LRC-USDT'
+            market: 'LRC-USDT'
         }
 
         const response = await api.getMixDepth(request)

@@ -2,8 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
-### v0.0.86
+### v0.0.87
     1) fix no amm swap calc issue.
+    2) add symbol to DepthData.
 
 ### v0.0.85
     1) add getUserTxs api. 

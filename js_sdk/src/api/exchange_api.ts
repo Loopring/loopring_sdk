@@ -497,7 +497,8 @@ export class ExchangeAPI extends BaseAPI {
         const mid_price = (bids.ab_prices[bids.ab_prices.length - 1] + asks.ab_prices[0]) / 2
 
         const depth: DepthData = {
-            version: parseInt(raw_data['version']),
+            symbol: raw_data.market,
+            version: parseInt(raw_data.version),
             timestamp,
             mid_price,
             bids: bids.ab_arr,

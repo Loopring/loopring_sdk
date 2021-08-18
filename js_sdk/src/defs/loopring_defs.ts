@@ -107,6 +107,7 @@ export interface ABInfo {
 }
 
 export interface DepthData {
+    symbol: number
     version: number
     timestamp: number
     

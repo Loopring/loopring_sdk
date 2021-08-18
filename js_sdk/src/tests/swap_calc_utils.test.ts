@@ -129,6 +129,19 @@ describe('swap_calc_utils', function () {
     beforeEach(async() => {
     }, TIMEOUT)
 
+    it('ETH_USDT_a2b_1', async () => {
+
+        try {
+
+            await initAll('1', 'ETH', 'USDT', true)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
     it('DAI_USDT_a2b_1', async () => {
 
         try {
