@@ -121,10 +121,10 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
 
         // console.log('try to exc ecRecover !!!')
 
-        // const valid: any = await ecRecover(web3, account, msg, result);
+        const valid: any = await ecRecover(web3, account, msg, result);
         // console.log('ecRecover valid:', valid)
 
-        const valid: any = await ecRecover2(account, msg, result)
+        // const valid: any = await ecRecover2(account, msg, result)
         // console.log('ecRecover2 valid:', valid)
 
         if (valid.result) {
