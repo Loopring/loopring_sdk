@@ -1072,6 +1072,9 @@ export interface SubmitOrderRequestV3 {
      * @type {string}
      * @memberof SubmitOrderRequestV3
      */
+
+    tradeChannel?: TradeChannel
+    
     taker?: string;
     /**
      * The AMM pool address if order type is AMM
@@ -1361,7 +1364,7 @@ export interface OffChainWithdrawalRequestV3WithPatch {
     walletType: ConnectorNames
     eddsaKey: string
     apiKey: string
-    callback?: () => boolean
+    isHWAddr?: boolean
 }
 
 export interface OriginTransferRequestV3WithPatch {
@@ -1371,7 +1374,7 @@ export interface OriginTransferRequestV3WithPatch {
     walletType: ConnectorNames
     eddsaKey: string
     apiKey: string
-    callback?: () => boolean
+    isHWAddr?: boolean
 }
 
 export interface UpdateAccountRequestV3WithPatch {
@@ -1379,5 +1382,5 @@ export interface UpdateAccountRequestV3WithPatch {
     web3: Web3
     chainId: ChainId
     walletType: ConnectorNames
-    callback?: () => boolean
+    isHWAddr?: boolean
 }

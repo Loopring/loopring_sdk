@@ -2,7 +2,7 @@ import { BaseAPI } from './base_api'
 
 import { ReqParams, } from '../defs/loopring_defs'
 
-import { SIG_FLAG, ReqMethod, SigPatchField, } from '../defs/loopring_enums'
+import { SIG_FLAG, ReqMethod, SigPatchField, TradeChannel, } from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
@@ -22,6 +22,14 @@ import { type } from 'os'
 const NOT_SUPPORT_ERROR = 'Not supported on this device'
 
 const WAIT_TIME = 1500
+
+export function checkNotSupport(message: any) {
+    if (!message) {
+        return false
+    }
+
+    return message.indexOf(NOT_SUPPORT_ERROR) !== -1
+}
 
 export class UserAPI extends BaseAPI {
 
@@ -62,7 +70,7 @@ export class UserAPI extends BaseAPI {
     * Change the ApiKey associated with the user's account. 
     * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
     */
-    public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest, 
+    public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest,
         apiKey: string, eddsaKey: string) {
 
         const dataToSig: Map<string, any> = new Map()
@@ -148,9 +156,9 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        const totalNum : number = raw_data.totalNum
-        const orders : loopring_defs.OrderDetail[] = raw_data.orders
-        
+        const totalNum: number = raw_data.totalNum
+        const orders: loopring_defs.OrderDetail[] = raw_data.orders
+
         return {
             totalNum,
             orders,
@@ -163,6 +171,10 @@ export class UserAPI extends BaseAPI {
     * Submit an order
     */
     public async submitOrder(orderRequest: loopring_defs.SubmitOrderRequestV3, PrivateKey: string, apiKey: string) {
+
+        if (!orderRequest.tradeChannel) {
+            orderRequest.tradeChannel = TradeChannel.MIXED
+        }
 
         const dataToSig = [
             orderRequest.exchange,
@@ -395,14 +407,14 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let userTxs : loopring_defs.UserTx[] = []
+        let userTxs: loopring_defs.UserTx[] = []
 
         if (raw_data?.transactions instanceof Array) {
             raw_data.transactions.forEach((item: loopring_defs.UserTx) => {
                 userTxs.push(item)
             })
         }
-        
+
         return {
             totalNum: raw_data?.totalNum,
             userTxs,
@@ -426,7 +438,7 @@ export class UserAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        let userTrades : loopring_defs.UserTrade[] = []
+        let userTrades: loopring_defs.UserTrade[] = []
 
         if (raw_data?.trades instanceof Array) {
             raw_data.trades.forEach((item: any[]) => {
@@ -441,7 +453,7 @@ export class UserAPI extends BaseAPI {
                 })
             })
         }
-        
+
         return {
             totalNum: raw_data.totalNum,
             userTrades,
@@ -475,7 +487,7 @@ export class UserAPI extends BaseAPI {
             })
 
         }
-        
+
         return {
             userFreeRateMap,
             raw_data,
@@ -606,34 +618,36 @@ export class UserAPI extends BaseAPI {
 
     public async submitOffchainWithdraw(req: loopring_defs.OffChainWithdrawalRequestV3WithPatch) {
 
-        const {request, web3, chainId, walletType,
-                eddsaKey, apiKey, callback, } = req
+        const { request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+
+        let isHWAddr = !!isHWAddrOld
 
         let ecdsaSignature = undefined
 
+        let errorInfo = undefined
+
+        const sigHW = async () => {
+            const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+        }
+
         // metamask not import hw wallet.
         if (walletType === ConnectorNames.MetaMask) {
-            try {
-                // signOffchainWithdrawWithDataStructure
-                // console.log('1. signOffchainWithdrawWithDataStructure')
-                const result = (await sign_tools.signOffchainWithdrawWithDataStructure(web3, request.owner, request, chainId))
-                ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-            } catch (err) {
-
-                if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                    
-                    if (callback) {
-                        await callback()
+                try {
+                    if (isHWAddr) {
+                        await sigHW()
+                    } else {
+                        const result = (await sign_tools.signOffchainWithdrawWithDataStructure(web3, request.owner, request, chainId))
+                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                     }
-                    
-                    // signOffchainWithdrawWithoutDataStructure
-                    // console.log('2. signOffchainWithdrawWithoutDataStructure')
-                    const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
-                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
-                } else {
-                    throw err
+
+                } catch (err) {
+
+                    errorInfo = {
+                        isNotSupport: checkNotSupport(err?.message)
+                    }
                 }
-            }
         } else {
 
             const isContractCheck = await isContract(web3, request.owner)
@@ -644,28 +658,36 @@ export class UserAPI extends BaseAPI {
                 const result = (await sign_tools.signOffchainWithdrawWithDataStructureForContract(web3, request.owner, request, chainId))
                 ecdsaSignature = result.ecdsaSig
             } else {
-                // signOffchainWithdrawWithoutDataStructure
-                // console.log('4. signOffchainWithdrawWithoutDataStructure 2')
-                const result = (await sign_tools.signOffchainWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
-                ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+                await sigHW()
             }
 
         }
 
-        request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
+        if (!errorInfo) {
 
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.WITHDRAWALS_ACTION,
-            bodyParams: request,
-            apiKey,
-            method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
-            ecdsaSignature,
+            request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
+    
+            const reqParams: ReqParams = {
+                url: LOOPRING_URLs.WITHDRAWALS_ACTION,
+                bodyParams: request,
+                apiKey,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+    
+            const raw_data = (await this.makeReq().request(reqParams)).data
+    
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+
         }
 
-        const raw_data = (await this.makeReq().request(reqParams)).data
-
-        return this.returnTxHash(raw_data)
+        return {
+            errorInfo,
+        }
 
     }
 
@@ -674,35 +696,37 @@ export class UserAPI extends BaseAPI {
     */
     public async submitInternalTransfer(req: loopring_defs.OriginTransferRequestV3WithPatch) {
 
-        const {request, web3, chainId, walletType,
-                eddsaKey, apiKey, callback, } = req
+        const { request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+
+        const isHWAddr = !!isHWAddrOld
 
         let ecdsaSignature = undefined
 
-        if (walletType === ConnectorNames.MetaMask) {
-            try {
-                // signOffchainWithdrawWithDataStructure
-                // console.log('1. signTransferWithDataStructure')
-                const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
-                ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-                // console.log('1. result.ecdsaSig:', result.ecdsaSig)
-            } catch (err) {
+        let errorInfo = undefined
 
-                if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                    
-                    if (callback) {
-                        await callback()
+        const sigHW = async () => {
+            const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+        }
+
+        if (walletType === ConnectorNames.MetaMask) {
+            
+                try {
+                    if (isHWAddr) {
+                        await sigHW()
+                    } else {
+                        const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
+                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                    }
+                } catch (err) {
+
+                    errorInfo = {
+                        isNotSupport: checkNotSupport(err?.message)
                     }
 
-                    // signOffchainWithdrawWithoutDataStructure
-                    // console.log('2. signTransferWithoutDataStructure')
-                    const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
-                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
-                    // console.log('2. result.ecdsaSig:', result.ecdsaSig)
-                } else {
-                    throw err
                 }
-            }
+                
         } else {
 
             const isContractCheck = await isContract(web3, request.payerAddr)
@@ -714,30 +738,37 @@ export class UserAPI extends BaseAPI {
                 ecdsaSignature = result.ecdsaSig
                 // console.log('3. result.ecdsaSig:', result.ecdsaSig)
             } else {
-                // signOffchainWithdrawWithoutDataStructure
-                // console.log('4. signTransferWithoutDataStructure 4')
-                const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
-                ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
-                // console.log('4. result.ecdsaSig:', result.ecdsaSig)
+                await sigHW()
             }
 
         }
         // console.log('ecdsaSignature:', ecdsaSignature)
 
-        request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
+        if (!errorInfo) {
 
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
-            bodyParams: request,
-            apiKey,
-            method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
-            ecdsaSignature,
+            request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
+    
+            const reqParams: ReqParams = {
+                url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
+                bodyParams: request,
+                apiKey,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+    
+            const raw_data = (await this.makeReq().request(reqParams)).data
+        
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+
         }
 
-        const raw_data = (await this.makeReq().request(reqParams)).data
-
-        return this.returnTxHash(raw_data)
+        return {
+            errorInfo,
+        }
 
     }
 
@@ -746,59 +777,72 @@ export class UserAPI extends BaseAPI {
     */
     public async updateAccount(req: loopring_defs.UpdateAccountRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType, callback, } = req
-    
-            let ecdsaSignature = undefined
-    
-            if (walletType === ConnectorNames.MetaMask) {
-                try {
-                    // console.log('1. signUpdateAccountWithDataStructure')
-                    const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
-                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-                } catch (err) {
-    
-                    if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                    
-                        if (callback) {
-                            await callback()
-                        }
+        const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld, } = req
 
-                        // console.log('2. signUpdateAccountWithoutDataStructure')
-                        const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
-                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
-                    } else {
-                        throw err
-                    }
-                }
-            } else {
-    
-                const isContractCheck = await isContract(web3, request.owner)
-    
-                if (isContractCheck) {
-                    // console.log('3. signUpdateAccountWithDataStructureForContract')
-                    const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
-                    ecdsaSignature = result.ecdsaSig
-                } else {
-                    // console.log('4. signUpdateAccountWithDataStructure_2')
-                    const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
-                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
-                }
-    
-            }
-    
-            // request.eddsaSignature = sign_tools.getEDD(request, privateKey)
+        let isHWAddr = !!isHWAddrOld
 
-        const reqParams: ReqParams = {
-            url: LOOPRING_URLs.ACCOUNT_ACTION,
-            bodyParams: request,
-            method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
-            ecdsaSignature,
+        let ecdsaSignature = undefined
+
+        let errorInfo = undefined
+
+        const sigHW = async () => {
+            const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
         }
 
-        const raw_data = (await this.makeReq().request(reqParams)).data
+        if (walletType === ConnectorNames.MetaMask) {
 
-        return this.returnTxHash(raw_data)
+                try {
+                    if (isHWAddr) {
+                        await sigHW()
+                    } else {
+                        const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
+                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                    }
+                } catch (err) {
+
+                    errorInfo = {
+                        isNotSupport: checkNotSupport(err?.message)
+                    }
+                }
+
+        } else {
+
+            const isContractCheck = await isContract(web3, request.owner)
+
+            if (isContractCheck) {
+                // console.log('3. signUpdateAccountWithDataStructureForContract')
+                const result = (await sign_tools.signUpdateAccountWithDataStructureForContract(web3, request, chainId))
+                ecdsaSignature = result.ecdsaSig
+            } else {
+                await sigHW()
+            }
+
+        }
+
+        if (!errorInfo) {
+
+            const reqParams: ReqParams = {
+                url: LOOPRING_URLs.ACCOUNT_ACTION,
+                bodyParams: request,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+    
+            const raw_data = (await this.makeReq().request(reqParams)).data
+    
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+    
+
+        }
+
+        return {
+            errorInfo,
+        }
 
     }
 
