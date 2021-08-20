@@ -1,9 +1,9 @@
-import BigNumber from "bignumber.js"
-import { ChainId } from "./web3_defs"
+import { ChainId, ConnectorNames } from "./web3_defs"
+
+import Web3 from 'web3'
 
 import {
     ReqMethod,
-    SigPatchField,
     MarketStatus,
     AssetType,
     IntervalType,
@@ -17,10 +17,8 @@ import {
     Side,
     TransferType,
     BillType,
-    FilledType,
     TransferTxType,
     AmmTxType,
-    SortOrder,
     RuleType,
     AmmPoolActivityStatus,
     SIG_FLAG,
@@ -1354,4 +1352,32 @@ export interface UpdateAccountRequestV3 {
      * @memberof UpdateAccountRequestV3
      */
     hashApproved?: string;
+}
+
+export interface OffChainWithdrawalRequestV3WithPatch {
+    request: OffChainWithdrawalRequestV3
+    web3: Web3
+    chainId: ChainId
+    walletType: ConnectorNames
+    eddsaKey: string
+    apiKey: string
+    callback?: () => boolean
+}
+
+export interface OriginTransferRequestV3WithPatch {
+    request: OriginTransferRequestV3
+    web3: Web3
+    chainId: ChainId
+    walletType: ConnectorNames
+    eddsaKey: string
+    apiKey: string
+    callback?: () => boolean
+}
+
+export interface UpdateAccountRequestV3WithPatch {
+    request: UpdateAccountRequestV3
+    web3: Web3
+    chainId: ChainId
+    walletType: ConnectorNames
+    callback?: () => boolean
 }

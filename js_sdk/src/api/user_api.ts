@@ -604,9 +604,10 @@ export class UserAPI extends BaseAPI {
     * Submit offchain withdraw request
     */
 
-    public async submitOffchainWithdraw(request: loopring_defs.OffChainWithdrawalRequestV3, 
-        web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        eddsaKey: string, apiKey: string) {
+    public async submitOffchainWithdraw(req: loopring_defs.OffChainWithdrawalRequestV3WithPatch) {
+
+        const {request, web3, chainId, walletType,
+                eddsaKey, apiKey, callback, } = req
 
         let ecdsaSignature = undefined
 
@@ -620,7 +621,10 @@ export class UserAPI extends BaseAPI {
             } catch (err) {
 
                 if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                    await sleep(WAIT_TIME)
+                    
+                    if (callback) {
+                        await callback()
+                    }
                     
                     // signOffchainWithdrawWithoutDataStructure
                     // console.log('2. signOffchainWithdrawWithoutDataStructure')
@@ -668,9 +672,10 @@ export class UserAPI extends BaseAPI {
     /*
     * Submit offchain withdraw request
     */
-    public async submitInternalTransfer(request: loopring_defs.OriginTransferRequestV3, 
-        web3: Web3, chainId: ChainId, walletType: ConnectorNames,
-        eddsaKey: string, apiKey: string) {
+    public async submitInternalTransfer(req: loopring_defs.OriginTransferRequestV3WithPatch) {
+
+        const {request, web3, chainId, walletType,
+                eddsaKey, apiKey, callback, } = req
 
         let ecdsaSignature = undefined
 
@@ -684,7 +689,10 @@ export class UserAPI extends BaseAPI {
             } catch (err) {
 
                 if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                    await sleep(WAIT_TIME)
+                    
+                    if (callback) {
+                        await callback()
+                    }
 
                     // signOffchainWithdrawWithoutDataStructure
                     // console.log('2. signTransferWithoutDataStructure')
@@ -736,8 +744,9 @@ export class UserAPI extends BaseAPI {
     /*
     * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
     */
-    public async updateAccount(request: loopring_defs.UpdateAccountRequestV3, web3: Web3, 
-        chainId: ChainId, walletType: ConnectorNames) {
+    public async updateAccount(req: loopring_defs.UpdateAccountRequestV3WithPatch) {
+
+        const { request, web3, chainId, walletType, callback, } = req
     
             let ecdsaSignature = undefined
     
@@ -749,7 +758,11 @@ export class UserAPI extends BaseAPI {
                 } catch (err) {
     
                     if (err.message.indexOf(NOT_SUPPORT_ERROR) !== -1) {
-                        await sleep(WAIT_TIME)
+                    
+                        if (callback) {
+                            await callback()
+                        }
+
                         // console.log('2. signUpdateAccountWithoutDataStructure')
                         const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
                         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03

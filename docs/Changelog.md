@@ -2,6 +2,9 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.90
+    1) add callback to updateaccount transfer and withdraw.
+
 ### v0.0.87
     1) fix no amm swap calc issue.
     2) add symbol to DepthData.
