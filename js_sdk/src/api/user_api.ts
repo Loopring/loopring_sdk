@@ -1,34 +1,38 @@
 import { BaseAPI } from './base_api'
 
-import { ReqParams, } from '../defs/loopring_defs'
+import { ConnectorError } from '../defs/error_codes'
 
 import { SIG_FLAG, ReqMethod, SigPatchField, TradeChannel, } from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
-import { ChainId, SigSuffix } from '../defs/web3_defs'
+import { SigSuffix } from '../defs/web3_defs'
 
 import * as loopring_defs from '../defs/loopring_defs'
 
 import { ConnectorNames } from '../defs/web3_defs'
 
-import { sleep } from '../utils/network_tools'
 import { isContract } from './ethereum/metaMask'
-import Web3 from 'web3'
 
 import * as sign_tools from './sign/sign_tools'
-import { type } from 'os'
 
-const NOT_SUPPORT_ERROR = 'Not supported on this device'
+export function genErr(err: any) {
 
-const WAIT_TIME = 1500
+    console.log('message:', err?.message)
 
-export function checkNotSupport(message: any) {
-    if (!message) {
-        return false
+    if (!err || !err?.message) {
+        return undefined
     }
 
-    return message.indexOf(NOT_SUPPORT_ERROR) !== -1
+    for (var error in ConnectorError) {
+        console.log('error:', error, err?.message.indexOf(error))
+        if (err?.message.indexOf(error) !== -1) {
+            return { errMsg: error }
+        }
+    }
+
+    return err
+
 }
 
 export class UserAPI extends BaseAPI {
@@ -42,7 +46,7 @@ export class UserAPI extends BaseAPI {
 
         dataToSig.set('accountId', request.accountId)
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.API_KEY_ACTION,
             queryParams: request,
             bodyParams: request,
@@ -77,7 +81,7 @@ export class UserAPI extends BaseAPI {
 
         dataToSig.set('accountId', request.accountId)
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.API_KEY_ACTION,
             bodyParams: request,
             apiKey,
@@ -106,7 +110,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getNextStorageId(request: loopring_defs.GetNextStorageIdRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_NEXT_STORAGE_ID,
             queryParams: request,
             apiKey,
@@ -128,7 +132,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getOrderDetails(request: loopring_defs.GetOrderDetailsRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.ORDER_ACTION,
             queryParams: request,
             apiKey,
@@ -147,7 +151,7 @@ export class UserAPI extends BaseAPI {
 
     public async getOrders(request: loopring_defs.GetOrdersRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_MULTI_ORDERS,
             queryParams: request,
             apiKey,
@@ -190,7 +194,7 @@ export class UserAPI extends BaseAPI {
             0,
         ]
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.ORDER_ACTION,
             bodyParams: orderRequest,
             apiKey,
@@ -222,7 +226,7 @@ export class UserAPI extends BaseAPI {
         if (request.clientOrderId)
             dataToSig.set('clientOrderId', request.clientOrderId)
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.ORDER_ACTION,
             queryParams: request,
             apiKey,
@@ -247,7 +251,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserRegTxs(request: loopring_defs.GetUserRegTxsRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_REG_TXS,
             queryParams: request,
             apiKey,
@@ -272,7 +276,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserPwdResetTxs(request: loopring_defs.GetUserPwdResetTxsRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_PWD_RESET_TXS,
             queryParams: request,
             apiKey,
@@ -297,7 +301,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserBalances(request: loopring_defs.GetUserBalancesRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
             queryParams: request,
             apiKey,
@@ -329,7 +333,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserDepositHistory(request: loopring_defs.GetUserDepositHistoryRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
             queryParams: request,
             apiKey,
@@ -352,7 +356,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserOnchainWithdrawalHistory(request: loopring_defs.GetUserOnchainWithdrawalHistoryRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.WITHDRAWALS_ACTION,
             queryParams: request,
             apiKey,
@@ -374,7 +378,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserTranferList(request: loopring_defs.GetUserTransferListRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_TRANFERS_LIST,
             queryParams: request,
             apiKey,
@@ -397,7 +401,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserTxs(request: loopring_defs.GetUserTxsRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_TXS,
             queryParams: request,
             apiKey,
@@ -428,7 +432,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserTrades(request: loopring_defs.GetUserTradesRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_TRADE_HISTORY,
             queryParams: request,
             apiKey,
@@ -468,7 +472,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserFeeRate(request: loopring_defs.GetUserFeeRateRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_FEE_RATE,
             queryParams: request,
             apiKey,
@@ -500,7 +504,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getUserOrderFeeRate(request: loopring_defs.GetUserOrderFeeRateRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_USER_ORDER_FEE_RATE,
             queryParams: request,
             apiKey,
@@ -525,7 +529,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getMinimumTokenAmt(request: loopring_defs.GetMinimumTokenAmtRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
             queryParams: request,
             apiKey,
@@ -564,7 +568,7 @@ export class UserAPI extends BaseAPI {
     */
     public async getOffchainFeeAmt(request: loopring_defs.GetOffchainFeeAmtRequest, apiKey: string) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
             queryParams: request,
             apiKey,
@@ -643,10 +647,7 @@ export class UserAPI extends BaseAPI {
                     }
 
                 } catch (err) {
-
-                    errorInfo = {
-                        isNotSupport: checkNotSupport(err?.message)
-                    }
+                    errorInfo = genErr(err)
                 }
         } else {
 
@@ -667,7 +668,7 @@ export class UserAPI extends BaseAPI {
 
             request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
     
-            const reqParams: ReqParams = {
+            const reqParams: loopring_defs.ReqParams = {
                 url: LOOPRING_URLs.WITHDRAWALS_ACTION,
                 bodyParams: request,
                 apiKey,
@@ -705,6 +706,8 @@ export class UserAPI extends BaseAPI {
 
         let errorInfo = undefined
 
+        console.log('isHWAddr:', isHWAddr)
+
         const sigHW = async () => {
             const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
             ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
@@ -720,11 +723,7 @@ export class UserAPI extends BaseAPI {
                         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                     }
                 } catch (err) {
-
-                    errorInfo = {
-                        isNotSupport: checkNotSupport(err?.message)
-                    }
-
+                    errorInfo = genErr(err)
                 }
                 
         } else {
@@ -748,7 +747,7 @@ export class UserAPI extends BaseAPI {
 
             request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
     
-            const reqParams: ReqParams = {
+            const reqParams: loopring_defs.ReqParams = {
                 url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
                 bodyParams: request,
                 apiKey,
@@ -785,6 +784,8 @@ export class UserAPI extends BaseAPI {
 
         let errorInfo = undefined
 
+        console.log('updateAccount isHWAddr:', isHWAddr)
+
         const sigHW = async () => {
             const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
             ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
@@ -800,10 +801,9 @@ export class UserAPI extends BaseAPI {
                         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                     }
                 } catch (err) {
+                    errorInfo = genErr(err)
 
-                    errorInfo = {
-                        isNotSupport: checkNotSupport(err?.message)
-                    }
+                    console.log('update errorInfo:', errorInfo)
                 }
 
         } else {
@@ -822,7 +822,7 @@ export class UserAPI extends BaseAPI {
 
         if (!errorInfo) {
 
-            const reqParams: ReqParams = {
+            const reqParams: loopring_defs.ReqParams = {
                 url: LOOPRING_URLs.ACCOUNT_ACTION,
                 bodyParams: request,
                 method: ReqMethod.POST,
@@ -848,7 +848,7 @@ export class UserAPI extends BaseAPI {
 
     public async SetReferrer(request: loopring_defs.SetReferrerRequest) {
 
-        const reqParams: ReqParams = {
+        const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.SET_REFERRER,
             bodyParams: request,
             method: ReqMethod.POST,

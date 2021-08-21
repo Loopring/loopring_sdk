@@ -42,9 +42,9 @@
   },
   "scripts": {
     "build": "tsdx build",
-    "start": "tsdx watch",
+    "start": "yarn link; tsdx watch",
     "test": "tsdx test",
-    "test_calc": "tsdx test src/tests/swap_calc_utils.test.ts",
+    "test_calc": "tsdx test",
     "prepublishOnly": "NODE_ENV=production tsdx build",
     "deploy": "cd ..; yarn deploy; cd js_sdk"
   },

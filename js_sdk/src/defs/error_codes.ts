@@ -44,3 +44,8 @@ export enum LoopringErrorCode {
     Unsupported_Depth_Level = 108001,
 
 }
+
+export enum ConnectorError {
+    NOT_SUPPORT_ERROR = 'Not supported on this device',
+    USER_DENIED = 'User denied message signature'
+}
