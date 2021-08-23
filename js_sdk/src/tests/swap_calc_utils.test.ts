@@ -23,6 +23,8 @@ const chainId = ChainId.GOERLI
 
 const TIMEOUT = 60000
 
+let feeBips = '20'
+
 let _slipBips = '50'
 
 let exchangeApi:ExchangeAPI
@@ -90,7 +92,7 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
     await init(chainId)
 }
 
-const checkResult = (takerRate = '6', slipBips: string = _slipBips) => {
+const checkResult = (takerRate = '10', slipBips: string = _slipBips) => {
 
     if (input !== '0' && input !== '0.') {
         let { amm, market } = getExistedMarket(marketArr, base, quote)
@@ -114,8 +116,8 @@ const checkResult = (takerRate = '6', slipBips: string = _slipBips) => {
 
     }
     
-    const output: any = getOutputAmount(input, base, quote, isAtoB, marketArr, 
-        tokenMap, marketMap, depth, ammpools, ammPoolSnapshot, takerRate, slipBips)
+    const output: any = getOutputAmount({input, base, quote, isAtoB, marketArr, 
+        tokenMap, marketMap, depth, feeBips, ammPoolSnapshot, takerRate, slipBips})
 
     console.log('base:', base, ' quote:', quote, ' output:', output)
 
@@ -124,6 +126,22 @@ const checkResult = (takerRate = '6', slipBips: string = _slipBips) => {
 describe('swap_calc_utils', function () {
 
     beforeEach(async() => {
+    }, TIMEOUT)
+
+    it('LRC_ETH_a2b_10000', async () => {
+
+        try {
+
+            await initAll('10', 'LRC', 'ETH', true, ChainId.MAINNET)
+
+            console.log('ammPoolSnapshot:', ammPoolSnapshot)
+            console.log('depth:', depth)
+            
+            checkResult('10')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, TIMEOUT)
 
     it('ETH_USDT_a2b_1', async () => {

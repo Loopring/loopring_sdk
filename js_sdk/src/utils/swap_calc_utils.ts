@@ -391,18 +391,14 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
 export function getReserveInfo(base: string, quote: string,
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>,
-    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
+    ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
 
-    const { market, amm, } = getExistedMarket(marketArr, base, quote)
+    const { market, amm, baseShow, quoteShow, } = getExistedMarket(marketArr, base, quote)
 
     if (isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
         return undefined
     }
-
-    let feeBips: string | number = ammpools[amm as string]?.feeBips
-
-    feeBips = feeBips ? feeBips.toString() : '0'
 
     const marketInfo: MarketInfo = marketMap[market]
 
@@ -438,7 +434,6 @@ export function getReserveInfo(base: string, quote: string,
         coinA,
         coinB,
         isReverse,
-        feeBips,
         marketInfo,
     }
 
@@ -548,16 +543,17 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string,
 
 }
 
-export function getOutputAmount(input: string, base: string, quote: string, isAtoB: boolean,
+export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap, marketMap, depth, ammPoolSnapshot, feeBips, takerRate, slipBips, }
+    : {input: string, base: string, quote: string, isAtoB: boolean,
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
-    ammpools: LoopringMap<AmmPoolInfoV3>, ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined,
-    takerFee: string = '6', slipBips: string = '100') {
+    ammPoolSnapshot: AmmPoolSnapshot | undefined,
+    feeBips: string, takerRate: string, slipBips: string}) {
 
     // console.log(`getOutputAmount market: ${base} / ${quote}`)
 
     // console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
-    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammpools, ammPoolSnapshot)
+    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammPoolSnapshot)
 
     if (!reserveInfo) {
         return undefined
@@ -569,7 +565,6 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
         baseToken,
         quoteToken,
         isReverse,
-        feeBips,
         marketInfo,
     } = reserveInfo
 
@@ -631,7 +626,7 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
         amountBOutWithoutFee = toWEI(tokenMap, quote, output, 0)
 
-        const leftRatio = (BIG10K.minus(fm.toBig(takerFee))).div(BIG10K)
+        const leftRatio = (BIG10K.minus(fm.toBig(takerRate))).div(BIG10K)
         amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(leftRatio).toString(), 0)
 
         amountS = toWEI(tokenMap, base, input, 0)
@@ -680,7 +675,7 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
             amountBOutWithoutFee = fm.toBig(amountB).toFixed(0, 0)
             // amountBOutWithoutFee = amountB
-            const leftRatio = (BIG10K.minus(fm.toBig(takerFee))).div(BIG10K)
+            const leftRatio = (BIG10K.minus(fm.toBig(takerRate))).div(BIG10K)
             amountBOut = fm.toBig(amountB).times(leftRatio).toFixed(0, 0)
         }
 
@@ -701,7 +696,7 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
 
     const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, 
         amountS, baseToken.decimals, amountBOut, quoteToken.decimals,
-        feeBips, takerFee, isAtoB, isReverse, exceedDepth, depth)
+        feeBips, takerRate, isAtoB, isReverse, exceedDepth, depth)
 
     return {
         exceedDepth,
@@ -709,7 +704,7 @@ export function getOutputAmount(input: string, base: string, quote: string, isAt
         isAtoB,
 
         slipBips,
-        takerFee,
+        takerRate,
         feeBips,
 
         output,
