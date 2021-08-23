@@ -107,9 +107,9 @@ describe('ExchangeAPI test', function () {
         console.log(response.raw_data.trades)
     }, DEFAULT_TIMEOUT)
 
-    it('getMarketTrades', async () => {
+    it('getMarketTrades_have', async () => {
         const req: GetMarketTradesRequest = {
-            market: 'LRC-ETH'
+            market: 'ETH-USDT'
         }
         const response = await api.getMarketTrades(req)
         console.log(response)

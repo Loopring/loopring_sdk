@@ -458,7 +458,7 @@ function getPriceImpactStr(curPrice: string, toPrice: string) {
 
     const percent = fm.toBig(toPriceBig).div(curPrice)
 
-    return BIG1.minus(percent).abs().times(100).toString()
+    return BIG1.minus(percent).abs().toString()
 
 }
 

@@ -185,9 +185,8 @@ describe('Transfer test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await userApi.submitInternalTransfer(request3, web3, 
-                ChainId.GOERLI, ConnectorNames.MetaMask,
-                eddsakey.sk, apiKey)
+            const response = await userApi.submitInternalTransfer({ request: request3, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
+                eddsaKey: eddsakey.sk, apiKey: apiKey})
             
             console.log(response)
 

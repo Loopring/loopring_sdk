@@ -23,7 +23,7 @@ const chainId = ChainId.GOERLI
 
 const TIMEOUT = 60000
 
-let slipBips = '100'
+let _slipBips = '50'
 
 let exchangeApi:ExchangeAPI
 let ammApi: AmmpoolAPI
@@ -90,7 +90,7 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
     await init(chainId)
 }
 
-const checkResult = (takerRate = '8', slipBips = '100') => {
+const checkResult = (takerRate = '6', slipBips: string = _slipBips) => {
 
     if (input !== '0' && input !== '0.') {
         let { amm, market } = getExistedMarket(marketArr, base, quote)
@@ -102,9 +102,6 @@ const checkResult = (takerRate = '8', slipBips = '100') => {
         const marketItem = marketMap[market as string]
 
         console.log('marketMap:', marketItem)
-
-        console.log('amm :', amm, market)
-        console.log('keys :', Object.keys(ammpools))
 
         const hasMarket2 = !!ammpools[amm as string]
 
@@ -199,6 +196,32 @@ describe('swap_calc_utils', function () {
         try {
 
             await initAll('1000000', 'LRC', 'ETH')
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_test1', async () => {
+
+        try {
+
+            await initAll('1000', 'LRC', 'ETH', true, ChainId.MAINNET)
+            
+            checkResult()
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('LRC_ETH_test2', async () => {
+
+        try {
+
+            await initAll('100', 'LRC', 'ETH', true, ChainId.MAINNET)
             
             checkResult()
 

@@ -132,11 +132,21 @@ describe('UserAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
+    it('getUserTrades1', async () => {
+        const request: GetUserTradesRequest = {
+            accountId: acc.accountId,
+            market: 'AMM-ETH-USDT',
+            fillTypes: 'dex,amm',
+        }
+        const response = await api.getUserTrades(request, acc.apiKey)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
     it('getUserTrades', async () => {
         const request: GetUserTradesRequest = {
             accountId: acc.accountId,
-            market: 'AMM-LRC-ETH',
-            fillTypes: FilledType.amm,
+            market: 'ETH-USDT',
+            fillTypes: 'dex,amm',
         }
         const response = await api.getUserTrades(request, acc.apiKey)
         console.log(response)
@@ -482,8 +492,8 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitOffchainWithdraw(request, web3, ChainId.GOERLI, ConnectorNames.Trezor,
-                acc.eddsaKey, acc.apiKey)
+            const response = await api.submitOffchainWithdraw({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
+                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey})
 
             console.log(response)
 
@@ -534,9 +544,8 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitInternalTransfer(request, web3, 
-                ChainId.GOERLI, ConnectorNames.MetaMask,
-                acc.eddsaKey, acc.apiKey)
+            const response = await api.submitInternalTransfer({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.MetaMask,
+                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey})
 
             console.log(response)
 
@@ -569,7 +578,7 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
                 nonce: accInfo.nonce,
             }
-            const response = await api.updateAccount(request, web3, ChainId.GOERLI, ConnectorNames.MetaMask)
+            const response = await api.updateAccount({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor, })
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
