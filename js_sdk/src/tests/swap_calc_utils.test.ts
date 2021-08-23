@@ -132,7 +132,7 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('10', 'LRC', 'ETH', true, ChainId.MAINNET)
+            await initAll('1', 'LRC', 'ETH', true, ChainId.MAINNET)
 
             console.log('ammPoolSnapshot:', ammPoolSnapshot)
             console.log('depth:', depth)

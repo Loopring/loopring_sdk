@@ -235,7 +235,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     let output: string = "0"
     let remain: string = input
 
-    const bids = depth.bids.reverse()
+    const bids = depth.bids // .reverse()
 
     // console.log('bids:', bids[0])
     // console.log('bids last:', bids[bids.length - 1])
@@ -256,7 +256,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
             remain = fm.toBig(remain).times('1e' + baseToken.decimals).toString()
 
-            for (let i = 0; i < bids.length; i++) {
+            for (let i = bids.length - 1; i >= 0; i--) {
                 const abInfo: ABInfo = bids[i]
 
                 // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
@@ -272,7 +272,8 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
                     output = fm.toBig(output).plus(volValue).toString()
                 } else {
-                    const ratio = fm.toBig(consume).div(fm.toBig(abInfo.amt))
+                    const ratio = fm.toBig(consume).dividedBy(fm.toBig(abInfo.amt))
+                    // myLog('got ratio:', ratio.toString(), consume, abInfo.amt)
                     output = fm.toBig(output).plus(ratio.times(volValue)).toString()
                 }
 
@@ -323,7 +324,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
             remain = fm.toBig(remain).times(BIG10.pow(quoteToken.decimals)).toString()
 
-            for (let i = 0; i < bids.length; i++) {
+            for (let i = bids.length - 1; i >= 0; i--) {
                 const abInfo: ABInfo = bids[i]
                 // const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
                 
@@ -511,7 +512,7 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string,
     // console.debug('bids_prices:', depth.bids_prices)
     // console.debug('mid_price:', depth.mid_price)
 
-    // console.debug('updatePriceImpact_new: \n reverseIn:', reverseIn, 
+    // console.log('updatePriceImpact_new: \n reverseIn:', reverseIn, 
     // ' reverseOut:', reverseOut, ' amountS:', amountS, '\n feeBips:', feeBips, ' takerFee:', takerFee, 
     // ' isReversed:', isReversed, ' exceedDepth:', exceedDepth)
 
@@ -534,7 +535,8 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string,
         const curPrice = fm.toBig(depth.mid_price).times('1e' + coinBDecimal).div('1e' + coinADecimal).toString()
         const toPrice = !isReversed ? getToPrice(amountS, amountBOut) : getToPrice(amountBOut, amountS)
         // console.log('updatePriceImpact_new isReversed:', isReversed, ' amountS:', amountS, ' amountBOut:', amountBOut)
-        // myLog('updatePriceImpact_new toPrice:', toPrice, ' curPrice:', curPrice)
+        // console.log('updatePriceImpact_new toPrice:', toPrice, ' curPrice:', curPrice)
+
         priceImpact = getPriceImpactStr(curPrice, toPrice)
 
     }
@@ -548,6 +550,8 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
     ammPoolSnapshot: AmmPoolSnapshot | undefined,
     feeBips: string, takerRate: string, slipBips: string}) {
+
+    // console.log('enter getOutputAmount:', input, base, quote, isAtoB, marketArr, tokenMap, marketMap, depth, ammPoolSnapshot, feeBips, takerRate, slipBips)
 
     // console.log(`getOutputAmount market: ${base} / ${quote}`)
 
@@ -627,6 +631,9 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
         amountBOutWithoutFee = toWEI(tokenMap, quote, output, 0)
 
         const leftRatio = (BIG10K.minus(fm.toBig(takerRate))).div(BIG10K)
+
+        // console.log('amountBOutWithoutFee:', amountBOutWithoutFee, ' leftRatio:', leftRatio.toString())
+
         amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(leftRatio).toString(), 0)
 
         amountS = toWEI(tokenMap, base, input, 0)
