@@ -18,16 +18,17 @@ import * as sign_tools from './sign/sign_tools'
 
 export function genErr(err: any) {
 
-    console.log('message:', err?.message)
+    // console.log('message:', err?.message)
 
     if (!err || !err?.message) {
         return undefined
     }
 
-    for (var error in ConnectorError) {
-        console.log('error:', error, err?.message.indexOf(error))
-        if (err?.message.indexOf(error) !== -1) {
-            return { errMsg: error }
+    for (var key in ConnectorError) {
+
+        // @ts-ignore
+        if (err?.message.search(ConnectorError[key]) !== -1) {
+            return { errMsg: key }
         }
     }
 
@@ -706,8 +707,6 @@ export class UserAPI extends BaseAPI {
 
         let errorInfo = undefined
 
-        console.log('isHWAddr:', isHWAddr)
-
         const sigHW = async () => {
             const result = (await sign_tools.signTransferWithoutDataStructure(web3, request.payerAddr, request, chainId, walletType))
             ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
@@ -784,8 +783,6 @@ export class UserAPI extends BaseAPI {
 
         let errorInfo = undefined
 
-        console.log('updateAccount isHWAddr:', isHWAddr)
-
         const sigHW = async () => {
             const result = (await sign_tools.signUpdateAccountWithoutDataStructure(web3, request, chainId, walletType))
             ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
@@ -802,8 +799,6 @@ export class UserAPI extends BaseAPI {
                     }
                 } catch (err) {
                     errorInfo = genErr(err)
-
-                    console.log('update errorInfo:', errorInfo)
                 }
 
         } else {

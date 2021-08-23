@@ -45,7 +45,7 @@ export enum LoopringErrorCode {
 
 }
 
-export enum ConnectorError {
-    NOT_SUPPORT_ERROR = 'Not supported on this device',
-    USER_DENIED = 'User denied message signature'
+export const ConnectorError = {
+    NOT_SUPPORT_ERROR: 'Not supported on this device',
+    USER_DENIED: 'User denied message signature'
 }

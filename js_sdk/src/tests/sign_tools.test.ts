@@ -4,6 +4,7 @@ import { ecRecover2, personalSign } from "../api/ethereum/metaMask"
 import { loopring_exported_account as acc, web3 as web3_1, } from './utils'
 
 import Web3 from 'web3'
+import { genErr } from ".."
 
 const PrivateKeyProvider = require("truffle-privatekey-provider")
 
@@ -12,6 +13,21 @@ const TIMEOUT = 30000
 describe('sign_tools', function () {
 
     beforeEach(async() => {
+    }, TIMEOUT)
+
+    it('gen_Err', async () => {
+        const err = { message: 'err: Not supported on this device' }
+        console.log('genErr:', genErr(err))
+    }, TIMEOUT)
+
+    it('gen_Err2', async () => {
+        const err = { message: 'err: User denied message signature' }
+        console.log('genErr:', genErr(err))
+    }, TIMEOUT)
+
+    it('gen_Err3', async () => {
+        const err = { message: 'err: User  message signature' }
+        console.log('genErr:', genErr(err))
     }, TIMEOUT)
 
     it('personalSign1', async () => {
