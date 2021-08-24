@@ -1,4 +1,5 @@
 export enum LOOPRING_URLs {
+
     GET_RELAYER_CURRENT_TIME = '/api/v3/timestamp',
     API_KEY_ACTION = '/api/v3/apiKey', // get update
     GET_NEXT_STORAGE_ID = '/api/v3/storageId',
@@ -7,6 +8,8 @@ export enum LOOPRING_URLs {
     GET_MARKETS = '/api/v3/exchange/markets',
     GET_TOKENS = '/api/v3/exchange/tokens',
     GET_EXCHANGE_INFO = '/api/v3/exchange/info',
+    GET_WITHDRAWAL_AGENTS = '/api/v3/exchange/withdrawalAgents',
+
     GET_MIX_MARKETS = '/api/v3/mix/markets',
     GET_DEPTH = '/api/v3/depth',
     GET_MIX_DEPTH = '/api/v3/mix/depth',

@@ -9,6 +9,7 @@ import {
     GetMarketTradesRequest,
     GetEthBalancesRequest,
     GetEthNonceRequest,
+    GetWithdrawalAgentsRequest,
 } from '../defs/loopring_defs'
 
 import {
@@ -248,9 +249,20 @@ describe('ExchangeAPI test', function () {
 
     }, DEFAULT_TIMEOUT)
 
+    it('getWithdrawalAgents', async () => {
+        
+        const req: GetWithdrawalAgentsRequest = {
+            tokenId: 1,
+            amount: '10000000000',
+        }
+
+        const response = await api.getWithdrawalAgents(req)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
     it('getTokens', async () => {
         const response = await api.getTokens()
-        // console.log(response)
+        console.log(response)
         console.log(response.raw_data[0].orderAmounts)
     }, DEFAULT_TIMEOUT)
 

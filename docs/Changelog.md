@@ -2,6 +2,11 @@
 
 ### JS SDK Version ChangeLog
 
+### v0.0.99
+    1) update swap calc function.
+    2) add getWithdrawalAgents
+    3) update TradeChannel enum
+
 ### v0.0.90
     1) add callback to updateaccount transfer and withdraw.
 

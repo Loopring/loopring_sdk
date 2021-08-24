@@ -132,22 +132,43 @@ describe('UserAPI test', function () {
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
-    it('getUserTrades1', async () => {
+    it('getUserTrades_both', async () => {
         const request: GetUserTradesRequest = {
             accountId: acc.accountId,
-            market: 'AMM-ETH-USDT',
-            fillTypes: 'dex,amm',
+            market: 'AMM-ETH-USDT,ETH-USDT',
         }
         const response = await api.getUserTrades(request, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
-    it('getUserTrades', async () => {
+    it('getUserTrade_t3', async () => {
+        const request: GetUserTradesRequest = {
+            accountId: acc.accountId,
+            market: 'AMM-ETH-USDT',
+        }
+        console.log('AMM-ETH-USDT getUserTrade_t3')
+        const response = await api.getUserTrades(request, acc.apiKey)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserTrade_t2', async () => {
+        const request: GetUserTradesRequest = {
+            accountId: acc.accountId,
+            market: 'AMM-ETH-USDT',
+            fillTypes: 'dex,amm',
+        }
+        console.log('AMM-ETH-USDT getUserTrade_t2')
+        const response = await api.getUserTrades(request, acc.apiKey)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserTrade_t', async () => {
         const request: GetUserTradesRequest = {
             accountId: acc.accountId,
             market: 'ETH-USDT',
             fillTypes: 'dex,amm',
         }
+        console.log('ETH-USDT getUserTrade_t2')
         const response = await api.getUserTrades(request, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
@@ -237,15 +258,51 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getOffchainFeeAmt_fast', async () => {
+    it('getOffchainFeeAmt_fast1', async () => {
         try {
             const request: GetOffchainFeeAmtRequest = {
                 accountId: acc.accountId,
                 requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'LRC',
-                amount: '1000000000000000000',
+                tokenSymbol: 'USDT',
+                amount: '1e+10',
             }
-            const type = OffchainFeeReqType.ORDER
+            
+            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+            console.log(response)
+            console.log('fees:', response.raw_data.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOffchainFeeAmt_fast2', async () => {
+        try {
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'USDT',
+                amount: '1e+6',
+            }
+            
+            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
+            console.log(response)
+            console.log('fees:', response.raw_data.fees)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getOffchainFeeAmt_fast3', async () => {
+        try {
+            const request: GetOffchainFeeAmtRequest = {
+                accountId: acc.accountId,
+                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
+                tokenSymbol: 'ETH',
+                amount: '1e+19',
+            }
+            
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
             console.log('fees:', response.raw_data.fees)

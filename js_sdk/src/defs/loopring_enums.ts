@@ -16,6 +16,7 @@ export enum MarketStatus {
 }
 
 export enum TradeChannel {
+    BLANK = '',
     ORDER_BOOK = 'ORDER_BOOK', // 0
     AMM_POOL = 'AMM_POOL', // 1
     MIXED = 'MIXED', // 2

@@ -92,7 +92,7 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
     await init(chainId)
 }
 
-const checkResult = (takerRate = '10', slipBips: string = _slipBips) => {
+const checkResult = (takerRate = '10', slipBips: string = _slipBips, feeBips= '20') => {
 
     if (input !== '0' && input !== '0.') {
         let { amm, market } = getExistedMarket(marketArr, base, quote)
@@ -111,8 +111,7 @@ const checkResult = (takerRate = '10', slipBips: string = _slipBips) => {
 
         console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
-        console.log(input, '*', base, quote, isAtoB, depth.mid_price, 
-        ammpools[ amm as string]?.tokens?.pooled, ammPoolSnapshot?.pooled, takerRate, slipBips)
+        console.log(input, '*', base, quote, isAtoB, depth.mid_price, ammPoolSnapshot?.pooled, takerRate, slipBips)
 
     }
     
@@ -126,6 +125,38 @@ const checkResult = (takerRate = '10', slipBips: string = _slipBips) => {
 describe('swap_calc_utils', function () {
 
     beforeEach(async() => {
+    }, TIMEOUT)
+
+    it('USDT_DAI_a2b_100', async () => {
+
+        try {
+
+            await initAll('100', 'USDT', 'DAI', true, ChainId.MAINNET)
+
+            console.log('ammPoolSnapshot:', ammPoolSnapshot)
+            console.log('depth:', depth)
+            
+            checkResult('4', _slipBips, '0')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('DAI_USDT_a2b_100', async () => {
+
+        try {
+
+            await initAll('100', 'DAI', 'USDT', true, ChainId.MAINNET)
+
+            console.log('ammPoolSnapshot:', ammPoolSnapshot)
+            console.log('depth:', depth)
+            
+            checkResult('4', _slipBips, '0')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, TIMEOUT)
 
     it('LRC_ETH_a2b_10000', async () => {

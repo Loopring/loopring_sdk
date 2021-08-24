@@ -541,6 +541,11 @@ export interface MarketTradeInfo {
     fee: string
 }
 
+export interface GetWithdrawalAgentsRequest {
+    tokenId: number
+    amount: string
+}
+
 export interface GetEthBalancesRequest {
     owner: string
 }

@@ -32,6 +32,7 @@ import {
     ABInfo,
     GetEthBalancesRequest,
     GetEthNonceRequest,
+    GetWithdrawalAgentsRequest,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -132,6 +133,31 @@ export class ExchangeAPI extends BaseAPI {
 
         return {
             timestamp,
+            raw_data,
+        }
+    }
+
+    public async getWithdrawalAgents(request: GetWithdrawalAgentsRequest) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_WITHDRAWAL_AGENTS,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        let supportTokenMap: { [key: string]: any } = {}
+
+        if (raw_data && raw_data.length > 0) {
+            for (var item in raw_data) {
+                supportTokenMap[(item as any).symbol] = item
+            }
+        }
+
+        return {
+            supportTokenMap,
             raw_data,
         }
     }

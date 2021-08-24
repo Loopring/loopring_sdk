@@ -247,6 +247,8 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     if (!baseToken || !quoteToken) {
         return output
     }
+    myLog(baseToken, ' ', quoteToken)
+
 
     //amt is size(base ETH). vol is volume(quote USDT)
 
@@ -272,12 +274,12 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 if (fm.toBig(consume).eq(fm.toBig(abInfo.amt))) {
                     output = fm.toBig(output).plus(volValue).toString()
                 } else {
-                    const ratio = fm.toBig(consume).dividedBy(fm.toBig(abInfo.amt))
-                    // myLog('got ratio:', ratio.toString(), consume, abInfo.amt)
+                    const ratio = fm.toBig(consume).div(fm.toBig(abInfo.amt))
+                    myLog('got ratio:', ratio.toString(), consume, abInfo.amt)
                     output = fm.toBig(output).plus(ratio.times(volValue)).toString()
                 }
 
-                // myLog('1__', i, ' output:', output, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
+                myLog('1__ ', i, ' output:', output, ' remain:', remain, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
             }
@@ -312,7 +314,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
 
-                // myLog('2__ ', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
+                myLog('2__ ', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
 
             }
 
