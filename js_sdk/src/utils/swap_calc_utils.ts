@@ -1,14 +1,13 @@
 import * as fm from './formatter'
 
 import {
-    AmmTxType, ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData,
+    ABInfo, AmmPoolInfoV3, AmmPoolSnapshot, DepthData,
     ExitAmmPoolRequest, JoinAmmPoolRequest, LoopringMap, MarketInfo, OffchainFeeInfo,
-    TokenInfo, TokenRelatedInfo, TokenVolumeV3,
+    TokenInfo, TokenVolumeV3,
 } from '../defs'
 
 import { getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
 import BigNumber from 'bignumber.js'
-import { myLog } from './log_tools'
 
 const BIG0 = fm.toBig(0)
 
@@ -247,7 +246,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     if (!baseToken || !quoteToken) {
         return output
     }
-    myLog(baseToken, ' ', quoteToken)
+    // myLog(baseToken, ' ', quoteToken)
 
 
     //amt is size(base ETH). vol is volume(quote USDT)
@@ -275,11 +274,11 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                     output = fm.toBig(output).plus(volValue).toString()
                 } else {
                     const ratio = fm.toBig(consume).div(fm.toBig(abInfo.amt))
-                    myLog('got ratio:', ratio.toString(), consume, abInfo.amt)
+                    // myLog('got ratio:', ratio.toString(), consume, abInfo.amt)
                     output = fm.toBig(output).plus(ratio.times(volValue)).toString()
                 }
 
-                myLog('1__ ', i, ' output:', output, ' remain:', remain, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
+                // myLog('1__ ', i, ' output:', output, ' remain:', remain, ' abInfo.amt:', abInfo.amt, ' abInfo.vol:', abInfo.vol, ' volValue:', volValue.toString())
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
             }
@@ -314,7 +313,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
 
                 remain = fm.toBig(remain).minus(fm.toBig(consume)).toString()
 
-                myLog('2__ ', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
+                // myLog('2__ ', i, ' output:', output, ' abInfo.vol:', abInfo.vol, ' remain:', remain)
 
             }
 
