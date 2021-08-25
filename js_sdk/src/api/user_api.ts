@@ -601,17 +601,17 @@ export class UserAPI extends BaseAPI {
 
         let hash = undefined
 
-        let errInfo = undefined
+        let resultInfo = undefined
 
         if (raw_data?.hash) {
             hash = raw_data.hash
         } else if (raw_data?.resultInfo) {
-            errInfo = raw_data.resultInfo
+            resultInfo = raw_data.resultInfo
         }
 
         return {
             hash,
-            errInfo,
+            resultInfo,
             raw_data,
         }
 
@@ -688,6 +688,7 @@ export class UserAPI extends BaseAPI {
         }
 
         return {
+            ...this.returnTxHash(undefined),
             errorInfo,
         }
 
@@ -765,6 +766,7 @@ export class UserAPI extends BaseAPI {
         }
 
         return {
+            ...this.returnTxHash(undefined),
             errorInfo,
         }
 
@@ -836,6 +838,7 @@ export class UserAPI extends BaseAPI {
         }
 
         return {
+            ...this.returnTxHash(undefined),
             errorInfo,
         }
 
