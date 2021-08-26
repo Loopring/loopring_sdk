@@ -8,6 +8,7 @@ import {
 
 import { getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
 import BigNumber from 'bignumber.js'
+import { myLog } from './log_tools'
 
 const BIG0 = fm.toBig(0)
 
@@ -295,6 +296,7 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
                 const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.vol)) ? abInfo.vol : remain
 
                 if (fm.toBig(consume).lte(BIG0)) {
+                    // console.log('return 22222')
                     break
                 }
 
@@ -424,6 +426,10 @@ export function getReserveInfo(base: string, quote: string,
         } else {
             reserveIn = coinB.volume
             reserveOut = coinA.volume
+            isReverse = true
+        }
+    } else {
+        if (market === `${quote}-${base}`) {
             isReverse = true
         }
     }

@@ -65,18 +65,21 @@ const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
         marketArr = marketAll.marketArr as string[]
 
-        let { amm } = getExistedMarket(marketArr, base, quote)
+        let { amm, market: marketTmp } = getExistedMarket(marketArr, base, quote)
 
         const market = amm as string
     
-        depth = (await exchangeApi.getMixDepth({ market })).depth
+        depth = (await exchangeApi.getMixDepth({ market: marketTmp })).depth
+    
+        // console.log(market, marketTmp, 'depth2:', depth2)
     
         ammpools = (await ammApi.getAmmPoolConf()).ammpools
 
         const ammPoolInfo = ammpools[market]
-    
-        ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: ammPoolInfo.address})).ammPoolSnapshot as AmmPoolSnapshot
-    
+
+        if (ammPoolInfo) {
+            ammPoolSnapshot = (await ammApi.getAmmPoolSnapshot({poolAddress: ammPoolInfo.address})).ammPoolSnapshot as AmmPoolSnapshot
+        }
     } catch (reason) {
         dumpError400(reason)
     }
