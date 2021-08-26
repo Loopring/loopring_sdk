@@ -103,14 +103,24 @@ describe('contract test', function () {
         console.log(`nonce: ${nonce} approveMax: ${response}`)
     }, DEFAULT_TIMEOUT)
 
-    it('deposit_LRC test', async () => {
+    it('deposit_LRC2', async () => {
+
+        const nonce = await contract.getNonce(web3, acc.address)
+
+        const response = await contract.deposit(web3, acc.address, acc.exchangeAddr, 
+            lrc, 11, 0, gasPrice, gasLimit, ChainId.GOERLI, nonce, false)
+
+        console.log(`nonce: ${nonce} deposit_LRC: `, response)
+    }, DEFAULT_TIMEOUT)
+
+    it('deposit_LRC1', async () => {
 
         const nonce = await contract.getNonce(web3, acc.address)
 
         const response = await contract.deposit(web3, acc.address, acc.exchangeAddr, 
             lrc, 1, 0, gasPrice, gasLimit, ChainId.GOERLI, nonce, true)
 
-        console.log(`nonce: ${nonce} deposit_LRC: ${response}`)
+        console.log(`nonce: ${nonce} deposit_LRC: `, response)
     }, DEFAULT_TIMEOUT)
 
     it('deposit_ETH test', async () => {

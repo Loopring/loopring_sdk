@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import Transaction from '@ethereumjs/tx'
+import { Transaction } from '@ethereumjs/tx'
 
 import { ChainId } from '../defs/web3_defs'
 
@@ -8,6 +8,8 @@ import { TokenInfo } from '../defs/loopring_defs'
 import * as fm from '../utils/formatter'
 
 import Contracts from './ethereum/contracts/Contracts'
+
+import Common, { Chain, Hardfork } from '@ethereumjs/common'
 
 export enum ERC20Method {
     Approve = 'approve',
@@ -84,14 +86,26 @@ export async function sign(web3: Web3, account: string, hash: string) {
  * @returns {Promise.<*>}
  */
 export async function signEthereumTx(web3: any, account: any, rawTx: any, chainId: ChainId) {
-    const ethTx = Transaction.Transaction.fromSerializedTx(rawTx)
+
+    const common = new Common({ chain: chainId })
+
+    // console.log('rawTx:', rawTx)
+
+    const ethTx = Transaction.fromTxData(rawTx, { common })
+
+    // console.log('ethTx:', ethTx)
+
     const hash = fm.toHex(ethTx.hash())
     const response: any = await sign(web3, account, hash)
+
     if (!response['error']) {
         const signature = response['result']
         signature.v += chainId * 2 + 8
-        Object.assign(ethTx, signature)
-        return { result: fm.toHex(ethTx.serialize()) }
+        // console.log('signature:', signature)
+
+        const jsonTx = Object.assign(ethTx.toJSON(), signature)
+
+        return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx }
     } else {
         const error = response['error']['message']
         console.error('sendTransaction got error:', response['error'])
@@ -106,27 +120,45 @@ export async function getNonce(web3: Web3, addr: string) {
 }
 
 export async function sendRawTx(web3: any, from: string, to: string, value: string, data: any, 
-    chainId: ChainId, nonce: number, gasPrice: any, gas: number, sendByMetaMask: boolean = false) {
+    chainId: ChainId, nonce: number, gasPrice: any, gasLimit: number, sendByMetaMask: boolean = false) {
 
     checkWeb3(web3)
 
-    const gasPrice2 = fm.fromGWEI(gasPrice).toFixed(0, 0)
+    gasPrice = fm.fromGWEI(gasPrice).toNumber()
+
+    // const rawTx = {
+    //     from,
+    //     to,
+    //     value,
+    //     data,
+    //     chainId,
+    //     nonce: nonce.toString(),
+    //     gasPrice: gasPrice2,
+    //     gas,
+    // }
 
     const rawTx = {
         from,
         to,
-        value,
+        value: parseInt(value),
         data,
         chainId,
-        nonce: nonce.toString(),
-        gasPrice: gasPrice2,
-        gas,
+        nonce,
+        gasPrice,
+        gasLimit,
     }
 
-    const response = sendByMetaMask
-        ? await sendTransaction(web3, rawTx)
-        : await signEthereumTx(web3, from, rawTx, chainId)
-    return response['result']
+    if (sendByMetaMask) {
+        return await sendTransaction(web3, rawTx)
+    }
+
+    const res = await signEthereumTx(web3, from, rawTx, chainId)
+
+    if (res.rawTx) {
+        return await sendTransaction(web3, res.rawTx)
+    }
+    
+    return res
 }
 
 function _genContractData(Contract: any, method: string, data: any) {
