@@ -214,9 +214,9 @@ export class AmmpoolAPI extends BaseAPI {
 
         const currentTs = new Date().getTime()
 
-        if (raw_data?.data instanceof Array) {
+        if (raw_data instanceof Array) {
 
-            raw_data.data.forEach((item: AmmPoolActivityRule) => {
+            raw_data.forEach((item: AmmPoolActivityRule) => {
     
                 const status = currentTs < item.rangeFrom ? AmmPoolActivityStatus.NotStarted 
                     : (currentTs >= item.rangeFrom && currentTs <= item.rangeTo) ? AmmPoolActivityStatus.InProgress 
