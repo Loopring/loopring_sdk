@@ -60,13 +60,17 @@ export async function sign(web3: Web3, account: string, hash: string) {
  export async function sendTransaction(web3: any, tx: any) {
     
     const response: any = await new Promise((resolve) => {
-        web3.eth.sendTransaction(tx, function (err: any, transactionHash: string) {
-            if (!err) {
-                resolve({ result: transactionHash })
-            } else {
-                resolve({ error: { message: err.message } })
-            }
-        })
+        try {
+            web3.eth.sendTransaction(tx, function (err: any, transactionHash: string) {
+                if (!err) {
+                    resolve({ result: transactionHash })
+                } else {
+                    resolve({ error: { message: err.message } })
+                }
+            })
+        } catch(reason) {
+            console.log(reason)
+        }
     })
 
     if (response['result']) {
@@ -101,9 +105,12 @@ export async function signEthereumTx(web3: any, account: any, rawTx: any, chainI
     if (!response['error']) {
         const signature = response['result']
         signature.v += chainId * 2 + 8
-        // console.log('signature:', signature)
 
         const jsonTx = Object.assign(ethTx.toJSON(), signature)
+        
+        jsonTx.from = rawTx.from
+        // console.log('account:', account)
+        // console.log('jsonTx:', jsonTx)
 
         return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx }
     } else {
