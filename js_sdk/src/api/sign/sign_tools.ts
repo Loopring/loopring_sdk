@@ -226,13 +226,25 @@ export async function signEip712(web3: any, account: string, method: string, par
 
 export async function signEip712WalletConnect(web3: any, account: string, typedData: any) {
   try {
-    const response = await web3.currentProvider?.send('eth_signTypedData', [
-      typedData,
-      account,
-    ]);
+    // console.log('web3.currentProvider:', web3.currentProvider)
+    // console.log('typedData:', typedData)
+    // console.log('account:', account)
+
+    let response: any = undefined
+
+    if (web3.currentProvider?.connector) {
+      response = await web3.currentProvider.connector.signTypedData(account, typedData)
+    } else {
+      response = await web3.currentProvider?.send('eth_signTypedData', [
+        account,
+        typedData,
+      ]);
+    }
+
+    // console.log('response:', response)
     return response;
   } catch (err) {
-    console.error('err', err);
+    return { error: err }
   }
 }
 
@@ -305,6 +317,10 @@ export async function getEcDSASig(web3: any, typedData: any, address: string | u
         address as string,
         msgParams
       )
+
+      if (signEip712Result.error) {
+        throw Error('Contract sig error')
+      }
 
       return {
         ecdsaSig: signEip712Result,

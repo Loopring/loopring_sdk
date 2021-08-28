@@ -97,78 +97,84 @@ export async function personalSign(web3: any, account: string | undefined, pwd: 
   }
 
   return new Promise((resolve) => {
-    web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
-      // console.log('msg:', msg)
-      // console.log('walletType:', walletType, ' personal result:', result)
-      if (!err) {
-        if (walletType === ConnectorNames.WalletLink) {
-          const valid: any = await walletLinkValid(account, msg, result);
+    try {
+      
+      web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
+        // console.log('msg:', msg)
+        // console.log('walletType:', walletType, ' personal result:', result)
+        if (!err) {
+          if (walletType === ConnectorNames.WalletLink) {
+            const valid: any = await walletLinkValid(account, msg, result);
+            if (valid.result) {
+              resolve({ sig: result });
+            } else {
+              resolve({ error: 'Failed to valid using WalletLink/Trezor' });
+            }
+            return;
+          } else if (walletType === ConnectorNames.Authereum) {
+            const valid: any = await authereumValid(web3, account, msg, result);
+            if (valid.result) {
+              resolve({ sig: result });
+            } else {
+              resolve({ error: 'invalid sig using Authereum' });
+            }
+            return;
+          }
+  
+          // console.log('try to exc ecRecover !!!')
+  
+          const valid: any = await ecRecover(web3, account, msg, result);
+          // console.log('ecRecover valid:', valid)
+  
+          // const valid: any = await ecRecover2(account, msg, result)
+          // console.log('ecRecover2 valid:', valid)
+  
           if (valid.result) {
             resolve({ sig: result });
           } else {
-            resolve({ error: 'Failed to valid using WalletLink/Trezor' });
-          }
-          return;
-        } else if (walletType === ConnectorNames.Authereum) {
-          const valid: any = await authereumValid(web3, account, msg, result);
-          if (valid.result) {
-            resolve({ sig: result });
-          } else {
-            resolve({ error: 'invalid sig using Authereum' });
-          }
-          return;
-        }
-
-        // console.log('try to exc ecRecover !!!')
-
-        const valid: any = await ecRecover(web3, account, msg, result);
-        // console.log('ecRecover valid:', valid)
-
-        // const valid: any = await ecRecover2(account, msg, result)
-        // console.log('ecRecover2 valid:', valid)
-
-        if (valid.result) {
-          resolve({ sig: result });
-        } else {
-          const walletValid: any = await contractWalletValidate(
-            web3,
-            account,
-            msg,
-            result
-          );
-
-          if (walletValid.result) {
-            resolve({ sig: result });
-          } else {
-            const walletValid2: any = await contractWalletValidate2(
+            const walletValid: any = await contractWalletValidate(
               web3,
               account,
               msg,
               result
             );
-
-            if (walletValid2.result) {
+  
+            if (walletValid.result) {
               resolve({ sig: result });
             } else {
-              const myKeyValid: any = await mykeyWalletValid(
+              const walletValid2: any = await contractWalletValidate2(
                 web3,
                 account,
                 msg,
                 result
               );
-
-              if (myKeyValid.result) {
+  
+              if (walletValid2.result) {
                 resolve({ sig: result });
               } else {
-                resolve({ error: 'myKeyValid sig at last!' });
+                const myKeyValid: any = await mykeyWalletValid(
+                  web3,
+                  account,
+                  msg,
+                  result
+                );
+  
+                if (myKeyValid.result) {
+                  resolve({ sig: result });
+                } else {
+                  resolve({ error: 'myKeyValid sig at last!' });
+                }
               }
             }
           }
+        } else {
+          resolve({ error: 'personalSign last:' + err });
         }
-      } else {
-        resolve({ error: 'personalSign last:' + err });
-      }
-    });
+      });
+
+    } catch (reason) {
+      resolve({ error: reason })
+    }
   });
 }
 

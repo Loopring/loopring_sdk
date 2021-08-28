@@ -36,18 +36,23 @@ function checkWeb3(web3: any) {
 export async function sign(web3: Web3, account: string, hash: string) {
     checkWeb3(web3)
     return new Promise((resolve) => {
-        web3.eth.sign(hash, account, function (err: any, result: any) {
-            if (!err) {
-                const r = result.slice(0, 66)
-                const s = fm.addHexPrefix(result.slice(66, 130))
-                let v = fm.toNumber(fm.addHexPrefix(result.slice(130, 132)))
-                if (v === 0 || v === 1) v = v + 27; // 修复ledger的签名
-                resolve({ result: { r, s, v } })
-            } else {
-                const errorMsg = err.message.substring(0, err.message.indexOf(' at '))
-                resolve({ error: { message: errorMsg } })
-            }
-        })
+        try {
+            web3.eth.sign(hash, account, function (err: any, result: any) {
+                if (!err) {
+                    const r = result.slice(0, 66)
+                    const s = fm.addHexPrefix(result.slice(66, 130))
+                    let v = fm.toNumber(fm.addHexPrefix(result.slice(130, 132)))
+                    if (v === 0 || v === 1) v = v + 27; // 修复ledger的签名
+                    resolve({ result: { r, s, v } })
+                } else {
+                    const errorMsg = err.message.substring(0, err.message.indexOf(' at '))
+                    resolve({ error: { message: errorMsg } })
+                }
+            })
+
+        } catch (reason) {
+            resolve({ error: { message: reason } })
+        }
     })
 }
 
@@ -69,7 +74,7 @@ export async function sign(web3: Web3, account: string, hash: string) {
                 }
             })
         } catch(reason) {
-            console.log(reason)
+            resolve({ error: { message: reason } })
         }
     })
 
@@ -100,24 +105,32 @@ export async function signEthereumTx(web3: any, account: any, rawTx: any, chainI
     // console.log('ethTx:', ethTx)
 
     const hash = fm.toHex(ethTx.hash())
-    const response: any = await sign(web3, account, hash)
 
-    if (!response['error']) {
-        const signature = response['result']
-        signature.v += chainId * 2 + 8
+    let error = ''
 
-        const jsonTx = Object.assign(ethTx.toJSON(), signature)
-        
-        jsonTx.from = rawTx.from
-        // console.log('account:', account)
-        // console.log('jsonTx:', jsonTx)
+    try {
+        const response: any = await sign(web3, account, hash)
+    
+        if (!response['error']) {
+            const signature = response['result']
+            signature.v += chainId * 2 + 8
+    
+            const jsonTx = Object.assign(ethTx.toJSON(), signature)
+            
+            jsonTx.from = rawTx.from
+            // console.log('account:', account)
+            // console.log('jsonTx:', jsonTx)
+    
+            return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx }
+        } else {
+            error = response['error']['message']
+        }
 
-        return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx }
-    } else {
-        const error = response['error']['message']
-        console.error('sendTransaction got error:', response['error'])
-        throw new Error(error)
+    } catch (reason) {
+        error = reason
     }
+
+    return { error }
 }
 
 export async function getNonce(web3: Web3, addr: string) {
@@ -127,7 +140,7 @@ export async function getNonce(web3: Web3, addr: string) {
 }
 
 export async function sendRawTx(web3: any, from: string, to: string, value: string, data: any, 
-    chainId: ChainId, nonce: number, gasPrice: any, gasLimit: number, sendByMetaMask: boolean = false) {
+    chainId: ChainId, nonce: number, gasPrice: any, gasLimit: number, sendByMetaMask: boolean = true) {
 
     checkWeb3(web3)
 
@@ -161,7 +174,7 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
 
     const res = await signEthereumTx(web3, from, rawTx, chainId)
 
-    if (res.rawTx) {
+    if (res?.rawTx) {
         return await sendTransaction(web3, res.rawTx)
     }
     
@@ -257,7 +270,7 @@ export async function approveMax(
     gasLimit: number,
     chainId: ChainId = ChainId.GOERLI,
     nonce: number,
-    sendByMetaMask: boolean = false
+    sendByMetaMask: boolean = true
 ) {
 
     let valueC = fm.toBig(value).times('1e' + token.decimals)
