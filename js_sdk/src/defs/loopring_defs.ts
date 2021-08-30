@@ -453,7 +453,7 @@ export interface GetAmmPoolTxsRequest {
     fromAddress?: string
 }
 
-export interface AmmPoolTx {
+export interface AmmPoolTxOld {
     id: number
     from: string
     to: string
@@ -470,6 +470,25 @@ export interface AmmPoolTx {
     price: string
     transferType: TransferType
     label: string
+}
+
+export interface TokenVolumeV4 {
+    tokenId: number
+    amount: string
+    actualAmount: string
+    feeAmount: string
+}
+
+export interface AmmPoolTx {
+    hash: string
+    txType: AmmTxType
+    txStatus: TxStatus
+    ammPoolAddress: string
+    ammLayerType: string,
+    poolTokens: [TokenVolumeV4, TokenVolumeV4],
+    lpToken: TokenVolumeV4
+    createdAt: number
+    updatedAt: number
 }
 
 export interface GetUserAmmPoolTxsRequest {

@@ -458,9 +458,15 @@ export class AmmpoolAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
+        let transactions = undefined
+
+        if (raw_data?.data?.transactions) {
+            transactions = raw_data?.data?.transactions
+        }
+
         return {
             totalNum: raw_data.data.totalNum,
-            bills: raw_data.data.bills as AmmPoolTx[],
+            transactions: transactions as AmmPoolTx[],
             raw_data,
         }
 
