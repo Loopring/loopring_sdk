@@ -8,7 +8,6 @@ import {
 
 import { getExistedMarket, getTokenInfoBySymbol } from './symbol_tools'
 import BigNumber from 'bignumber.js'
-import { myLog } from './log_tools'
 
 const BIG0 = fm.toBig(0)
 
@@ -17,8 +16,6 @@ const BIG1 = fm.toBig(1)
 const BIG10 = fm.toBig(10)
 
 const BIG10K = fm.toBig(10000)
-
-const MULTI_FACTOR = 10000
 
 export const getToken = (tokens: any, token: any) => {
     if (!tokens) {
@@ -37,129 +34,6 @@ export const getTokenInfoByToken = (ammBalance: any, tokens: any, token: any) =>
     return {
         tokenInfo, tokenVol, reserve,
     }
-}
-
-const getKey = (base: any, quote: any) => {
-
-    if (!base || !quote) {
-        return {
-            key: undefined,
-            key_bak: undefined,
-            isOK: false,
-        }
-    }
-
-    const isLRCETH = false
-    const key = isLRCETH ? 'LRCETH-Pool' : ('AMM-' + base + '-' + quote)
-    const key_bak = isLRCETH ? 'LRCETH-Pool' : ('AMM-' + quote + '-' + base)
-    return {
-        key,
-        key_bak,
-        isOK: true,
-    }
-}
-
-const getInfoByKey = (raw_data: any, keyPair: any) => {
-    const {
-        key,
-        key_bak,
-    } = keyPair
-
-    if (raw_data[key]) return raw_data[key]
-    return raw_data[key_bak]
-}
-
-export const getBalances = (ammpools: any, ammPoolsBalances: any, base: any, quote: any, tokens: any) => {
-
-    const { ammInfo,
-        ammBalance,
-    } = getAmmInfo(ammpools, ammPoolsBalances, base, quote)
-
-    const baseToken = getToken(tokens, base)
-    const quoteToken = getToken(tokens, quote)
-
-    const baseBalance = ammBalance.pooledMap[baseToken.tokenId]
-    const quoteBalance = ammBalance.pooledMap[quoteToken.tokenId]
-
-    return {
-        ammInfo,
-        ammBalance,
-        baseBalance,
-        quoteBalance,
-    }
-
-}
-
-export const getAmmInfoOnly = (ammpools: any, base: any, quote: any) => {
-
-    const keyPair = getKey(base, quote)
-
-    const ammInfo = getInfoByKey(ammpools, keyPair)
-
-    if (!ammInfo) {
-        throw Error('no ammInfo!')
-    }
-
-    return {
-        ammInfo,
-    }
-
-}
-
-export const getAmmInfo = (ammpools: any, ammPoolsBalances: any, base: any, quote: any) => {
-
-    const keyPair = getKey(base, quote)
-
-    const ammInfo = getInfoByKey(ammpools, keyPair)
-    const ammBalance = getInfoByKey(ammPoolsBalances, keyPair)
-
-    if (!ammInfo || !ammBalance) {
-        throw Error('no ammInfo! no ammBalance!')
-    }
-
-    const feeBips = parseInt(ammInfo.feeBips)
-
-    return {
-        ammInfo,
-        ammBalance,
-        feeBips,
-    }
-
-}
-
-const getAmt = (rawAmt: any, tokenInfo: any) => {
-    if (rawAmt === undefined) {
-        rawAmt = 0
-    }
-
-    return fm.toBig(rawAmt).times('1e' + tokenInfo.decimals)
-}
-
-export const applySlippageTolerance = (
-    tokens: any,
-    token: any,
-    value: any,
-    slippageTolerance: number = 0.01
-) => {
-    const tokenInfo = getToken(tokens, token)
-    const f = 1e7
-    const feeFactor = fm.toBig(f * (1 - slippageTolerance))
-    const amount = fm.toBig(value).times('1e' + tokenInfo.decimals)
-    const outInWei = amount.times(feeFactor).dividedBy(f)
-    const out = fromWEI(tokens, token, outInWei)
-
-    return {
-        outInWei,
-        out,
-    }
-}
-
-export const applyOrderFee = (tokens: any, token: any, value: any, feeBip: any) => {
-    const tokenInfo = getToken(tokens, token)
-    const feeFactor = fm.toBig(MULTI_FACTOR - feeBip)
-    const amount = fm.toBig(value).times('1e' + tokenInfo.decimals)
-    const appliedAmount = amount.times(feeFactor).dividedBy(MULTI_FACTOR)
-    return appliedAmount
 }
 
 export function fromWEI(tokens: any, symbol: any, valueInWEI: any, precision?: any, ceil?: any) {
@@ -393,11 +267,11 @@ function getOutputOrderbook(input: string, baseToken: TokenInfo | undefined, quo
     return output
 }
 
-export function getReserveInfo(base: string, quote: string,
+export function getReserveInfo(sell: string, buy: string,
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>,
     ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined) {
 
-    const { market, amm, baseShow, quoteShow, } = getExistedMarket(marketArr, base, quote)
+    const { market, amm, baseShow, quoteShow, } = getExistedMarket(marketArr, sell, buy)
 
     if (isEmpty(market) || isEmpty(amm)
         || (Object.keys(marketMap).indexOf(market) < 0)) {
@@ -406,8 +280,8 @@ export function getReserveInfo(base: string, quote: string,
 
     const marketInfo: MarketInfo = marketMap[market]
 
-    const baseToken = getTokenInfoBySymbol(tokenMap, base)
-    const quoteToken = getTokenInfoBySymbol(tokenMap, quote)
+    const sellToken = getTokenInfoBySymbol(tokenMap, sell)
+    const buyToken = getTokenInfoBySymbol(tokenMap, buy)
 
     let isReverse = false
 
@@ -418,9 +292,9 @@ export function getReserveInfo(base: string, quote: string,
     let reserveIn = '0'
     let reserveOut = '0'
 
-    if (baseToken?.tokenId !== undefined && quoteToken?.tokenId !== undefined
+    if (sellToken?.tokenId !== undefined && buyToken?.tokenId !== undefined
         && coinA?.tokenId !== undefined && coinB?.tokenId !== undefined) {
-        if (baseToken?.tokenId === coinA?.tokenId) {
+        if (sellToken?.tokenId === coinA?.tokenId) {
             reserveIn = coinA.volume
             reserveOut = coinB.volume
         } else {
@@ -429,7 +303,7 @@ export function getReserveInfo(base: string, quote: string,
             isReverse = true
         }
     } else {
-        if (market === `${quote}-${base}`) {
+        if (market === `${buy}-${sell}`) {
             isReverse = true
         }
     }
@@ -437,8 +311,8 @@ export function getReserveInfo(base: string, quote: string,
     return {
         reserveIn,
         reserveOut,
-        baseToken,
-        quoteToken,
+        sellToken,
+        buyToken,
         coinA,
         coinB,
         isReverse,
@@ -552,8 +426,8 @@ export function updatePriceImpact_new(reverseIn: string, reverseOut: string,
 
 }
 
-export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap, marketMap, depth, ammPoolSnapshot, feeBips, takerRate, slipBips, }
-    : {input: string, base: string, quote: string, isAtoB: boolean,
+export function getOutputAmount({input, sell, buy, isAtoB, marketArr, tokenMap, marketMap, depth, ammPoolSnapshot, feeBips, takerRate, slipBips, }
+    : {input: string, sell: string, buy: string, isAtoB: boolean,
     marketArr: string[], tokenMap: LoopringMap<TokenInfo>, marketMap: LoopringMap<MarketInfo>, depth: DepthData,
     ammPoolSnapshot: AmmPoolSnapshot | undefined,
     feeBips: string, takerRate: string, slipBips: string}) {
@@ -564,7 +438,7 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
 
     // console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
-    const reserveInfo = getReserveInfo(base, quote, marketArr, tokenMap, marketMap, ammPoolSnapshot)
+    const reserveInfo = getReserveInfo(sell, buy, marketArr, tokenMap, marketMap, ammPoolSnapshot)
 
     if (!reserveInfo) {
         return undefined
@@ -573,13 +447,13 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
     const {
         reserveIn,
         reserveOut,
-        baseToken,
-        quoteToken,
+        sellToken,
+        buyToken,
         isReverse,
         marketInfo,
     } = reserveInfo
 
-    if (!baseToken || !quoteToken) {
+    if (!sellToken || !buyToken) {
         return undefined
     }
 
@@ -606,7 +480,7 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
 
         // bids_amtTotal -> bidsSizeShown
         // asks_volTotal -> asksQuoteSizeShown
-        const amountInWei = toWEI(tokenMap, base, input, 0)
+        const amountInWei = toWEI(tokenMap, sell, input, 0)
 
         // console.log('isAtoB amountInWei:', amountInWei)
 
@@ -629,26 +503,24 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
         if (exceedDepth) {
             if (marketInfo.isSwapEnabled) {
                 const amountB = getAmountOutWithFeeBips(amountInWei, feeBips, reserveIn, reserveOut)
-                output = fromWEI(tokenMap, quote, amountB.toFixed(0, 0))
+                output = fromWEI(tokenMap, buy, amountB.toFixed(0, 0))
             }
         } else {
-            output = getOutputOrderbook(input, baseToken, quoteToken, feeBips, isAtoB, isReverse, depth)
+            output = getOutputOrderbook(input, sellToken, buyToken, feeBips, isAtoB, isReverse, depth)
         }
 
-        amountBOutWithoutFee = toWEI(tokenMap, quote, output, 0)
+        amountBOutWithoutFee = toWEI(tokenMap, buy, output, 0)
 
         const leftRatio = (BIG10K.minus(fm.toBig(takerRate))).div(BIG10K)
 
         // console.log('amountBOutWithoutFee:', amountBOutWithoutFee, ' leftRatio:', leftRatio.toString())
 
-        amountBOut = toWEI(tokenMap, quote, fm.toBig(output).times(leftRatio).toString(), 0)
+        amountBOut = toWEI(tokenMap, buy, fm.toBig(output).times(leftRatio).toString(), 0)
 
-        amountS = toWEI(tokenMap, base, input, 0)
+        amountS = toWEI(tokenMap, sell, input, 0)
 
         baseAmt = input
         quoteAmt = output
-
-        minimumDecimal = quoteToken.decimals
 
     } else {
 
@@ -658,7 +530,7 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
         if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
             exceedDepth = true
         } else {
-            const amountInWei = toWEI(tokenMap, quote, input, 0)
+            const amountInWei = toWEI(tokenMap, buy, input, 0)
 
             if (!isReverse) {
                 exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_volTotal))
@@ -670,7 +542,7 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
 
         let amountSBint = BIG0
 
-        const amountB: string = toWEI(tokenMap, quote, input, 0)
+        const amountB: string = toWEI(tokenMap, buy, input, 0)
 
         // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
 
@@ -679,21 +551,19 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
                 amountSBint = getAmountInWithFeeBips(amountB, feeBips, reserveIn, reserveOut)
             }
         } else {
-            const outputOrderbook = getOutputOrderbook(input, baseToken, quoteToken, feeBips,
+            const outputOrderbook = getOutputOrderbook(input, sellToken, buyToken, feeBips,
                 isAtoB, isReverse, depth)
-            amountSBint = fm.toBig(toWEI(tokenMap, base, outputOrderbook))
+            amountSBint = fm.toBig(toWEI(tokenMap, sell, outputOrderbook))
         }
 
         if (amountSBint.gt(BIG0)) {
-            output = fromWEI(tokenMap, base, amountSBint.toString())
+            output = fromWEI(tokenMap, sell, amountSBint.toString())
 
             amountBOutWithoutFee = fm.toBig(amountB).toFixed(0, 0)
             // amountBOutWithoutFee = amountB
             const leftRatio = (BIG10K.minus(fm.toBig(takerRate))).div(BIG10K)
             amountBOut = fm.toBig(amountB).times(leftRatio).toFixed(0, 0)
         }
-
-        //  LRC / ETH b -> a
 
         amountS = amountSBint.toFixed(0, 0)
 
@@ -702,14 +572,14 @@ export function getOutputAmount({input, base, quote, isAtoB, marketArr, tokenMap
         baseAmt = output
         quoteAmt = input
 
-        minimumDecimal = baseToken.decimals
-
     }
+    
+    minimumDecimal = buyToken.decimals
 
     const amountBOutSlip = getMinReceived(amountBOut, minimumDecimal, slipBips)
 
     const priceImpact = updatePriceImpact_new(reserveIn, reserveOut, 
-        amountS, baseToken.decimals, amountBOut, quoteToken.decimals,
+        amountS, sellToken.decimals, amountBOut, buyToken.decimals,
         feeBips, takerRate, isAtoB, isReverse, exceedDepth, depth)
 
     return {
@@ -743,7 +613,8 @@ export function getMinReceived(amountBOut: string, minimumDecimal: number, slipB
     const minReceived = fm.toBig(amountBOut).times(BIG10K.minus(fm.toBig(slipBips))).div(BIG10K)
     return {
         minReceived: minReceived.toFixed(0, 0),
-        minReceivedVal: minReceived.div('1e' + minimumDecimal).toString()
+        minReceivedVal: minReceived.div('1e' + minimumDecimal).toString(),
+        minimumDecimal,
     }
 }
 

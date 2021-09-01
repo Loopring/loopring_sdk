@@ -30,8 +30,8 @@ let _slipBips = '50'
 let exchangeApi:ExchangeAPI
 let ammApi: AmmpoolAPI
 
-let base: string
-let quote: string
+let sell: string
+let buy: string
 let marketArr: string[]
 
 let isAtoB: boolean
@@ -65,7 +65,7 @@ const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
         marketArr = marketAll.marketArr as string[]
 
-        let { amm, market: marketTmp } = getExistedMarket(marketArr, base, quote)
+        let { amm, market: marketTmp } = getExistedMarket(marketArr, sell, buy)
 
         const market = amm as string
     
@@ -87,8 +87,8 @@ const init = async(chainId: ChainId = ChainId.MAINNET) => {
 
 const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: boolean = true, chainId = ChainId.MAINNET) => {
     input = _input
-    base = _base
-    quote = _quote
+    sell = _base
+    buy = _quote
 
     isAtoB = _isAtoB
 
@@ -98,7 +98,7 @@ const initAll = async(_input: string, _base: string, _quote: string, _isAtoB: bo
 const checkResult = (takerRate = '10', slipBips: string = _slipBips, feeBips= '20') => {
 
     if (input !== '0' && input !== '0.') {
-        let { amm, market } = getExistedMarket(marketArr, base, quote)
+        let { amm, market } = getExistedMarket(marketArr, sell, buy)
 
         const hasMarket = !!marketMap[market as string]
 
@@ -114,14 +114,14 @@ const checkResult = (takerRate = '10', slipBips: string = _slipBips, feeBips= '2
 
         console.log('ammPoolSnapshot:', ammPoolSnapshot)
 
-        console.log(input, '*', base, quote, isAtoB, depth.mid_price, ammPoolSnapshot?.pooled, takerRate, slipBips)
+        console.log(input, '*', sell, buy, isAtoB, depth.mid_price, ammPoolSnapshot?.pooled, takerRate, slipBips)
 
     }
     
-    const output: any = getOutputAmount({input, base, quote, isAtoB, marketArr, 
+    const output: any = getOutputAmount({input, sell, buy, isAtoB, marketArr, 
         tokenMap, marketMap, depth, feeBips, ammPoolSnapshot, takerRate, slipBips})
 
-    console.log('base:', base, ' quote:', quote, ' output:', output)
+    console.log('sell:', sell, ' buy:', buy, ' output:', output)
 
 }
 
@@ -420,9 +420,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('0.2', 'ETH', 'USDT', true, ChainId.GOERLI)
+            await initAll('1', 'ETH', 'USDT', true, ChainId.GOERLI)
             
-            checkResult('8', '50')
+            checkResult('10', '50', '20')
 
         } catch (reason) {
             dumpError400(reason)
@@ -433,9 +433,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1000', 'ETH', 'USDT', false, ChainId.GOERLI)
+            await initAll('2800', 'ETH', 'USDT', false, ChainId.GOERLI)
             
-            checkResult('8', '10')
+            checkResult('10', '50', '20')
 
         } catch (reason) {
             dumpError400(reason)
@@ -446,9 +446,9 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('1000', 'USDT', 'ETH', true, ChainId.GOERLI)
+            await initAll('2866', 'USDT', 'ETH', true, ChainId.GOERLI)
             
-            checkResult('10', '10')
+            checkResult('10', '50', '20')
 
         } catch (reason) {
             dumpError400(reason)
@@ -459,9 +459,63 @@ describe('swap_calc_utils', function () {
 
         try {
 
-            await initAll('0.2', 'USDT', 'ETH', false, ChainId.GOERLI)
+            await initAll('1', 'USDT', 'ETH', false, ChainId.GOERLI)
             
-            checkResult('10', '10')
+            checkResult('10', '50', '20')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    //-------
+
+    it('ETH_USDT_a2b_main', async () => {
+
+        try {
+
+            await initAll('1', 'ETH', 'USDT', true, ChainId.MAINNET)
+            
+            checkResult('10', '50', '20')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('ETH_USDT_b2a_main', async () => {
+
+        try {
+
+            await initAll('3500', 'ETH', 'USDT', false, ChainId.MAINNET)
+            
+            checkResult('10', '50', '20')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('USDT_ETH_a2b_main', async () => {
+
+        try {
+
+            await initAll('3500', 'USDT', 'ETH', true, ChainId.MAINNET)
+            
+            checkResult('10', '50', '20')
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, TIMEOUT)
+
+    it('USDT_ETH_b2a_main', async () => {
+
+        try {
+
+            await initAll('1', 'USDT', 'ETH', false, ChainId.MAINNET)
+            
+            checkResult('10', '50', '20')
 
         } catch (reason) {
             dumpError400(reason)

@@ -151,9 +151,11 @@ export class ExchangeAPI extends BaseAPI {
         let supportTokenMap: { [key: string]: any } = {}
 
         if (raw_data && raw_data.length > 0) {
-            for (var item in raw_data) {
-                supportTokenMap[(item as any).symbol] = item
-            }
+            raw_data.forEach((item: any) => {
+                if (item.symbol) {
+                    supportTokenMap[item.symbol] = item
+                }
+            })
         }
 
         return {
