@@ -416,20 +416,20 @@ describe('swap_calc_utils', function () {
 
     //-------
 
-    it('ETH_USDT_a2b', async () => {
+    it('ETH_USDT_a2b_test', async () => {
 
         try {
 
             await initAll('1', 'ETH', 'USDT', true, ChainId.GOERLI)
             
-            checkResult('10', '50', '20')
+            checkResult('0', '50', '20')
 
         } catch (reason) {
             dumpError400(reason)
         }
     }, TIMEOUT)
 
-    it('ETH_USDT_b2a', async () => {
+    it('ETH_USDT_b2a_test', async () => {
 
         try {
 
@@ -442,7 +442,7 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('USDT_ETH_a2b', async () => {
+    it('USDT_ETH_a2b_test', async () => {
 
         try {
 
@@ -455,7 +455,7 @@ describe('swap_calc_utils', function () {
         }
     }, TIMEOUT)
 
-    it('USDT_ETH_b2a', async () => {
+    it('USDT_ETH_b2a_test', async () => {
 
         try {
 

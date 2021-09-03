@@ -765,9 +765,10 @@ export function makeExitAmmPoolRequest2(rawVal: string, slippageTolerance: strin
     const volA = ratio.times(coinA.volume).times(rest).toFixed(0, 0)
     const volB = ratio.times(coinB.volume).times(rest).toFixed(0, 0)
 
+    const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]]
     const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
 
-    const maxFee = fees[quoteToken.symbol].fee
+    const maxFee = (fees && fees[quoteToken.symbol]) ? fees[quoteToken.symbol].fee : '0'
 
     let request: ExitAmmPoolRequest = {
         owner,
@@ -781,6 +782,11 @@ export function makeExitAmmPoolRequest2(rawVal: string, slippageTolerance: strin
     }
 
     return {
+        ratio,
+        volA,
+        volB,
+        volA_show: fm.toBig(volA).div('1e' + baseToken.decimals).toNumber(),
+        volB_show: fm.toBig(volB).div('1e' + quoteToken.decimals).toNumber(),
         request,
     }
 }
