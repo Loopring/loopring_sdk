@@ -106,7 +106,7 @@ export async function signEthereumTx(web3: any, account: any, rawTx: any, chainI
 
     const hash = fm.toHex(ethTx.hash())
 
-    let error = ''
+    let error: any = undefined
 
     try {
         const response: any = await sign(web3, account, hash)

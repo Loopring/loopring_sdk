@@ -1,5 +1,4 @@
 import { ChainId, ExchangeAPI, generateKeyPair, ConnectorNames } from ".."
-import { ecRecover2, personalSign } from "../api/ethereum/metaMask"
 
 import { loopring_exported_account as acc, web3 as web3_1, } from './utils'
 

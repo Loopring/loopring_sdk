@@ -1,10 +1,5 @@
 import { 
-    LoopringMap, 
-    MarketInfo, 
-    TokenInfo, 
-    DepthData, 
     ChainId,
-    AmmPoolInfoV3,
     AmmPoolSnapshot,
     GetAmmPoolSnapshotRequest,
     GetOffchainFeeAmtRequest,
@@ -20,7 +15,7 @@ import {
 
 import { dumpError400 } from '../utils/network_tools'
 
-import { ammPoolCalc, getOutputAmount, makeExitAmmPoolRequest, makeExitAmmPoolRequest2, makeJoinAmmPoolRequest } from '../utils/swap_calc_utils'
+import { makeExitAmmPoolRequest, makeExitAmmPoolRequest2, makeJoinAmmPoolRequest } from '../utils/swap_calc_utils'
 
 import * as sdk from '..'
 

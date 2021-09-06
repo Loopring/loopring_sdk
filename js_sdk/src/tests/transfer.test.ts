@@ -1,35 +1,14 @@
 import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI, ExchangeAPI, WhitelistedUserAPI, } from '../api'
 
-import { local_web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
-    GetAccountRequest, GetOrdersRequest, GetUserAssetsRequest, SubmitOrderRequestV3,
-    GetMinimumTokenAmtRequest,
-    UpdateAccountRequestV3,
-    UpdateUserApiKeyRequest,
+    GetAccountRequest,
     GetNextStorageIdRequest,
-    GetUserOrderFeeRateRequest,
-    GetUserFeeRateRequest,
-    GetUserBalancesRequest,
-    GetUserDepositHistoryRequest,
-    GetUserOnchainWithdrawalHistoryRequest,
     GetUserApiKeyRequest,
-    GetOrderDetailsRequest,
-    GetUserTradesRequest,
-    OffChainWithdrawalRequestV3,
-    GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
-    GetUserTransferListRequest,
 } from '../defs/loopring_defs'
-
-import { 
-    OffchainFeeReqType,
-    OrderType,
-    TradingInterval,
-    FilledType,
-} from '../defs/loopring_enums'
 
 import { 
     VALID_UNTIL,

@@ -10,13 +10,12 @@ import {
 
 import {
     AmmpoolAPI, 
-    UserAPI, 
     ExchangeAPI, 
 } from '../api'
 
 import { dumpError400 } from '../utils/network_tools'
 
-import { getMinReceived, getOutputAmount } from '../utils/swap_calc_utils'
+import { getOutputAmount } from '../utils/swap_calc_utils'
 import { getExistedMarket } from '../utils'
 
 const chainId = ChainId.GOERLI

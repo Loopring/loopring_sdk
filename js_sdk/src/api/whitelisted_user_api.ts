@@ -2,19 +2,11 @@ import { BaseAPI } from './base_api'
 
 import { ReqParams, } from '../defs/loopring_defs'
 
-import { SIG_FLAG, ReqMethod, SigPatchField, } from '../defs/loopring_enums'
+import { SIG_FLAG, ReqMethod, } from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
-import { ChainId, SigSuffix } from '../defs/web3_defs'
-
 import * as loopring_defs from '../defs/loopring_defs'
-
-import { ConnectorNames } from '../defs/web3_defs'
-
-import { sleep } from '../utils/network_tools'
-import { isContract } from './ethereum/metaMask'
-import Web3 from 'web3'
 
 import * as sign_tools from './sign/sign_tools'
 

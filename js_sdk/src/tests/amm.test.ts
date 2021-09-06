@@ -7,13 +7,11 @@ import {
     GetAmmPoolSnapshotRequest, 
     GetAmmPoolTradesRequest,
     GetUserAmmPoolTxsRequest,
-    ExitAmmPoolRequest,
     AmmPoolRequestPatch,
     GetAmmPoolTxsRequest,
     OffchainFeeReqType,
 
     DEFAULT_TIMEOUT,
-    AmmTxType,
     AmmPoolSnapshot,
     GetLiquidityMiningUserHistoryRequest,
 } from '../defs'

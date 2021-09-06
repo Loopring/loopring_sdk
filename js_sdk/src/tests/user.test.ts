@@ -2,11 +2,11 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { loopring_exported_account as acc, web3, local_web3, } from './utils'
+import { loopring_exported_account as acc, web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
-    GetAccountRequest, GetOrdersRequest, GetUserAssetsRequest, SubmitOrderRequestV3,
+    GetAccountRequest, GetOrdersRequest, SubmitOrderRequestV3,
     GetMinimumTokenAmtRequest,
     UpdateAccountRequestV3,
     UpdateUserApiKeyRequest,
