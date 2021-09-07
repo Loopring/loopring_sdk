@@ -25,6 +25,7 @@ import {
     WithdrawalTypes,
     UserTxTypes,
 } from './loopring_enums'
+import { String } from "lodash"
 
 export interface ReqOptions {
     baseUrl?: string
@@ -334,8 +335,8 @@ export interface GameRankInfo {
 
 export interface SetReferrerRequest {
     address: string
-    referrer: number
-    promotionCode: string
+    referrer?: number
+    promotionCode?: string
     publicKeyX: string
     publicKeyY: string
 }

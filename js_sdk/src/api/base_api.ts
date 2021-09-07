@@ -23,7 +23,7 @@ export interface InitParam {
 
 export class BaseAPI {
 
-    private baseUrl: string = ''
+    protected baseUrl: string = ''
     private timeout: number
 
     public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {

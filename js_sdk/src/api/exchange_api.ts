@@ -177,7 +177,11 @@ export class ExchangeAPI extends BaseAPI {
         let recommended = []
 
         if (raw_data?.recommended) {
-            recommended = raw_data.recommended.split(',')
+            if (typeof raw_data.recommended === 'string') {
+                recommended = raw_data.recommended.split(',')
+            } else {
+                recommended = raw_data.recommended
+            }
         }
 
         return {

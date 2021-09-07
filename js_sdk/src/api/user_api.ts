@@ -15,10 +15,9 @@ import { ConnectorNames } from '../defs/web3_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
+import { myLog } from '../utils/log_tools'
 
 export function genErr(err: any) {
-
-    // console.log('message:', err?.message)
 
     if (!err || !err?.message) {
         return undefined
@@ -845,18 +844,31 @@ export class UserAPI extends BaseAPI {
 
     }
 
-    public async SetReferrer(request: loopring_defs.SetReferrerRequest) {
+    public async SetReferrer(request: loopring_defs.SetReferrerRequest, eddsaKey: string) {
+
+        const dataToSig: Map<string, any> = new Map()
+
+        dataToSig.set('address', request.address)
+        dataToSig.set('promotionCode', request.promotionCode)
+        dataToSig.set('publicKeyX', request.publicKeyX)
+        dataToSig.set('publicKeyY', request.publicKeyY)
+        dataToSig.set('referrer', request.referrer)
 
         const reqParams: loopring_defs.ReqParams = {
             url: LOOPRING_URLs.SET_REFERRER,
             bodyParams: request,
             method: ReqMethod.POST,
-            sigFlag: SIG_FLAG.NO_SIG,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj: {
+                dataToSig,
+                PrivateKey: eddsaKey
+            },
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
+            result: raw_data?.result,
             raw_data,
         }
 

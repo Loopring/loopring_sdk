@@ -35,6 +35,14 @@ describe('ExchangeAPI test', function () {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
     })
 
+    it('getRecommendedMarkets_MAINNET', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
+
+        const response = await api.getRecommendedMarkets()
+        console.log(response)
+
+    }, DEFAULT_TIMEOUT)
+
     it('getRecommendedMarkets', async () => {
         api = new ExchangeAPI({ chainId: ChainId.GOERLI })
 

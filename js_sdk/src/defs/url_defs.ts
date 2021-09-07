@@ -61,7 +61,7 @@ export enum LOOPRING_URLs {
 
     GET_AMM_ASSET_HISTORY = '/api/v3/amm/assets',
 
-    SET_REFERRER = ' /api/v3/refer',
+    SET_REFERRER = '/api/v3/refer',
 
     GET_WS_KEY = '/v3/ws/key',
     

@@ -30,9 +30,14 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
  */
 export const serializeDataIfNeeded = function (value: any) {
     const nonString = typeof value !== 'string';
+
+    const tmp = JSON.stringify(value !== undefined ? value : {}, )
+
+    const val = value !== undefined ? value : {}
+
     return nonString
-        ? JSON.stringify(value !== undefined ? value : {})
-        : (value || "");
+        ? JSON.stringify(val, Object.keys(val).sort())
+        : (val || "");
 }
 
 /**
@@ -143,11 +148,13 @@ export class Request {
             localVarRequestOptions.data = serializeDataIfNeeded(bodyParams)
         }
 
+        console.log(' localVarRequestOptions.data:',  localVarRequestOptions.data)
+
         headers = { ...this.baseOptions.headers, ...headers }
 
         const optInOne = { ...this.baseOptions, ...{ headers }, ...localVarRequestOptions, url: this.baseOptions.baseURL + urlPathStr}
 
-        // console.log(optInOne)
+        console.log(optInOne)
         
         return await this._axios.request(optInOne)
 

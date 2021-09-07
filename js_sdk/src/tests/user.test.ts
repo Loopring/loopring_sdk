@@ -24,6 +24,7 @@ import {
     OriginTransferRequestV3,
     GetUserTransferListRequest,
     GetUserTxsRequest,
+    SetReferrerRequest,
 } from '../defs/loopring_defs'
 
 import { 
@@ -33,6 +34,9 @@ import {
     FilledType,
 } from '../defs/loopring_enums'
 
+import Web3 from 'web3'
+const PrivateKeyProvider = require("truffle-privatekey-provider")
+
 import { 
     VALID_UNTIL,
     DEFAULT_TIMEOUT,
@@ -40,6 +44,8 @@ import {
 
 import * as sign_tools from '../api/sign/sign_tools'
 import { getTokenInfoBySymbol, toBig } from '../utils'
+
+import { generateKeyPair }  from '../api/sign/sign_tools'
 
 let api: UserAPI
 
@@ -699,6 +705,44 @@ describe('UserAPI test', function () {
             dumpError400(reason)
         }
 
+    }, DEFAULT_TIMEOUT)
+
+    it('SetReferrer', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+            const { accInfo } = await exchange.getAccount(req)
+
+            if (!accInfo) {
+                return
+            }
+
+            const provider = new PrivateKeyProvider(
+              '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
+              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr, accInfo.nonce as number, ConnectorNames.MetaMask)
+            
+            console.log('accInfo:', accInfo)
+
+            const request: SetReferrerRequest = {
+                address: owner,
+                referrer: 10083,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, DEFAULT_TIMEOUT)
 
 })
