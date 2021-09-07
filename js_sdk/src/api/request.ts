@@ -148,13 +148,13 @@ export class Request {
             localVarRequestOptions.data = serializeDataIfNeeded(bodyParams)
         }
 
-        console.log(' localVarRequestOptions.data:',  localVarRequestOptions.data)
+        // console.log(' localVarRequestOptions.data:',  localVarRequestOptions.data)
 
         headers = { ...this.baseOptions.headers, ...headers }
 
         const optInOne = { ...this.baseOptions, ...{ headers }, ...localVarRequestOptions, url: this.baseOptions.baseURL + urlPathStr}
 
-        console.log(optInOne)
+        // console.log(optInOne)
         
         return await this._axios.request(optInOne)
 

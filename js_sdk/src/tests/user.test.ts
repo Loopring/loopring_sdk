@@ -707,6 +707,44 @@ describe('UserAPI test', function () {
 
     }, DEFAULT_TIMEOUT)
 
+    it('SetReferrer2', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+            const { accInfo } = await exchange.getAccount(req)
+
+            if (!accInfo) {
+                return
+            }
+
+            const provider = new PrivateKeyProvider(
+              '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
+              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr, accInfo.nonce as number, ConnectorNames.MetaMask)
+            
+            console.log('accInfo:', accInfo)
+
+            const request: SetReferrerRequest = {
+                address: owner,
+                referrer: 10428,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('SetReferrer', async () => {
         api = new UserAPI({ chainId: ChainId.GOERLI })
         let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
@@ -733,6 +771,97 @@ describe('UserAPI test', function () {
             const request: SetReferrerRequest = {
                 address: owner,
                 referrer: 10083,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+    
+    it('SetReferrer3', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0xeEbDa810d3a2C3bBd89433390911450676DA4af1'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+
+            const provider = new PrivateKeyProvider(
+              '7d894ce1007864fedce26b9a7b59c492a669c7f7922c7b404524418d333fe616',
+              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
+            
+            const request: SetReferrerRequest = {
+                address: owner,
+                referrer: 10083,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('SetReferrer4', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+
+            const provider = new PrivateKeyProvider(
+              '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
+              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
+            
+            const request: SetReferrerRequest = {
+                address: owner,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('SetReferrer5', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+
+            const provider = new PrivateKeyProvider(
+              '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
+              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
+            
+            const request: SetReferrerRequest = {
+                address: owner,
                 promotionCode: 'loopring_ch',
                 publicKeyX: eddsaKey.formatedPx,
                 publicKeyY: eddsaKey.formatedPy,
