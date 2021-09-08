@@ -745,7 +745,7 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('SetReferrer', async () => {
+    it('SetReferrer6', async () => {
         api = new UserAPI({ chainId: ChainId.GOERLI })
         let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
         try {

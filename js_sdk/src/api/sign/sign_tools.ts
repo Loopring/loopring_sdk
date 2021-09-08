@@ -144,36 +144,8 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 }
 
 const makeObjectStr = (request: Map<string, any>) => {
-  let jsonObject:any = {};  
-  request.forEach((value, key) => {  
-    jsonObject[key] = value  
-}); 
-const jsonTxt = JSON.stringify(jsonObject)
-  //const jsonTxt = JSON.stringify(Object.fromEntries(request))
-  console.log(jsonTxt)
+  const jsonTxt = JSON.stringify(Object.fromEntries(request))
   return encodeURIComponent(jsonTxt)
-}
-
-export function getSetReferrerEdDSASig(basePath: string, api_url: string, request: SetReferrerRequest, PrivateKey: string) {
-
-  let params = undefined
-
-  const uri = encodeURIComponent(`${basePath}${api_url}`)
-
-  const message = `POST&${uri}&${params}`
-  
-  console.log('message:', message)
-
-  let hash: any = new BigInteger(sha256(message).toString(), 16)
-
-  console.log('hash:', hash.toString())
-  
-  hash = (hash.mod(SNARK_SCALAR_FIELD)).toFormat(0, 0, {})
-
-  const sig = genSigWithPadding(PrivateKey, hash)
-
-  return sig
-
 }
 
 export function getEdDSASig(method: string, basePath: string, api_url: string, requestInfo: any, PrivateKey: string | undefined) {
@@ -196,7 +168,7 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
 
   let hash: any = new BigInteger(sha256(message).toString(), 16)
 
-  console.log('message:', message, ' hash:', hash.toFormat(0, 0, {}))
+  // console.log('message:', message, ' hash:', hash.toFormat(0, 0, {}))
   
   hash = (hash.mod(SNARK_SCALAR_FIELD)).toFormat(0, 0, {})
 

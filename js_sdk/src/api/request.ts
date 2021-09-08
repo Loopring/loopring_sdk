@@ -6,6 +6,7 @@ import { SIG_FLAG, } from '../defs/loopring_enums'
 import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 
 import { getEdDSASig, getEdDSASigWithPoseidon, } from './sign/sign_tools'
+import { sortObject } from '../utils/obj_tools'
 
 /**
  *
@@ -28,16 +29,15 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
  *
  * @export
  */
+export const serializeDataIfNeeded_For_SetReffer = function (value: any) {
+    return JSON.stringify(value, Object.keys(value).sort())
+}
+
 export const serializeDataIfNeeded = function (value: any) {
     const nonString = typeof value !== 'string';
-
-    const tmp = JSON.stringify(value !== undefined ? value : {}, )
-
-    const val = value !== undefined ? value : {}
-
     return nonString
-        ? JSON.stringify(val, Object.keys(val).sort())
-        : (val || "");
+        ? JSON.stringify(value !== undefined ? sortObject(value) : {})
+        : (value || "");
 }
 
 /**
@@ -144,11 +144,9 @@ export class Request {
             if (params?.eddsaSignature) {
                 bodyParams.eddsaSignature = params?.eddsaSignature
             }
-
+            
             localVarRequestOptions.data = serializeDataIfNeeded(bodyParams)
         }
-
-        // console.log(' localVarRequestOptions.data:',  localVarRequestOptions.data)
 
         headers = { ...this.baseOptions.headers, ...headers }
 

@@ -861,7 +861,7 @@ export class UserAPI extends BaseAPI {
             sigFlag: SIG_FLAG.EDDSA_SIG,
             sigObj: {
                 dataToSig,
-                PrivateKey: eddsaKey
+                PrivateKey: eddsaKey,
             },
         }
 
