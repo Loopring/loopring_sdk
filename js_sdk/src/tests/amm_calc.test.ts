@@ -63,8 +63,6 @@ describe('amm_calc', function () {
         const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
         try {
 
-            const { ammpools } = await api.getAmmPoolConf()
-
             const request: GetAmmPoolSnapshotRequest = {
                 poolAddress
             }
@@ -85,7 +83,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeJoinAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0, 0)
+                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0, 0)
 
             console.log('res:', res)
 
@@ -122,7 +120,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeExitAmmPoolRequest2('100', '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
 
             console.log('res:', res)
 
@@ -159,7 +157,7 @@ describe('amm_calc', function () {
             const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res } = makeExitAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                ammpools['AMM-LRC-ETH'], response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
 
             console.log('res:', res)
             console.log('res:', res.exitTokens)

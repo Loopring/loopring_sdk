@@ -652,8 +652,7 @@ export function ammPoolCalc(rawVal: string, isAtoB: boolean, coinA: TokenVolumeV
 
 export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     slippageTolerance: string, owner: string,
-    fees: LoopringMap<OffchainFeeInfo>,
-    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    fees: LoopringMap<OffchainFeeInfo>, ammPoolSnapshot: AmmPoolSnapshot,
     tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>, 
     coinAOffchainId: number = 0, coinBOffchainId: number = 0) {
 
@@ -678,7 +677,7 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
 
     let request: JoinAmmPoolRequest = {
         owner,
-        poolAddress: ammConf.address,
+        poolAddress: ammPoolSnapshot.poolAddress,
         joinTokens: {
             pooled: [{ tokenId: coinA.tokenId, volume: volA, }, { tokenId: coinB.tokenId, volume: volB, },],
             minimumLp: { tokenId: ammPoolSnapshot.lp.tokenId, volume: volLp, },
@@ -694,8 +693,7 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
 
 export function makeExitAmmPoolRequest(rawVal: string, isAtoB: boolean, slippageTolerance: string, 
     owner: string,
-    fees: LoopringMap<OffchainFeeInfo>,
-    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    fees: LoopringMap<OffchainFeeInfo>, ammPoolSnapshot: AmmPoolSnapshot,
     tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>,
     offchainId: number = 0) {
 
@@ -726,7 +724,7 @@ export function makeExitAmmPoolRequest(rawVal: string, isAtoB: boolean, slippage
 
     let request: ExitAmmPoolRequest = {
         owner,
-        poolAddress: ammConf.address,
+        poolAddress: ammPoolSnapshot.poolAddress,
         exitTokens: {
             unPooled: [{ tokenId: tokenA.tokenId, volume: volA, }, { tokenId: tokenB.tokenId, volume: volB, },],
             burned: { tokenId: ammPoolSnapshot.lp.tokenId, volume: burnedVol, },
@@ -741,8 +739,7 @@ export function makeExitAmmPoolRequest(rawVal: string, isAtoB: boolean, slippage
 }
 
 export function makeExitAmmPoolRequest2(rawVal: string, slippageTolerance: string, owner: string,
-    fees: LoopringMap<OffchainFeeInfo>,
-    ammConf: AmmPoolInfoV3, ammPoolSnapshot: AmmPoolSnapshot,
+    fees: LoopringMap<OffchainFeeInfo>, ammPoolSnapshot: AmmPoolSnapshot,
     tokenMap: LoopringMap<TokenInfo>, idIdx: LoopringMap<string>,
     offchainId: number = 0) {
 
@@ -768,7 +765,7 @@ export function makeExitAmmPoolRequest2(rawVal: string, slippageTolerance: strin
 
     let request: ExitAmmPoolRequest = {
         owner,
-        poolAddress: ammConf.address,
+        poolAddress: ammPoolSnapshot.poolAddress,
         exitTokens: {
             unPooled: [{ tokenId: coinA.tokenId, volume: volA, }, { tokenId: coinB.tokenId, volume: volB, },],
             burned: { tokenId: ammPoolSnapshot.lp.tokenId, volume: burnedVol, },
