@@ -21,7 +21,7 @@ import {
 } from '../defs/loopring_constants'
 
 import { ChainId } from '../defs/web3_defs'
-import { ExchangeAPI } from '../api/exchange_api'
+import { ExchangeAPI, WalletAPI, } from '../api'
 
 import { loopring_exported_account as acc } from './utils'
 

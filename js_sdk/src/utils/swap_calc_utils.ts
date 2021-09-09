@@ -663,11 +663,7 @@ export function makeJoinAmmPoolRequest(rawVal: string, isAtoB: boolean,
     const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]]
     const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]]
 
-    // console.log('ammConf:', ammConf)
-    // console.log('fees:', fees)
-    // console.log('quoteToken:', quoteToken)
-
-    const fee = fees[quoteToken.symbol].fee
+    const fee = (fees && fees[quoteToken.symbol] && fees[quoteToken.symbol].fee) ? fees[quoteToken.symbol].fee : '0'
 
     rawVal = fm.toBig(rawVal).times(BIG10.pow(isAtoB ? baseToken.decimals : quoteToken.decimals)).toFixed(0, 0)
 
@@ -726,7 +722,7 @@ export function makeExitAmmPoolRequest(rawVal: string, isAtoB: boolean, slippage
 
     const volB = (isAtoB ? fm.toBig(tokenB.volume).times(ratio) : rawWithDecimals).times(rest).toFixed(0, 0)
 
-    const maxFee = fees[tokenB_TV.symbol].fee
+    const maxFee = (fees && fees[tokenB_TV.symbol] && fees[tokenB_TV.symbol].fee) ? fees[tokenB_TV.symbol].fee : '0'
 
     let request: ExitAmmPoolRequest = {
         owner,

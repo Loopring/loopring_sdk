@@ -88,9 +88,10 @@ export class WalletAPI extends BaseAPI {
     * Fetches, for all the tokens supported by Loopring, their fiat price.
     * response: { [key: string]: <price> }  key is token address
     */
-    public async getLatestTokenPrices() {
+    public async getLatestTokenPrices(request?: loopring_defs.getLatestTokenPricesRequest) {
 
         const reqParams: ReqParams = {
+            queryParams: request,
             url: LOOPRING_URLs.GET_LATEST_TOKEN_PRICES,
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,

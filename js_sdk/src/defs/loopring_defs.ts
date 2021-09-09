@@ -962,6 +962,11 @@ export interface GetTokenPricesRequest {
     limit?: number
 }
 
+export interface getLatestTokenPricesRequest {
+    tokens?: string
+    currency?: string
+}
+
 export interface GetUserTxsRequest {
     accountId: number
     tokenSymbol?: string
