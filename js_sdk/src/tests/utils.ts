@@ -8,7 +8,7 @@ const dumpRequest = async (request: any, currentTestName?: string) => {
   try {
     console.log('--->', request)
     console.log('--->', currentTestName, request.data)
-  } catch (error) {
+  } catch (error: any) {
     if (error.response) {
       console.log('---error', expect.getState().currentTestName, error.response.data)
     } else {

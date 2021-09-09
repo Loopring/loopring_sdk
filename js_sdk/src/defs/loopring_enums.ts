@@ -112,10 +112,10 @@ export enum FilledType {
     amm = 'amm',
 }
 
-export enum TransferTxType {
+export enum TxType {
     TRANSFER = 'TRANSFER',
     DEPOSIT = 'DEPOSIT',
-    WITHDRAW = 'WITHDRAW',
+    OFFCHAIN_WITHDRAWAL = 'OFFCHAIN_WITHDRAWAL',
 }
 
 export enum AmmTxType {

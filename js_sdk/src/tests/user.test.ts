@@ -71,12 +71,13 @@ describe('UserAPI test', function () {
             console.log('accInfo:', accInfo)
 
             const eddsakey = await sign_tools
-                .generateKeyPair(
+                .generateKeyPair({
                     web3,
-                    acc.address,
-                    acc.exchangeAddr,
-                    accInfo?.nonce as number - 1,
-                    ConnectorNames.MetaMask,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: accInfo?.nonce as number - 1,
+                    walletType: ConnectorNames.MetaMask,
+                }
                 )
 
             console.log('eddsakey:', eddsakey.sk)
@@ -100,12 +101,13 @@ describe('UserAPI test', function () {
             console.log('accInfo:', accInfo)
 
             const eddsakey = await sign_tools
-                .generateKeyPair(
+                .generateKeyPair({
                     web3,
-                    acc.address,
-                    acc.exchangeAddr,
-                    accInfo?.nonce as number - 1,
-                    ConnectorNames.MetaMask,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: accInfo?.nonce as number - 1,
+                    walletType: ConnectorNames.MetaMask,
+                }
                 )
 
             const request: UpdateUserApiKeyRequest = {
@@ -726,19 +728,27 @@ describe('UserAPI test', function () {
             );
             const web3 = new Web3(provider)
 
-            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr, accInfo.nonce as number, ConnectorNames.MetaMask)
-            
+            const eddsakey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: accInfo?.nonce as number,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
+
             console.log('accInfo:', accInfo)
 
             const request: SetReferrerRequest = {
                 address: owner,
                 referrer: 10428,
                 promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
+                publicKeyX: eddsakey.formatedPx,
+                publicKeyY: eddsakey.formatedPy,
             }
 
-            const response = await api.SetReferrer(request, eddsaKey.sk)
+            const response = await api.SetReferrer(request, eddsakey.sk)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
@@ -764,8 +774,16 @@ describe('UserAPI test', function () {
             );
             const web3 = new Web3(provider)
 
-            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr, accInfo.nonce as number, ConnectorNames.MetaMask)
-            
+            const eddsaKey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: accInfo?.nonce as number,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
+
             console.log('accInfo:', accInfo)
 
             const request: SetReferrerRequest = {
@@ -797,8 +815,16 @@ describe('UserAPI test', function () {
             );
             const web3 = new Web3(provider)
 
-            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
-            
+
+            const eddsaKey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: 0,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
             const request: SetReferrerRequest = {
                 address: owner,
                 referrer: 10083,
@@ -828,8 +854,16 @@ describe('UserAPI test', function () {
             );
             const web3 = new Web3(provider)
 
-            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
-            
+
+            const eddsaKey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: 0,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
             const request: SetReferrerRequest = {
                 address: owner,
                 promotionCode: 'loopring_ch',
@@ -858,8 +892,16 @@ describe('UserAPI test', function () {
             );
             const web3 = new Web3(provider)
 
-            const eddsaKey = await generateKeyPair(web3, owner, acc.exchangeAddr,0, ConnectorNames.MetaMask)
-            
+
+            const eddsaKey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: 0,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
             const request: SetReferrerRequest = {
                 address: owner,
                 promotionCode: 'loopring_ch',

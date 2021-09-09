@@ -229,8 +229,7 @@ describe('AmmpoolAPI test', function () {
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: res3 } = makeJoinAmmPoolRequest('500', true, 
-            '0.001', acc.address, fees,
-            ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex,
+            '0.001', acc.address, fees, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex,
             storageId_1.offchainId, storageId.offchainId)
 
             const patch: AmmPoolRequestPatch = {
@@ -276,7 +275,7 @@ describe('AmmpoolAPI test', function () {
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: req3 } = makeExitAmmPoolRequest('200', true, '0.001', acc.address,
-            fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
+            fees, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GOERLI,
@@ -320,7 +319,7 @@ describe('AmmpoolAPI test', function () {
             const { tokenSymbolMap, tokenIdIndex, } = await exchangeApi.getTokens()
 
             const { request: req3 } = makeExitAmmPoolRequest2('10', '0.001', acc.address,
-            fees, ammInfo, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
+            fees, ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, storageId.offchainId, )
 
             const patch: AmmPoolRequestPatch = {
                 chainId: ChainId.GOERLI,

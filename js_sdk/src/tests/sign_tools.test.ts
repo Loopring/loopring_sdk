@@ -39,8 +39,15 @@ describe('sign_tools', function () {
 
         console.log('acc:', accInfo)
 
-        const eddsaKey = await generateKeyPair(web3_1, addr, acc.exchangeAddr, accInfo?.keyNonce as number - 1, ConnectorNames.MetaMask)
-        
+        const eddsaKey = await generateKeyPair({
+             web3: web3_1,
+                address: addr,
+                exchangeAddress: acc.exchangeAddr,
+                keyNonce: accInfo?.keyNonce as number - 1,
+                walletType: ConnectorNames.MetaMask,
+            }
+            )
+
         console.log('eddsaKey:', eddsaKey)
         
     }, TIMEOUT)
@@ -61,8 +68,15 @@ describe('sign_tools', function () {
         
         console.log('acc:', accInfo)
 
-        const eddsaKey = await generateKeyPair(web3, addr, acc.exchangeAddr, accInfo?.keyNonce as number - 1, ConnectorNames.MetaMask)
-        
+        const eddsaKey = await generateKeyPair({
+                web3,
+                address: addr,
+                exchangeAddress: acc.exchangeAddr,
+                keyNonce: accInfo?.keyNonce as number - 1,
+                walletType: ConnectorNames.MetaMask,
+            }
+            )
+
         console.log('eddsaKey:', eddsaKey)
         
     }, TIMEOUT)
@@ -83,8 +97,15 @@ describe('sign_tools', function () {
         
         console.log('acc:', accInfo)
 
-        const eddsaKey = await generateKeyPair(web3, addr, acc.exchangeAddr, accInfo?.keyNonce as number - 1, ConnectorNames.MetaMask)
-        
+        const eddsaKey = await generateKeyPair({
+                web3,
+                address: addr,
+                exchangeAddress: acc.exchangeAddr,
+                keyNonce: accInfo?.keyNonce as number - 1,
+                walletType: ConnectorNames.MetaMask,
+            }
+            )
+
         console.log('eddsaKey:', eddsaKey)
         
     }, TIMEOUT)

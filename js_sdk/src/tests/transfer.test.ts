@@ -77,12 +77,13 @@ describe('Transfer test', function () {
             console.log('accInfo:', accInfo)
 
             const eddsakey = await sign_tools
-                .generateKeyPair(
+                .generateKeyPair({
                     web3,
-                    addressWhitlisted,
-                    exchangeInfo.exchangeAddress,
-                    accInfo.nonce - 1,
-                    ConnectorNames.MetaMask,
+                    address: addressWhitlisted,
+                    exchangeAddress: exchangeInfo.exchangeAddress,
+                    keyNonce: accInfo.nonce - 1,
+                    walletType: ConnectorNames.MetaMask,
+                }
                 )
 
             console.log('eddsakey:', eddsakey.sk)
@@ -119,14 +120,14 @@ describe('Transfer test', function () {
 
             console.log('accInfo:', accInfo)
 
-            // step 2. generate eddsakey
             const eddsakey = await sign_tools
-                .generateKeyPair(
+                .generateKeyPair({
                     web3,
-                    address,
-                    exchangeInfo.exchangeAddress,
-                    accInfo.nonce - 1,
-                    ConnectorNames.MetaMask,
+                    address: addressWhitlisted,
+                    exchangeAddress: exchangeInfo.exchangeAddress,
+                    keyNonce: accInfo.nonce - 1,
+                    walletType: ConnectorNames.MetaMask,
+                }
                 )
 
             console.log('eddsakey:', eddsakey.sk)

@@ -18,7 +18,6 @@ import { personalSign } from '../ethereum/metaMask'
 import { ChainId, ConnectorNames } from '../../defs/web3_defs'
 
 import { 
-  SetReferrerRequest,
   AmmPoolRequestPatch,
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
@@ -46,27 +45,45 @@ const transferMessage = 'Sign this message to authorize Loopring Pay: '
 
 const SNARK_SCALAR_FIELD = new BigInteger('21888242871839275222246405745257275088548364400416034343698204186575808495617', 10)
 
-export async function generateKeyPair(web3: any, address: string, exchangeAddress: string, 
-  keyNonce: number, walletType: ConnectorNames = ConnectorNames.MetaMask) {
+export interface KeyPairParams {
+  web3: any, 
+  address: string, 
+  exchangeAddress: string, 
+  keyNonce: number, 
+  walletType: ConnectorNames,
+  keySeed?: string,
+}
+
+export async function generateKeyPair({
+  web3,
+  address,
+  exchangeAddress,
+  keyNonce,
+  walletType,
+  keySeed,
+}: KeyPairParams) {
 
   const result: any = await personalSign(
     web3,
     address, '',
-    keyMessage + exchangeAddress + ' with key nonce: ' + keyNonce,
+    keySeed ? keySeed : (keyMessage + exchangeAddress + ' with key nonce: ' + keyNonce),
     walletType
   )
 
   if (!result.error) {
+
     const keyPair = EdDSA.generateKeyPair(ethUtil.sha256(fm.toBuffer((result.sig))))
     const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)))
     const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)))
     const sk = toHex(toBig(keyPair.secretKey))
+
     return {
       keyPair,
       formatedPx,
       formatedPy,
       sk,
     }
+
   } else {
     throw Error(result.error)
   }

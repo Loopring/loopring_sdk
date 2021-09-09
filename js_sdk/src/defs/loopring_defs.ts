@@ -17,7 +17,7 @@ import {
     Side,
     TransferType,
     BillType,
-    TransferTxType,
+    TxType,
     AmmTxType,
     RuleType,
     AmmPoolActivityStatus,
@@ -918,7 +918,7 @@ export interface GetUserTransferListRequest {
 export interface UserTransferRecord {
     id: number
     hash: string
-    txType: TransferTxType
+    txType: TxType
     symbol: string
     amount: string
     senderAddress: string
