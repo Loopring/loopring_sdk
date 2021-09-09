@@ -25,7 +25,6 @@ import {
     WithdrawalTypes,
     UserTxTypes,
 } from './loopring_enums'
-import { String } from "lodash"
 
 export interface ReqOptions {
     baseUrl?: string
@@ -1385,6 +1384,9 @@ export interface UpdateAccountRequestV3 {
      * @memberof UpdateAccountRequestV3
      */
     hashApproved?: string;
+
+    keySeed?: string;
+
 }
 
 export interface OffChainWithdrawalRequestV3WithPatch {

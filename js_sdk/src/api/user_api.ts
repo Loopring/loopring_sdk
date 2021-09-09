@@ -15,7 +15,6 @@ import { ConnectorNames } from '../defs/web3_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
-import { myLog } from '../utils/log_tools'
 
 export function genErr(err: any) {
 

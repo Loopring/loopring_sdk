@@ -8,6 +8,5 @@ export interface AccountInfo {
     tags: string
     nonce: number
     keyNonce: number
+    keySeed: string
 }
-
-export const POLLING_INTERVAL = 10000
