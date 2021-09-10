@@ -1019,8 +1019,8 @@ export interface UserTrades {
 
 export interface CancelOrderRequest {
     accountId: number
-    orderHash?: string
     clientOrderId?: string
+    orderHash?: string
 }
 
 export interface SubmitOrderRequestV3 {

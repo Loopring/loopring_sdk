@@ -2,7 +2,7 @@ import { ChainId, ConnectorNames } from '../defs/web3_defs'
 import { UserAPI } from '../api/user_api'
 import { ExchangeAPI } from '../api/exchange_api'
 
-import { loopring_exported_account as acc, web3, } from './utils'
+import { edd, loopring_exported_account as acc, web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
@@ -25,19 +25,19 @@ import {
     GetUserTransferListRequest,
     GetUserTxsRequest,
     SetReferrerRequest,
+    CancelOrderRequest,
 } from '../defs/loopring_defs'
 
-import { 
+import {
     OffchainFeeReqType,
     OrderType,
-    TradingInterval,
-    FilledType,
+    TradeChannel,
 } from '../defs/loopring_enums'
 
 import Web3 from 'web3'
 const PrivateKeyProvider = require("truffle-privatekey-provider")
 
-import { 
+import {
     VALID_UNTIL,
     DEFAULT_TIMEOUT,
 } from '../defs/loopring_constants'
@@ -45,20 +45,19 @@ import {
 import * as sign_tools from '../api/sign/sign_tools'
 import { getTokenInfoBySymbol, toBig } from '../utils'
 
-import { generateKeyPair }  from '../api/sign/sign_tools'
-
 let api: UserAPI
 
 let exchange: ExchangeAPI
 
 let orderHash = process.env.ORDER_HASH ? process.env.ORDER_HASH : ''
+let clientOrderId = process.env.CID ? process.env.CID : ''
 
-let mainAcc = parseInt(process.env.MAINNET_ACC ? process.env.MAINNET_ACC: '')
-let mainApiKey = process.env.MAINNET_APIKEY ? process.env.MAINNET_APIKEY: ''
+let mainAcc = parseInt(process.env.MAINNET_ACC ? process.env.MAINNET_ACC : '')
+let mainApiKey = process.env.MAINNET_APIKEY ? process.env.MAINNET_APIKEY : ''
 
 describe('UserAPI test', function () {
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         api = new UserAPI({ chainId: ChainId.GOERLI })
         exchange = new ExchangeAPI({ chainId: ChainId.GOERLI })
     })
@@ -66,7 +65,7 @@ describe('UserAPI test', function () {
     it('getUserApiKey', async () => {
         try {
 
-            const { accInfo } = await exchange.getAccount({owner: acc.address})
+            const { accInfo } = await exchange.getAccount({ owner: acc.address })
 
             console.log('accInfo:', accInfo)
 
@@ -96,7 +95,7 @@ describe('UserAPI test', function () {
     it('updateUserApiKey', async () => {
         try {
 
-            const { accInfo } = await exchange.getAccount({owner: acc.address})
+            const { accInfo } = await exchange.getAccount({ owner: acc.address })
 
             console.log('accInfo:', accInfo)
 
@@ -122,12 +121,12 @@ describe('UserAPI test', function () {
     }, DEFAULT_TIMEOUT)
 
     it('getUserRegTxs', async () => {
-        const response = await api.getUserRegTxs({accountId: acc.accountId}, acc.apiKey)
+        const response = await api.getUserRegTxs({ accountId: acc.accountId }, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getUserPwdResetTxs', async () => {
-        const response = await api.getUserPwdResetTxs({accountId: acc.accountId}, acc.apiKey)
+        const response = await api.getUserPwdResetTxs({ accountId: acc.accountId }, acc.apiKey)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 
@@ -224,7 +223,7 @@ describe('UserAPI test', function () {
                 accountId: acc.accountId,
                 market: 'AMM-ETH-USDT',
             }
-            
+
             const response = await api.getMinimumTokenAmt(request, acc.apiKey)
             console.log(response)
             console.log(response.raw_data.amounts)
@@ -240,7 +239,7 @@ describe('UserAPI test', function () {
                 accountId: acc.accountId,
                 market: 'LRC-ETH',
             }
-            
+
             const response = await api.getMinimumTokenAmt(request, acc.apiKey)
             console.log(response)
             console.log(response.raw_data.amounts)
@@ -274,7 +273,7 @@ describe('UserAPI test', function () {
                 tokenSymbol: 'USDT',
                 amount: '1e+10',
             }
-            
+
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
             console.log('fees:', response.raw_data.fees)
@@ -292,7 +291,7 @@ describe('UserAPI test', function () {
                 tokenSymbol: 'USDT',
                 amount: '1e+6',
             }
-            
+
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
             console.log('fees:', response.raw_data.fees)
@@ -310,7 +309,7 @@ describe('UserAPI test', function () {
                 tokenSymbol: 'ETH',
                 amount: '1e+19',
             }
-            
+
             const response = await api.getOffchainFeeAmt(request, acc.apiKey)
             console.log(response)
             console.log('fees:', response.raw_data.fees)
@@ -331,7 +330,7 @@ describe('UserAPI test', function () {
             }
             const type = OffchainFeeReqType.ORDER
             const response = await api.getOffchainFeeAmt(request, mainApiKey)
-            
+
             console.log('-----------------\nMAINNET:', request)
             console.log('fees:', response.fees)
 
@@ -557,8 +556,10 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitOffchainWithdraw({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
-                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey})
+            const response = await api.submitOffchainWithdraw({
+                request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
+                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey
+            })
 
             console.log(response)
 
@@ -609,8 +610,10 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitInternalTransfer({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.MetaMask,
-                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey})
+            const response = await api.submitInternalTransfer({
+                request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.MetaMask,
+                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey
+            })
 
             console.log(response)
 
@@ -650,65 +653,6 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('submitOrder', async () => {
-        const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId,
-            sellTokenId: 1
-        }
-        const storageId = await api.getNextStorageId(request, acc.apiKey)
-
-        const { accInfo } = await exchange.getAccount({
-            owner: acc.address
-        })
-
-        if (!accInfo) {
-            return
-        }
-
-        const { tokenSymbolMap } = await exchange.getTokens()
-
-        const baseToken = getTokenInfoBySymbol(tokenSymbolMap, 'LRC')
-
-        const quoteToken = getTokenInfoBySymbol(tokenSymbolMap, 'ETH')
-
-        if (!baseToken || !quoteToken) {
-            return
-        }
-
-        console.log(`storageId:${JSON.stringify(storageId)}`)
-
-        try {
-
-            const request: SubmitOrderRequestV3 = {
-                exchange: acc.exchangeAddr,
-                accountId: accInfo.accountId,
-                storageId: storageId.orderId,
-                sellToken: {
-                    tokenId: baseToken.tokenId,
-                    volume: '100000000000000000000'
-                },
-                buyToken: {
-                    tokenId: quoteToken.tokenId,
-                    volume: '63074132800000000'
-                },
-                allOrNone: false,
-                validUntil: VALID_UNTIL,
-                maxFeeBips: 60,
-                fillAmountBOrS: false, // amm only false
-                orderType: OrderType.ClassAmm,
-                eddsaSignature: '',
-            }
-
-            const response = await api.submitOrder(request, acc.eddsaKey, acc.apiKey)
-
-            console.log(response)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-
-    }, DEFAULT_TIMEOUT)
-
     it('SetReferrer2', async () => {
         api = new UserAPI({ chainId: ChainId.GOERLI })
         let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
@@ -723,8 +667,8 @@ describe('UserAPI test', function () {
             }
 
             const provider = new PrivateKeyProvider(
-              '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
-              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+                '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
             );
             const web3 = new Web3(provider)
 
@@ -769,8 +713,8 @@ describe('UserAPI test', function () {
             }
 
             const provider = new PrivateKeyProvider(
-              '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
-              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+                '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
             );
             const web3 = new Web3(provider)
 
@@ -800,7 +744,7 @@ describe('UserAPI test', function () {
             dumpError400(reason)
         }
     }, DEFAULT_TIMEOUT)
-    
+
     it('SetReferrer3', async () => {
         api = new UserAPI({ chainId: ChainId.GOERLI })
         let owner = '0xeEbDa810d3a2C3bBd89433390911450676DA4af1'
@@ -810,8 +754,8 @@ describe('UserAPI test', function () {
             }
 
             const provider = new PrivateKeyProvider(
-              '7d894ce1007864fedce26b9a7b59c492a669c7f7922c7b404524418d333fe616',
-              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+                '7d894ce1007864fedce26b9a7b59c492a669c7f7922c7b404524418d333fe616',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
             );
             const web3 = new Web3(provider)
 
@@ -849,8 +793,8 @@ describe('UserAPI test', function () {
             }
 
             const provider = new PrivateKeyProvider(
-              '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
-              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
             );
             const web3 = new Web3(provider)
 
@@ -887,8 +831,8 @@ describe('UserAPI test', function () {
             }
 
             const provider = new PrivateKeyProvider(
-              '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
-              "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
             );
             const web3 = new Web3(provider)
 
@@ -911,6 +855,151 @@ describe('UserAPI test', function () {
 
             const response = await api.SetReferrer(request, eddsaKey.sk)
             console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('SetReferrer5', async () => {
+        api = new UserAPI({ chainId: ChainId.GOERLI })
+        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
+        try {
+            const req: GetAccountRequest = {
+                owner,
+            }
+
+            const provider = new PrivateKeyProvider(
+                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+
+            const eddsaKey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: 0,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
+            const request: SetReferrerRequest = {
+                address: owner,
+                promotionCode: 'loopring_ch',
+                publicKeyX: eddsaKey.formatedPx,
+                publicKeyY: eddsaKey.formatedPy,
+            }
+
+            const response = await api.SetReferrer(request, eddsaKey.sk)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('submitOrderAndCancel', async () => {
+        const request: GetNextStorageIdRequest = {
+            accountId: acc.accountId,
+            sellTokenId: 1
+        }
+        const storageId = await api.getNextStorageId(request, acc.apiKey)
+
+        const { accInfo } = await exchange.getAccount({
+            owner: acc.address
+        })
+
+        if (!accInfo) {
+            return
+        }
+
+        const eddsakey = await sign_tools
+            .generateKeyPair({
+                web3,
+                address: acc.address,
+                exchangeAddress: acc.exchangeAddr,
+                keyNonce: accInfo?.nonce as number - 1,
+                walletType: ConnectorNames.MetaMask,
+            }
+            )
+
+        const { tokenSymbolMap } = await exchange.getTokens()
+
+        const baseToken = getTokenInfoBySymbol(tokenSymbolMap, 'LRC')
+
+        const quoteToken = getTokenInfoBySymbol(tokenSymbolMap, 'ETH')
+
+        if (!baseToken || !quoteToken) {
+            return
+        }
+
+        console.log(`storageId:${JSON.stringify(storageId)}`)
+
+        try {
+
+            const request: SubmitOrderRequestV3 = {
+                exchange: acc.exchangeAddr,
+                accountId: accInfo.accountId,
+                storageId: storageId.orderId,
+                sellToken: {
+                    tokenId: baseToken.tokenId,
+                    volume: '300000000000000000000'
+                },
+                buyToken: {
+                    tokenId: quoteToken.tokenId,
+                    volume: '3000000000000000000'
+                },
+                allOrNone: false,
+                validUntil: VALID_UNTIL,
+                maxFeeBips: 60,
+                fillAmountBOrS: false, // amm only false
+                orderType: OrderType.LimitOrder,
+                tradeChannel: TradeChannel.ORDER_BOOK,
+                eddsaSignature: '',
+            }
+
+            const response = await api.submitOrder(request, eddsakey.sk, acc.apiKey)
+
+            console.log(response)
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
+
+    }, DEFAULT_TIMEOUT)
+
+    it('cancelOrder', async () => {
+        try {
+
+            console.log('enter cancel!')
+
+            const { accInfo } = await exchange.getAccount({
+                owner: acc.address
+            })
+
+            if (!accInfo) {
+                return
+            }
+
+            const eddsakey = await sign_tools
+                .generateKeyPair({
+                    web3,
+                    address: acc.address,
+                    exchangeAddress: acc.exchangeAddr,
+                    keyNonce: accInfo?.nonce as number - 1,
+                    walletType: ConnectorNames.MetaMask,
+                }
+                )
+
+            const req: CancelOrderRequest = {
+                accountId: acc.accountId,
+                orderHash: orderHash,
+                clientOrderId,
+            }
+
+            const res = await api.cancelOrder(req, eddsakey.sk, acc.apiKey)
+
+            console.log('cancel res:', res)
         } catch (reason) {
             dumpError400(reason)
         }

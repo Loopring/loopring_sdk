@@ -92,24 +92,27 @@ export async function generateKeyPair({
 const makeRequestParamStr = (request: Map<string, any>) => {
 
   // @ts-ignore
-  // var mapAsc = new Map([...request.entries()].sort())
-  const mapAsc = new Map([...request].sort())
+  // const mapAsc = new Map([...request].sort())
+
+  let arrObj = Array.from(request)
+  arrObj.sort(function(a, b) { return a[0].localeCompare(b[0])})
+  const orderedMap = new Map(arrObj.map(i => [i[0], i[1]]))
 
   var paramlist: Array<string> = new Array()
 
-  const keys = Object.keys(Object.fromEntries(request))
+  const keys = Object.keys(Object.fromEntries(orderedMap))
 
   if (keys) {
 
     keys.forEach((key: string) => {
       const value = request.get(key)
       if (value !== undefined && value !== '')
-        paramlist.push(encodeURIComponent(`${key}=${value}`))
+        paramlist.push(`${key}=${value}`)
     })
 
   }
 
-  return paramlist.join('&')
+  return encodeURIComponent(paramlist.join('&'))
 
 }
 

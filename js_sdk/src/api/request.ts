@@ -14,14 +14,19 @@ import { sortObject } from '../utils/obj_tools'
  */
 export const setSearchParams = function (url: URL, ...objects: any[]) {
     const searchParams = new URLSearchParams(url.search);
+
     for (const object of objects) {
         if (object) {
-            for (const key in object) {
-                if (object[key] != undefined)
-                    searchParams.set(key, object[key]);
+            const objectTmp = sortObject(object)
+            // console.log('new obj:', objectTmp)
+            for (const key in objectTmp) {
+                if (objectTmp[key] != undefined)
+                    searchParams.set(key, objectTmp[key]);
             }
         }
     }
+
+    // console.log('searchParams:', searchParams)
     url.search = searchParams.toString();
 }
 
@@ -35,6 +40,7 @@ export const serializeDataIfNeeded_For_SetReffer = function (value: any) {
 
 export const serializeDataIfNeeded = function (value: any) {
     const nonString = typeof value !== 'string';
+
     return nonString
         ? JSON.stringify(value !== undefined ? sortObject(value) : {})
         : (value || "");
@@ -95,6 +101,8 @@ export class Request {
         setSearchParams(localUrl, params?.queryParams)
 
         const urlPathStr = toPathString(localUrl)
+
+        // console.log('urlPathStr:', urlPathStr)
 
         let headers: any = {}
 

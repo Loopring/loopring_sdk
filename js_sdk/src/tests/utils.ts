@@ -54,7 +54,7 @@ const loopring_exported_account = {
   publicKeyX: '0x1256c6535c9de10e874a59d098364ea67f6341a0e519971068b916d94ab95476',
   publicKeyY: '0x1a84c4104e002c506302239c8c68756b91cfa62a7a6d76be6fa8534b2feba3a3',
   ecdsaKey: '',
-  eddsaKey: '0x3f0058a9ce78b9a23ad86cde5721687fc7048117335cd7377065106a8ee0689'
+  eddsaKey: '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
 }
 
 export { local_web3, dumpRequest, apikey, exAddr, edd, ecd, owner, new_account, acc_pwd, loopring_exported_account, web3, }
