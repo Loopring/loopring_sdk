@@ -17,14 +17,14 @@ import { personalSign } from '../ethereum/metaMask'
 
 import { ChainId, ConnectorNames } from '../../defs/web3_defs'
 
-import { 
+import {
   AmmPoolRequestPatch,
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
   OffChainWithdrawalRequestV3,
   OriginTransferRequestV3,
   PublicKey,
-  UpdateAccountRequestV3, 
+  UpdateAccountRequestV3,
 } from '../../defs/loopring_defs'
 
 import Web3 from 'web3'
@@ -46,10 +46,10 @@ const transferMessage = 'Sign this message to authorize Loopring Pay: '
 const SNARK_SCALAR_FIELD = new BigInteger('21888242871839275222246405745257275088548364400416034343698204186575808495617', 10)
 
 export interface KeyPairParams {
-  web3: any, 
-  address: string, 
-  exchangeAddress: string, 
-  keyNonce: number, 
+  web3: any,
+  address: string,
+  exchangeAddress: string,
+  keyNonce: number,
   walletType: ConnectorNames,
   keySeed?: string,
 }
@@ -95,7 +95,7 @@ const makeRequestParamStr = (request: Map<string, any>) => {
   // const mapAsc = new Map([...request].sort())
 
   let arrObj = Array.from(request)
-  arrObj.sort(function(a, b) { return a[0].localeCompare(b[0])})
+  arrObj.sort(function (a, b) { return a[0].localeCompare(b[0]) })
   const orderedMap = new Map(arrObj.map(i => [i[0], i[1]]))
 
   var paramlist: Array<string> = new Array()
@@ -176,7 +176,7 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
 
   if (method === 'GET' || method === 'DELETE') {
     params = makeRequestParamStr(requestInfo)
-  } else if (method === 'POST' || method === 'PUT')  {
+  } else if (method === 'POST' || method === 'PUT') {
     params = makeObjectStr(requestInfo)
   } else {
     throw new Error(`${method} is not supported yet!`)
@@ -189,7 +189,7 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
   let hash: any = new BigInteger(sha256(message).toString(), 16)
 
   // console.log('message:', message, ' hash:', hash.toFormat(0, 0, {}))
-  
+
   hash = (hash.mod(SNARK_SCALAR_FIELD)).toFormat(0, 0, {})
 
   const sig = genSigWithPadding(PrivateKey, hash)
@@ -254,20 +254,14 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
     // console.log('typedData:', typedData)
     // console.log('account:', account)
 
-    let response: any = undefined
+    let response: any = await web3.currentProvider?.send('eth_signTypedData', [
+      account,
+      typedData,
+    ]);
 
-    if (web3.currentProvider?.connector) {
-      response = await web3.currentProvider.connector.signTypedData(account, typedData)
-    } else {
-      response = await web3.currentProvider?.send('eth_signTypedData', [
-        account,
-        typedData,
-      ]);
-    }
-
-    // console.log('response:', response)
     return response;
   } catch (err) {
+    console.log('err:', err)
     return { error: err }
   }
 }
@@ -417,7 +411,7 @@ export async function signUpdateAccountWithDataStructure(web3: Web3, bodyParams:
   return result
 }
 
-export async function signUpdateAccountWithoutDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3, 
+export async function signUpdateAccountWithoutDataStructure(web3: Web3, bodyParams: UpdateAccountRequestV3,
   chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getUpdateAccountEcdsaTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, bodyParams.owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
@@ -432,15 +426,15 @@ export async function signUpdateAccountWithDataStructureForContract(web3: Web3, 
 
 // withdraw
 export function get_EddsaSig_OffChainWithdraw(request: OffChainWithdrawalRequestV3, eddsaKey: string) {
-  
+
   const onchainDataHash = abi.soliditySHA3(
-      ['uint256', 'address', 'bytes'],
-      [
-        request.minGas,
-        new BN(fm.clearHexPrefix(request.to), 16),
-        ethUtil.toBuffer(request.extraData),
-      ]
-    ).slice(0, 20)
+    ['uint256', 'address', 'bytes'],
+    [
+      request.minGas,
+      new BN(fm.clearHexPrefix(request.to), 16),
+      ethUtil.toBuffer(request.extraData),
+    ]
+  ).slice(0, 20)
 
   const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
 
@@ -460,7 +454,7 @@ export function get_EddsaSig_OffChainWithdraw(request: OffChainWithdrawalRequest
 
 }
 
-export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId: ChainId): EIP712TypedData  {
+export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId: ChainId): EIP712TypedData {
 
   let message = {
     owner: data.owner,
@@ -475,7 +469,7 @@ export function getWithdrawTypedData(data: OffChainWithdrawalRequestV3, chainId:
     validUntil: data.validUntil,
     storageID: data.storageId,
   }
-  
+
   const typedData: EIP712TypedData = {
     types: {
       EIP712Domain: [
@@ -516,7 +510,7 @@ export async function signOffchainWithdrawWithDataStructure(web3: Web3, owner: s
   return result
 }
 
-export async function signOffchainWithdrawWithoutDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3, 
+export async function signOffchainWithdrawWithoutDataStructure(web3: Web3, owner: string, bodyParams: OffChainWithdrawalRequestV3,
   chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getWithdrawTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
@@ -546,10 +540,10 @@ export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey
     request.storageId,
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey)
-  
+
 }
 
-export function getTransferTypedData(data: OriginTransferRequestV3, chainId: ChainId): EIP712TypedData  {
+export function getTransferTypedData(data: OriginTransferRequestV3, chainId: ChainId): EIP712TypedData {
 
   let message = {
     from: data.payerAddr,
@@ -598,7 +592,7 @@ export async function signTransferWithDataStructure(web3: Web3, owner: string, b
   return result
 }
 
-export async function signTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3, 
+export async function signTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3,
   chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getTransferTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)

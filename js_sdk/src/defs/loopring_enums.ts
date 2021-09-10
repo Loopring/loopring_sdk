@@ -29,6 +29,13 @@ export enum OrderType {
     ClassAmm = 'AMM'
 }
 
+export enum OrderTypeResp {
+    LimitOrder = 'LIMIT_ORDER',
+    TakerOnly = 'TAKER_ONLY',
+    MakerOnly = 'MAKER_ONLY',
+    ClassAmm = 'CLASS_AMM'
+}
+
 export enum Currency {
     USD = 'usd',
     CNY = 'cny',

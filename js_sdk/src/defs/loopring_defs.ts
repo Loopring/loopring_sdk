@@ -24,6 +24,7 @@ import {
     SIG_FLAG,
     WithdrawalTypes,
     UserTxTypes,
+    OrderTypeResp,
 } from './loopring_enums'
 
 export interface ReqOptions {
@@ -678,7 +679,7 @@ export interface OrderDetail {
       fee: string
     },
     validity: { start: number, end: number },
-    orderType: OrderType,
+    orderType: OrderTypeResp,
     tradeChannel: TradeChannel,
     status: OrderStatus
   }

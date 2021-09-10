@@ -63,7 +63,7 @@ describe('ExchangeAPI test', function () {
     it('getAccount_Found3', async () => {
         api = new ExchangeAPI({ chainId: ChainId.GOERLI })
         const request: GetAccountRequest = {
-            owner: "0x01cb603BD2120cc88601fe43d405aBCCAA6cc46F"
+            owner: "0xd46ff313cb67b901821f5ce46eb0bc981a9c9457"
         }
         const response = await api.getAccount(request)
         console.log(response)
