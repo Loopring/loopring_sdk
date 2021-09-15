@@ -1,19 +1,24 @@
-import { ChainId } from '../defs/web3_defs'
-import { WsAPI } from '../api/ws_api'
+import * as sdk from '..'
 
-import { DEFAULT_TIMEOUT } from '../defs/loopring_constants'
-
-let api: WsAPI
+let api: sdk.WsAPI
 
 describe('WsAPI test', function () {
 
     beforeEach(() => {
-        api = new WsAPI({chainId: ChainId.GOERLI})
+        api = new sdk.WsAPI({chainId: sdk.ChainId.GOERLI})
     })
 
     it('getWsKey', async () => {
         const response = await api.getWsKey()
         console.log(response)
-    }, DEFAULT_TIMEOUT)
+    }, sdk.DEFAULT_TIMEOUT)
+
+    it('getOrderBookArg', async () => {
+        const arg1 = sdk.getOrderBookArg({market: 'LRC-ETH', level: 50, })
+        console.log(arg1)
+
+        const arg2 = sdk.getOrderBookArg({market: 'LRC-ETH', level: 50, count: 40, snapshot: false, })
+        console.log(arg2)
+    }, sdk.DEFAULT_TIMEOUT)
 
 })

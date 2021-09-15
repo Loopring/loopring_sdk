@@ -14,7 +14,7 @@ export enum WsOps {
 export enum WsTopicType {
     account = 'account',
     order = 'order',
-    orderBook = 'orderbook',
+    orderbook = 'orderbook',
     trade = 'trade',
     ticker = 'ticker',
     candlestick = 'candlestick',
@@ -58,12 +58,21 @@ export interface WsOrder {
     market: string
 }
 
-export const getOrderBookArg = (market: string, level: number) => {
-    return {
-        topic: WsTopicType.orderBook,
+export const getOrderBookArg = ({ market, level, count, snapshot, }: {
+    market: string, level: number, count?: number, snapshot?: boolean, }
+    ) => {
+        
+    const obj: any = {
+        topic: WsTopicType.orderbook,
         market,
         level,
+        count,
+        snapshot,
     }
+
+    Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : {})
+
+    return obj
 }
 
 export const getTradeArg = (market: string) => {
