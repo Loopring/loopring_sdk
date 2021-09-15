@@ -7,6 +7,7 @@ import {
     ReqMethod,
     Side,
     MarketStatus,
+    VipCatergory,
 } from '../defs/loopring_enums'
 
 import {
@@ -33,6 +34,7 @@ import {
     GetEthBalancesRequest,
     GetEthNonceRequest,
     GetWithdrawalAgentsRequest,
+    VipFeeRateInfoMap,
 } from '../defs/loopring_defs'
 
 import { AccountInfo } from '../defs/account_defs'
@@ -133,6 +135,28 @@ export class ExchangeAPI extends BaseAPI {
 
         return {
             timestamp,
+            raw_data,
+        }
+    }
+
+    /*
+    * Returns exchange fee info
+    */
+    public async getExchangeFeeInfo() {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_EXCHANGE_FEEINFO,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            orderbookTradingFeesStablecoin: raw_data[VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN] as VipFeeRateInfoMap,
+            orderbookTradingFees: raw_data[VipCatergory.ORDERBOOK_TRADING_FEES] as VipFeeRateInfoMap,
+            ammTradingFees: raw_data[VipCatergory.AMM_TRADING_FEES] as VipFeeRateInfoMap,
+            otherFees: raw_data[VipCatergory.OTHER_FEES] as { [key: string]: string },
             raw_data,
         }
     }

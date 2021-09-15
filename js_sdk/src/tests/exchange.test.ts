@@ -14,6 +14,7 @@ import {
 
 import {
     TradingInterval,
+    VipCatergory,
 } from '../defs/loopring_enums'
 
 import {
@@ -21,7 +22,7 @@ import {
 } from '../defs/loopring_constants'
 
 import { ChainId } from '../defs/web3_defs'
-import { ExchangeAPI, WalletAPI, } from '../api'
+import { ExchangeAPI, } from '../api'
 
 import { loopring_exported_account as acc } from './utils'
 
@@ -34,6 +35,24 @@ describe('ExchangeAPI test', function () {
     beforeEach(() => {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
     })
+
+    it('getExchangeFeeInfo_Mainnet', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
+
+        const response = await api.getExchangeFeeInfo()
+        console.log(response)
+        console.log(response.raw_data[VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN])
+
+    }, DEFAULT_TIMEOUT)
+
+    it('getExchangeFeeInfo_Test', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+
+        const response = await api.getExchangeFeeInfo()
+        console.log(response)
+        console.log(response.raw_data[VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN])
+
+    }, DEFAULT_TIMEOUT)
 
     it('getRecommendedMarkets_MAINNET', async () => {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })

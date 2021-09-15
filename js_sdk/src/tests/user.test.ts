@@ -409,6 +409,20 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getOrdersWithStatus', async () => {
+        try {
+            const request: GetOrdersRequest = {
+                accountId: acc.accountId,
+                status: 'cancelled',
+            }
+            const response = await api.getOrders(request, acc.apiKey)
+            console.log(response.orders[0], response.orders[1], response.orders[2], )
+            console.log(response.totalNum, )
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getOrders', async () => {
         try {
             const request: GetOrdersRequest = {

@@ -9,6 +9,7 @@ export enum LOOPRING_URLs {
     GET_TOKENS = '/api/v3/exchange/tokens',
     GET_EXCHANGE_INFO = '/api/v3/exchange/info',
     GET_WITHDRAWAL_AGENTS = '/api/v3/exchange/withdrawalAgents',
+    GET_EXCHANGE_FEEINFO = '/api/v3/exchange/feeInfo',
 
     GET_MIX_MARKETS = '/api/v3/mix/markets',
     GET_DEPTH = '/api/v3/depth',

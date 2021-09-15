@@ -27,6 +27,14 @@ import {
     OrderTypeResp,
 } from './loopring_enums'
 
+export interface VipFeeRateInfo {
+    symbol: string
+    makerRate: number
+    takerRate: number
+}
+
+export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo }
+
 export interface ReqOptions {
     baseUrl?: string
     apiKey?: string

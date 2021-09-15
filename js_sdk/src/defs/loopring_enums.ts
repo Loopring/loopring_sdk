@@ -15,6 +15,13 @@ export enum MarketStatus {
     ALL = 3,
 }
 
+export enum VipCatergory {
+    ORDERBOOK_TRADING_FEES_STABLECOIN = 'ORDERBOOK_TRADING_FEES_STABLECOIN',
+    ORDERBOOK_TRADING_FEES = 'ORDERBOOK_TRADING_FEES',
+    AMM_TRADING_FEES = 'AMM_TRADING_FEES',
+    OTHER_FEES = 'OTHER_FEES',
+}
+
 export enum TradeChannel {
     BLANK = '',
     ORDER_BOOK = 'ORDER_BOOK', // 0
