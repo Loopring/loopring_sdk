@@ -131,10 +131,27 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const timestamp = raw_data.timestamp
+        return {
+            ...raw_data,
+            raw_data,
+        }
+    }
+
+    /*
+    * Returns Protocol Portrait
+    */
+    public async getProtocolPortrait() {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_PROTOCOL_PORTRAIT,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            timestamp,
+            ...raw_data,
             raw_data,
         }
     }

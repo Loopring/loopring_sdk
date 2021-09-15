@@ -36,6 +36,22 @@ describe('ExchangeAPI test', function () {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
     })
 
+    it('getProtocolPortrait_Mainnet', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.MAINNET })
+
+        const response = await api.getProtocolPortrait()
+        console.log(response)
+
+    }, DEFAULT_TIMEOUT)
+
+    it('getProtocolPortrait_Test', async () => {
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+
+        const response = await api.getProtocolPortrait()
+        console.log(response)
+
+    }, DEFAULT_TIMEOUT)
+
     it('getExchangeFeeInfo_Mainnet', async () => {
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
