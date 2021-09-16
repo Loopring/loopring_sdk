@@ -69,7 +69,6 @@ function getFeeMap(feeArr: any[], type: number = 0) {
         })
     }
 
-
     return feesMap
 }
 
@@ -114,6 +113,28 @@ function genAB(data: any[], isReverse: boolean = false) {
 
     return { ab_arr, ab_prices, amtTotal, volTotal, ab_amtTotals, ab_volTotals, best, }
 
+}
+
+export function getMidPrice({_asks, askReverse, _bids, bidReverse,}: {_asks: any, askReverse?: boolean, _bids: any, bidReverse?: boolean}) {
+
+    if (askReverse === undefined) {
+        askReverse = false
+    }
+
+    if (bidReverse === undefined) {
+        bidReverse = true
+    }
+
+    const bids = genAB(_bids, bidReverse)
+    const asks = genAB(_asks, askReverse)
+
+    const mid_price = (bids.ab_prices[bids.ab_prices.length - 1] + asks.ab_prices[0]) / 2
+
+    return {
+        bids,
+        asks,
+        mid_price,
+    }
 }
 
 export class ExchangeAPI extends BaseAPI {
@@ -562,12 +583,13 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const bids = genAB(raw_data['bids'], true)
-        const asks = genAB(raw_data['asks'])
-
         const timestamp = raw_data['timestamp']
 
-        const mid_price = (bids.ab_prices[bids.ab_prices.length - 1] + asks.ab_prices[0]) / 2
+        const {
+            asks,
+            bids,
+            mid_price,
+        } = getMidPrice({_asks: raw_data['asks'], _bids: raw_data['bids']})
 
         const depth: DepthData = {
             symbol: raw_data.market,
