@@ -13,6 +13,7 @@ import {
 
     DEFAULT_TIMEOUT,
     AmmPoolSnapshot,
+    GetLiquidityMiningRequest,
     GetLiquidityMiningUserHistoryRequest,
 } from '../defs'
 
@@ -115,6 +116,16 @@ describe('AmmpoolAPI test', function () {
             const response = await api.getAmmPoolSnapshot(request)
             console.log(response)
             console.log(response.raw_data.pooled)
+    }, DEFAULT_TIMEOUT)
+
+    it('getLiquidityMining_OK', async () => {
+            const request: GetLiquidityMiningRequest = {
+                accountId: acc.accountId,
+                market: 'LRC-ETH',
+                size: 120,
+            }
+            const response = await api.getLiquidityMining(request, acc.apiKey)
+            console.log(response)
     }, DEFAULT_TIMEOUT)
 
     it('getLiquidityMiningUserHistory_OK', async () => {

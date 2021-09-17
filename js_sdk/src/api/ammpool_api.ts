@@ -28,8 +28,10 @@ import {
     UserAmmPoolTx,
     ReqParams,
     GetAmmAssetRequest,
+    GetLiquidityMiningRequest,
     GetLiquidityMiningUserHistoryRequest,
     UserMiningInfo,
+    RewardItem,
 } from '../defs/loopring_defs'
 
 import { VALID_UNTIL, } from '../defs/loopring_constants'
@@ -397,6 +399,28 @@ export class AmmpoolAPI extends BaseAPI {
 
         return {
             ammpoolsbalances,
+            raw_data,
+        }
+
+    }
+
+    /*
+    */
+    public async getLiquidityMining(request: GetLiquidityMiningRequest, apiKey: string) {
+
+        const reqParams: ReqParams = {
+            queryParams: request,
+            apiKey,
+            url: LOOPRING_URLs.GET_LIQUIDITY_MINING,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            rewards: (raw_data?.data ? raw_data.data as RewardItem[] : []),
+            resultInfo: raw_data.resultInfo,
             raw_data,
         }
 

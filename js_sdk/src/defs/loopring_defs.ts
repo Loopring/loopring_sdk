@@ -39,7 +39,7 @@ export interface ReqOptions {
     baseUrl?: string
     apiKey?: string
     signature?: string
-    
+
     url?: string
 }
 
@@ -62,7 +62,7 @@ export interface ReqParams {
 
         owner?: string
         pwd?: string
-        web3? : any
+        web3?: any
         hasDataStruct?: boolean
     }
     eddsaSignature?: string
@@ -115,10 +115,10 @@ export interface ABInfo {
 
 export interface DepthData {
     symbol: string
-    
+
     version: number
     timestamp: number
-    
+
     mid_price: number
 
     bids: ABInfo[]
@@ -530,6 +530,22 @@ export interface UserAmmPoolTx {
     updatedAt: number
 }
 
+export interface GetLiquidityMiningRequest {
+    accountId: number
+    market: string
+    size: number
+}
+
+export interface RewardItem {
+    startAt: number,
+    timeInterval: string,
+    accountId: number,
+    tokenId: number,
+    market: string,
+    score: number,
+    amount: string
+}
+
 export interface GetLiquidityMiningUserHistoryRequest {
     accountId: number
     start?: number
@@ -549,7 +565,7 @@ export interface GetFiatPriceRequest {
 }
 
 export interface FiatPriceInfo {
-    symbol: string 
+    symbol: string
     price: number
     updatedAt: number
 }
@@ -662,9 +678,9 @@ export interface UserBalanceInfo {
     tokenId: number,
     total: string,
     locked: string,
-    pending: { 
-        withdraw: string, 
-        deposit: string 
+    pending: {
+        withdraw: string,
+        deposit: string
     }
 }
 
@@ -680,17 +696,17 @@ export interface OrderDetail {
     market: string,
     price: string,
     volumes: {
-      baseAmount: string,
-      quoteAmount: string,
-      baseFilled: string,
-      quoteFilled: string,
-      fee: string
+        baseAmount: string,
+        quoteAmount: string,
+        baseFilled: string,
+        quoteFilled: string,
+        fee: string
     },
     validity: { start: number, end: number },
     orderType: OrderTypeResp,
     tradeChannel: TradeChannel,
     status: OrderStatus
-  }
+}
 
 export interface GetUserOrderFeeRateRequest {
     accountId: number
@@ -699,7 +715,7 @@ export interface GetUserOrderFeeRateRequest {
     amountB: string
 }
 
-export interface FeeRateInfo { 
+export interface FeeRateInfo {
     symbol: string
     makerRate: number
     takerRate: number
@@ -1019,7 +1035,7 @@ export interface GetUserTradesRequest {
     fillTypes?: string
 }
 
-export interface UserTrade extends MarketTradeInfo {}
+export interface UserTrade extends MarketTradeInfo { }
 
 export interface UserTrades {
     totalNum: number
@@ -1112,7 +1128,7 @@ export interface SubmitOrderRequestV3 {
      */
 
     tradeChannel?: TradeChannel
-    
+
     taker?: string;
     /**
      * The AMM pool address if order type is AMM

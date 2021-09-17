@@ -58,6 +58,7 @@ export enum LOOPRING_URLs {
     GET_AMMPOOL_USER_REWARDS = '/api/v2/amm/user/rewards',
     GET_AMMPOOL_GAME_RANK = '/api/v2/game/rank',
     GET_AMMPOOL_GAME_USER_RANK = '/api/v2/game/user/rank',
+    GET_LIQUIDITY_MINING = '/api/v2/sidecar/liquidityMining',
     GET_LIQUIDITY_MINING_USER_HISTORY = '/api/v2/sidecar/liquidityMiningUserHistory',
     GET_PROTOCOL_PORTRAIT = '/api/v3/sidecar/ProtocolPortrait',
 
