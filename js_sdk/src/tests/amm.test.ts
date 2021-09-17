@@ -68,11 +68,10 @@ describe('AmmpoolAPI test', function () {
 
     it('getAmmPoolGameRank', async () => {
         api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
-        const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'AMM-VSP-ETH' })
+        const response: any = await api.getAmmPoolGameRank({ ammPoolMarket: 'UNI-ETH' })
         console.log('getAmmPoolGameRank:', response.raw_data)
         console.log('totalRewards:', response.totalRewards)
         console.log('userRankList 1:', response.userRankList[0])
-        console.log('userRankList:', response.userRankList[0].rewards)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmAssetHistory', async () => {
@@ -92,9 +91,10 @@ describe('AmmpoolAPI test', function () {
         api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         const response = await api.getAmmPoolActivityRules()
         console.log('getAmmPoolActivityRules:', response)
+        console.log('getAmmPoolActivityRules:', response.groupByRuleTypeAndStatus)
     }, DEFAULT_TIMEOUT)
 
-    it('getAmmPoolActivityRules', async () => {
+    it('getAmmPoolActivityRules_test', async () => {
         const response = await api.getAmmPoolActivityRules()
         console.log('getAmmPoolActivityRules:', response)
         console.log(response.activityRules['AMM-LRC-ETH'].awardRules)

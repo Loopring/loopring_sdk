@@ -257,13 +257,12 @@ export class AmmpoolAPI extends BaseAPI {
                 } else {
                     ruleMap[status] = [item]
                 }
-    
+
                 groupByRuleTypeAndStatus[item.ruleType] = ruleMap
-    
+
             })
 
         }
-
 
         return {
             activityRules,

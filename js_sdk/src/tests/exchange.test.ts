@@ -22,7 +22,7 @@ import {
 } from '../defs/loopring_constants'
 
 import { ChainId } from '../defs/web3_defs'
-import { ExchangeAPI, } from '../api'
+import { ExchangeAPI, depth2ViewData, } from '../api'
 
 import { loopring_exported_account as acc } from './utils'
 
@@ -322,16 +322,37 @@ describe('ExchangeAPI test', function () {
 
     }, DEFAULT_TIMEOUT)
 
+    it('getMixDepth_test', async () => {
+
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+
+        const request: GetDepthRequest = {
+            market: 'LRC-ETH'
+        }
+
+        const response = await api.getMixDepth(request)
+        // console.log(response)
+
+        const { viewData, } = depth2ViewData({ depth: response.depth, count: 10, })
+        console.log(viewData)
+        console.log(viewData.length)
+
+    }, DEFAULT_TIMEOUT)
+
     it('getMixDepth2', async () => {
 
         api = new ExchangeAPI({ chainId: ChainId.MAINNET })
 
         const request: GetDepthRequest = {
-            market: 'LRC-USDT'
+            market: 'ETH-USDT'
         }
 
         const response = await api.getMixDepth(request)
-        console.log(response)
+        // console.log(response)
+
+        const { viewData, } = depth2ViewData({ depth: response.depth, count: 8, maxWidth: 100, })
+        console.log(viewData)
+        console.log(viewData.length)
 
     }, DEFAULT_TIMEOUT)
 

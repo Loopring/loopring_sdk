@@ -41,6 +41,7 @@ import { AccountInfo } from '../defs/account_defs'
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote } from '../utils/symbol_tools'
+import { toBig } from '../utils'
 
 const SEP = ','
 
@@ -113,6 +114,29 @@ function genAB(data: any[], isReverse: boolean = false) {
 
     return { ab_arr, ab_prices, amtTotal, volTotal, ab_amtTotals, ab_volTotals, best, }
 
+}
+
+export function depth2ViewData({ depth, count, maxWidth, }: { depth: DepthData, count: number, maxWidth?: number }) {
+    
+    const askSlice = depth.asks_amtTotals.slice(0, count)
+    const bidSlice = depth.bids_amtTotals.slice( -count)
+
+    const maxVal = BigNumber.max(toBig(askSlice[askSlice.length - 1]), toBig(bidSlice[0]))
+
+    const totalLst = [ ...bidSlice, ...askSlice, ]
+
+    const viewData = totalLst.map((value: string) => {
+        const percentage = toBig(value).div(maxVal).toNumber()
+        const width = maxWidth ? Math.round(percentage * maxWidth) : 0
+        return {
+            percentage,
+            width,
+        }
+    })
+
+    return {
+        viewData,
+    }
 }
 
 export function getMidPrice({_asks, askReverse, _bids, bidReverse,}: {_asks: any, askReverse?: boolean, _bids: any, bidReverse?: boolean}) {
