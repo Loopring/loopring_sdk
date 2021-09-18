@@ -116,42 +116,6 @@ function genAB(data: any[], isReverse: boolean = false) {
 
 }
 
-export function depth2ViewData({ depth, count, maxWidth, }: { depth: DepthData, count: number, maxWidth?: number }) {
-    
-    let askSlice = depth.asks_amtTotals.slice(0, count)
-    let bidSlice = depth.bids_amtTotals.slice(-count)
-
-    // console.log('ask:', askSlice)
-    // console.log('bid:', bidSlice)
-
-    const maxVal = BigNumber.max(toBig(askSlice[askSlice.length - 1]), toBig(bidSlice[0]))
-
-    if (askSlice.length < count) {
-        const lastV = askSlice[askSlice.length - 1]
-        askSlice = askSlice.concat(new Array(count - askSlice.length).fill(lastV))
-    }
-
-    if (bidSlice.length < count) {
-        const lastV = bidSlice[0]
-        bidSlice = new Array(count - bidSlice.length).fill(lastV).concat(bidSlice)
-    }
-
-    const totalLst = [ ...bidSlice, ...askSlice, ]
-
-    const viewData = totalLst.map((value: string) => {
-        const percentage = maxVal.eq(toBig(0)) ? toBig(value).div(maxVal).toNumber() : 0
-        const width = maxWidth ? Math.round(percentage * maxWidth) : 0
-        return {
-            percentage,
-            width,
-        }
-    })
-
-    return {
-        viewData,
-    }
-}
-
 export function getMidPrice({_asks, askReverse, _bids, bidReverse,}: {_asks: any, askReverse?: boolean, _bids: any, bidReverse?: boolean}) {
 
     if (askReverse === undefined) {

@@ -92,7 +92,7 @@ describe('AmmpoolAPI test', function () {
         api = new AmmpoolAPI({ chainId: ChainId.MAINNET })
         const response = await api.getAmmPoolActivityRules()
         console.log('getAmmPoolActivityRules:', response)
-        console.log('getAmmPoolActivityRules:', response.groupByRuleTypeAndStatus)
+        console.log('getAmmPoolActivityRules:', response.groupByRuleTypeAndStatus.ORDERBOOK_MINING)
     }, DEFAULT_TIMEOUT)
 
     it('getAmmPoolActivityRules_test', async () => {
