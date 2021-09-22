@@ -491,10 +491,36 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
-    it('getUserDepositHistory', async () => {
+    it('getUserDepositHistory1', async () => {
         try {
             const request: GetUserDepositHistoryRequest = {
                 accountId: acc.accountId,
+            }
+
+            const response = await api.getUserDepositHistory(request, acc.apiKey)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserDepositHistory2', async () => {
+        try {
+            const request: GetUserDepositHistoryRequest = {
+                hashes: '0x12da333f6e15724890876adc0dd42dc9d06d986c8175195912f388105e6001d8',
+            }
+
+            const response = await api.getUserDepositHistory(request, acc.apiKey)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserDepositHistory3_txHash_not_found', async () => {
+        try {
+            const request: GetUserDepositHistoryRequest = {
+                hashes: '0x492eb235e575a5e88f5db517b5ca32b717dfb862b9ab7b5f3d7af6ee48688250',
             }
 
             const response = await api.getUserDepositHistory(request, acc.apiKey)
@@ -534,6 +560,19 @@ describe('UserAPI test', function () {
         try {
             const request: GetUserTransferListRequest = {
                 accountId: acc.accountId,
+            }
+
+            const response = await api.getUserTranferList(request, acc.apiKey)
+            console.log(response)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserTranferList2', async () => {
+        try {
+            const request: GetUserTransferListRequest = {
+                hashes: '0x15e95faf3d836e3210dc90cd6edab51504c66107d416cc8d754cd2fc3d7086b3,0x165ff32e57ba1afbaf2808ed4a3d1fa774ae88120aa8526b5cb2f3f209c7b4f2',
             }
 
             const response = await api.getUserTranferList(request, acc.apiKey)
