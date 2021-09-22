@@ -14,7 +14,7 @@ describe('WsAPI test', function () {
     }, sdk.DEFAULT_TIMEOUT)
 
     it('getOrderBookArg', async () => {
-        const arg1 = sdk.getOrderBookArg({market: 'LRC-ETH', level: 50, })
+        const arg1 = sdk.getMixOrderArg({market: 'LRC-ETH', level: 50, })
         console.log(arg1)
 
         const arg2 = sdk.getOrderBookArg({market: 'LRC-ETH', level: 50, count: 40, snapshot: false, })

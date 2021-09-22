@@ -15,6 +15,7 @@ export enum WsTopicType {
     account = 'account',
     order = 'order',
     orderbook = 'orderbook',
+    mixorder = 'mixorder',
     trade = 'trade',
     ticker = 'ticker',
     candlestick = 'candlestick',
@@ -58,12 +59,18 @@ export interface WsOrder {
     market: string
 }
 
-export const getOrderBookArg = ({ market, level, count, snapshot, showOverlap, }: {
+export const getMixOrderArg = ({ market, level, count, snapshot, showOverlap, }: {
     market: string, level: number, count?: number, snapshot?: boolean, showOverlap?: boolean, }
     ) => {
-        
+    return getOrderBookArg({ topic: WsTopicType.mixorder, market, level, count, snapshot, showOverlap, })
+}
+
+export const getOrderBookArg = ({ topic = WsTopicType.orderbook, market, level, count, snapshot, showOverlap, }: {
+    topic?: string, market: string, level: number, count?: number, snapshot?: boolean, showOverlap?: boolean, }
+    ) => {
+
     const obj: any = {
-        topic: WsTopicType.orderbook,
+        topic,
         market,
         level,
         count,
