@@ -517,6 +517,19 @@ describe('UserAPI test', function () {
         }
     }, DEFAULT_TIMEOUT)
 
+    it('getUserOnchainWithdrawalHistoryWithHashes', async () => {
+        try {
+            const request: GetUserOnchainWithdrawalHistoryRequest = {
+                hashes: '0x13ef7d02f584d63522c87fb1399703fa799b1e87688742613cd8eb39ef020e26,0x19d8091e9f9baaf6986aba37093353ef1e894c9ea111122c378b01e7cf41bb8e'
+            }
+
+            const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
+            console.log(response.userOnchainWithdrawalHistory)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
     it('getUserTranferList', async () => {
         try {
             const request: GetUserTransferListRequest = {

@@ -877,7 +877,8 @@ export interface UserPwdResetTx extends UserRegTx {
 }
 
 export interface GetUserDepositHistoryRequest {
-    accountId: number
+    accountId?: number
+    hashes?: string
     start?: number
     end?: number
     status?: string
@@ -919,7 +920,8 @@ export interface UserOnchainWithdrawalHistoryTx {
 }
 
 export interface GetUserOnchainWithdrawalHistoryRequest {
-    accountId: number
+    accountId?: number
+    hashes?: string
     start?: number
     end?: number
     status?: string
@@ -930,7 +932,8 @@ export interface GetUserOnchainWithdrawalHistoryRequest {
 }
 
 export interface GetUserTransferListRequest {
-    accountId: number
+    accountId?: number
+    hashes?: string
     start?: number
     end?: number
     status?: string
