@@ -58,8 +58,8 @@ export interface WsOrder {
     market: string
 }
 
-export const getOrderBookArg = ({ market, level, count, snapshot, }: {
-    market: string, level: number, count?: number, snapshot?: boolean, }
+export const getOrderBookArg = ({ market, level, count, snapshot, showOverlap, }: {
+    market: string, level: number, count?: number, snapshot?: boolean, showOverlap?: boolean, }
     ) => {
         
     const obj: any = {
@@ -68,6 +68,7 @@ export const getOrderBookArg = ({ market, level, count, snapshot, }: {
         level,
         count,
         snapshot,
+        showOverlap,
     }
 
     Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : {})
