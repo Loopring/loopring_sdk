@@ -471,8 +471,8 @@ export function getOutputAmount({input, sell, buy, isAtoB, marketArr, tokenMap, 
 
     let amountBOut = '0'
 
-    let baseAmt = '0'
-    let quoteAmt = '0'
+    let sellAmt = '0'
+    let buyAmt = '0'
 
     let minimumDecimal = 0
 
@@ -519,8 +519,8 @@ export function getOutputAmount({input, sell, buy, isAtoB, marketArr, tokenMap, 
 
         amountS = toWEI(tokenMap, sell, input, 0)
 
-        baseAmt = input
-        quoteAmt = output
+        sellAmt = input
+        buyAmt = output
 
     } else {
 
@@ -569,8 +569,8 @@ export function getOutputAmount({input, sell, buy, isAtoB, marketArr, tokenMap, 
 
         // console.log('got amountSBint:', amountSBint.toString(), amountSBint.gt(BIG0), ' amountBOut:', amountBOut.toString())
 
-        baseAmt = output
-        quoteAmt = input
+        sellAmt = output
+        buyAmt = input
 
     }
     
@@ -593,8 +593,8 @@ export function getOutputAmount({input, sell, buy, isAtoB, marketArr, tokenMap, 
 
         output,
 
-        baseAmt,
-        quoteAmt,
+        sellAmt,
+        buyAmt,
 
         amountS,
 
