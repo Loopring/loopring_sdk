@@ -941,4 +941,14 @@ export class ExchangeAPI extends BaseAPI {
 
     }
 
+    public async checkIpValid(ipAddr: string, mockBool?: boolean) {
+
+        const isIpValid = mockBool !== undefined ? mockBool : true
+
+        return {
+            isIpValid,
+        }
+
+    }
+
 }

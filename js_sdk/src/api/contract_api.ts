@@ -81,8 +81,8 @@ export async function sign(web3: Web3, account: string, hash: string) {
     if (response['result']) {
         return response;
     } else {
-        const error = response['error']['message']
-        console.error('sendTransaction got error:', response['error'])
+        const error = response['error']
+        console.log(response)
         throw new Error(error)
     }
 }
