@@ -87,7 +87,7 @@ describe('WalletApi', function () {
             console.log(response.tokenPrices[addr])
         }
 
-        const response2 = await walletApi.getLatestTokenPrices( { currency: Currency.CNY })
+        const response2 = await walletApi.getLatestTokenPrices( { currency: Currency.cny })
 
         if (tokens && response2) {
             const addr = tokens.tokenSymbolMap['UNI'].address
@@ -99,7 +99,7 @@ describe('WalletApi', function () {
     it('getLatestTokenPrices_cny', async () => {
         try {
 
-            const response = await api.getLatestTokenPrices({ currency: Currency.CNY, })
+            const response = await api.getLatestTokenPrices({ currency: Currency.cny, })
             console.log(response)
         } catch (reason) {
             dumpError400(reason)

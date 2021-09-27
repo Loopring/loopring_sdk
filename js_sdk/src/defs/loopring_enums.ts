@@ -44,8 +44,8 @@ export enum OrderTypeResp {
 }
 
 export enum Currency {
-    USD = 'usd',
-    CNY = 'cny',
+    usd = 'usd',
+    cny = 'cny',
 }
 
 export enum OffchainFeeReqType {
