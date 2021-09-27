@@ -72,4 +72,6 @@ export enum LOOPRING_URLs {
     GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',
     GET_LATEST_TOKEN_PRICES = '/api/wallet/v3/latestTokenPrices',
 
+    GET_ACCOUNT_SERVICES = '/api/v2/spi/getAccountServices',
+
 }

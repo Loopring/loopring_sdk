@@ -34,6 +34,7 @@ import {
     GetEthBalancesRequest,
     GetEthNonceRequest,
     GetWithdrawalAgentsRequest,
+    GetAccountServicesRequest,
     VipFeeRateInfoMap,
 } from '../defs/loopring_defs'
 
@@ -41,7 +42,6 @@ import { AccountInfo } from '../defs/account_defs'
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote } from '../utils/symbol_tools'
-import { toBig } from '../utils'
 
 const SEP = ','
 
@@ -941,12 +941,24 @@ export class ExchangeAPI extends BaseAPI {
 
     }
 
-    public async checkIpValid(ipAddr: string, mockBool?: boolean) {
+    public async getAccountServices(request: GetAccountServicesRequest) {
 
-        const isIpValid = mockBool !== undefined ? mockBool : true
+        const reqParams: ReqParams = {
+            queryParams: request,
+            url: LOOPRING_URLs.GET_ACCOUNT_SERVICES,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            isIpValid,
+            register: raw_data?.data?.register,
+            order: raw_data?.data?.order,
+            joinAmm: raw_data?.data?.joinAmm,
+            dAppTrade: raw_data?.data?.dAppTrade,
+
+            raw_data,
         }
 
     }

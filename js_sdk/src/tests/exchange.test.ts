@@ -10,6 +10,7 @@ import {
     GetEthBalancesRequest,
     GetEthNonceRequest,
     GetWithdrawalAgentsRequest,
+    GetAccountServicesRequest,
 } from '../defs/loopring_defs'
 
 import {
@@ -306,7 +307,7 @@ describe('ExchangeAPI test', function () {
     it('getTokens', async () => {
         const response = await api.getTokens()
         console.log(response)
-        console.log(response.raw_data[0].orderAmounts)
+        console.log(response.raw_data[0])
     }, DEFAULT_TIMEOUT)
 
     it('getDepth', async () => {
@@ -451,6 +452,17 @@ describe('ExchangeAPI test', function () {
             limit: 96,
         }
         const response = await api.getCandlestick(request)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getAccountServices', async () => {
+        
+        api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+        
+        const req: GetAccountServicesRequest = {
+        }
+
+        const response = await api.getAccountServices(req)
         console.log(response)
     }, DEFAULT_TIMEOUT)
 

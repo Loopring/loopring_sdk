@@ -169,11 +169,17 @@ export interface TokenInfo {
     address: string
     decimals: number
     precision: number
+    precisionForOrder: number
     orderAmounts: {
         minimum: string
         maximum: string
         dust: string
-    }
+    },
+    luckyTokenAmounts: {
+        minimum: string
+        maximum: string
+        dust: string
+    },
     fastWithdrawLimit: string
     gasAmounts: {
         distribution: string
@@ -1443,4 +1449,10 @@ export interface UpdateAccountRequestV3WithPatch {
     chainId: ChainId
     walletType: ConnectorNames
     isHWAddr?: boolean
+}
+
+export interface GetAccountServicesRequest {
+    phone?: string
+    email?: string
+    wallet?: string
 }
