@@ -442,6 +442,8 @@ describe('ExchangeAPI test', function () {
         }
         const response = await api.getMixCandlestick(request)
         console.log(response)
+        console.log(response.raw_data.candlesticks.length)
+        console.log(response.candlesticks.length)
     }, DEFAULT_TIMEOUT)
 
     it('getCandlestick', async () => {

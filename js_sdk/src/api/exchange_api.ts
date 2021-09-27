@@ -8,6 +8,7 @@ import {
     Side,
     MarketStatus,
     VipCatergory,
+    TradingInterval,
 } from '../defs/loopring_enums'
 
 import {
@@ -116,7 +117,7 @@ function genAB(data: any[], isReverse: boolean = false) {
 
 }
 
-export function getMidPrice({_asks, askReverse, _bids, bidReverse,}: {_asks: any, askReverse?: boolean, _bids: any, bidReverse?: boolean}) {
+export function getMidPrice({ _asks, askReverse, _bids, bidReverse, }: { _asks: any, askReverse?: boolean, _bids: any, bidReverse?: boolean }) {
 
     if (askReverse === undefined) {
         askReverse = false
@@ -590,7 +591,7 @@ export class ExchangeAPI extends BaseAPI {
             asks,
             bids,
             mid_price,
-        } = getMidPrice({_asks: raw_data['asks'], _bids: raw_data['bids']})
+        } = getMidPrice({ _asks: raw_data['asks'], _bids: raw_data['bids'] })
 
         const depth: DepthData = {
             symbol: raw_data.market,
@@ -642,24 +643,24 @@ export class ExchangeAPI extends BaseAPI {
 
         if (raw_data instanceof Array) {
             raw_data.forEach((item: any, ind: number, arr: any) => {
-    
+
                 const open = parseFloat(item[4])
                 const close = parseFloat(item[7])
-    
+
                 const symbol = item[0].replace('COMBINE-', '')
-    
+
                 const {
                     base,
                     quote,
                 } = getBaseQuote(symbol)
-    
+
                 let change = 0
                 if (!isNaN(open) && !isNaN(close)) {
                     change = (close - open) / open
                 }
-    
+
                 const timestamp = parseInt(item[1])
-    
+
                 const tick: TickerData = {
                     symbol,
                     base,
@@ -678,7 +679,7 @@ export class ExchangeAPI extends BaseAPI {
                     quote_fee_amt: checkAmt(item[12]),
                     change,
                 }
-    
+
                 tickMap[symbol] = tick
                 tickList.push(tick)
             })
@@ -746,24 +747,121 @@ export class ExchangeAPI extends BaseAPI {
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
+        let tsStep = 60000
+
+        switch (request.interval) {
+            case TradingInterval.min1:
+                break
+            case TradingInterval.min5:
+                tsStep = 300000
+                break
+            case TradingInterval.min15:
+                tsStep = 900000
+                break
+            case TradingInterval.min30:
+                tsStep = 1800000
+                break
+            case TradingInterval.hr1:
+                tsStep = 3600000
+                break
+            case TradingInterval.hr2:
+                tsStep = 7200000
+                break
+            case TradingInterval.hr4:
+                tsStep = 14400000
+                break
+            case TradingInterval.hr12:
+                tsStep = 43200000
+                break
+            case TradingInterval.d1:
+                tsStep = 86400000
+                break
+            case TradingInterval.w1:
+                tsStep = 604800000
+                break
+            default:
+                break
+        }
+
         var candlesticks: Candlestick[] = []
 
         if (raw_data?.candlesticks instanceof Array) {
-            raw_data.candlesticks.forEach((item: any) => {
-                const candlestick: Candlestick = {
-                    timestamp: parseInt(item[0]),
-                    txs: parseInt(item[1]),
-                    open: parseFloat(item[2]),
-                    close: parseFloat(item[3]),
-                    high: parseFloat(item[4]),
-                    low: parseFloat(item[5]),
-                    baseVol: item[6],
-                    quoteVol: item[7],
+            const rawCandlesticks = raw_data.candlesticks.reverse()
+
+            let lastCandlestick: Candlestick | undefined = undefined
+            let lastTs: number = -1
+            
+            rawCandlesticks.forEach((item: any) => {
+                const curTs = parseInt(item[0])
+
+                if (lastCandlestick === undefined) {
+                    lastTs = curTs
+
+                    const candlestick: Candlestick = {
+                        timestamp: curTs,
+                        txs: parseInt(item[1]),
+                        open: parseFloat(item[2]),
+                        close: parseFloat(item[3]),
+                        high: parseFloat(item[4]),
+                        low: parseFloat(item[5]),
+                        baseVol: item[6],
+                        quoteVol: item[7],
+                    }
+
+                    lastCandlestick = candlestick
+
+                    candlesticks.push(candlestick)
+
+                } else {
+
+                    const counter = (curTs - lastTs) / tsStep
+    
+                    // console.log('counter:', curTs, lastTs, counter)
+    
+                    for (let i = 1; i <= counter; i++) {
+
+                        let candlestick: Candlestick
+
+                        if (i === counter) {
+
+                            candlestick = {
+                                timestamp: lastTs + i * tsStep,
+                                txs: parseInt(item[1]),
+                                open: parseFloat(item[2]),
+                                close: parseFloat(item[3]),
+                                high: parseFloat(item[4]),
+                                low: parseFloat(item[5]),
+                                baseVol: item[6],
+                                quoteVol: item[7],
+                            }
+    
+                            lastTs = curTs
+                            lastCandlestick = candlestick
+
+                        } else {
+
+                            candlestick = {
+                                timestamp: lastTs + i * tsStep,
+                                txs: 0,
+                                open: lastCandlestick.close,
+                                close: lastCandlestick.close,
+                                high: lastCandlestick.close,
+                                low: lastCandlestick.close,
+                                baseVol: '0',
+                                quoteVol: '0',
+                            }
+
+                        }
+
+                        candlesticks.push(candlestick)
+    
+                    }
+
                 }
-                candlesticks.push(candlestick)
             })
         }
 
+        candlesticks = candlesticks.reverse()
 
         return {
             candlesticks,
