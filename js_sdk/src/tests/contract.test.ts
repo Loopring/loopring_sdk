@@ -27,7 +27,13 @@ const lrc = {
     "address": "0xfc28028d9b1f6966fe74710653232972f50673be",
     "decimals": 18,
     "precision": 6,
+    precisionForOrder: 6,
     "orderAmounts": {
+        "minimum": "1000000000000000000",
+        "maximum": "100000000000000000000000",
+        "dust": "10000000000000000000"
+    },
+    luckyTokenAmounts: {
         "minimum": "1000000000000000000",
         "maximum": "100000000000000000000000",
         "dust": "10000000000000000000"
@@ -49,10 +55,16 @@ const eth = {
     "address": "0x0000000000000000000000000000000000000000",
     "decimals": 18,
     "precision": 7,
+    precisionForOrder: 6,
     "orderAmounts": {
         "minimum": "1000000000000000",
         "maximum": "10000000000000000000",
         "dust": "10000000000000000"
+    },
+    luckyTokenAmounts: {
+        "minimum": "1000000000000000000",
+        "maximum": "100000000000000000000000",
+        "dust": "10000000000000000000"
     },
     "fastWithdrawLimit": "20000000000000000000",
     "gasAmounts": {
