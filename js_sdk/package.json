@@ -1,7 +1,7 @@
 {
-  "name": "loopring-sdk",
-  "version": "0.0.143",
-  "author": "leochan007",
+  "name": "@loopring-web/loopring-sdk",
+  "version": "0.1.1",
+  "author": "SylvanasGone",
   "description": "Loopring SDK",
   "private": false,
   "license": "GPL-3.0",

@@ -72,7 +72,7 @@ export enum LOOPRING_URLs {
     GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',
     GET_LATEST_TOKEN_PRICES = '/api/wallet/v3/latestTokenPrices',
 
-    GET_ACCOUNT_SERVICES = '/api/v2/spi/getAccountServices',
+    GET_ACCOUNT_SERVICES = '/api/v3/spi/getAccountServices',
 
     // NFT
     GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances', 
