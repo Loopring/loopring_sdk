@@ -873,4 +873,27 @@ export class UserAPI extends BaseAPI {
 
     }
 
+
+    // Get users NFT balance, besides amount, it also includes tokenId and nftData
+
+    public async getUserNFTBalances(request: loopring_defs.GetUserNFTBalancesRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_BALANCES,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
+            raw_data,
+        }
+
+    }
+
 }

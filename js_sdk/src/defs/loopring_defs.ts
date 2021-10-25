@@ -1456,3 +1456,29 @@ export interface GetAccountServicesRequest {
     email?: string
     wallet?: string
 }
+
+// NFT
+
+export interface GetUserNFTBalancesRequest {
+    accountId: number
+    nftDatas?:string
+    tokenAddrs?:string
+    tokenIds?:string
+    offset?:number
+    limit?:number
+    nonZero?:boolean
+}
+
+export interface UserNFTBalanceInfo {
+    accountId: number,
+    tokenId: number,
+    nftData?: string,
+    tokenAddress?:string,
+    nftId?:string,
+    total?:string,
+    locked?:string,
+    pending: {
+        withdraw: string,
+        deposit: string
+    }
+}

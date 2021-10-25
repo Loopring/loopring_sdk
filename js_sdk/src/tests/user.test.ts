@@ -26,6 +26,7 @@ import {
     GetUserTxsRequest,
     SetReferrerRequest,
     CancelOrderRequest,
+    GetUserNFTBalancesRequest,
 } from '../defs/loopring_defs'
 
 import {
@@ -1066,6 +1067,19 @@ describe('UserAPI test', function () {
             const res = await api.cancelOrder(req, eddsakey.sk, acc.apiKey)
 
             console.log('cancel res:', res)
+        } catch (reason) {
+            dumpError400(reason)
+        }
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserNFTBalances', async () => {
+        try {
+            const request: GetUserNFTBalancesRequest = {
+                accountId: acc.accountId,
+            }
+
+            const response = await api.getUserNFTBalances(request, acc.apiKey)
+            console.log(response)
         } catch (reason) {
             dumpError400(reason)
         }

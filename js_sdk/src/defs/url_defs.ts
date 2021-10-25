@@ -74,4 +74,8 @@ export enum LOOPRING_URLs {
 
     GET_ACCOUNT_SERVICES = '/api/v2/spi/getAccountServices',
 
+    // NFT
+    GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances', 
+
+
 }
