@@ -982,6 +982,12 @@ export interface GetUserAssetsRequest {
     offset?: number
 }
 
+export interface GetUserTradeAmount {
+    accountId: number;
+    markets?: string;
+    limit?: number;
+}
+
 export interface TokenPriceInfo {
     price: string
     createdAt: number
@@ -1481,4 +1487,16 @@ export interface UserNFTBalanceInfo {
         withdraw: string,
         deposit: string
     }
+}
+
+export interface GetUserVIPInfoRequest {
+    address: string;
+}
+
+export interface getUserVIPAssetsRequest {
+    address: string;
+    currency?: string;
+    assetTypes?: string;
+    token?: string;
+    limit?: number;
 }

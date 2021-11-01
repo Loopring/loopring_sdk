@@ -51,7 +51,7 @@ export class WalletAPI extends BaseAPI {
     /*
     * Get user trade amount
     */
-    public async getUserTradeAmount(request: loopring_defs.GetUserAssetsRequest) {
+    public async getUserTradeAmount(request: loopring_defs.GetUserTradeAmount) {
 
         const reqParams: ReqParams = {
             url: LOOPRING_URLs.GET_USER_TRADE_AMOUNT,
@@ -60,6 +60,8 @@ export class WalletAPI extends BaseAPI {
             sigFlag: SIG_FLAG.NO_SIG,
         }
         const raw_data = (await this.makeReq().request(reqParams)).data
+
+        console.log({raw_data})
 
         return {
             raw_data,

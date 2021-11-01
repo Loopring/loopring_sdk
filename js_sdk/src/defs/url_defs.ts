@@ -80,4 +80,6 @@ export enum LOOPRING_URLs {
 
     // VIP
     GET_USER_VIP_INFO = '/api/v3/user/vipInfo',
+    // VIP calc assets
+    GET_USER_VIP_ASSETS = '/api/v3/datacenter/getUserAssets',
 }
