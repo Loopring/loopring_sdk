@@ -896,4 +896,20 @@ export class UserAPI extends BaseAPI {
 
     }
 
+    public async getUserVipInfo(request: loopring_defs.GetUserNFTBalancesRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_VIP_INFO,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+    }
 }
