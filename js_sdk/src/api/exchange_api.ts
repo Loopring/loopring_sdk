@@ -1051,11 +1051,10 @@ export class ExchangeAPI extends BaseAPI {
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
-            register: raw_data?.data?.register,
-            order: raw_data?.data?.order,
-            joinAmm: raw_data?.data?.joinAmm,
-            dAppTrade: raw_data?.data?.dAppTrade,
-
+            register: raw_data?.register,
+            order: raw_data?.order,
+            joinAmm: raw_data?.joinAmm,
+            dAppTrade: raw_data?.dAppTrade,
             raw_data,
         }
 
