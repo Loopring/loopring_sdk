@@ -1490,7 +1490,7 @@ export interface UserNFTBalanceInfo {
 }
 
 export interface GetUserVIPInfoRequest {
-    address: string;
+    userAddress: string;
 }
 
 export interface getUserVIPAssetsRequest {
