@@ -49,6 +49,26 @@ export class WalletAPI extends BaseAPI {
     }
 
     /*
+    * Get user trade amount
+    */
+    public async getUserTradeAmount(request: loopring_defs.GetUserTradeAmount) {
+
+        const reqParams: ReqParams = {
+            url: LOOPRING_URLs.GET_USER_TRADE_AMOUNT,
+            queryParams: request,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        console.log({raw_data})
+
+        return {
+            raw_data,
+        }
+    }
+
+    /*
     * Get token prices
     * e.g. http://api3.loopring.io/api/wallet/v3/tokenPrices?token=0xdac17f958d2ee523a2206206994597c13d831ec7&intervalType=1&limit=30&currency=CNY
     */

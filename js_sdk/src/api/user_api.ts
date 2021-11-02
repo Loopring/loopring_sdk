@@ -896,4 +896,43 @@ export class UserAPI extends BaseAPI {
 
     }
 
+    public async getUserVIPAssets(request: loopring_defs.getUserVIPAssetsRequest) {
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_VIP_ASSETS,
+            queryParams: request,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+        
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data,
+        }
+    }
+
+    public async getUserVIPInfo(request: loopring_defs.GetUserVIPInfoRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_VIP_INFO,
+            queryParams: request,
+            method: ReqMethod.GET,
+            apiKey: apiKey,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        const vipInfo = {
+            createdAt: raw_data.created_at,
+            validTo: raw_data.valid_to,
+            org: raw_data.org,
+            vipTag: raw_data.vip_tag,
+        }
+
+        return {
+            vipInfo,
+            raw_data,
+        }
+    }
 }
