@@ -21,7 +21,7 @@ import {
   AmmPoolRequestPatch,
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
-  OffChainWithdrawalRequestV3,
+  OffChainWithdrawalRequestV3, OriginNFTTransferRequestV3,
   OriginTransferRequestV3,
   PublicKey,
   UpdateAccountRequestV3,
@@ -201,9 +201,10 @@ export function getEdDSASig(method: string, basePath: string, api_url: string, r
 export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefined) => {
 
   const hasher = Poseidon.createHash(inputs.length + 1, 6, 53)
+  // myLog('getEdDSASigWithPoseidon *16 hash:', hasher(inputs).toString(16))
   const hash = hasher(inputs).toString(10)
 
-  // console.log('getEdDSASigWithPoseidon hash:', hash)
+  // myLog('getEdDSASigWithPoseidon hash:', hash)
 
   return genSigWithPadding(PrivateKey, hash)
 
@@ -543,6 +544,25 @@ export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey
 
 }
 
+export function get_EddsaSig_NFT_Transfer(request: OriginNFTTransferRequestV3, eddsaKey: string) {
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.fromAccountId,
+    request.toAccountId,
+    request.token.tokenId,
+    request.token.amount,
+    request.maxFee.tokenId,
+    request.maxFee.amount,
+    new BN(ethUtil.toBuffer(request.toAddress)).toString(),
+    0,
+    0,
+    request.validUntil,
+    request.storageId,
+  ];
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+
+}
+
 export function getTransferTypedData(data: OriginTransferRequestV3, chainId: ChainId): EIP712TypedData {
 
   let message = {
@@ -586,6 +606,7 @@ export function getTransferTypedData(data: OriginTransferRequestV3, chainId: Cha
   return typedData
 }
 
+
 export async function signTransferWithDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3, chainId: ChainId,) {
   const typedData = getTransferTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.HasDataStruct)
@@ -604,6 +625,74 @@ export async function signTransferWithDataStructureForContract(web3: Web3, owner
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.Contract)
   return result
 }
+export function getNFTTransferTypedData(data: OriginNFTTransferRequestV3, chainId: ChainId): EIP712TypedData {
+
+  let message = {
+    from: data.fromAddress,
+    to: data.toAddress,
+    tokenID: data.token.tokenId,
+    amount: data.token.amount,
+    feeTokenID: data.maxFee.tokenId,
+    maxFee: data.maxFee.amount,
+    validUntil: data.validUntil,
+    storageID: data.storageId,
+  };
+  const typedData: EIP712TypedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      Transfer: [
+        { name: 'from', type: 'address' },
+        { name: 'to', type: 'address' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
+      ],
+    },
+    primaryType: 'Transfer',
+    domain: {
+      name: 'Loopring Protocol',
+      version: '3.6.0',
+      chainId: chainId,
+      verifyingContract: data.exchange,
+    },
+    message: message,
+  };
+  return typedData
+}
+
+export async function signTNFTransferWithDataStructure(web3: Web3, owner: string, bodyParams: OriginNFTTransferRequestV3, chainId: ChainId,) {
+  const typedData = getNFTTransferTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.HasDataStruct)
+  return result
+}
+
+export async function signNFTTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginNFTTransferRequestV3,
+                                                       chainId: ChainId, walletType: ConnectorNames) {
+  const typedData: any = getNFTTransferTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
+  return result
+}
+// export async function signNFTTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3,
+//                                                        chainId: ChainId, walletType: ConnectorNames) {
+//   const typedData: any = getTransferTypedData(bodyParams, chainId)
+//   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
+//   return result
+// }
+
+export async function signNFTTransferWithDataStructureForContract(web3: Web3, owner: string, bodyParams: OriginNFTTransferRequestV3, chainId: ChainId) {
+  const typedData = getNFTTransferTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.Contract)
+  return result
+}
+
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData))

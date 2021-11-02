@@ -8,3 +8,4 @@ export * from './whitelisted_user_api'
 
 export * from './contract_api'
 export * from './sign/sign_tools'
+export * from './nft_api'

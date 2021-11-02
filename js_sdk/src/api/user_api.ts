@@ -15,6 +15,9 @@ import { ConnectorNames } from '../defs/web3_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
+import { OriginNFTTransferRequestV3WithPatch } from '../defs/loopring_defs';
+import { get_EddsaSig_NFT_Transfer } from './sign/sign_tools';
+
 
 export function genErr(err: any) {
 
@@ -594,6 +597,39 @@ export class UserAPI extends BaseAPI {
         }
 
     }
+    /*
+   * Query current NFT fee amount
+   */
+    //TODO：UT
+    public async getNFTOffchainFeeAmt(request: loopring_defs.GetNFTOffchainFeeAmtRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_NFT_OFFCHAIN_FEE_AMT,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        // const gasPrice = parseInt(raw_data.gasPrice)
+        //
+        let fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {}
+        //
+        if (raw_data?.fees instanceof Array) {
+            raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
+                fees[item.token] = item
+            })
+        }
+
+        return {
+            fees,
+            // gasPrice,
+            raw_data,
+        }
+
+    }
 
     private returnTxHash(raw_data: any) {
 
@@ -756,6 +792,85 @@ export class UserAPI extends BaseAPI {
     
             const raw_data = (await this.makeReq().request(reqParams)).data
         
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+
+        }
+
+        return {
+            ...this.returnTxHash(undefined),
+            errorInfo,
+        }
+
+    }
+
+
+    /*
+    * Submit NFT withdraw request
+    */
+    public async submitNFTInTransfer(req: loopring_defs.OriginNFTTransferRequestV3WithPatch) {
+
+        const { request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+
+        const isHWAddr = !!isHWAddrOld
+
+        let ecdsaSignature = undefined
+
+        let errorInfo = undefined
+
+        const sigHW = async () => {
+            const result = (await sign_tools.signNFTTransferWithoutDataStructure(web3, request.fromAddress, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+        }
+
+        if (walletType === ConnectorNames.MetaMask) {
+
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signTNFTransferWithDataStructure(web3, request.fromAddress, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                }
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
+
+        } else {
+
+            const isContractCheck = await isContract(web3, request.fromAddress)
+
+            if (isContractCheck) {
+                // signOffchainWithdrawWithDataStructureForContract
+                // console.log('3. signTransferWithDataStructureForContract')
+                const result = (await sign_tools.signNFTTransferWithDataStructureForContract(web3, request.fromAddress, request, chainId))
+                ecdsaSignature = result.ecdsaSig
+                // console.log('3. result.ecdsaSig:', result.ecdsaSig)
+            } else {
+                await sigHW()
+            }
+
+        }
+        // console.log('ecdsaSignature:', ecdsaSignature)
+
+        if (!errorInfo) {
+
+            request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey)
+
+            const reqParams: loopring_defs.ReqParams = {
+                url: LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
+                bodyParams: request,
+                apiKey,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+
+            const raw_data = (await this.makeReq().request(reqParams)).data
+
             return {
                 ...this.returnTxHash(raw_data),
                 errorInfo,
