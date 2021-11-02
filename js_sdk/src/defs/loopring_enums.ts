@@ -59,6 +59,11 @@ export enum OffchainFeeReqType {
     DEPOSIT,
     AMM_JOIN,
 }
+export enum OffchainNFTFeeReqType {
+    NFT_MINT=9,
+    NFT_WITHDRAWAL,
+    NFT_TRANSFER
+}
 
 export enum TradingInterval {
     min1 = '1min',

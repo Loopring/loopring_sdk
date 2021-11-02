@@ -36,6 +36,7 @@ export enum LOOPRING_URLs {
     GET_MINIMUM_TOKEN_AMT = '/api/v3/user/orderUserRateAmount',
     GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
 
+
     GET_ALLOWANCES = '/api/v3/eth/allowances',
     GET_ETH_NONCE = '/api/v3/eth/nonce',
     GET_ETH_BALANCES = '/api/v3/eth/balances',
@@ -59,6 +60,7 @@ export enum LOOPRING_URLs {
     GET_AMMPOOL_GAME_RANK = '/api/v2/game/rank',
     GET_AMMPOOL_GAME_USER_RANK = '/api/v2/game/user/rank',
     GET_LIQUIDITY_MINING = '/api/v2/sidecar/liquidityMining',
+    GET_DELEGATE_GET_CODE = '/api/v2/delegator/getCode',
     GET_LIQUIDITY_MINING_USER_HISTORY = '/api/v2/sidecar/liquidityMiningUserHistory',
     GET_PROTOCOL_PORTRAIT = '/api/v3/sidecar/ProtocolPortrait',
 
@@ -76,10 +78,15 @@ export enum LOOPRING_URLs {
     GET_ACCOUNT_SERVICES = '/api/v3/spi/getAccountServices',
 
     // NFT
-    GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances', 
+    // GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances', 
 
     // VIP
     GET_USER_VIP_INFO = '/api/v3/user/vipInfo',
     // VIP calc assets
     GET_USER_VIP_ASSETS = '/api/v3/datacenter/getUserAssets',
+    GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances',
+    GET_NFT_OFFCHAIN_FEE_AMT = '/api/v3/user/nft/offchainFee',
+    POST_NFT_INTERNAL_TRANSFER = '/api/v3/nft/transfer',
+    GET_NFTs_INFO = '/api/v3/nft/info/nfts'
+
 }

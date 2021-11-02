@@ -24,7 +24,7 @@ import {
     SIG_FLAG,
     WithdrawalTypes,
     UserTxTypes,
-    OrderTypeResp,
+    OrderTypeResp, OffchainNFTFeeReqType,
 } from './loopring_enums'
 
 export interface VipFeeRateInfo {
@@ -329,6 +329,27 @@ export interface TokenVolumeV3 {
      */
     volume: string;
 }
+export interface TokenVolumeNTF   {
+    /**
+     * The Loopring\'s token identifier.
+     * @type {string}
+     * @memberof TokenVolumeV3
+     */
+    tokenId: string | number;
+    /**
+     * The ammount of the token
+     * @type {string}
+     * @memberof TokenVolumeV3
+     */
+    amount: string;
+    /**
+     * The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID
+     * @type {string}
+     * @memberof The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID
+     */
+    nftData:NftData
+}
+
 
 export interface AmmPoolJoinTokens {
     pooled: TokenVolumeV3[]
@@ -454,6 +475,8 @@ export interface AmmPoolTrade {
     feeAmount: string
     createdAt: number
 }
+
+
 
 export interface GetAmmPoolTxsRequest {
     poolAddress: string
@@ -648,6 +671,12 @@ export interface GetOffchainFeeAmtRequest {
     accountId: number
     requestType: OffchainFeeReqType
     tokenSymbol?: string
+    amount?: string
+}
+export interface GetNFTOffchainFeeAmtRequest {
+    accountId: number
+    requestType: OffchainNFTFeeReqType
+    tokenAddress?: string
     amount?: string
 }
 
@@ -1252,6 +1281,98 @@ export interface OriginTransferRequestV3 {
 }
 
 /**
+ * Submit internal transfer params
+ * @export
+ * @interface OriginNFTTransferRequestV3
+ */
+export interface OriginNFTTransferRequestV3 {
+    /**
+     * exchange address
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    exchange: string;
+    /**
+     * fromAccountId
+     * @type {number}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    fromAccountId: number;
+    /**
+     * payer account address
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    fromAddress: string;
+    /**
+     * to account ID
+     * @type {number}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    toAccountId: number;
+    /**
+     * toAddress address
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    toAddress: string;
+    /**
+     *
+     * @type {TokenVolumeV3}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    token: TokenVolumeNTF;
+    /**
+     *
+     * @type {TokenVolumeV3}
+     * @memberof OriginNFTTransferRequestV3
+     */
+     maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
+    /**
+     * offchain Id
+     * @type {number}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    storageId: number;
+    /**
+     * Timestamp for order to become invalid
+     * @type {number}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    validUntil: number;
+    /**
+     * eddsa signature
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    eddsaSignature?: string;
+    /**
+     * ecdsa signature
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    ecdsaSignature?: string;
+    /**
+     * An approved hash string which was already submitted on eth mainnet
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    hashApproved?: string;
+    /**
+     * transfer memo
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    memo?: string;
+    /**
+     * A user-defined id
+     * @type {string}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    clientId?: string;
+}
+
+/**
  * 
  * @export
  * @interface OffChainWithdrawalRequestV3
@@ -1448,6 +1569,15 @@ export interface OriginTransferRequestV3WithPatch {
     apiKey: string
     isHWAddr?: boolean
 }
+export interface OriginNFTTransferRequestV3WithPatch {
+    request: OriginNFTTransferRequestV3
+    web3: Web3
+    chainId: ChainId
+    walletType: ConnectorNames
+    eddsaKey: string
+    apiKey: string
+    isHWAddr?: boolean
+}
 
 export interface UpdateAccountRequestV3WithPatch {
     request: UpdateAccountRequestV3
@@ -1499,4 +1629,16 @@ export interface getUserVIPAssetsRequest {
     assetTypes?: string;
     token?: string;
     limit?: number;
+}
+
+export type NftData = string;
+
+export interface NFTTokenInfo  {
+    nftData: string,
+    minter: string,
+    nftType: string,
+    tokenAddress: string,
+    nftId: string,
+    creatorFeeBips: 0,
+    status: boolean
 }
