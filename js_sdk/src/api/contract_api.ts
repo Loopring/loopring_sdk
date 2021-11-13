@@ -82,7 +82,7 @@ export async function sign(web3: Web3, account: string, hash: string) {
         return response;
     } else {
         const error = response['error']
-        console.log(response)
+        console.log(JSON.stringify(error))
         throw new Error(error)
     }
 }
