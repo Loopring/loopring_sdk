@@ -87,6 +87,11 @@ export enum LOOPRING_URLs {
     GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances',
     GET_NFT_OFFCHAIN_FEE_AMT = '/api/v3/user/nft/offchainFee',
     POST_NFT_INTERNAL_TRANSFER = '/api/v3/nft/transfer',
-    GET_NFTs_INFO = '/api/v3/nft/info/nfts'
+    POST_NFT_WITHDRAWALS = '/api/v3/nft/withdrawal', // post get
+    GET_NFTs_INFO = '/api/v3/nft/info/nfts',
+    GET_USER_NFT_TRANSFER_HISTORY = '/api/v3/user/nft/transfers',
+    GET_USER_NFT_DEPOSIT_HISTORY = '/api/v3/user/nft/deposits',
+    GET_USER_NFT_WITHDRAW_HISTORY = '/api/v3/user/nft/withdrawals',
 
+    // GET_OFFCHAIN_FEE_AMT = '/api/v3/user/nft/offchainFee',
 }

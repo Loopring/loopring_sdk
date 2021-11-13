@@ -15,9 +15,7 @@ import { ConnectorNames } from '../defs/web3_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
-import { OriginNFTTransferRequestV3WithPatch } from '../defs/loopring_defs';
-import { get_EddsaSig_NFT_Transfer } from './sign/sign_tools';
-
+import { UserNFTDepositHistoryTx, UserNFTTransferHistoryTx } from '../defs/loopring_defs';
 
 export function genErr(err: any) {
 
@@ -729,7 +727,7 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-    * Submit offchain withdraw request
+    * Submit Internal Transfer request
     */
     public async submitInternalTransfer(req: loopring_defs.OriginTransferRequestV3WithPatch) {
 
@@ -808,7 +806,7 @@ export class UserAPI extends BaseAPI {
 
 
     /*
-    * Submit NFT withdraw request
+    * Submit NFT Transfer request
     */
     public async submitNFTInTransfer(req: loopring_defs.OriginNFTTransferRequestV3WithPatch) {
 
@@ -884,6 +882,150 @@ export class UserAPI extends BaseAPI {
         }
 
     }
+
+    /*
+   * Submit NFT Transfer request
+   */
+    public async submitNFTWithdraw(req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch) {
+
+        const { request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+
+        let isHWAddr = !!isHWAddrOld
+
+        let ecdsaSignature = undefined
+
+        let errorInfo = undefined
+        const sigHW = async () => {
+            const result = (await sign_tools.signNFTWithdrawWithoutDataStructure(web3, request.owner, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+        }
+
+        // metamask not import hw wallet.
+        if (walletType === ConnectorNames.MetaMask) {
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signNFTWithdrawWithDataStructure(web3, request.owner, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                }
+
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
+        } else {
+
+            const isContractCheck = await isContract(web3, request.owner)
+
+            if (isContractCheck) {
+                // signNFTWithdrawWithDataStructureForContract
+                // console.log('3. signNFTWithdrawWithDataStructureForContract')
+                const result = (await sign_tools.signNFTWithdrawWithDataStructureForContract(web3, request.owner, request, chainId))
+                ecdsaSignature = result.ecdsaSig
+            } else {
+                await sigHW()
+            }
+
+        }
+
+        if (!errorInfo) {
+
+            request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey)
+
+            const reqParams: loopring_defs.ReqParams = {
+                url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
+                bodyParams: request,
+                apiKey,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+
+            const raw_data = (await this.makeReq().request(reqParams)).data
+
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+
+        }
+
+        return {
+            ...this.returnTxHash(undefined),
+            errorInfo,
+        }
+
+    }
+
+    /*
+  * Returns User NFT deposit records.
+  */
+    public async getUserNFTDepositHistory(request: loopring_defs.GetUserNFTDepositHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTDepositHistory: raw_data.deposits as loopring_defs.UserNFTDepositHistoryTx[],
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Get User NFT Withdrawal History.
+    */
+    public async getUserNFTWithdrawalHistory(request: loopring_defs.GetUserNFTWithdrawalHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTWithdrawalHistory: raw_data.withdrawals as loopring_defs.UserNFTWithdrawalHistoryTx[],
+            raw_data,
+        }
+
+    }
+
+    /*
+   * Get user NFT transfer list.
+   */
+    public async getUserNFTTranferHistory(request: loopring_defs.GetUserNFTTransferHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTTransfers: raw_data.transfers as loopring_defs.UserNFTTransferHistoryTx[],
+            raw_data,
+        }
+
+    }
+
 
     /*
     * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.

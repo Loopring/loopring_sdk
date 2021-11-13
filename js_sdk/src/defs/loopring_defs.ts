@@ -1318,13 +1318,13 @@ export interface OriginNFTTransferRequestV3 {
     toAddress: string;
     /**
      *
-     * @type {TokenVolumeV3}
+     * @type {TokenVolumeNTF}
      * @memberof OriginNFTTransferRequestV3
      */
     token: TokenVolumeNTF;
     /**
      *
-     * @type {TokenVolumeV3}
+     * @type {TokenVolumeNTF}
      * @memberof OriginNFTTransferRequestV3
      */
      maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
@@ -1372,6 +1372,97 @@ export interface OriginNFTTransferRequestV3 {
     clientId?: string;
 }
 
+export interface NFTWithdrawRequestV3{
+    /**
+     * exchange address
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    exchange: string;
+    /**
+     * account ID
+     * @type {number}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    accountId: number;
+    /**
+     * account owner address
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    owner: string;
+    /**
+     *
+     * @type {TokenVolumeV3}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    /**
+     *
+     * @type {TokenVolumeNTF}
+     * @memberof OriginNFTTransferRequestV3
+     */
+    token: TokenVolumeNTF;
+    /**
+     *
+     * @type {TokenVolumeNTF}
+     * @memberof OriginNFTTransferRequestV3
+     */
+     maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
+    /**
+     * offchain ID
+     * @type {number}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    storageId: number;
+    /**
+     * Timestamp for order to become invalid
+     * @type {number}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    validUntil: number;
+    /**
+     * min gas for on-chain withdraw, Loopring exchange allocates gas for each distribution, but people can also assign this min gas, so Loopring have to allocate higher gas value for this specific distribution. Normally no need to take care of this value, 0 means let loopring choose the reasonable gas
+     * @type {number}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    minGas: number;
+    /**
+     * withdraw to address
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    to: string;
+    /**
+     * extra data for complex withdraw mode, normally none
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    extraData?: string;
+    // /**
+    //  * is fast withdraw mode
+    //  * @type {boolean}
+    //  * @memberof OriginNFTWithdrawRequestV3
+    //  */
+    // fastWithdrawalMode?: boolean;
+    /**
+     * eddsa signature
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    eddsaSignature?: string;
+    /**
+     * ecdsa signature
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    ecdsaSignature?: string;
+    /**
+     * An approved hash string which was already submitted on eth mainnet
+     * @type {string}
+     * @memberof OriginNFTWithdrawRequestV3
+     */
+    hashApproved?: string;
+}
 /**
  * 
  * @export
@@ -1578,6 +1669,15 @@ export interface OriginNFTTransferRequestV3WithPatch {
     apiKey: string
     isHWAddr?: boolean
 }
+export interface OriginNFTWithdrawRequestV3WithPatch{
+    request: NFTWithdrawRequestV3
+    web3: Web3
+    chainId: ChainId
+    walletType: ConnectorNames
+    eddsaKey: string
+    apiKey: string
+    isHWAddr?: boolean
+}
 
 export interface UpdateAccountRequestV3WithPatch {
     request: UpdateAccountRequestV3
@@ -1641,4 +1741,105 @@ export interface NFTTokenInfo  {
     nftId: string,
     creatorFeeBips: 0,
     status: boolean
+}
+
+export type GetUserNFTTransferHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+    // offset?: number
+    // transferTypes?: string // transfer, transfer_red
+}
+
+export type GetUserNFTDepositHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    startId?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+}
+
+export type GetUserNFTWithdrawalHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    startId?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+}
+
+export interface UserNFTDepositHistoryTx {
+    id: number
+    requestId: number
+    nftData: string
+    amount: string
+    hash: string
+    txHash: string
+    accountId:number
+    owner:string
+    status: TxStatus
+    progress: string
+    timestamp: number
+    blockId: number
+    indexInBlock: number
+    createdAt:number
+    updatedAt: number
+    feeTokenSymbol:string
+    feeAmount:string
+    memo?:string
+    depositFrom:string
+    depositFromAccountId:string
+}
+
+export interface UserNFTWithdrawalHistoryTx {
+    id : number,
+    requestId : number,
+    hash : string,
+    txHash : string,
+    accountId : number,
+    owner : string,
+    status : string,
+    nftData? : string,
+    amount? : string,
+    feeTokenSymbol? : string,
+    feeAmount :  string,
+    createdAt : number,
+    updatedAt : number,
+    memo? : string,
+    recipient : string,
+    distributeHash : string,
+    fastWithdrawStatus : string,
+    isFast : false,
+    blockId : number,
+    indexInBlock : number
+}
+
+export interface UserNFTTransferHistoryTx {
+    id : string,
+    requestId : number,
+    hash : string,
+    txHash : string,
+    accountId : number,
+    owner : string,
+    status : string,
+    nftData : string,
+    amount : string,
+    feeTokenSymbol : string,
+    feeAmount : string,
+    createdAt : number,
+    updatedAt : number,
+    memo : string,
+    payeeId : number,
+    payeeAddress : string,
+    blockId : number,
+    indexInBlock : number
 }
