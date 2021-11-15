@@ -329,7 +329,7 @@ export interface TokenVolumeV3 {
      */
     volume: string;
 }
-export interface TokenVolumeNTF   {
+export interface TokenVolumeNFT   {
     /**
      * The Loopring\'s token identifier.
      * @type {string}
@@ -1318,13 +1318,13 @@ export interface OriginNFTTransferRequestV3 {
     toAddress: string;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
-    token: TokenVolumeNTF;
+    token: TokenVolumeNFT;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
      maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
@@ -1398,13 +1398,13 @@ export interface NFTWithdrawRequestV3{
      */
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
-    token: TokenVolumeNTF;
+    token: TokenVolumeNFT;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
      maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
