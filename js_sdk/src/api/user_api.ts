@@ -247,6 +247,58 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
+    * Cancel multiple orders using order hashs
+    */
+    public async cancelMultiOrdersByHash(request: loopring_defs.CancelMultiOrdersByHashRequest, PrivateKey: string, apiKey: string) {
+        const dataToSig: Map<string, any> = new Map()
+        dataToSig.set('accountId', request.accountId)
+        dataToSig.set('orderHash', request.orderHash)
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.ORDER_CANCEL_HASH_LIST,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.DELETE,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj: {
+                dataToSig,
+                PrivateKey,
+            }
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data
+        }
+    }
+    
+    /*
+    * Cancel multiple orders using clientOrderIds
+    */
+    public async cancelMultiOrdersByCreditOrderId(request: loopring_defs.CancelMultiOrdersByClientOrderIdRequest, PrivateKey: string, apiKey: string) {
+        const dataToSig: Map<string, any> = new Map()
+        dataToSig.set('accountId', request.accountId)
+        dataToSig.set('clientOrderId', request.clientOrderId)
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.ORDER_CANCEL_CLIENT_ORDER_ID_LIST,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.DELETE,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj: {
+                dataToSig,
+                PrivateKey,
+            }
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data
+        }
+    }
+
+    /*
     * Returns a list Ethereum transactions from users for exchange account registration.
     */
     public async getUserRegTxs(request: loopring_defs.GetUserRegTxsRequest, apiKey: string) {

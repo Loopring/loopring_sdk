@@ -4,6 +4,8 @@ export enum LOOPRING_URLs {
     API_KEY_ACTION = '/api/v3/apiKey', // get update
     GET_NEXT_STORAGE_ID = '/api/v3/storageId',
     ORDER_ACTION = '/api/v3/order', // get submit cancel
+    ORDER_CANCEL_HASH_LIST = '/api/v2/orders/byHash', // cancel multiple orders by hashs
+    ORDER_CANCEL_CLIENT_ORDER_ID_LIST = '/api/v2/orders/byClientOrderId', // cancel multiple orders by clientOrderids
     GET_MULTI_ORDERS = '/api/v3/orders',
     GET_MARKETS = '/api/v3/exchange/markets',
     GET_TOKENS = '/api/v3/exchange/tokens',
