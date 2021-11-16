@@ -1092,6 +1092,16 @@ export interface CancelOrderRequest {
     orderHash?: string
 }
 
+export interface CancelMultiOrdersByHashRequest {
+    accountId: number
+    orderHash: string // comma seprated string
+}
+
+export interface CancelMultiOrdersByClientOrderIdRequest {
+    accountId: number
+    clientOrderId: string // comma seprated string
+}
+
 export interface SubmitOrderRequestV3 {
     /**
      * The adderss of the exchange which has to process this order
