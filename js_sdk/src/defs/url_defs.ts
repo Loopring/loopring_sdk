@@ -4,6 +4,8 @@ export enum LOOPRING_URLs {
     API_KEY_ACTION = '/api/v3/apiKey', // get update
     GET_NEXT_STORAGE_ID = '/api/v3/storageId',
     ORDER_ACTION = '/api/v3/order', // get submit cancel
+    ORDER_CANCEL_HASH_LIST = '/api/v2/orders/byHash', // cancel multiple orders by hashs
+    ORDER_CANCEL_CLIENT_ORDER_ID_LIST = '/api/v2/orders/byClientOrderId', // cancel multiple orders by clientOrderids
     GET_MULTI_ORDERS = '/api/v3/orders',
     GET_MARKETS = '/api/v3/exchange/markets',
     GET_TOKENS = '/api/v3/exchange/tokens',
@@ -87,8 +89,10 @@ export enum LOOPRING_URLs {
     GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances',
     GET_NFT_OFFCHAIN_FEE_AMT = '/api/v3/user/nft/offchainFee',
     POST_NFT_INTERNAL_TRANSFER = '/api/v3/nft/transfer',
+    POST_NFT_WITHDRAWALS = '/api/v3/nft/withdrawal', // post get
     GET_NFTs_INFO = '/api/v3/nft/info/nfts',
-    ACTION_NFT_WITHDRAWALS = '/api/v3/nft/withdrawal', // post get
+    GET_USER_NFT_TRANSFER_HISTORY = '/api/v3/user/nft/transfers',
+    GET_USER_NFT_DEPOSIT_HISTORY = '/api/v3/user/nft/deposits',
+    GET_USER_NFT_WITHDRAW_HISTORY = '/api/v3/user/nft/withdrawals',
 
-    // GET_OFFCHAIN_FEE_AMT = '/api/v3/user/nft/offchainFee',
 }

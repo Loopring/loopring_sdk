@@ -15,6 +15,7 @@ import { ConnectorNames } from '../defs/web3_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
+import { UserNFTDepositHistoryTx, UserNFTTransferHistoryTx } from '../defs/loopring_defs';
 
 export function genErr(err: any) {
 
@@ -243,6 +244,58 @@ export class UserAPI extends BaseAPI {
             raw_data
         }
 
+    }
+
+    /*
+    * Cancel multiple orders using order hashs
+    */
+    public async cancelMultiOrdersByHash(request: loopring_defs.CancelMultiOrdersByHashRequest, PrivateKey: string, apiKey: string) {
+        const dataToSig: Map<string, any> = new Map()
+        dataToSig.set('accountId', request.accountId)
+        dataToSig.set('orderHash', request.orderHash)
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.ORDER_CANCEL_HASH_LIST,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.DELETE,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj: {
+                dataToSig,
+                PrivateKey,
+            }
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data
+        }
+    }
+    
+    /*
+    * Cancel multiple orders using clientOrderIds
+    */
+    public async cancelMultiOrdersByCreditOrderId(request: loopring_defs.CancelMultiOrdersByClientOrderIdRequest, PrivateKey: string, apiKey: string) {
+        const dataToSig: Map<string, any> = new Map()
+        dataToSig.set('accountId', request.accountId)
+        dataToSig.set('clientOrderId', request.clientOrderId)
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.ORDER_CANCEL_CLIENT_ORDER_ID_LIST,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.DELETE,
+            sigFlag: SIG_FLAG.EDDSA_SIG,
+            sigObj: {
+                dataToSig,
+                PrivateKey,
+            }
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            raw_data
+        }
     }
 
     /*
@@ -933,7 +986,7 @@ export class UserAPI extends BaseAPI {
             request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey)
 
             const reqParams: loopring_defs.ReqParams = {
-                url: LOOPRING_URLs.ACTION_NFT_WITHDRAWALS,
+                url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
                 bodyParams: request,
                 apiKey,
                 method: ReqMethod.POST,
@@ -956,6 +1009,75 @@ export class UserAPI extends BaseAPI {
         }
 
     }
+
+    /*
+  * Returns User NFT deposit records.
+  */
+    public async getUserNFTDepositHistory(request: loopring_defs.GetUserNFTDepositHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTDepositHistory: raw_data.deposits as loopring_defs.UserNFTDepositHistoryTx[],
+            raw_data,
+        }
+
+    }
+
+    /*
+    * Get User NFT Withdrawal History.
+    */
+    public async getUserNFTWithdrawalHistory(request: loopring_defs.GetUserNFTWithdrawalHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTWithdrawalHistory: raw_data.withdrawals as loopring_defs.UserNFTWithdrawalHistoryTx[],
+            raw_data,
+        }
+
+    }
+
+    /*
+   * Get user NFT transfer list.
+   */
+    public async getUserNFTTranferHistory(request: loopring_defs.GetUserNFTTransferHistoryRequest, apiKey: string) {
+
+        const reqParams: loopring_defs.ReqParams = {
+            url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
+            queryParams: request,
+            apiKey,
+            method: ReqMethod.GET,
+            sigFlag: SIG_FLAG.NO_SIG,
+        }
+
+        const raw_data = (await this.makeReq().request(reqParams)).data
+
+        return {
+            totalNum: raw_data?.totalNum,
+            userNFTTransfers: raw_data.transfers as loopring_defs.UserNFTTransferHistoryTx[],
+            raw_data,
+        }
+
+    }
+
 
     /*
     * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.

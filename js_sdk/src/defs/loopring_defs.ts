@@ -329,7 +329,7 @@ export interface TokenVolumeV3 {
      */
     volume: string;
 }
-export interface TokenVolumeNTF   {
+export interface TokenVolumeNFT   {
     /**
      * The Loopring\'s token identifier.
      * @type {string}
@@ -1092,6 +1092,16 @@ export interface CancelOrderRequest {
     orderHash?: string
 }
 
+export interface CancelMultiOrdersByHashRequest {
+    accountId: number
+    orderHash: string // comma seprated string
+}
+
+export interface CancelMultiOrdersByClientOrderIdRequest {
+    accountId: number
+    clientOrderId: string // comma seprated string
+}
+
 export interface SubmitOrderRequestV3 {
     /**
      * The adderss of the exchange which has to process this order
@@ -1318,13 +1328,13 @@ export interface OriginNFTTransferRequestV3 {
     toAddress: string;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
-    token: TokenVolumeNTF;
+    token: TokenVolumeNFT;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
      maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
@@ -1398,13 +1408,13 @@ export interface NFTWithdrawRequestV3{
      */
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
-    token: TokenVolumeNTF;
+    token: TokenVolumeNFT;
     /**
      *
-     * @type {TokenVolumeNTF}
+     * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */
      maxFee: Pick<TokenVolumeV3,'tokenId'> & {amount:string};
@@ -1741,4 +1751,105 @@ export interface NFTTokenInfo  {
     nftId: string,
     creatorFeeBips: 0,
     status: boolean
+}
+
+export type GetUserNFTTransferHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+    // offset?: number
+    // transferTypes?: string // transfer, transfer_red
+}
+
+export type GetUserNFTDepositHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    startId?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+}
+
+export type GetUserNFTWithdrawalHistoryRequest = {
+    accountId: number
+    nftData?: string
+    start?: number
+    end?: number
+    startId?: number
+    hashes?: string
+    txStatus?: string
+    limit?: number
+}
+
+export interface UserNFTDepositHistoryTx {
+    id: number
+    requestId: number
+    nftData: string
+    amount: string
+    hash: string
+    txHash: string
+    accountId:number
+    owner:string
+    status: TxStatus
+    progress: string
+    timestamp: number
+    blockId: number
+    indexInBlock: number
+    createdAt:number
+    updatedAt: number
+    feeTokenSymbol:string
+    feeAmount:string
+    memo?:string
+    depositFrom:string
+    depositFromAccountId:string
+}
+
+export interface UserNFTWithdrawalHistoryTx {
+    id : number,
+    requestId : number,
+    hash : string,
+    txHash : string,
+    accountId : number,
+    owner : string,
+    status : string,
+    nftData? : string,
+    amount? : string,
+    feeTokenSymbol? : string,
+    feeAmount :  string,
+    createdAt : number,
+    updatedAt : number,
+    memo? : string,
+    recipient : string,
+    distributeHash : string,
+    fastWithdrawStatus : string,
+    isFast : false,
+    blockId : number,
+    indexInBlock : number
+}
+
+export interface UserNFTTransferHistoryTx {
+    id : string,
+    requestId : number,
+    hash : string,
+    txHash : string,
+    accountId : number,
+    owner : string,
+    status : string,
+    nftData : string,
+    amount : string,
+    feeTokenSymbol : string,
+    feeAmount : string,
+    createdAt : number,
+    updatedAt : number,
+    memo : string,
+    payeeId : number,
+    payeeAddress : string,
+    blockId : number,
+    indexInBlock : number
 }
