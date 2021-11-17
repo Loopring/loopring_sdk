@@ -2,7 +2,7 @@ import { toBig, toFixed } from '../../utils/formatter';
 import { Base64 } from 'js-base64';
 const config = require('./config.json');
 
-const temp = "cG93ZXIgdG8gdGhlIHBsYXllcnM";
+const temp = process.env.SLOGAN
 
 function getMaintenanceMode() {
   return config.maintenanceMode;
