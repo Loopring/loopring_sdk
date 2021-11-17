@@ -1,8 +1,15 @@
 import { toBig, toFixed } from '../../utils/formatter';
+import { Base64 } from 'js-base64';
 const config = require('./config.json');
+
+const temp = "cG93ZXIgdG8gdGhlIHBsYXllcnM";
 
 function getMaintenanceMode() {
   return config.maintenanceMode;
+}
+
+function siteTeaser() {
+  return Base64.decode(temp);
 }
 
 function getRelayerHost(restUrl = true) {
