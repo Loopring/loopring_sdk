@@ -183,6 +183,7 @@ function getFeeByToken(token, fees) {
 
 export default {
   getMaintenanceMode,
+  siteTeaser
   getRelayerHost,
   getServer,
   getWsServer,
