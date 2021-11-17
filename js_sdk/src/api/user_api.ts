@@ -2,20 +2,20 @@ import { BaseAPI } from './base_api'
 
 import { ConnectorError } from '../defs/error_codes'
 
-import { SIG_FLAG, ReqMethod, SigPatchField, TradeChannel, } from '../defs/loopring_enums'
+import { ReqMethod, SIG_FLAG, SigPatchField, TradeChannel, } from '../defs/loopring_enums'
 
 import { LOOPRING_URLs, } from '../defs/url_defs'
 
-import { SigSuffix } from '../defs/web3_defs'
+import { ConnectorNames, SigSuffix } from '../defs/web3_defs'
 
 import * as loopring_defs from '../defs/loopring_defs'
-
-import { ConnectorNames } from '../defs/web3_defs'
 
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
-import { UserNFTDepositHistoryTx, UserNFTTransferHistoryTx } from '../defs/loopring_defs';
+import { OriginNFTMINTRequestV3WithPatch } from '../defs/loopring_defs';
+import BN from 'bn.js';
+import { toHex } from '../utils';
 
 export function genErr(err: any) {
 
@@ -26,8 +26,8 @@ export function genErr(err: any) {
     for (var key in ConnectorError) {
 
         // @ts-ignore
-        if (err?.message.search(ConnectorError[key]) !== -1) {
-            return { errMsg: key }
+        if (err?.message.search(ConnectorError[ key ]) !== -1) {
+            return {errMsg: key}
         }
     }
 
@@ -53,15 +53,15 @@ export class UserAPI extends BaseAPI {
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.EDDSA_SIG,
             sigObj:
-            {
-                dataToSig,
-                PrivateKey: eddsaKey,
-            }
+                {
+                    dataToSig,
+                    PrivateKey: eddsaKey,
+                }
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
 
-        const apiKey = raw_data['apiKey']
+        const apiKey = raw_data[ 'apiKey' ]
 
         return {
             apiKey,
@@ -75,7 +75,7 @@ export class UserAPI extends BaseAPI {
     * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
     */
     public async updateUserApiKey(request: loopring_defs.UpdateUserApiKeyRequest,
-        apiKey: string, eddsaKey: string) {
+                                  apiKey: string, eddsaKey: string) {
 
         const dataToSig: Map<string, any> = new Map()
 
@@ -88,10 +88,10 @@ export class UserAPI extends BaseAPI {
             method: ReqMethod.POST,
             sigFlag: SIG_FLAG.EDDSA_SIG,
             sigObj:
-            {
-                dataToSig,
-                PrivateKey: eddsaKey,
-            }
+                {
+                    dataToSig,
+                    PrivateKey: eddsaKey,
+                }
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
@@ -119,7 +119,7 @@ export class UserAPI extends BaseAPI {
         }
 
         const raw_data = (await this.makeReq().request(reqParams)).data
-        const { orderId, offchainId } = raw_data
+        const {orderId, offchainId} = raw_data
         return {
             orderId,
             offchainId,
@@ -368,7 +368,7 @@ export class UserAPI extends BaseAPI {
         if (raw_data instanceof Array) {
 
             raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-                userBalances[item.tokenId] = item
+                userBalances[ item.tokenId ] = item
             })
 
         }
@@ -499,13 +499,13 @@ export class UserAPI extends BaseAPI {
         if (raw_data?.trades instanceof Array) {
             raw_data.trades.forEach((item: any[]) => {
                 userTrades.push({
-                    tradeTime: item[0],
-                    tradeId: item[1],
-                    side: item[2],
-                    volume: item[3],
-                    price: item[4],
-                    market: item[5],
-                    fee: item[6],
+                    tradeTime: item[ 0 ],
+                    tradeId: item[ 1 ],
+                    side: item[ 2 ],
+                    volume: item[ 3 ],
+                    price: item[ 4 ],
+                    market: item[ 5 ],
+                    fee: item[ 6 ],
                 })
             })
         }
@@ -539,7 +539,7 @@ export class UserAPI extends BaseAPI {
         if (raw_data instanceof Array) {
 
             raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
-                userFreeRateMap[item.symbol] = item
+                userFreeRateMap[ item.symbol ] = item
             })
 
         }
@@ -600,7 +600,7 @@ export class UserAPI extends BaseAPI {
         if (amounts instanceof Array) {
 
             amounts.forEach((item: loopring_defs.TokenAmount) => {
-                amountMap[item.tokenSymbol] = item
+                amountMap[ item.tokenSymbol ] = item
             })
 
         }
@@ -636,7 +636,7 @@ export class UserAPI extends BaseAPI {
 
         if (raw_data?.fees instanceof Array) {
             raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
-                fees[item.token] = item
+                fees[ item.token ] = item
             })
         }
 
@@ -647,9 +647,11 @@ export class UserAPI extends BaseAPI {
         }
 
     }
+
     /*
    * Query current NFT fee amount
    */
+
     //TODO：UT
     public async getNFTOffchainFeeAmt(request: loopring_defs.GetNFTOffchainFeeAmtRequest, apiKey: string) {
 
@@ -669,7 +671,7 @@ export class UserAPI extends BaseAPI {
         //
         if (raw_data?.fees instanceof Array) {
             raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
-                fees[item.token] = item
+                fees[ item.token ] = item
             })
         }
 
@@ -707,8 +709,10 @@ export class UserAPI extends BaseAPI {
 
     public async submitOffchainWithdraw(req: loopring_defs.OffChainWithdrawalRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType,
-            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+        const {
+            request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld,
+        } = req
 
         let isHWAddr = !!isHWAddrOld
 
@@ -723,17 +727,17 @@ export class UserAPI extends BaseAPI {
 
         // metamask not import hw wallet.
         if (walletType === ConnectorNames.MetaMask) {
-                try {
-                    if (isHWAddr) {
-                        await sigHW()
-                    } else {
-                        const result = (await sign_tools.signOffchainWithdrawWithDataStructure(web3, request.owner, request, chainId))
-                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-                    }
-
-                } catch (err) {
-                    errorInfo = genErr(err)
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signOffchainWithdrawWithDataStructure(web3, request.owner, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 }
+
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
         } else {
 
             const isContractCheck = await isContract(web3, request.owner)
@@ -752,7 +756,7 @@ export class UserAPI extends BaseAPI {
         if (!errorInfo) {
 
             request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)
-    
+
             const reqParams: loopring_defs.ReqParams = {
                 url: LOOPRING_URLs.WITHDRAWALS_ACTION,
                 bodyParams: request,
@@ -761,9 +765,9 @@ export class UserAPI extends BaseAPI {
                 sigFlag: SIG_FLAG.NO_SIG,
                 ecdsaSignature,
             }
-    
+
             const raw_data = (await this.makeReq().request(reqParams)).data
-    
+
             return {
                 ...this.returnTxHash(raw_data),
                 errorInfo,
@@ -783,8 +787,10 @@ export class UserAPI extends BaseAPI {
     */
     public async submitInternalTransfer(req: loopring_defs.OriginTransferRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType,
-            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+        const {
+            request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld,
+        } = req
 
         const isHWAddr = !!isHWAddrOld
 
@@ -798,18 +804,18 @@ export class UserAPI extends BaseAPI {
         }
 
         if (walletType === ConnectorNames.MetaMask) {
-            
-                try {
-                    if (isHWAddr) {
-                        await sigHW()
-                    } else {
-                        const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
-                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-                    }
-                } catch (err) {
-                    errorInfo = genErr(err)
+
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signTransferWithDataStructure(web3, request.payerAddr, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 }
-                
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
+
         } else {
 
             const isContractCheck = await isContract(web3, request.payerAddr)
@@ -830,7 +836,7 @@ export class UserAPI extends BaseAPI {
         if (!errorInfo) {
 
             request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)
-    
+
             const reqParams: loopring_defs.ReqParams = {
                 url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
                 bodyParams: request,
@@ -839,9 +845,9 @@ export class UserAPI extends BaseAPI {
                 sigFlag: SIG_FLAG.NO_SIG,
                 ecdsaSignature,
             }
-    
+
             const raw_data = (await this.makeReq().request(reqParams)).data
-        
+
             return {
                 ...this.returnTxHash(raw_data),
                 errorInfo,
@@ -862,8 +868,10 @@ export class UserAPI extends BaseAPI {
     */
     public async submitNFTInTransfer(req: loopring_defs.OriginNFTTransferRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType,
-            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+        const {
+            request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld,
+        } = req
 
         const isHWAddr = !!isHWAddrOld
 
@@ -936,12 +944,14 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-   * Submit NFT Transfer request
-   */
+     * Submit NFT Withdraw request
+     */
     public async submitNFTWithdraw(req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType,
-            eddsaKey, apiKey, isHWAddr: isHWAddrOld, } = req
+        const {
+            request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld,
+        } = req
 
         let isHWAddr = !!isHWAddrOld
 
@@ -1011,8 +1021,87 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-  * Returns User NFT deposit records.
-  */
+    * Submit NFT MINT request
+    */
+    public async submitNFTMint(req: loopring_defs.OriginNFTMINTRequestV3WithPatch) {
+
+        const {
+            request, web3, chainId, walletType,
+            eddsaKey, apiKey, isHWAddr: isHWAddrOld,
+        } = req
+        request.creatorFeeBips =  request.creatorFeeBips ?? 0;
+        // request.nftId =  Number(request.nftId).toString(16)
+
+        let isHWAddr = !!isHWAddrOld
+
+        let ecdsaSignature = undefined
+
+        let errorInfo = undefined
+        const sigHW = async () => {
+            const result = (await sign_tools.signNFTMintWithoutDataStructure(web3, request.minterAddress, request, chainId, walletType))
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03
+        }
+
+        // metamask not import hw wallet.
+        if (walletType === ConnectorNames.MetaMask) {
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signNFTMintWithDataStructure(web3, request.minterAddress, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
+                }
+
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
+        } else {
+
+            const isContractCheck = await isContract(web3, request.minterAddress)
+
+            if (isContractCheck) {
+                // signNFTMintWithDataStructureForContract
+                // console.log('3. signNFTMintWithDataStructureForContract')
+                const result = (await sign_tools.signNFTMintWithDataStructureForContract(web3, request.minterAddress, request, chainId))
+                ecdsaSignature = result.ecdsaSig
+            } else {
+                await sigHW()
+            }
+
+        }
+
+        if (!errorInfo) {
+
+            request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey)
+
+            const reqParams: loopring_defs.ReqParams = {
+                url: LOOPRING_URLs.POST_NFT_MINT,
+                bodyParams: request,
+                apiKey,
+                method: ReqMethod.POST,
+                sigFlag: SIG_FLAG.NO_SIG,
+                ecdsaSignature,
+            }
+
+            const raw_data = (await this.makeReq().request(reqParams)).data
+
+            return {
+                ...this.returnTxHash(raw_data),
+                errorInfo,
+            }
+
+        }
+
+        return {
+            ...this.returnTxHash(undefined),
+            errorInfo,
+        }
+
+    }
+
+    /*
+     * Returns User NFT deposit records.
+     */
     public async getUserNFTDepositHistory(request: loopring_defs.GetUserNFTDepositHistoryRequest, apiKey: string) {
 
         const reqParams: loopring_defs.ReqParams = {
@@ -1084,7 +1173,7 @@ export class UserAPI extends BaseAPI {
     */
     public async updateAccount(req: loopring_defs.UpdateAccountRequestV3WithPatch) {
 
-        const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld, } = req
+        const {request, web3, chainId, walletType, isHWAddr: isHWAddrOld,} = req
 
         let isHWAddr = !!isHWAddrOld
 
@@ -1099,16 +1188,16 @@ export class UserAPI extends BaseAPI {
 
         if (walletType === ConnectorNames.MetaMask) {
 
-                try {
-                    if (isHWAddr) {
-                        await sigHW()
-                    } else {
-                        const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
-                        ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
-                    }
-                } catch (err) {
-                    errorInfo = genErr(err)
+            try {
+                if (isHWAddr) {
+                    await sigHW()
+                } else {
+                    const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
+                    ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 }
+            } catch (err) {
+                errorInfo = genErr(err)
+            }
 
         } else {
 
@@ -1134,14 +1223,14 @@ export class UserAPI extends BaseAPI {
                 sigFlag: SIG_FLAG.NO_SIG,
                 ecdsaSignature,
             }
-    
+
             const raw_data = (await this.makeReq().request(reqParams)).data
-    
+
             return {
                 ...this.returnTxHash(raw_data),
                 errorInfo,
             }
-    
+
 
         }
 
@@ -1212,7 +1301,7 @@ export class UserAPI extends BaseAPI {
             method: ReqMethod.GET,
             sigFlag: SIG_FLAG.NO_SIG,
         }
-        
+
         const raw_data = (await this.makeReq().request(reqParams)).data
 
         return {
