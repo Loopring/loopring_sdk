@@ -11,6 +11,8 @@ import Contracts from './ethereum/contracts/Contracts'
 
 import Common, { Chain, Hardfork } from '@ethereumjs/common'
 
+import BN from 'bn.js';
+
 export enum ERC20Method {
     Approve = 'approve',
     Deposit = 'deposit',
@@ -145,22 +147,12 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
     checkWeb3(web3)
 
     gasPrice = fm.fromGWEI(gasPrice).toNumber()
-
-    // const rawTx = {
-    //     from,
-    //     to,
-    //     value,
-    //     data,
-    //     chainId,
-    //     nonce: nonce.toString(),
-    //     gasPrice: gasPrice2,
-    //     gas,
-    // }
-
+    
+    const _value = new BN(value)
     const rawTx = {
         from,
         to,
-        value: parseInt(value),
+        value: _value.toString() ,
         data,
         chainId,
         nonce,
