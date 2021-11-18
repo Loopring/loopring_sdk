@@ -1,7 +1,7 @@
 {
     "root": "./docs",
     "description": "loopring sdk",
-    "authors": "Leo Chan, 0x4d6172",
+    "author": "Loopring Dev Team",
     "title": "Loopring SDK",
     "gitbook" : ">=3.0.0",
     "links" : {

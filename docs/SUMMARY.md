@@ -3,12 +3,12 @@
 ### Overview
 
 * [Introduction](README.md)
-* [Changelog](CHANGELOG.md)
+* [Changelog](Changelog.md)
 
 ### SDKs
 
-* [JS SDK](./js_sdk/intro.md)
-    * [Overview](./js_sdk/intro.md#install)
+* [JS SDK](./js_sdk/INTRO.md)
+    * [Overview](./js_sdk/INTRO.md#install)
     * [Unit Test](./js_sdk/unit_test.md)
     * [AmmPool](./js_sdk/ammpool_api.md)
     * [Contract](./js_sdk/contract_api.md)

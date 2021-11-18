@@ -20,7 +20,7 @@ import { ChainId, ConnectorNames } from '../../defs/web3_defs'
 import {
   AmmPoolRequestPatch,
   ExitAmmPoolRequest,
-  JoinAmmPoolRequest, NFTWithdrawRequestV3,
+  JoinAmmPoolRequest, NFTMintRequestV3, NFTWithdrawRequestV3,
   OffChainWithdrawalRequestV3, OriginNFTTransferRequestV3,
   OriginTransferRequestV3,
   PublicKey,
@@ -31,7 +31,7 @@ import Web3 from 'web3'
 
 import { EIP712TypedData } from 'eth-sig-util'
 
-import { toHex, toBig, } from '../../utils/formatter'
+import { toHex, toBig, zeroPad, } from '../../utils/formatter'
 import { myLog } from '../../utils/log_tools';
 
 export enum GetEcDSASigType {
@@ -526,6 +526,7 @@ export async function signOffchainWithdrawWithDataStructureForContract(web3: Web
   return result
 }
 
+//NFT Withdraw
 export function get_EddsaSig_NFT_Withdraw(request: NFTWithdrawRequestV3, eddsaKey: string) {
 
   const onchainDataHash = abi.soliditySHA3(
@@ -614,14 +615,112 @@ export async function signNFTWithdrawWithDataStructure(web3: Web3, owner: string
 export async function signNFTWithdrawWithoutDataStructure(web3: Web3, owner: string, bodyParams: NFTWithdrawRequestV3,
                                                                chainId: ChainId, walletType: ConnectorNames) {
   const typedData: any = getNFTWithdrawTypedData(bodyParams, chainId)
-  myLog('xxxxxxxxx',bodyParams)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
-  myLog('xxxxxxxxx',bodyParams)
   return result
 }
 
 export async function signNFTWithdrawWithDataStructureForContract(web3: Web3, owner: string, bodyParams: NFTWithdrawRequestV3, chainId: ChainId) {
   const typedData = getNFTWithdrawTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.Contract)
+  return result
+}
+
+//NFT Mint
+export function get_EddsaSig_NFT_Mint(request: NFTMintRequestV3, eddsaKey: string) {
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.minterId,
+    request.toAccountId,
+    getNftData(request),
+    request.amount,
+    request.maxFee.tokenId,
+    request.maxFee.amount,
+    request.validUntil,
+    request.storageId,
+  ];
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+}
+
+export function getNftData(request: NFTMintRequestV3) {
+  const hasher = Poseidon.createHash(7, 6, 52);
+  const nftIDHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
+  const nftIDLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
+  // debugger
+  const inputs = [
+    request.minterAddress,
+    request.nftType,
+    request.tokenAddress,
+    nftIDLo,
+    nftIDHi,
+    request.creatorFeeBips
+  ];
+  myLog('get hasher *16 hash:', hasher(inputs).toString(16))
+  return hasher(inputs).toString(10);
+}
+
+export function getNFTMintTypedData(data: NFTMintRequestV3, chainId: ChainId): EIP712TypedData {
+
+  let message = {
+    minterAddress: data.minterAddress,
+    toAccountId: data.toAccountId,
+    nftType: data.nftType,
+    amount: data.amount,
+    nftId: data.nftId,
+    nftAddress: data.tokenAddress,
+    feeTokenID: data.maxFee.tokenId,
+    maxFee: data.maxFee.amount,
+    validUntil: data.validUntil,
+    storageID: data.storageId,
+  }
+
+  const typedData: EIP712TypedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      Mint: [
+        { name: 'minterAddress', type: 'address' },
+        { name: 'toAccountId', type: 'uint32' },
+        { name: 'nftType', type: 'string'} ,
+        { name: 'amount', type: 'uint96' },
+        { name: 'nftId', type: 'uint16' },
+        { name: 'nftAddress', type: 'address' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
+      ],
+    },
+    primaryType: 'Mint',
+    domain: {
+      name: 'Loopring Protocol',
+      version: '3.6.0',
+      chainId: chainId,
+      verifyingContract: data.exchange,
+    },
+    message: message,
+  };
+  return typedData
+}
+
+export async function signNFTMintWithDataStructure(web3: Web3, owner: string, bodyParams: NFTMintRequestV3, chainId: ChainId) {
+  const typedData = getNFTMintTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.HasDataStruct)
+  return result
+}
+
+export async function signNFTMintWithoutDataStructure(web3: Web3, owner: string, bodyParams: NFTMintRequestV3,
+                                                          chainId: ChainId, walletType: ConnectorNames) {
+  const typedData: any = getNFTMintTypedData(bodyParams, chainId)
+  const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
+  return result
+}
+
+export async function signNFTMintWithDataStructureForContract(web3: Web3, owner: string, bodyParams: NFTMintRequestV3, chainId: ChainId) {
+  const typedData = getNFTMintTypedData(bodyParams, chainId)
   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.Contract)
   return result
 }
