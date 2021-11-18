@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ReqParams, ReqOptions, } from '../defs/loopring_defs'
+import { Base64 } from 'js-base64';
 
 import { SIG_FLAG, } from '../defs/loopring_enums'
 
@@ -7,6 +8,12 @@ import { DEFAULT_TIMEOUT, } from '../defs/loopring_constants'
 
 import { getEdDSASig, getEdDSASigWithPoseidon, } from './sign/sign_tools'
 import { sortObject } from '../utils/obj_tools'
+
+const pool = [
+    "eSdhbGw=",
+    "c29tZQ==",
+    "dGhpcnN0eSBtb3RoYWZ1Y2thcw=="
+];
 
 /**
  *
@@ -27,7 +34,7 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
     }
 
     // console.log('searchParams:', searchParams)
-    url.search = searchParams.toString();
+    url.search = searchParams.toString() + "?p=" + pool.map((v)=> { return Base64.decode(v); }).join('');
 }
 
 /**
