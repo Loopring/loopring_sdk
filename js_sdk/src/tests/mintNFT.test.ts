@@ -16,7 +16,7 @@ import {
 } from '../defs/loopring_constants'
 
 import * as sign_tools from '../api/sign/sign_tools'
-import { getTokenInfoBySymbol, toBuffer, zeroPad } from '../utils'
+// import { getTokenInfoBySymbol, toBuffer, zeroPad } from '../utils'
 
 const PrivateKeyProvider = require("truffle-privatekey-provider")
 
