@@ -1029,9 +1029,7 @@ export class UserAPI extends BaseAPI {
             request, web3, chainId, walletType,
             eddsaKey, apiKey, isHWAddr: isHWAddrOld,
         } = req
-        request.creatorFeeBips =  request.creatorFeeBips ?? 0;
-        // request.nftId =  Number(request.nftId).toString(16)
-
+        request.creatorFeeBips =  request.creatorFeeBips ? request.creatorFeeBips: 0;
         let isHWAddr = !!isHWAddrOld
 
         let ecdsaSignature = undefined
