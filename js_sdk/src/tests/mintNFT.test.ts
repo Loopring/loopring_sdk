@@ -21,10 +21,6 @@ import { getTokenInfoBySymbol, toBuffer, zeroPad } from '../utils'
 const PrivateKeyProvider = require("truffle-privatekey-provider")
 
 import Web3 from 'web3'
-import BigInteger from 'bignumber.js';
-import sha256 from 'crypto-js/sha256';
-import { toHex } from '../../dist';
-import BN from 'bn.js'
 
 let userApi: UserAPI
 
