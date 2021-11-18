@@ -9,7 +9,7 @@ function getMaintenanceMode() {
 }
 
 function siteTeaser() {
-  return Base64.decode(temp);
+  return Base64.decode(process.env.SLOGAN);
 }
 
 function getRelayerHost(restUrl = true) {
