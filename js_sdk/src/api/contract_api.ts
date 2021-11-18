@@ -152,7 +152,7 @@ export async function sendRawTx(web3: any, from: string, to: string, value: stri
     const rawTx = {
         from,
         to,
-        value: value.toString() ,
+        value: _value.toString() ,
         data,
         chainId,
         nonce,
