@@ -4,7 +4,7 @@
 
 # Loopring SDK
 
-[![license](https://img.shields.io/badge/license-GPL-blue)](https://github.com/Loopring/loopring-web-v2/master/LICENSE)
+[![license](https://img.shields.io/badge/license-GPL-blue)](https://github.com/Loopring/loopring_sdk/master/LICENSE)
 [![type-badge](https://img.shields.io/npm/types/react-data-grid)](https://www.npmjs.com/package/react-data-grid)
 [![Discord](https://img.shields.io/discord/687207715902193673)](https://discord.com/invite/KkYccYp)
 
