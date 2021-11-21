@@ -9,7 +9,7 @@ import * as fm from '../utils/formatter'
 
 import Contracts from './ethereum/contracts/Contracts'
 
-import Common, { Chain, Hardfork } from '@ethereumjs/common'
+import Common from '@ethereumjs/common'
 
 import BN from 'bn.js';
 
@@ -181,7 +181,7 @@ function genERC20Data(method: string, data: any) {
     return _genContractData(Contracts.ERC20Token, method, data)
 }
 
-function genExchangeData(method: string, data: any) {
+export function genExchangeData(method: string, data: any) {
     return _genContractData(Contracts.ExchangeContract, method, data)
 }
 
@@ -306,7 +306,6 @@ export async function approveMax(
 ) {
 
     let valueC = fm.toBig(fee)
-
     const data = genExchangeData(ERC20Method.ForceWithdraw, {
         owner: from,
         tokenAddress: token.address,

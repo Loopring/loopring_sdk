@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
@@ -37,7 +37,7 @@
     "publish": {
       "provider": "custom",
       "repo": "https://github.com/Loopring/loopring_sdk",
-      "owner": "leochan007"
+      "owner": "Loopring Dev Team"
     }
   },
   "scripts": {
