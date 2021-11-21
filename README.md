@@ -32,7 +32,7 @@ Please see the [documentation page](https://loopring.github.io/loopring_sdk/) fo
 
 ## ✨ Changelog
 
-- [JS SDK](https://loopring.github.io/loopring_sdk/CHANGELOG.html)
+- [JS SDK](CHANGELOG.md)
 
 ## 🫂 Community
 
