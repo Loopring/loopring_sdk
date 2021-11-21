@@ -1,7 +1,7 @@
-# Contract Part
+# Contract API
 
-##### 1) getNonce
+## getNonce
 
 ```javascript
-    const nonce = await contract.getNonce(web3, acc.address)
+const nonce = await contract.getNonce(web3, acc.address);
 ```

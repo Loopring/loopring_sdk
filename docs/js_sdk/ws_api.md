@@ -1,7 +1,7 @@
 # WS REST Part
 
-##### 1) getWsKey
+## getWsKey
 
 ```javascript
-        const response = await api.getWsKey()
+const response = await api.getWsKey();
 ```
