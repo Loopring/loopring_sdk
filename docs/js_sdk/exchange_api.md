@@ -1,121 +1,121 @@
-# Exchange Part
+# Exchange API
 
-##### 1) getAccount
+## getAccount
 
 ```javascript
-    const request: GetAccountRequest = {
-        owner: acc.address
-    }
-    const response = await api.getAccount(request)
+const request: GetAccountRequest = {
+  owner: acc.address,
+};
+const response = await api.getAccount(request);
 ```
 
-##### 2) getRelayerCurrentTime
+## getRelayerCurrentTime
 
 ```javascript
-    const response = await api.getRelayerCurrentTime()
+const response = await api.getRelayerCurrentTime();
 ```
 
-##### 3) getFiatPrice
+## getFiatPrice
 
 ```javascript
-    const response = await api.getFiatPrice({ legal: 'USD' })
+const response = await api.getFiatPrice({ legal: "USD" });
 ```
 
-##### 4) getLatestTokenPrices
+## getLatestTokenPrices
 
 ```javascript
-    const response = await api.getLatestTokenPrices()
+const response = await api.getLatestTokenPrices();
 ```
 
-##### 5) getAllowances
+## getAllowances
 
 ```javascript
-    const request: GetAllowancesRequest = {
-        owner: acc.address,
-        token: 'LRC,ETH,DAI',
-    }
+const request: GetAllowancesRequest = {
+  owner: acc.address,
+  token: "LRC,ETH,DAI",
+};
 
-    const tokens = await api.getTokens()
+const tokens = await api.getTokens();
 
-    const response = await api.getAllowances(request, tokens.tokenSymbolMap)
+const response = await api.getAllowances(request, tokens.tokenSymbolMap);
 ```
 
-##### 6) getAllowances
+## getAllowances
 
 ```javascript
-    const request: GetAllowancesRequest = {
-        owner: acc.address,
-        token: 'LRC,ETH,DAI',
-    }
+const request: GetAllowancesRequest = {
+  owner: acc.address,
+  token: "LRC,ETH,DAI",
+};
 
-    const tokens = await api.getTokens()
+const tokens = await api.getTokens();
 
-    const response = await api.getAllowances(request, tokens.tokenSymbolMap)
+const response = await api.getAllowances(request, tokens.tokenSymbolMap);
 ```
 
-##### 7) getTokenBalances
+## getTokenBalances
 
 ```javascript
-    const tokens = await api.getTokens()
+const tokens = await api.getTokens();
 
-    const request: GetTokenBalancesRequest = {
-        owner: acc.address,
-        token: '',
-    }
+const request: GetTokenBalancesRequest = {
+  owner: acc.address,
+  token: "",
+};
 
-    const response = await api.getTokenBalances(request, tokens.tokenSymbolMap)
+const response = await api.getTokenBalances(request, tokens.tokenSymbolMap);
 ```
 
-##### 8) getMixMarkets
+## getMixMarkets
 
 ```javascript
-    const response = await api.getMixMarkets()
+const response = await api.getMixMarkets();
 ```
 
-##### 9) getTokens
+## getTokens
 
 ```javascript
-    const response = await api.getTokens()
+const response = await api.getTokens();
 ```
 
-##### 10) getDepth
+## getDepth
 
 ```javascript
-    const request: GetDepthRequest = {
-        market: ['LRC-ETH']
-    }
+const request: GetDepthRequest = {
+  market: ["LRC-ETH"],
+};
 
-    const response = await api.getDepth(request)
+const response = await api.getDepth(request);
 ```
 
-##### 11) getExchangeInfo
+## getExchangeInfo
 
 ```javascript
-    const response = await api.getExchangeInfo()
+const response = await api.getExchangeInfo();
 ```
 
-##### 12) getTicker
+## getTicker
 
 ```javascript
-    const request: GetTickerRequest = {
-        market: 'LRC-ETH',
-    }
-    const response = await api.getTicker(request)
+const request: GetTickerRequest = {
+  market: "LRC-ETH",
+};
+const response = await api.getTicker(request);
 ```
 
-##### 13) getAllTickers
+## getAllTickers
 
 ```javascript
-    const response = await api.getAllTickers()
+const response = await api.getAllTickers();
 ```
 
-##### 14) getCandlestick
+## getCandlestick
 
 ```javascript
-    const request: GetCandlestickRequest = {
-        market: 'LRC-ETH',
-        interval: TradingInterval.min15,
-        limit: 96,
-    }
-    const response = await api.getCandlestick(request)
+const request: GetCandlestickRequest = {
+  market: "LRC-ETH",
+  interval: TradingInterval.min15,
+  limit: 96,
+};
+const response = await api.getCandlestick(request);
 ```
