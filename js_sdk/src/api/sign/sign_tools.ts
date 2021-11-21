@@ -645,7 +645,6 @@ export function getNftData(request: NFTMintRequestV3) {
   const hasher = Poseidon.createHash(7, 6, 52);
   const nftIDHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
   const nftIDLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
-  // debugger
   const inputs = [
     request.minterAddress,
     request.nftType,
