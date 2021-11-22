@@ -12,7 +12,7 @@
   - [Overview](./js_sdk/INTRO.md#install)
   - [Unit Test](./js_sdk/unit_test.md)
   - [AmmPool](./js_sdk/ammpool_api.md)
-  - [NFT(Contract)](./detail/classes/NFTAPI.md)
+  - [NFT(Contract)](./js_sdk/NFTAPI.md)
   - [Contract](./js_sdk/contract_api.md)
   - [Exchange](./js_sdk/exchange_api.md)
   - [User](./js_sdk/user_api.md)
