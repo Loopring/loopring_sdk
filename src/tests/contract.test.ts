@@ -8,6 +8,7 @@ import {
 import { loopring_exported_account as acc, web3 } from './utils'
 
 import { ExchangeAPI } from '../api/exchange_api'
+import { sleep } from '../utils';
 
 // start ganache-cli before
 // ganache-cli --debug --chainId=5 --account="0xadc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf,1000e+18" --secure --unlock "0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8"
@@ -81,8 +82,13 @@ const gasLimit = 200000
 
 describe('contract test', function () {
 
-    beforeEach(() => {
+    beforeEach(async () => {
         api = new ExchangeAPI({ chainId: ChainId.GOERLI })
+
+    })
+    afterEach(async () => {
+       await sleep(500)
+
     })
 
     it('approveZero_LRC', async () => {

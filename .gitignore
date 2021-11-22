@@ -1,8 +1,6 @@
-infura_url.txt
-node_modules
-tsconfig.tsbuildinfo
-dist
-_book
-notes.java
-.DS_Store
+yarn-error.log
+*.tgz
+*testfile*
 .idea
+_book
+dist

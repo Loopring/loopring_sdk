@@ -26,13 +26,13 @@ yarn add @loopring-web/loopring-sdk
 
 Please see the [documentation page](https://loopring.github.io/loopring_sdk/) for information about getting started and developing with the Loopring SDK.
 
-- [JS SDK](https://loopring.github.io/loopring_sdk)
+- [Javascript](https://loopring.github.io/loopring_sdk/js_sdk/intro.html)
 - [Python](https://github.com/Loopring/hello_loopring)
-- [APIs](https://docs.loopring.io/en/)
+- [Exchange](https://docs.loopring.io/en/)
 
 ## ✨ Changelog
 
-- [JS SDK](https://docs.loopring.io/en/ChangeLog.html)
+- [JS SDK](CHANGELOG.md)
 
 ## 🫂 Community
 
@@ -45,15 +45,12 @@ Please see the [documentation page](https://loopring.github.io/loopring_sdk/) fo
 
 ## 🎒 Getting Started
 
-Please see our [introduction page](https://loopring.github.io/loopring_sdk/) for details on integrating the SDK into your application.
+Please see our [introduction page](https://loopring.github.io/loopring_sdk/js_sdk/intro.html) for details on integrating the SDK into your application.
 
-## 🙋 Protocol & Architecture
+## 🙋 Help
 
 - [Whitepaper](https://loopring.org/resources/en_whitepaper.pdf)
 - [Design Docs](https://github.com/LoopringSecondary/docs/wiki/Loopring3_Design)
-
-## ❓Help
-- [Submit a Request](https://loopring.io/#/newticket)
 
 ### What is Loopring?
 

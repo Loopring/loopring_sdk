@@ -1,121 +1,121 @@
-# Exchange API
+# Exchange Part
 
-## getAccount
+##### 1) getAccount
 
 ```javascript
-const request: GetAccountRequest = {
-  owner: acc.address,
-};
-const response = await api.getAccount(request);
+    const request: GetAccountRequest = {
+        owner: acc.address
+    }
+    const response = await api.getAccount(request)
 ```
 
-## getRelayerCurrentTime
+##### 2) getRelayerCurrentTime
 
 ```javascript
-const response = await api.getRelayerCurrentTime();
+    const response = await api.getRelayerCurrentTime()
 ```
 
-## getFiatPrice
+##### 3) getFiatPrice
 
 ```javascript
-const response = await api.getFiatPrice({ legal: "USD" });
+    const response = await api.getFiatPrice({ legal: 'USD' })
 ```
 
-## getLatestTokenPrices
+##### 4) getLatestTokenPrices
 
 ```javascript
-const response = await api.getLatestTokenPrices();
+    const response = await api.getLatestTokenPrices()
 ```
 
-## getAllowances
+##### 5) getAllowances
 
 ```javascript
-const request: GetAllowancesRequest = {
-  owner: acc.address,
-  token: "LRC,ETH,DAI",
-};
+    const request: GetAllowancesRequest = {
+        owner: acc.address,
+        token: 'LRC,ETH,DAI',
+    }
 
-const tokens = await api.getTokens();
+    const tokens = await api.getTokens()
 
-const response = await api.getAllowances(request, tokens.tokenSymbolMap);
+    const response = await api.getAllowances(request, tokens.tokenSymbolMap)
 ```
 
-## getAllowances
+##### 6) getAllowances
 
 ```javascript
-const request: GetAllowancesRequest = {
-  owner: acc.address,
-  token: "LRC,ETH,DAI",
-};
+    const request: GetAllowancesRequest = {
+        owner: acc.address,
+        token: 'LRC,ETH,DAI',
+    }
 
-const tokens = await api.getTokens();
+    const tokens = await api.getTokens()
 
-const response = await api.getAllowances(request, tokens.tokenSymbolMap);
+    const response = await api.getAllowances(request, tokens.tokenSymbolMap)
 ```
 
-## getTokenBalances
+##### 7) getTokenBalances
 
 ```javascript
-const tokens = await api.getTokens();
+    const tokens = await api.getTokens()
 
-const request: GetTokenBalancesRequest = {
-  owner: acc.address,
-  token: "",
-};
+    const request: GetTokenBalancesRequest = {
+        owner: acc.address,
+        token: '',
+    }
 
-const response = await api.getTokenBalances(request, tokens.tokenSymbolMap);
+    const response = await api.getTokenBalances(request, tokens.tokenSymbolMap)
 ```
 
-## getMixMarkets
+##### 8) getMixMarkets
 
 ```javascript
-const response = await api.getMixMarkets();
+    const response = await api.getMixMarkets()
 ```
 
-## getTokens
+##### 9) getTokens
 
 ```javascript
-const response = await api.getTokens();
+    const response = await api.getTokens()
 ```
 
-## getDepth
+##### 10) getDepth
 
 ```javascript
-const request: GetDepthRequest = {
-  market: ["LRC-ETH"],
-};
+    const request: GetDepthRequest = {
+        market: ['LRC-ETH']
+    }
 
-const response = await api.getDepth(request);
+    const response = await api.getDepth(request)
 ```
 
-## getExchangeInfo
+##### 11) getExchangeInfo
 
 ```javascript
-const response = await api.getExchangeInfo();
+    const response = await api.getExchangeInfo()
 ```
 
-## getTicker
+##### 12) getTicker
 
 ```javascript
-const request: GetTickerRequest = {
-  market: "LRC-ETH",
-};
-const response = await api.getTicker(request);
+    const request: GetTickerRequest = {
+        market: 'LRC-ETH',
+    }
+    const response = await api.getTicker(request)
 ```
 
-## getAllTickers
+##### 13) getAllTickers
 
 ```javascript
-const response = await api.getAllTickers();
+    const response = await api.getAllTickers()
 ```
 
-## getCandlestick
+##### 14) getCandlestick
 
 ```javascript
-const request: GetCandlestickRequest = {
-  market: "LRC-ETH",
-  interval: TradingInterval.min15,
-  limit: 96,
-};
-const response = await api.getCandlestick(request);
+    const request: GetCandlestickRequest = {
+        market: 'LRC-ETH',
+        interval: TradingInterval.min15,
+        limit: 96,
+    }
+    const response = await api.getCandlestick(request)
 ```

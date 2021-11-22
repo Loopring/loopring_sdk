@@ -1,6 +1,14 @@
 # CHANGELOG
 
 ### JS SDK Version ChangeLog
+### v0.2.6
+    1) NFT withdraw L2 -> L1
+    2) NFT Deposit L1 -> L2  (NFT approvedAll fot Exchange)
+    3) NFT Transfer L2 -> L2  
+    4) NFT Mint L2
+    5) NFT META
+    6) NFT Action Check History L2
+
 
 ### v0.0.99
     1) update swap calc function.
