@@ -59,7 +59,7 @@ Please see our [introduction page](https://loopring.github.io/loopring_sdk/) for
 
 Loopring is an ecosystem consisting of several projects.
 
-- Loopring `Protocol` is an open source Ethereum zkRollup protocol — a layer-2 for securely scaling exchanges and payments.
+- Loopring `Protocol` is an open-source Ethereum zkRollup protocol — a layer-2 for securely scaling exchanges and payments.
 - Loopring `Relayer` is a closed source zkRollup relayer — the backend (operator) that does all the off-chain duties to make a zkRollup roll.
 - Loopring `Exchange` is a non-custodial Ethereum exchange — a highly performant (super fast, gas-free) AMM & orderbook-based exchange with 100% Ethereum security guarantees. It also acts as a payment platform.
 - Loopring `Wallet` is an Ethereum smart contract wallet — a mobile wallet app with social recovery, other security features, and with the Loopring L2 baked in. (It is the app, as well as the open source smart contracts which constitute the wallet).
