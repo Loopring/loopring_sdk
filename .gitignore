@@ -5,7 +5,7 @@ yarn-error.log
 _book
 dist
 docs/detail
-docs/Changelog.md
-docs/README.md
+#docs/Changelog.md
+#docs/README.md
 
 
