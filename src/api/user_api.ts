@@ -247,7 +247,7 @@ export class UserAPI extends BaseAPI {
     }
 
     /*
-    * Cancel multiple orders using order hashs
+    * Cancel multiple orders using order hashes
     */
     public async cancelMultiOrdersByHash(request: loopring_defs.CancelMultiOrdersByHashRequest, PrivateKey: string, apiKey: string) {
         const dataToSig: Map<string, any> = new Map()
