@@ -34,7 +34,7 @@
 
 • **amount**: `string`
 
-The ammount of the token
+The amount of the token
 
 **`memberof`** TokenVolumeV3
 
