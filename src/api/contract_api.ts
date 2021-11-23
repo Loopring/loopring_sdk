@@ -101,7 +101,6 @@ export async function signEthereumTx(web3: any, account: any, rawTx: any, chainI
     const common = new Common({ chain: chainId })
 
     // console.log('rawTx:', rawTx)
-
     const ethTx = Transaction.fromTxData(rawTx, { common })
 
     // console.log('ethTx:', ethTx)

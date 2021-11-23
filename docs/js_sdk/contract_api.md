@@ -1,7 +1,6 @@
 # Contract API
 
 ## getNonce
-
-```javascript
+```typescript
 const nonce = await contract.getNonce(web3, acc.address);
 ```
