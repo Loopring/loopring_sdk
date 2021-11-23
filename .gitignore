@@ -4,3 +4,8 @@ yarn-error.log
 .idea
 _book
 dist
+docs/detail
+docs/Changelog.md
+docs/README.md
+
+

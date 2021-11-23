@@ -48,7 +48,7 @@
     "prepublishOnly": "NODE_ENV=production tsdx build",
     "doc": "typedoc --out docs/detail src\\/",
     "build-book": "npx honkit build",
-    "build-b": "npm run doc; npm run build-book",
+    "build-b": "cp Changelog.md ./docs/Changelog.md;cp README.md ./docs/README.md;  npm run doc; npm run build-book",
     "serve-book": "npx honkit serve",
     "deploy-book": "gh-pages -d _book"
   },

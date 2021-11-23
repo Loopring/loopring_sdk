@@ -2,7 +2,7 @@
 
 ### Overview
 
-- [Introduction](./detail/README.md)
+- [Introduction](README.md)
 - [Changelog](ChangeLog.md)
 
 ### SDKs demo

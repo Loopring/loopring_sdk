@@ -116,9 +116,6 @@ describe('contract test', function () {
         console.log(`nonce: ${nonce} approveMax: ${response}`)
     }, DEFAULT_TIMEOUT)
 
-   
-
-
     it('deposit_LRC1', async () => {
         const nonce = await contract.getNonce(web3, acc.address)
         await sleep(200)
@@ -137,7 +134,6 @@ describe('contract test', function () {
     //
     //     console.log(`nonce: ${nonce} deposit_ETH: ${response}`)
     // }, DEFAULT_TIMEOUT)
-
     it('forceWithdrawal test', async () => {
         const nonce = await contract.getNonce(web3, acc.address)
         await sleep(200)
@@ -156,6 +152,5 @@ describe('contract test', function () {
 
         console.log(`nonce: ${nonce} approveZero: ${response}`)
     }, DEFAULT_TIMEOUT)
-
 
 })

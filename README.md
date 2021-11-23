@@ -1,7 +1,3 @@
-<p align="center">
-  <a href="https://github.com/Loopring/loopring-web-v2" rel="noopener" target="_blank"><img width="150" src="https://loopring.org/images/logo.svg" alt="Loopring-website"></a>
-</p>
-
 # Loopring SDK
 
 [![license](https://img.shields.io/badge/license-GPL-blue)](https://github.com/Loopring/loopring_sdk/master/LICENSE)
