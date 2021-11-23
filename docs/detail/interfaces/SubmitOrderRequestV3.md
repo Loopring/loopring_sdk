@@ -35,7 +35,7 @@ Loopring\'s account ID
 
 #### Defined in
 
-[defs/loopring_defs.ts:1117](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1117)
+[defs/loopring_defs.ts:1117](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1117)
 
 ___
 
@@ -49,7 +49,7 @@ Whether the order supports partial fills or not.Currently only supports false as
 
 #### Defined in
 
-[defs/loopring_defs.ts:1141](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1141)
+[defs/loopring_defs.ts:1141](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1141)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1135](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1135)
+[defs/loopring_defs.ts:1135](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1135)
 
 ___
 
@@ -75,7 +75,7 @@ Aux data to mark the order source
 
 #### Defined in
 
-[defs/loopring_defs.ts:1198](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1198)
+[defs/loopring_defs.ts:1198](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1198)
 
 ___
 
@@ -89,7 +89,7 @@ An arbitrary, client-set unique order identifier, max length is 120 bytes
 
 #### Defined in
 
-[defs/loopring_defs.ts:1171](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1171)
+[defs/loopring_defs.ts:1171](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1171)
 
 ___
 
@@ -103,7 +103,7 @@ The orders EdDSA signature. The signature is a hexadecimal string obtained by si
 
 #### Defined in
 
-[defs/loopring_defs.ts:1165](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1165)
+[defs/loopring_defs.ts:1165](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1165)
 
 ___
 
@@ -117,7 +117,7 @@ The adderss of the exchange which has to process this order
 
 #### Defined in
 
-[defs/loopring_defs.ts:1111](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1111)
+[defs/loopring_defs.ts:1111](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1111)
 
 ___
 
@@ -131,7 +131,7 @@ Fill size by buy token or by sell token
 
 #### Defined in
 
-[defs/loopring_defs.ts:1147](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1147)
+[defs/loopring_defs.ts:1147](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1147)
 
 ___
 
@@ -145,7 +145,7 @@ Maximum order fee that the user can accept, value range (in ten thousandths) 1 ~
 
 #### Defined in
 
-[defs/loopring_defs.ts:1159](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1159)
+[defs/loopring_defs.ts:1159](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1159)
 
 ___
 
@@ -159,7 +159,7 @@ Order types, can be AMM, LIMIT_ORDER, MAKER_ONLY, TAKER_ONLY
 
 #### Defined in
 
-[defs/loopring_defs.ts:1177](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1177)
+[defs/loopring_defs.ts:1177](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1177)
 
 ___
 
@@ -173,7 +173,7 @@ The AMM pool address if order type is AMM
 
 #### Defined in
 
-[defs/loopring_defs.ts:1192](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1192)
+[defs/loopring_defs.ts:1192](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1192)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1129](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1129)
+[defs/loopring_defs.ts:1129](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1129)
 
 ___
 
@@ -199,7 +199,7 @@ The unique identifier of the L2 Merkle tree storage slot where the burn made in 
 
 #### Defined in
 
-[defs/loopring_defs.ts:1123](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1123)
+[defs/loopring_defs.ts:1123](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1123)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1186](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1186)
+[defs/loopring_defs.ts:1186](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1186)
 
 ___
 
@@ -223,7 +223,7 @@ Used by the P2P order which user specify the taker, so far its 0x000000000000000
 
 #### Defined in
 
-[defs/loopring_defs.ts:1184](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1184)
+[defs/loopring_defs.ts:1184](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1184)
 
 ___
 
@@ -237,4 +237,4 @@ Order expiration time, accuracy is in seconds
 
 #### Defined in
 
-[defs/loopring_defs.ts:1153](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1153)
+[defs/loopring_defs.ts:1153](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1153)

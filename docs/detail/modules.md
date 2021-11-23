@@ -350,7 +350,7 @@
 
 #### Defined in
 
-[defs/loopring_defs.ts:1893](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1893)
+[defs/loopring_defs.ts:1893](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1893)
 
 ___
 
@@ -372,7 +372,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1881](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1881)
+[defs/loopring_defs.ts:1881](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1881)
 
 ___
 
@@ -395,7 +395,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1904](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1904)
+[defs/loopring_defs.ts:1904](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1904)
 
 ___
 
@@ -405,7 +405,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:1869](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L1869)
+[defs/loopring_defs.ts:1869](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L1869)
 
 ___
 
@@ -419,7 +419,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:36](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_defs.ts#L36)
+[defs/loopring_defs.ts:36](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_defs.ts#L36)
 
 ## Properties
 
@@ -466,7 +466,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:22](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L22)
+[api/contract_api.ts:22](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L22)
 
 ___
 
@@ -483,7 +483,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:48](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L48)
+[defs/error_codes.ts:48](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L48)
 
 ___
 
@@ -493,7 +493,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_constants.ts:3](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_constants.ts#L3)
+[defs/loopring_constants.ts:3](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_constants.ts#L3)
 
 ___
 
@@ -503,7 +503,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:6](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L6)
+[defs/web3_defs.ts:6](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L6)
 
 ___
 
@@ -513,7 +513,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_constants.ts:1](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/loopring_constants.ts#L1)
+[defs/loopring_constants.ts:1](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/loopring_constants.ts#L1)
 
 ## Functions
 
@@ -535,7 +535,7 @@ Returns hex string with '0x' prefix
 
 #### Defined in
 
-[utils/formatter.ts:169](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L169)
+[utils/formatter.ts:169](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L169)
 
 ___
 
@@ -563,7 +563,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:621](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L621)
+[utils/swap_calc_utils.ts:621](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L621)
 
 ___
 
@@ -592,7 +592,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:187](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L187)
+[api/contract_api.ts:187](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L187)
 
 ___
 
@@ -622,7 +622,7 @@ Approve Max
 
 #### Defined in
 
-[api/contract_api.ts:232](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L232)
+[api/contract_api.ts:232](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L232)
 
 ___
 
@@ -652,7 +652,7 @@ Approve Zero
 
 #### Defined in
 
-[api/contract_api.ts:207](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L207)
+[api/contract_api.ts:207](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L207)
 
 ___
 
@@ -674,7 +674,7 @@ Returns hex string without '0x' prefix
 
 #### Defined in
 
-[utils/formatter.ts:181](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L181)
+[utils/formatter.ts:181](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L181)
 
 ___
 
@@ -694,7 +694,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:359](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L359)
+[api/sign/sign_tools.ts:359](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L359)
 
 ___
 
@@ -714,7 +714,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:355](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L355)
+[api/sign/sign_tools.ts:355](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L355)
 
 ___
 
@@ -746,7 +746,7 @@ deposit
 
 #### Defined in
 
-[api/contract_api.ts:253](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L253)
+[api/contract_api.ts:253](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L253)
 
 ___
 
@@ -767,7 +767,7 @@ ___
 
 #### Defined in
 
-[utils/network_tools.ts:1](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/network_tools.ts#L1)
+[utils/network_tools.ts:1](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/network_tools.ts#L1)
 
 ___
 
@@ -792,7 +792,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:899](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L899)
+[api/sign/sign_tools.ts:899](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L899)
 
 ___
 
@@ -824,7 +824,7 @@ forceWithdrawal
 
 #### Defined in
 
-[api/contract_api.ts:293](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L293)
+[api/contract_api.ts:293](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L293)
 
 ___
 
@@ -846,7 +846,7 @@ Returns hex string of a given address
 
 #### Defined in
 
-[utils/formatter.ts:151](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L151)
+[utils/formatter.ts:151](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L151)
 
 ___
 
@@ -866,7 +866,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:242](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L242)
+[utils/formatter.ts:242](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L242)
 
 ___
 
@@ -888,7 +888,7 @@ Returns formatted hex string of a given private key
 
 #### Defined in
 
-[utils/formatter.ts:135](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L135)
+[utils/formatter.ts:135](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L135)
 
 ___
 
@@ -908,7 +908,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:117](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L117)
+[utils/formatter.ts:117](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L117)
 
 ___
 
@@ -932,7 +932,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:39](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L39)
+[utils/swap_calc_utils.ts:39](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L39)
 
 ___
 
@@ -952,7 +952,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:20](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L20)
+[api/user_api.ts:20](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L20)
 
 ___
 
@@ -973,7 +973,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:183](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L183)
+[api/contract_api.ts:183](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L183)
 
 ___
 
@@ -993,7 +993,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:58](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L58)
+[api/sign/sign_tools.ts:58](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L58)
 
 ___
 
@@ -1011,7 +1011,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:25](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L25)
+[defs/ws_defs.ts:25](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L25)
 
 ___
 
@@ -1032,7 +1032,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:967](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L967)
+[api/sign/sign_tools.ts:967](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L967)
 
 ___
 
@@ -1072,7 +1072,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:921](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L921)
+[api/sign/sign_tools.ts:921](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L921)
 
 ___
 
@@ -1098,7 +1098,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:107](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L107)
+[defs/ws_defs.ts:107](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L107)
 
 ___
 
@@ -1118,7 +1118,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:7](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L7)
+[utils/symbol_tools.ts:7](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L7)
 
 ___
 
@@ -1143,7 +1143,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:100](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L100)
+[defs/ws_defs.ts:100](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L100)
 
 ___
 
@@ -1164,7 +1164,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:342](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L342)
+[utils/swap_calc_utils.ts:342](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L342)
 
 ___
 
@@ -1186,7 +1186,7 @@ Returns symbol of a given kind of currency
 
 #### Defined in
 
-[utils/formatter.ts:202](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L202)
+[utils/formatter.ts:202](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L202)
 
 ___
 
@@ -1211,7 +1211,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:272](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L272)
+[api/sign/sign_tools.ts:272](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L272)
 
 ___
 
@@ -1235,7 +1235,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:173](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L173)
+[api/sign/sign_tools.ts:173](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L173)
 
 ___
 
@@ -1256,7 +1256,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:203](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L203)
+[api/sign/sign_tools.ts:203](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L203)
 
 ___
 
@@ -1285,7 +1285,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:93](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L93)
+[utils/symbol_tools.ts:93](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L93)
 
 ___
 
@@ -1329,7 +1329,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:120](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/exchange_api.ts#L120)
+[api/exchange_api.ts:120](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/exchange_api.ts#L120)
 
 ___
 
@@ -1357,7 +1357,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:612](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L612)
+[utils/swap_calc_utils.ts:612](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L612)
 
 ___
 
@@ -1382,7 +1382,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:62](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L62)
+[defs/ws_defs.ts:62](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L62)
 
 ___
 
@@ -1403,7 +1403,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:660](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L660)
+[api/sign/sign_tools.ts:660](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L660)
 
 ___
 
@@ -1424,7 +1424,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:830](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L830)
+[api/sign/sign_tools.ts:830](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L830)
 
 ___
 
@@ -1445,7 +1445,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:559](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L559)
+[api/sign/sign_tools.ts:559](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L559)
 
 ___
 
@@ -1465,7 +1465,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:644](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L644)
+[api/sign/sign_tools.ts:644](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L644)
 
 ___
 
@@ -1486,7 +1486,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:137](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L137)
+[api/contract_api.ts:137](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L137)
 
 ___
 
@@ -1511,7 +1511,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:38](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L38)
+[defs/ws_defs.ts:38](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L38)
 
 ___
 
@@ -1537,7 +1537,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:68](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L68)
+[defs/ws_defs.ts:68](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L68)
 
 ___
 
@@ -1569,7 +1569,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:429](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L429)
+[utils/swap_calc_utils.ts:429](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L429)
 
 ___
 
@@ -1597,7 +1597,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:83](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L83)
+[utils/symbol_tools.ts:83](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L83)
 
 ___
 
@@ -1621,7 +1621,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:379](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L379)
+[utils/swap_calc_utils.ts:379](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L379)
 
 ___
 
@@ -1646,7 +1646,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:270](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L270)
+[utils/swap_calc_utils.ts:270](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L270)
 
 ___
 
@@ -1671,7 +1671,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:93](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L93)
+[defs/ws_defs.ts:93](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L93)
 
 ___
 
@@ -1692,7 +1692,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:361](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L361)
+[utils/swap_calc_utils.ts:361](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L361)
 
 ___
 
@@ -1713,7 +1713,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:20](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L20)
+[utils/swap_calc_utils.ts:20](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L20)
 
 ___
 
@@ -1734,7 +1734,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:59](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L59)
+[utils/symbol_tools.ts:59](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L59)
 
 ___
 
@@ -1755,7 +1755,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:47](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L47)
+[utils/symbol_tools.ts:47](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L47)
 
 ___
 
@@ -1783,7 +1783,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:27](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L27)
+[utils/swap_calc_utils.ts:27](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L27)
 
 ___
 
@@ -1808,7 +1808,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:86](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L86)
+[defs/ws_defs.ts:86](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L86)
 
 ___
 
@@ -1829,7 +1829,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:748](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L748)
+[api/sign/sign_tools.ts:748](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L748)
 
 ___
 
@@ -1850,7 +1850,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:367](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L367)
+[api/sign/sign_tools.ts:367](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L367)
 
 ___
 
@@ -1871,7 +1871,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:460](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L460)
+[api/sign/sign_tools.ts:460](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L460)
 
 ___
 
@@ -1896,7 +1896,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:962](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L962)
+[api/sign/sign_tools.ts:962](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L962)
 
 ___
 
@@ -1921,7 +1921,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:916](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L916)
+[api/sign/sign_tools.ts:916](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L916)
 
 ___
 
@@ -1942,7 +1942,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:629](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L629)
+[api/sign/sign_tools.ts:629](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L629)
 
 ___
 
@@ -1963,7 +1963,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:811](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L811)
+[api/sign/sign_tools.ts:811](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L811)
 
 ___
 
@@ -1984,7 +1984,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:530](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L530)
+[api/sign/sign_tools.ts:530](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L530)
 
 ___
 
@@ -2005,7 +2005,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:431](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L431)
+[api/sign/sign_tools.ts:431](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L431)
 
 ___
 
@@ -2026,7 +2026,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:728](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L728)
+[api/sign/sign_tools.ts:728](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L728)
 
 ___
 
@@ -2047,7 +2047,7 @@ ___
 
 #### Defined in
 
-[utils/symbol_tools.ts:70](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/symbol_tools.ts#L70)
+[utils/symbol_tools.ts:70](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/symbol_tools.ts#L70)
 
 ___
 
@@ -2067,7 +2067,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:63](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L63)
+[utils/swap_calc_utils.ts:63](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L63)
 
 ___
 
@@ -2099,7 +2099,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:694](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L694)
+[utils/swap_calc_utils.ts:694](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L694)
 
 ___
 
@@ -2135,7 +2135,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:741](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L741)
+[utils/swap_calc_utils.ts:741](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L741)
 
 ___
 
@@ -2168,7 +2168,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:653](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L653)
+[utils/swap_calc_utils.ts:653](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L653)
 
 ___
 
@@ -2190,7 +2190,7 @@ Returns a number with commas as thousands separators
 
 #### Defined in
 
-[utils/formatter.ts:252](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L252)
+[utils/formatter.ts:252](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L252)
 
 ___
 
@@ -2210,7 +2210,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:193](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L193)
+[utils/formatter.ts:193](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L193)
 
 ___
 
@@ -2239,7 +2239,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:143](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L143)
+[api/contract_api.ts:143](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L143)
 
 ___
 
@@ -2262,7 +2262,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:67](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L67)
+[api/contract_api.ts:67](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L67)
 
 ___
 
@@ -2286,7 +2286,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L38)
+[api/contract_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L38)
 
 ___
 
@@ -2311,7 +2311,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:223](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L223)
+[api/sign/sign_tools.ts:223](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L223)
 
 ___
 
@@ -2333,7 +2333,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:254](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L254)
+[api/sign/sign_tools.ts:254](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L254)
 
 ___
 
@@ -2358,7 +2358,7 @@ ___
 
 #### Defined in
 
-[api/contract_api.ts:99](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/contract_api.ts#L99)
+[api/contract_api.ts:99](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/contract_api.ts#L99)
 
 ___
 
@@ -2381,7 +2381,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:708](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L708)
+[api/sign/sign_tools.ts:708](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L708)
 
 ___
 
@@ -2404,7 +2404,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:721](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L721)
+[api/sign/sign_tools.ts:721](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L721)
 
 ___
 
@@ -2428,7 +2428,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:714](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L714)
+[api/sign/sign_tools.ts:714](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L714)
 
 ___
 
@@ -2451,7 +2451,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:892](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L892)
+[api/sign/sign_tools.ts:892](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L892)
 
 ___
 
@@ -2475,7 +2475,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:879](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L879)
+[api/sign/sign_tools.ts:879](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L879)
 
 ___
 
@@ -2498,7 +2498,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:609](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L609)
+[api/sign/sign_tools.ts:609](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L609)
 
 ___
 
@@ -2521,7 +2521,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:622](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L622)
+[api/sign/sign_tools.ts:622](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L622)
 
 ___
 
@@ -2545,7 +2545,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:615](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L615)
+[api/sign/sign_tools.ts:615](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L615)
 
 ___
 
@@ -2568,7 +2568,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:510](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L510)
+[api/sign/sign_tools.ts:510](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L510)
 
 ___
 
@@ -2591,7 +2591,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:523](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L523)
+[api/sign/sign_tools.ts:523](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L523)
 
 ___
 
@@ -2615,7 +2615,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:516](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L516)
+[api/sign/sign_tools.ts:516](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L516)
 
 ___
 
@@ -2638,7 +2638,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:873](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L873)
+[api/sign/sign_tools.ts:873](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L873)
 
 ___
 
@@ -2661,7 +2661,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:792](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L792)
+[api/sign/sign_tools.ts:792](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L792)
 
 ___
 
@@ -2684,7 +2684,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:805](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L805)
+[api/sign/sign_tools.ts:805](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L805)
 
 ___
 
@@ -2708,7 +2708,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:798](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L798)
+[api/sign/sign_tools.ts:798](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L798)
 
 ___
 
@@ -2730,7 +2730,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:410](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L410)
+[api/sign/sign_tools.ts:410](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L410)
 
 ___
 
@@ -2752,7 +2752,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:424](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L424)
+[api/sign/sign_tools.ts:424](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L424)
 
 ___
 
@@ -2775,7 +2775,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:417](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/sign/sign_tools.ts#L417)
+[api/sign/sign_tools.ts:417](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/sign/sign_tools.ts#L417)
 
 ___
 
@@ -2795,7 +2795,7 @@ ___
 
 #### Defined in
 
-[utils/network_tools.ts:12](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/network_tools.ts#L12)
+[utils/network_tools.ts:12](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/network_tools.ts#L12)
 
 ___
 
@@ -2815,7 +2815,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:108](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L108)
+[utils/formatter.ts:108](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L108)
 
 ___
 
@@ -2835,7 +2835,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:87](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L87)
+[utils/formatter.ts:87](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L87)
 
 ___
 
@@ -2855,7 +2855,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:16](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L16)
+[utils/formatter.ts:16](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L16)
 
 ___
 
@@ -2879,7 +2879,7 @@ Returns number in string with a given precision
 
 #### Defined in
 
-[utils/formatter.ts:220](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L220)
+[utils/formatter.ts:220](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L220)
 
 ___
 
@@ -2899,7 +2899,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:126](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L126)
+[utils/formatter.ts:126](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L126)
 
 ___
 
@@ -2919,7 +2919,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:39](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L39)
+[utils/formatter.ts:39](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L39)
 
 ___
 
@@ -2939,7 +2939,7 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:66](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L66)
+[utils/formatter.ts:66](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L66)
 
 ___
 
@@ -2962,7 +2962,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:51](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L51)
+[utils/swap_calc_utils.ts:51](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L51)
 
 ___
 
@@ -2993,7 +2993,7 @@ ___
 
 #### Defined in
 
-[utils/swap_calc_utils.ts:388](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/swap_calc_utils.ts#L388)
+[utils/swap_calc_utils.ts:388](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/swap_calc_utils.ts#L388)
 
 ___
 
@@ -3014,4 +3014,4 @@ ___
 
 #### Defined in
 
-[utils/formatter.ts:30](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/utils/formatter.ts#L30)
+[utils/formatter.ts:30](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/utils/formatter.ts#L30)

@@ -79,7 +79,7 @@ BaseAPI.constructor
 
 #### Defined in
 
-[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L29)
+[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L29)
 
 ## Properties
 
@@ -93,7 +93,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L26)
+[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L26)
 
 ## Methods
 
@@ -114,7 +114,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/user_api.ts:1242](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1242)
+[api/user_api.ts:1242](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1242)
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:278](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L278)
+[api/user_api.ts:278](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L278)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:252](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L252)
+[api/user_api.ts:252](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L252)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:219](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L219)
+[api/user_api.ts:219](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L219)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:582](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L582)
+[api/user_api.ts:582](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L582)
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:656](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L656)
+[api/user_api.ts:656](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L656)
 
 ___
 
@@ -243,7 +243,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:111](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L111)
+[api/user_api.ts:111](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L111)
 
 ___
 
@@ -264,7 +264,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:621](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L621)
+[api/user_api.ts:621](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L621)
 
 ___
 
@@ -285,7 +285,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:133](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L133)
+[api/user_api.ts:133](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L133)
 
 ___
 
@@ -306,7 +306,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:152](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L152)
+[api/user_api.ts:152](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L152)
 
 ___
 
@@ -327,7 +327,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:43](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L43)
+[api/user_api.ts:43](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L43)
 
 ___
 
@@ -348,7 +348,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:354](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L354)
+[api/user_api.ts:354](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L354)
 
 ___
 
@@ -369,7 +369,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:386](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L386)
+[api/user_api.ts:386](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L386)
 
 ___
 
@@ -390,7 +390,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:525](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L525)
+[api/user_api.ts:525](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L525)
 
 ___
 
@@ -411,7 +411,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1275](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1275)
+[api/user_api.ts:1275](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1275)
 
 ___
 
@@ -432,7 +432,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1103](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1103)
+[api/user_api.ts:1103](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1103)
 
 ___
 
@@ -453,7 +453,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1148](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1148)
+[api/user_api.ts:1148](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1148)
 
 ___
 
@@ -474,7 +474,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1126](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1126)
+[api/user_api.ts:1126](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1126)
 
 ___
 
@@ -495,7 +495,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:409](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L409)
+[api/user_api.ts:409](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L409)
 
 ___
 
@@ -516,7 +516,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:557](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L557)
+[api/user_api.ts:557](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L557)
 
 ___
 
@@ -537,7 +537,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:329](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L329)
+[api/user_api.ts:329](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L329)
 
 ___
 
@@ -558,7 +558,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:304](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L304)
+[api/user_api.ts:304](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L304)
 
 ___
 
@@ -579,7 +579,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:485](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L485)
+[api/user_api.ts:485](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L485)
 
 ___
 
@@ -600,7 +600,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:431](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L431)
+[api/user_api.ts:431](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L431)
 
 ___
 
@@ -621,7 +621,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:454](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L454)
+[api/user_api.ts:454](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L454)
 
 ___
 
@@ -641,7 +641,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1295](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1295)
+[api/user_api.ts:1295](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1295)
 
 ___
 
@@ -662,7 +662,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1310](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1310)
+[api/user_api.ts:1310](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1310)
 
 ___
 
@@ -680,7 +680,7 @@ BaseAPI.makeReq
 
 #### Defined in
 
-[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L49)
+[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L49)
 
 ___
 
@@ -706,7 +706,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:686](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L686)
+[api/user_api.ts:686](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L686)
 
 ___
 
@@ -730,7 +730,7 @@ BaseAPI.setBaseUrl
 
 #### Defined in
 
-[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L45)
+[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L45)
 
 ___
 
@@ -754,7 +754,7 @@ BaseAPI.setChainId
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L41)
 
 ___
 
@@ -774,7 +774,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:788](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L788)
+[api/user_api.ts:788](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L788)
 
 ___
 
@@ -794,7 +794,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:869](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L869)
+[api/user_api.ts:869](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L869)
 
 ___
 
@@ -814,7 +814,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1026](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1026)
+[api/user_api.ts:1026](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1026)
 
 ___
 
@@ -834,7 +834,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:949](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L949)
+[api/user_api.ts:949](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L949)
 
 ___
 
@@ -854,7 +854,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:710](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L710)
+[api/user_api.ts:710](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L710)
 
 ___
 
@@ -876,7 +876,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:177](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L177)
+[api/user_api.ts:177](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L177)
 
 ___
 
@@ -896,7 +896,7 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:1172](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L1172)
+[api/user_api.ts:1172](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L1172)
 
 ___
 
@@ -918,4 +918,4 @@ ___
 
 #### Defined in
 
-[api/user_api.ts:77](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/user_api.ts#L77)
+[api/user_api.ts:77](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/user_api.ts#L77)

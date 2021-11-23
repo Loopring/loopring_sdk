@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[defs/ws_defs.ts:32](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L32)
+[defs/ws_defs.ts:32](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L32)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:35](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L35)
+[defs/ws_defs.ts:35](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L35)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:34](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L34)
+[defs/ws_defs.ts:34](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L34)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[defs/ws_defs.ts:33](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/ws_defs.ts#L33)
+[defs/ws_defs.ts:33](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/ws_defs.ts#L33)

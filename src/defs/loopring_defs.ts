@@ -337,7 +337,7 @@ export interface TokenVolumeNFT   {
      */
     tokenId: string | number;
     /**
-     * The ammount of the token
+     * The amount of the token
      * @type {string}
      * @memberof TokenVolumeV3
      */
@@ -1533,7 +1533,7 @@ export interface NFTMintRequestV3{
      */
     nftId:  string
     /**
-     * The ammount of the token
+     * The amount of the token
      * @type {string}
      * @memberof TokenVolumeV3
      */

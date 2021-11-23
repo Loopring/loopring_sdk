@@ -51,7 +51,7 @@
 
 #### Defined in
 
-[defs/error_codes.ts:6](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L6)
+[defs/error_codes.ts:6](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L6)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:33](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L33)
+[defs/error_codes.ts:33](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L33)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:21](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L21)
+[defs/error_codes.ts:21](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L21)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:9](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L9)
+[defs/error_codes.ts:9](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L9)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:30](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L30)
+[defs/error_codes.ts:30](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L30)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:20](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L20)
+[defs/error_codes.ts:20](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L20)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:14](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L14)
+[defs/error_codes.ts:14](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L14)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:35](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L35)
+[defs/error_codes.ts:35](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L35)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:11](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L11)
+[defs/error_codes.ts:11](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L11)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:34](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L34)
+[defs/error_codes.ts:34](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L34)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:4](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L4)
+[defs/error_codes.ts:4](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L4)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:22](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L22)
+[defs/error_codes.ts:22](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L22)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:12](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L12)
+[defs/error_codes.ts:12](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L12)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:24](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L24)
+[defs/error_codes.ts:24](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L24)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:23](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L23)
+[defs/error_codes.ts:23](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L23)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:18](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L18)
+[defs/error_codes.ts:18](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L18)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:13](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L13)
+[defs/error_codes.ts:13](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L13)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:29](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L29)
+[defs/error_codes.ts:29](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L29)
 
 ___
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:36](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L36)
+[defs/error_codes.ts:36](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L36)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:15](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L15)
+[defs/error_codes.ts:15](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L15)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:16](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L16)
+[defs/error_codes.ts:16](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L16)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:19](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L19)
+[defs/error_codes.ts:19](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L19)
 
 ___
 
@@ -271,7 +271,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:31](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L31)
+[defs/error_codes.ts:31](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L31)
 
 ___
 
@@ -281,7 +281,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:17](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L17)
+[defs/error_codes.ts:17](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L17)
 
 ___
 
@@ -291,7 +291,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:41](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L41)
+[defs/error_codes.ts:41](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L41)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:40](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L40)
+[defs/error_codes.ts:40](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L40)
 
 ___
 
@@ -311,7 +311,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:28](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L28)
+[defs/error_codes.ts:28](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L28)
 
 ___
 
@@ -321,7 +321,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:26](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L26)
+[defs/error_codes.ts:26](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L26)
 
 ___
 
@@ -331,7 +331,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:3](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L3)
+[defs/error_codes.ts:3](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L3)
 
 ___
 
@@ -341,7 +341,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:25](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L25)
+[defs/error_codes.ts:25](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L25)
 
 ___
 
@@ -351,7 +351,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:44](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L44)
+[defs/error_codes.ts:44](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L44)
 
 ___
 
@@ -361,7 +361,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:43](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L43)
+[defs/error_codes.ts:43](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L43)
 
 ___
 
@@ -371,7 +371,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:10](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L10)
+[defs/error_codes.ts:10](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L10)
 
 ___
 
@@ -381,7 +381,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:39](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L39)
+[defs/error_codes.ts:39](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L39)
 
 ___
 
@@ -391,7 +391,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:7](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L7)
+[defs/error_codes.ts:7](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L7)
 
 ___
 
@@ -401,4 +401,4 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:37](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/error_codes.ts#L37)
+[defs/error_codes.ts:37](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/error_codes.ts#L37)

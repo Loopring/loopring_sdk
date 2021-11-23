@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[defs/web3_defs.ts:16](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L16)
+[defs/web3_defs.ts:16](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L16)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:14](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L14)
+[defs/web3_defs.ts:14](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L14)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:10](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L10)
+[defs/web3_defs.ts:10](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L10)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:11](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L11)
+[defs/web3_defs.ts:11](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L11)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:15](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L15)
+[defs/web3_defs.ts:15](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L15)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:9](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L9)
+[defs/web3_defs.ts:9](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L9)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:12](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L12)
+[defs/web3_defs.ts:12](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L12)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:13](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/web3_defs.ts#L13)
+[defs/web3_defs.ts:13](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/web3_defs.ts#L13)

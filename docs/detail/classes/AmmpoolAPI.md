@@ -60,7 +60,7 @@ BaseAPI.constructor
 
 #### Defined in
 
-[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L29)
+[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L29)
 
 ## Properties
 
@@ -74,7 +74,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L26)
+[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L26)
 
 ## Methods
 
@@ -96,7 +96,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/ammpool_api.ts:549](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L549)
+[api/ammpool_api.ts:549](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L549)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:281](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L281)
+[api/ammpool_api.ts:281](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L281)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:199](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L199)
+[api/ammpool_api.ts:199](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L199)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:364](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L364)
+[api/ammpool_api.ts:364](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L364)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:54](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L54)
+[api/ammpool_api.ts:54](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L54)
 
 ___
 
@@ -178,7 +178,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:141](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L141)
+[api/ammpool_api.ts:141](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L141)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:166](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L166)
+[api/ammpool_api.ts:166](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L166)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:334](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L334)
+[api/ammpool_api.ts:334](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L334)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:307](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L307)
+[api/ammpool_api.ts:307](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L307)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:500](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L500)
+[api/ammpool_api.ts:500](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L500)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:473](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L473)
+[api/ammpool_api.ts:473](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L473)
 
 ___
 
@@ -293,7 +293,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:113](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L113)
+[api/ammpool_api.ts:113](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L113)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:409](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L409)
+[api/ammpool_api.ts:409](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L409)
 
 ___
 
@@ -334,7 +334,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:431](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L431)
+[api/ammpool_api.ts:431](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L431)
 
 ___
 
@@ -355,7 +355,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:187](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L187)
+[api/ammpool_api.ts:187](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L187)
 
 ___
 
@@ -376,7 +376,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:451](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L451)
+[api/ammpool_api.ts:451](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L451)
 
 ___
 
@@ -398,7 +398,7 @@ ___
 
 #### Defined in
 
-[api/ammpool_api.ts:521](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/ammpool_api.ts#L521)
+[api/ammpool_api.ts:521](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/ammpool_api.ts#L521)
 
 ___
 
@@ -416,7 +416,7 @@ BaseAPI.makeReq
 
 #### Defined in
 
-[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L49)
+[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L49)
 
 ___
 
@@ -440,7 +440,7 @@ BaseAPI.setBaseUrl
 
 #### Defined in
 
-[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L45)
+[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L45)
 
 ___
 
@@ -464,4 +464,4 @@ BaseAPI.setChainId
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L41)

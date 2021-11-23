@@ -47,7 +47,7 @@ BaseAPI.constructor
 
 #### Defined in
 
-[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L29)
+[api/base_api.ts:29](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L29)
 
 ## Properties
 
@@ -61,7 +61,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L26)
+[api/base_api.ts:26](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L26)
 
 ## Methods
 
@@ -81,7 +81,7 @@ BaseAPI.baseUrl
 
 #### Defined in
 
-[api/wallet_api.ts:111](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/wallet_api.ts#L111)
+[api/wallet_api.ts:111](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/wallet_api.ts#L111)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:75](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/wallet_api.ts#L75)
+[api/wallet_api.ts:75](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/wallet_api.ts#L75)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:16](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/wallet_api.ts#L16)
+[api/wallet_api.ts:16](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/wallet_api.ts#L16)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:54](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/wallet_api.ts#L54)
+[api/wallet_api.ts:54](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/wallet_api.ts#L54)
 
 ___
 
@@ -159,7 +159,7 @@ BaseAPI.makeReq
 
 #### Defined in
 
-[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L49)
+[api/base_api.ts:49](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L49)
 
 ___
 
@@ -183,7 +183,7 @@ BaseAPI.setBaseUrl
 
 #### Defined in
 
-[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L45)
+[api/base_api.ts:45](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L45)
 
 ___
 
@@ -207,4 +207,4 @@ BaseAPI.setChainId
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/api/base_api.ts#L41)

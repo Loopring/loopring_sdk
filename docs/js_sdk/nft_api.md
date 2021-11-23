@@ -7,6 +7,7 @@ NFT deposit step:
 NFT View step:
  - getContractNFTMeta;
  - getIPFS JSON information;
+
 ### approveNFT
 ```typescript
     const nonce = await contract.getNonce(web3, loopring_exported_account.address)

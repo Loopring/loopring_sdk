@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[defs/account_defs.ts:4](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L4)
+[defs/account_defs.ts:4](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L4)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:6](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L6)
+[defs/account_defs.ts:6](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L6)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:10](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L10)
+[defs/account_defs.ts:10](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L10)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:11](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L11)
+[defs/account_defs.ts:11](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L11)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:9](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L9)
+[defs/account_defs.ts:9](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L9)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:5](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L5)
+[defs/account_defs.ts:5](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L5)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:7](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L7)
+[defs/account_defs.ts:7](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L7)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:8](https://github.com/Loopring/loopring_sdk/blob/acbd5a2/src/defs/account_defs.ts#L8)
+[defs/account_defs.ts:8](https://github.com/Loopring/loopring_sdk/blob/ea87b1c/src/defs/account_defs.ts#L8)
