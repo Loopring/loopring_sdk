@@ -4,6 +4,7 @@
 
 - [Introduction](README.md)
 - [Changelog](ChangeLog.md)
+- [GitHub](https://github.com/Loopring/loopring_sdk)
 
 ### SDKs demo
 
