@@ -10,7 +10,8 @@ const getBaseUrlByChainId = (id: ChainId) => {
             baseUrl = 'https://api.loopring.network'
             break
         default:
-            baseUrl = 'https://api.uat.loopring.pro'
+            // baseUrl = 'https://api.uat.loopring.pro'
+            baseUrl = 'https://uat2.loopring.io'
     }
 
     return baseUrl
