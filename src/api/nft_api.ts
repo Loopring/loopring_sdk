@@ -5,6 +5,7 @@ import { myLog } from '../utils/log_tools';
 import Web3 from 'web3';
 import { genExchangeData, sendRawTx } from './contract_api';
 import contracts from './ethereum/contracts';
+import { ApproveParam, ContractNFTMetaParam, DepositNFTParam, IsApproveParam } from '../defs/nft_defs';
 
 export enum NFTType {
     ERC1155 = 0,
@@ -45,13 +46,12 @@ export class NFTAPI extends BaseAPI {
             type === NFTType.ERC1155 ? contracts.Contracts.erc1155Abi : contracts.Contracts.erc721Abi,
             contractAddress
         );
-
-        // new Contract(
-        //     type === NFTType.ERC1155 ? erc1155Abi : erc721Abi,
-        //     contractAddress
-        // );
     }
 
+    /**
+     * getInfoForNFTTokens
+     * @param nftDatas NftData[]
+     */
     public async getInfoForNFTTokens({nftDatas}: { nftDatas: NftData[] }): Promise<{ [ key: string ]: NFTTokenInfo } | undefined> {
         try {
             const reqParams: ReqParams = {
@@ -74,19 +74,25 @@ export class NFTAPI extends BaseAPI {
         }
     }
 
+    /**
+     * getContractNFTMeta
+     * @param web3
+     * @param tokenAddress
+     * @param _id
+     * @param nftType
+     */
     public async getContractNFTMeta({
                                         web3,
                                         tokenAddress,
                                         _id,
                                         nftType = NFTType.ERC1155,
-                                    }: { web3: any, tokenAddress: string, _id: string, nftType?: NFTType }) {
+                                    }: ContractNFTMetaParam) {
         try {
             const result = await this.callContractMethod(web3, NFTMethod.uri, [_id],
                 tokenAddress,
                 nftType)
             myLog(tokenAddress, '_id', _id, result);
             return await (fetch(result.replace('{id}', _id)).then(response => response.json()))
-
         } catch (error) {
             return undefined
         }
@@ -94,7 +100,7 @@ export class NFTAPI extends BaseAPI {
     }
 
     /**
-     *
+     * approveNFT
      * @param web3
      * @param from  The address that deposits the funds to the exchange
      * @param to  The address  deposits to
@@ -119,19 +125,7 @@ export class NFTAPI extends BaseAPI {
                                 chainId,
                                 nonce,
                                 sendByMetaMask = true
-                            }: {
-        web3: Web3,
-        from: string,
-        depositAddress: string,
-        tokenAddress: string,
-        tokenId: string,
-        nftType: NFTType,
-        gasPrice: number,
-        gasLimit: number,
-        chainId: ChainId,
-        nonce: number,
-        sendByMetaMask?: boolean
-    }) {
+                            }: ApproveParam) {
         let data: any;
 
         if (nftType === NFTType.ERC1155) {
@@ -150,19 +144,21 @@ export class NFTAPI extends BaseAPI {
 
     }
 
+    /**
+     * isApprovedForAll
+     * @param web3
+     * @param from The address that deposits the funds to the exchange
+     * @param exchangeAddress loopring exchange address
+     * @param nftType  NFTType
+     * @param tokenAddress  The address of NFT token
+     */
     public async isApprovedForAll({
                                       web3,
                                       from,
                                       exchangeAddress,
                                       nftType = NFTType.ERC1155,
                                       tokenAddress,
-                                  }: {
-                                      web3: Web3,
-                                      from: string,
-                                      exchangeAddress: string,
-                                      nftType: NFTType,
-                                      tokenAddress: string
-                                  }                                  // chainId: ChainId,
+                                  }: IsApproveParam
     ) {
 
         try {
@@ -176,6 +172,23 @@ export class NFTAPI extends BaseAPI {
         }
     }
 
+
+    /**
+     * @DepositParam  an NFT to the specified account.
+     * @param web3
+     * @param from The address that deposits the funds to the exchange
+     * @param to The account owner's address receiving the funds
+     * @param nftType The type of NFT contract address (ERC721/ERC1155/...)
+     * @param tokenAddress The address of NFT token
+     * @param nftID The token type 'id`.
+     * @param amount The amount of tokens to deposit.
+     * @param nonce: number,
+     * @param gasPrice: number,
+     * @param gasLimit: number,
+     * @param extraData Optional extra data used by the deposit contract.
+     * @param chainId  0|5
+     * @param sendByMetaMask boolean
+     */
     public async depositNFT(
         {
             web3,
@@ -191,21 +204,7 @@ export class NFTAPI extends BaseAPI {
             nonce,
             extraData,
             sendByMetaMask = true
-        }: {
-            web3: Web3,
-            from: string,
-            exchangeAddress: string,
-            nftType?: NFTType,
-            tokenAddress: string,
-            nftID: string,
-            amount: number,
-            gasPrice: number,
-            gasLimit: number,
-            chainId?: ChainId,
-            nonce: number,
-            extraData?: any,
-            sendByMetaMask?: boolean
-        }
+        }: DepositNFTParam
     ) {
         const data = genExchangeData(NFTMethod.depositNFT, {
             from,
@@ -226,20 +225,4 @@ export class NFTAPI extends BaseAPI {
 }
 
 
-/**
- * @description Deposits an NFT to the specified account.
- * @param web3
- * @param from The address that deposits the funds to the exchange
- * @param to The account owner's address receiving the funds
- * @param nftType The type of NFT contract address (ERC721/ERC1155/...)
- * @param tokenAddress The address of the token
- * @param nftID The token type 'id`.
- * @param amount The amount of tokens to deposit.
- * @param nonce: number,
- * @param gasPrice: number,
- * @param gasLimit: number,
- * @param extraData Optional extra data used by the deposit contract.
- * @param chainId  0|5
- * @param sendByMetaMask boolean
- */
 
