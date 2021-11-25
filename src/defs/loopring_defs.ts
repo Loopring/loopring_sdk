@@ -821,7 +821,11 @@ export interface OffChainWithdrawalRequestV3 {
      */
     validUntil: number;
     /**
-     * min gas for on-chain withdraw, Loopring exchange allocates gas for each distribution, but people can also assign this min gas, so Loopring have to allocate higher gas value for this specific distribution. Normally no need to take care of this value, 0 means let loopring choose the reasonable gas
+     * min gas for on-chain withdraw, Loopring exchange allocates gas for each distribution,
+     * but people can also assign this min gas,
+     * so Loopring has to allocate higher gas value for this specific distribution.
+     * Normally no need to take care of this value,
+     * 0 means let loopring choose the reasonable gas
      * @type {number}
      * @memberof OffChainWithdrawalRequestV3
      */

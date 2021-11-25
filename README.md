@@ -28,7 +28,7 @@ Please see the [documentation page](https://loopring.github.io/loopring_sdk/) fo
 
 ## ✨ Changelog
 
-- [JS SDK](https://docs.loopring.io/en/ChangeLog.html)
+- [Changelog](https://loopring.github.io/loopring_sdk/ChangeLog.html)
 
 ## 🫂 Community
 
