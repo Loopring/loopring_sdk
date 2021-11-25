@@ -24,7 +24,7 @@ yarn add @loopring-web/loopring-sdk
 
 ## Getting Started
 
-### Initalize the APIs
+### Initialize the APIs
 
 ```javascript
 const userApi: UserAPI = new UserApi(ChainId.GORLI);
@@ -37,7 +37,7 @@ const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI);
 
 ### Example (Transfer Process)
 
-#### 1. Initalize the api
+#### 1. Initialize the api
 
 ```javascript
 const api: UserAPI = new UserApi(ChainId.GORLI);
