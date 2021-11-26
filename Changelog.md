@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ### JS SDK Version ChangeLog
+### v0.2.9
+    FIX: AccountInfo.fronzen to frozen
 ### v0.2.8
     1) NFT refactory the interface fot doc
 ### v0.2.7
