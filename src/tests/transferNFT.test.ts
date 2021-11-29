@@ -3,7 +3,7 @@ import { UserAPI, ExchangeAPI, WhitelistedUserAPI, get_EddsaSig_NFT_Transfer, } 
 
 
 import {
-    GetNextStorageIdRequest, GetUserApiKeyRequest,
+    GetNextStorageIdRequest, GetNFTOffchainFeeAmtRequest, GetUserApiKeyRequest,
     OriginNFTTransferRequestV3,
 } from '../defs/loopring_defs'
 
@@ -17,6 +17,7 @@ const PrivateKeyProvider = require("truffle-privatekey-provider")
 import Web3 from 'web3'
 import { loopring_exported_account } from './utils';
 import * as sign_tools from '../api/sign/sign_tools';
+import { OffchainNFTFeeReqType } from '../defs';
 
 let userApi: UserAPI
 
@@ -106,7 +107,15 @@ describe('Transfer NFT test', function () {
             sellTokenId: 1
         }
 
-        const storageId = await userApi.getNextStorageId(request2, apiKey)
+        const storageId = await userApi.getNextStorageId(request2, apiKey);
+
+        const requestFee: GetNFTOffchainFeeAmtRequest = {
+            accountId:accInfo.accountId,
+            tokenAddress:loopring_exported_account.nftTokenAddress,
+            requestType:OffchainNFTFeeReqType.NFT_TRANSFER,
+            amount:'0',
+        }
+        const responseFee = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey)
 
         const request3:OriginNFTTransferRequestV3 = {
             exchange: loopring_exported_account.exchangeAddr,
@@ -121,7 +130,7 @@ describe('Transfer NFT test', function () {
             },
             maxFee: {
                 tokenId: 1,
-                amount: '3260000000000000'
+                amount: responseFee.fees[0]?.fee??'3260000000000000'
             },
             storageId: storageId.offchainId,
             validUntil: 1667396982
