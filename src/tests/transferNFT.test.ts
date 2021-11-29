@@ -120,8 +120,8 @@ describe('Transfer NFT test', function () {
                 amount: '1',
             },
             maxFee: {
-                tokenId: 2,
-                amount: '311000000000000000000'
+                tokenId: 1,
+                amount: '3260000000000000'
             },
             storageId: storageId.offchainId,
             validUntil: 1667396982
@@ -130,7 +130,7 @@ describe('Transfer NFT test', function () {
 
         const response = await userApi.submitNFTInTransfer({
             request:request3,
-            web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.MetaMask,
+            web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
             eddsaKey: eddsaKey.sk, apiKey})
         console.log('response:',response)
 
