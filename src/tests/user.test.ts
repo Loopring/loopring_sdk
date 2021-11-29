@@ -1,668 +1,151 @@
 import { ChainId, ConnectorNames } from '../defs/web3_defs'
-import { UserAPI } from '../api/user_api'
-import { ExchangeAPI } from '../api/exchange_api'
+import { ExchangeAPI, UserAPI, WhitelistedUserAPI, } from '../api'
 
-import { edd, loopring_exported_account as acc, web3, } from './utils'
 import { dumpError400 } from '../utils/network_tools'
 
 import {
-    GetAccountRequest, GetOrdersRequest, SubmitOrderRequestV3,
-    GetMinimumTokenAmtRequest,
-    UpdateAccountRequestV3,
-    UpdateUserApiKeyRequest,
+    GetAccountRequest,
     GetNextStorageIdRequest,
-    GetUserOrderFeeRateRequest,
-    GetUserFeeRateRequest,
-    GetUserBalancesRequest,
-    GetUserDepositHistoryRequest,
-    GetUserOnchainWithdrawalHistoryRequest,
     GetUserApiKeyRequest,
-    GetOrderDetailsRequest,
-    GetUserTradesRequest,
-    OffChainWithdrawalRequestV3,
-    GetOffchainFeeAmtRequest,
     OriginTransferRequestV3,
-    GetUserTransferListRequest,
-    GetUserTxsRequest,
-    SetReferrerRequest,
-    CancelOrderRequest,
-    GetUserNFTBalancesRequest,
 } from '../defs/loopring_defs'
 
-import {
-    OffchainFeeReqType,
-    OrderType,
-    TradeChannel,
-} from '../defs/loopring_enums'
-
-import Web3 from 'web3'
-const PrivateKeyProvider = require("truffle-privatekey-provider")
-
-import {
-    VALID_UNTIL,
-    DEFAULT_TIMEOUT,
-} from '../defs/loopring_constants'
+import { DEFAULT_TIMEOUT, VALID_UNTIL, } from '../defs/loopring_constants'
 
 import * as sign_tools from '../api/sign/sign_tools'
-import { getTokenInfoBySymbol, toBig } from '../utils'
+import Web3 from 'web3'
 
-let api: UserAPI
+const PrivateKeyProvider = require("truffle-privatekey-provider")
+
+let userApi: UserAPI
+
+let whitelistedUserApi: WhitelistedUserAPI
 
 let exchange: ExchangeAPI
 
-let orderHash = process.env.ORDER_HASH ? process.env.ORDER_HASH : ''
-let clientOrderId = process.env.CID ? process.env.CID : ''
+let address = '0xff7d59d9316eba168837e3ef924bcdfd64b237d8'
 
-let mainAcc = parseInt(process.env.MAINNET_ACC ? process.env.MAINNET_ACC : '')
-let mainApiKey = process.env.MAINNET_APIKEY ? process.env.MAINNET_APIKEY : ''
+const privateKey = "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf"
 
-describe('UserAPI test', function () {
+///-----------------
+
+let addressWhitlisted = '0x35405E1349658BcA12810d0f879Bf6c5d89B512C'
+
+let privateKey2 = 'ada29a473e2b777403e7d2dc3876c5be03ca6b60d97e37e9bd335b1ce05a2680'
+
+let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
+
+describe('Transfer test', function () {
 
     beforeEach(async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        exchange = new ExchangeAPI({ chainId: ChainId.GOERLI })
+        userApi = new UserAPI({chainId: ChainId.GOERLI})
+        exchange = new ExchangeAPI({chainId: ChainId.GOERLI})
+        whitelistedUserApi = new WhitelistedUserAPI({chainId: ChainId.GOERLI})
     })
 
-    it('getUserApiKey', async () => {
+    it('getAccountWhitelisted', async () => {
+        const request: GetAccountRequest = {
+            owner: addressWhitlisted
+        }
+        const response = await exchange.getAccount(request)
+        console.log(response)
+    }, DEFAULT_TIMEOUT)
+
+    it('getUserApiKeyWhitelisted', async () => {
         try {
 
-            const { accInfo } = await exchange.getAccount({ owner: acc.address })
+            // step 0. init web3
+            const provider = new PrivateKeyProvider(
+                privateKey2,
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            const {accInfo} = await exchange.getAccount({owner: addressWhitlisted})
+
+            if (!accInfo) {
+                return
+            }
+
+            const {exchangeInfo} = await exchange.getExchangeInfo()
 
             console.log('accInfo:', accInfo)
 
             const eddsakey = await sign_tools
                 .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: accInfo?.nonce as number - 1,
-                    walletType: ConnectorNames.MetaMask,
-                }
+                        web3,
+                        address: addressWhitlisted,
+                        exchangeAddress: exchangeInfo.exchangeAddress,
+                        keyNonce: accInfo.nonce - 1,
+                        walletType: ConnectorNames.MetaMask,
+                    }
                 )
 
             console.log('eddsakey:', eddsakey.sk)
 
             const request: GetUserApiKeyRequest = {
-                accountId: acc.accountId,
+                accountId: accInfo.accountId,
             }
 
-            const response = await api.getUserApiKey(request, eddsakey.sk)
+            const response = await userApi.getUserApiKey(request, eddsakey.sk)
             console.log(response)
         } catch (reason) {
             dumpError400(reason)
         }
     }, DEFAULT_TIMEOUT)
 
-    it('updateUserApiKey', async () => {
+    it('full_transfer_case', async () => {
         try {
 
-            const { accInfo } = await exchange.getAccount({ owner: acc.address })
+            // step 0. init web3
+            const provider = new PrivateKeyProvider(
+                privateKey,
+                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+            );
+            const web3 = new Web3(provider)
+
+            // step 1. get account info
+            const {accInfo} = await exchange.getAccount({owner: address})
+
+            if (!accInfo) {
+                return
+            }
+
+            const {exchangeInfo} = await exchange.getExchangeInfo()
 
             console.log('accInfo:', accInfo)
 
             const eddsakey = await sign_tools
                 .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: accInfo?.nonce as number - 1,
-                    walletType: ConnectorNames.MetaMask,
-                }
+                        web3,
+                        address: addressWhitlisted,
+                        exchangeAddress: exchangeInfo.exchangeAddress,
+                        keyNonce: accInfo.nonce - 1,
+                        walletType: ConnectorNames.MetaMask,
+                    }
                 )
 
-            const request: UpdateUserApiKeyRequest = {
-                accountId: acc.accountId,
+            console.log('eddsakey:', eddsakey.sk)
+
+            // step 3 get apikey
+            const request: GetUserApiKeyRequest = {
+                accountId: accInfo.accountId,
             }
 
-            const response = await api.updateUserApiKey(request, acc.apiKey, eddsakey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
+            const {apiKey} = await userApi.getUserApiKey(request, eddsakey.sk)
 
-    it('getUserRegTxs', async () => {
-        const response = await api.getUserRegTxs({ accountId: acc.accountId }, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserPwdResetTxs', async () => {
-        const response = await api.getUserPwdResetTxs({ accountId: acc.accountId }, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTxs', async () => {
-        const request: GetUserTxsRequest = {
-            accountId: acc.accountId,
-            tokenSymbol: 'ETH',
-        }
-        const response = await api.getUserTxs(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTrades_both', async () => {
-        const request: GetUserTradesRequest = {
-            accountId: acc.accountId,
-            market: 'AMM-ETH-USDT,ETH-USDT',
-        }
-        const response = await api.getUserTrades(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTrade_t3', async () => {
-        const request: GetUserTradesRequest = {
-            accountId: acc.accountId,
-            market: 'AMM-ETH-USDT',
-        }
-        console.log('AMM-ETH-USDT getUserTrade_t3')
-        const response = await api.getUserTrades(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTrade_t2', async () => {
-        const request: GetUserTradesRequest = {
-            accountId: acc.accountId,
-            market: 'AMM-ETH-USDT',
-            fillTypes: 'dex,amm',
-        }
-        console.log('AMM-ETH-USDT getUserTrade_t2')
-        const response = await api.getUserTrades(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTrade_t', async () => {
-        const request: GetUserTradesRequest = {
-            accountId: acc.accountId,
-            market: 'ETH-USDT',
-            fillTypes: 'dex,amm',
-        }
-        console.log('ETH-USDT getUserTrade_t2')
-        const response = await api.getUserTrades(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getNextStorageId', async () => {
-        const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId,
-            sellTokenId: 1
-        }
-        const response = await api.getNextStorageId(request, acc.apiKey)
-        console.log(response)
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserFeeRate', async () => {
-        try {
-            const request: GetUserFeeRateRequest = {
-                accountId: acc.accountId,
-                markets: 'AMM-LRC-ETH,AMM-LRC-USDT',
+            // step 4 get storageId
+            const request2: GetNextStorageIdRequest = {
+                accountId: accInfo.accountId,
+                sellTokenId: 1
             }
-            const response = await api.getUserFeeRate(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserOrderFeeRate', async () => {
-        try {
-            const request: GetUserOrderFeeRateRequest = {
-                accountId: acc.accountId,
-                market: 'LRC-ETH',
-                tokenB: 0,
-                amountB: '1000000000000000000',
-            }
-            const response = await api.getUserOrderFeeRate(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getMinimumTokenAmt_AMM', async () => {
-        try {
-            const request: GetMinimumTokenAmtRequest = {
-                accountId: acc.accountId,
-                market: 'AMM-ETH-USDT',
-            }
-
-            const response = await api.getMinimumTokenAmt(request, acc.apiKey)
-            console.log(response)
-            console.log(response.raw_data.amounts)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getMinimumTokenAmt', async () => {
-        try {
-            const request: GetMinimumTokenAmtRequest = {
-                accountId: acc.accountId,
-                market: 'LRC-ETH',
-            }
-
-            const response = await api.getMinimumTokenAmt(request, acc.apiKey)
-            console.log(response)
-            console.log(response.raw_data.amounts)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_up', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.UPDATE_ACCOUNT,
-            }
-            const type = OffchainFeeReqType.ORDER
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-            console.log('fees:', response.raw_data.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_fast1', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'USDT',
-                amount: '1e+10',
-            }
-
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-            console.log('fees:', response.raw_data.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_fast2', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'USDT',
-                amount: '1e+6',
-            }
-
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-            console.log('fees:', response.raw_data.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_fast3', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'ETH',
-                amount: '1e+19',
-            }
-
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-            console.log('fees:', response.raw_data.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_with_amt', async () => {
-        try {
-            api = new UserAPI({ chainId: ChainId.MAINNET })
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: mainAcc,
-                amount: toBig('1e+19').toString(),
-                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'LRC',
-            }
-            const type = OffchainFeeReqType.ORDER
-            const response = await api.getOffchainFeeAmt(request, mainApiKey)
-
-            console.log('-----------------\nMAINNET:', request)
-            console.log('fees:', response.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_with_amt3', async () => {
-        try {
-            api = new UserAPI({ chainId: ChainId.MAINNET })
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: mainAcc,
-                amount: toBig('1').toString(),
-                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'LRC',
-            }
-            const type = OffchainFeeReqType.ORDER
-            const response = await api.getOffchainFeeAmt(request, mainApiKey)
-
-            console.log('-----------------\nMAINNET:', request)
-            console.log('fees:', response.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_with_amt2', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                amount: toBig('1e+19').toString(),
-                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'LRC',
-            }
-            const type = OffchainFeeReqType.ORDER
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-
-            console.log('-----------------\nGORLI:', request)
-            console.log('fees:', response.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt_std', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-                tokenSymbol: 'LRC',
-            }
-            const type = OffchainFeeReqType.ORDER
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-            console.log('fees:', response.raw_data.fees)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOffchainFeeAmt2', async () => {
-        try {
-            const request: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                tokenSymbol: 'ETH',
-                requestType: OffchainFeeReqType.TRANSFER,
-            }
-            const response = await api.getOffchainFeeAmt(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOrdersWithStatus', async () => {
-        try {
-            const request: GetOrdersRequest = {
-                accountId: acc.accountId,
-                status: 'cancelled',
-            }
-            const response = await api.getOrders(request, acc.apiKey)
-            console.log(response.orders[0], response.orders[1], response.orders[2], )
-            console.log(response.totalNum, )
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOrders', async () => {
-        try {
-            const request: GetOrdersRequest = {
-                accountId: acc.accountId,
-            }
-            const response = await api.getOrders(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getOrderDetails', async () => {
-        try {
-            console.log('orderHash:', orderHash)
-            const request: GetOrderDetailsRequest = {
-                accountId: acc.accountId,
-                orderHash,
-            }
-            const response = await api.getOrderDetails(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserBalances0', async () => {
-        try {
-            const request: GetUserBalancesRequest = {
-                accountId: acc.accountId,
-                tokens: '',
-            }
-
-            const response = await api.getUserBalances(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserBalances1', async () => {
-        try {
-            const request: GetUserBalancesRequest = {
-                accountId: acc.accountId,
-                tokens: '0',
-            }
-
-            const response = await api.getUserBalances(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserBalances2', async () => {
-        try {
-            const request: GetUserBalancesRequest = {
-                accountId: acc.accountId,
-                tokens: '0,1',
-            }
-
-            const response = await api.getUserBalances(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserDepositHistory1', async () => {
-        try {
-            const request: GetUserDepositHistoryRequest = {
-                accountId: acc.accountId,
-            }
-
-            const response = await api.getUserDepositHistory(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserDepositHistory2', async () => {
-        try {
-            const request: GetUserDepositHistoryRequest = {
-                hashes: '0x12da333f6e15724890876adc0dd42dc9d06d986c8175195912f388105e6001d8',
-            }
-
-            const response = await api.getUserDepositHistory(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserDepositHistory3_txHash_not_found', async () => {
-        try {
-            const request: GetUserDepositHistoryRequest = {
-                hashes: '0x492eb235e575a5e88f5db517b5ca32b717dfb862b9ab7b5f3d7af6ee48688250',
-            }
-
-            const response = await api.getUserDepositHistory(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserOnchainWithdrawalHistory', async () => {
-        try {
-            const request: GetUserOnchainWithdrawalHistoryRequest = {
-                accountId: acc.accountId,
-            }
-
-            const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
-            console.log(response.userOnchainWithdrawalHistory)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserOnchainWithdrawalHistoryWithHashes', async () => {
-        try {
-            const request: GetUserOnchainWithdrawalHistoryRequest = {
-                hashes: '0x13ef7d02f584d63522c87fb1399703fa799b1e87688742613cd8eb39ef020e26,0x19d8091e9f9baaf6986aba37093353ef1e894c9ea111122c378b01e7cf41bb8e'
-            }
-
-            const response = await api.getUserOnchainWithdrawalHistory(request, acc.apiKey)
-            console.log(response.userOnchainWithdrawalHistory)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTranferList', async () => {
-        try {
-            const request: GetUserTransferListRequest = {
-                accountId: acc.accountId,
-            }
-
-            const response = await api.getUserTranferList(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserTranferList2', async () => {
-        try {
-            const request: GetUserTransferListRequest = {
-                hashes: '0x15e95faf3d836e3210dc90cd6edab51504c66107d416cc8d754cd2fc3d7086b3,0x165ff32e57ba1afbaf2808ed4a3d1fa774ae88120aa8526b5cb2f3f209c7b4f2',
-            }
-
-            const response = await api.getUserTranferList(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('submitOffchainWithdraw', async () => {
-        const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId,
-            sellTokenId: 1
-        }
-        const storageId = await api.getNextStorageId(request, acc.apiKey)
-
-        const { accInfo } = await exchange.getAccount({
-            owner: acc.address
-        })
-
-        if (!accInfo) {
-            return
-        }
-
-        const { nonce } = accInfo
-
-        const extraData = Buffer.from('').toString()
-        console.log(`nonce:${nonce} storageId:${JSON.stringify(storageId)} extraData: ${extraData}`)
-
-        try {
-            const request: OffChainWithdrawalRequestV3 = {
-                exchange: acc.exchangeAddr,
-                owner: acc.address,
-                to: acc.address,
-                accountId: acc.accountId,
-                storageId: storageId.offchainId,
-                token: {
-                    tokenId: 1,
-                    volume: '100000000000000000000',
-                },
-                maxFee: {
-                    tokenId: 1,
-                    volume: '11000000000000000000',
-                },
-                extraData: '',
-                minGas: 0,
-                validUntil: VALID_UNTIL,
-            }
-
-            const response = await api.submitOffchainWithdraw({
-                request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
-                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey
-            })
-
-            console.log(response)
-
-        } catch (reason) {
-
-            dumpError400(reason)
-
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('submitInternalTransfer', async () => {
-        const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId,
-            sellTokenId: 1
-        }
-        const storageId = await api.getNextStorageId(request, acc.apiKey)
-
-        const { accInfo } = await exchange.getAccount({
-            owner: acc.address
-        })
-
-        if (!accInfo) {
-            return
-        }
-
-        const { nonce } = accInfo
-        console.log(`nonce:${nonce}`)
-        console.log(`storageId:${storageId}`)
-
-        // api.getUserOrderFeeRate
-
-        try {
-            const request: OriginTransferRequestV3 = {
-                exchange: acc.exchangeAddr,
-                payerAddr: acc.address,
-                payerId: acc.accountId,
+            const storageId = await userApi.getNextStorageId(request2, apiKey)
+
+            // step 5 transfer
+            const request3: OriginTransferRequestV3 = {
+                exchange: exchangeInfo.exchangeAddress,
+                payerAddr: address,
+                payerId: accInfo.accountId,
                 payeeAddr: '0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c',
                 payeeId: 10392,
                 storageId: storageId.offchainId,
@@ -677,412 +160,129 @@ describe('UserAPI test', function () {
                 validUntil: VALID_UNTIL,
             }
 
-            const response = await api.submitInternalTransfer({
-                request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.MetaMask,
-                eddsaKey: acc.eddsaKey, apiKey: acc.apiKey
+            const response = await userApi.submitInternalTransfer({
+                request: request3, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
+                eddsaKey: eddsakey.sk, apiKey: apiKey
             })
 
             console.log(response)
 
+
         } catch (reason) {
             dumpError400(reason)
         }
+    }, DEFAULT_TIMEOUT)
 
+    it('whitelistedAccTransfer', async () => {
+        try {
+
+            // step 1. get account info
+            const {accInfo} = await exchange.getAccount({owner: addressWhitlisted})
+
+            if (!accInfo) {
+                return
+            }
+
+            console.log('accInfo:', accInfo)
+
+            const {exchangeInfo} = await exchange.getExchangeInfo()
+
+            // step 2 get apikey
+            const request: GetUserApiKeyRequest = {
+                accountId: accInfo.accountId,
+            }
+
+            const {apiKey} = await userApi.getUserApiKey(request, eddkeyWhitelisted)
+
+            console.log('apiKey:', apiKey)
+
+            // step 3 get storageId
+            const request2: GetNextStorageIdRequest = {
+                accountId: accInfo.accountId,
+                sellTokenId: 1
+            }
+            const storageId = await userApi.getNextStorageId(request2, apiKey)
+
+            // step 4 transfer
+            const request3: OriginTransferRequestV3 = {
+                exchange: exchangeInfo.exchangeAddress,
+                payerAddr: addressWhitlisted,
+                payerId: accInfo.accountId,
+                payeeAddr: '0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c',
+                payeeId: 0,
+                storageId: storageId.offchainId,
+                token: {
+                    tokenId: 1,
+                    volume: '100000000000000000000',
+                },
+                maxFee: {
+                    tokenId: 1,
+                    volume: '9400000000000000000',
+                },
+                validUntil: VALID_UNTIL,
+            }
+
+            console.log('request3:', request3)
+
+            const response = await whitelistedUserApi.submitInternalTransfer(request3, eddkeyWhitelisted, apiKey)
+
+            console.log(response)
+
+
+        } catch (reason) {
+            dumpError400(reason)
+        }
     }, DEFAULT_TIMEOUT)
 
     it('updateAccount', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        try {
-            const req: GetAccountRequest = {
-                owner: acc.address
-            }
-            const { accInfo } = await exchange.getAccount(req)
+        // step 0. init web3
+        const provider = new PrivateKeyProvider(
+            privateKey,
+            "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+        );
 
-            if (!accInfo) {
-                return
-            }
+        const web3 = new Web3(provider)
 
-            console.log('accInfo:', accInfo)
-
-            const request: UpdateAccountRequestV3 = {
-                exchange: acc.exchangeAddr,
-                owner: accInfo.owner,
-                accountId: accInfo.accountId,
-                publicKey: accInfo.publicKey,
-                maxFee: { tokenId: '0', volume: '10000000000' },
-                validUntil: VALID_UNTIL,
-                nonce: accInfo.nonce,
-            }
-            const response = await api.updateAccount({ request, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor, })
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer2', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-            const { accInfo } = await exchange.getAccount(req)
-
-            if (!accInfo) {
-                return
-            }
-
-            const provider = new PrivateKeyProvider(
-                '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-            const eddsakey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: accInfo?.nonce as number,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-
-            console.log('accInfo:', accInfo)
-
-            const request: SetReferrerRequest = {
-                address: owner,
-                referrer: 10428,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsakey.formatedPx,
-                publicKeyY: eddsakey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsakey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer6', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0xE633d724Fe7F0dADC58bE6744B887CA1f074b2C2'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-            const { accInfo } = await exchange.getAccount(req)
-
-            if (!accInfo) {
-                return
-            }
-
-            const provider = new PrivateKeyProvider(
-                '0b54129eab0c138b059cc4a87332844d431725fc3d3c5cc53bf28a0dd76cc6a1',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-            const eddsaKey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: accInfo?.nonce as number,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-
-            console.log('accInfo:', accInfo)
-
-            const request: SetReferrerRequest = {
-                address: owner,
-                referrer: 10083,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsaKey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer3', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0xeEbDa810d3a2C3bBd89433390911450676DA4af1'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-
-            const provider = new PrivateKeyProvider(
-                '7d894ce1007864fedce26b9a7b59c492a669c7f7922c7b404524418d333fe616',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-
-            const eddsaKey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: 0,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-            const request: SetReferrerRequest = {
-                address: owner,
-                referrer: 10083,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsaKey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer4', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-
-            const provider = new PrivateKeyProvider(
-                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-
-            const eddsaKey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: 0,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-            const request: SetReferrerRequest = {
-                address: owner,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsaKey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer5', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-
-            const provider = new PrivateKeyProvider(
-                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-
-            const eddsaKey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: 0,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-            const request: SetReferrerRequest = {
-                address: owner,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsaKey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('SetReferrer5', async () => {
-        api = new UserAPI({ chainId: ChainId.GOERLI })
-        let owner = '0x7AF03bd02c090396AcA1AFa068a4D565B5E34366'
-        try {
-            const req: GetAccountRequest = {
-                owner,
-            }
-
-            const provider = new PrivateKeyProvider(
-                '781251de9928c822ad41bd323c7bcff066a1c6c26dfd5635be372ce677b929cf',
-                "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-            );
-            const web3 = new Web3(provider)
-
-
-            const eddsaKey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: 0,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-            const request: SetReferrerRequest = {
-                address: owner,
-                promotionCode: 'loopring_ch',
-                publicKeyX: eddsaKey.formatedPx,
-                publicKeyY: eddsaKey.formatedPy,
-            }
-
-            const response = await api.SetReferrer(request, eddsaKey.sk)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('submitOrderAndCancel', async () => {
-        const request: GetNextStorageIdRequest = {
-            accountId: acc.accountId,
-            sellTokenId: 1
-        }
-        const storageId = await api.getNextStorageId(request, acc.apiKey)
-
-        const { accInfo } = await exchange.getAccount({
-            owner: acc.address
-        })
+        // step 1. get account info
+        const {accInfo} = await exchange.getAccount({owner: address})
 
         if (!accInfo) {
             return
         }
 
-        const eddsakey = await sign_tools
-            .generateKeyPair({
+        const {exchangeInfo} = await exchange.getExchangeInfo()
+
+        console.log('accInfo:', accInfo)
+        const eddsaKey = await sign_tools.generateKeyPair({
                 web3,
-                address: acc.address,
-                exchangeAddress: acc.exchangeAddr,
-                keyNonce: accInfo?.nonce as number - 1,
+                address: accInfo.owner,
+                exchangeAddress: exchangeInfo.exchangeAddress,
+                keyNonce: accInfo.nonce - 1,
                 walletType: ConnectorNames.MetaMask,
             }
-            )
-
-        const { tokenSymbolMap } = await exchange.getTokens()
-
-        const baseToken = getTokenInfoBySymbol(tokenSymbolMap, 'LRC')
-
-        const quoteToken = getTokenInfoBySymbol(tokenSymbolMap, 'ETH')
-
-        if (!baseToken || !quoteToken) {
-            return
+        );
+        console.log('eddsakey:', eddsaKey.sk)
+        const request = {
+            exchange: exchangeInfo.exchangeAddress,
+            owner: accInfo.owner,
+            accountId: accInfo.accountId,
+            publicKey: {x: eddsaKey.formatedPx, y: eddsaKey.formatedPy,},
+            maxFee: {
+                tokenId: 1,
+                volume: '0100000000000000000'},
+            validUntil: VALID_UNTIL,
+            nonce: accInfo.nonce as number,
         }
 
-        console.log(`storageId:${JSON.stringify(storageId)}`)
+       const result =  userApi.updateAccount({
+            request,
+            web3,
+            chainId: ChainId.GOERLI,
+            walletType: ConnectorNames.MetaMask,
+            isHWAddr: false
+        })
+        console.log('updateAccount result: ',JSON.stringify(result))
 
-        try {
-
-            const request: SubmitOrderRequestV3 = {
-                exchange: acc.exchangeAddr,
-                accountId: accInfo.accountId,
-                storageId: storageId.orderId,
-                sellToken: {
-                    tokenId: baseToken.tokenId,
-                    volume: '300000000000000000000'
-                },
-                buyToken: {
-                    tokenId: quoteToken.tokenId,
-                    volume: '3000000000000000000'
-                },
-                allOrNone: false,
-                validUntil: VALID_UNTIL,
-                maxFeeBips: 60,
-                fillAmountBOrS: false, // amm only false
-                orderType: OrderType.LimitOrder,
-                tradeChannel: TradeChannel.ORDER_BOOK,
-                eddsaSignature: '',
-            }
-
-            const response = await api.submitOrder(request, eddsakey.sk, acc.apiKey)
-
-            console.log(response)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-
-    }, DEFAULT_TIMEOUT)
-
-    it('cancelOrder', async () => {
-        try {
-
-            console.log('enter cancel!')
-
-            const { accInfo } = await exchange.getAccount({
-                owner: acc.address
-            })
-
-            if (!accInfo) {
-                return
-            }
-
-            const eddsakey = await sign_tools
-                .generateKeyPair({
-                    web3,
-                    address: acc.address,
-                    exchangeAddress: acc.exchangeAddr,
-                    keyNonce: accInfo?.nonce as number - 1,
-                    walletType: ConnectorNames.MetaMask,
-                }
-                )
-
-            const req: CancelOrderRequest = {
-                accountId: acc.accountId,
-                orderHash: orderHash,
-                clientOrderId,
-            }
-
-            const res = await api.cancelOrder(req, eddsakey.sk, acc.apiKey)
-
-            console.log('cancel res:', res)
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, DEFAULT_TIMEOUT)
-
-    it('getUserNFTBalances', async () => {
-        try {
-            const request: GetUserNFTBalancesRequest = {
-                accountId: acc.accountId,
-            }
-
-            const response = await api.getUserNFTBalances(request, acc.apiKey)
-            console.log(response)
-        } catch (reason) {
-            dumpError400(reason)
-        }
     }, DEFAULT_TIMEOUT)
 
 })

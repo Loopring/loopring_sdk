@@ -1223,7 +1223,6 @@ export class UserAPI extends BaseAPI {
             }
 
             const raw_data = (await this.makeReq().request(reqParams)).data
-
             return {
                 ...this.returnTxHash(raw_data),
                 errorInfo,

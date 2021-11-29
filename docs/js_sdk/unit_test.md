@@ -28,7 +28,7 @@ Test Account Basic Info (for Goerli)
 const loopring_exported_account = {
   name: "DEV Account 1",
   exchangeName: "LoopringDEX: V2",
-  priv_key: "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf",
+  privateKey: "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf",
   depositAddr: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
   exchangeAddr: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
   address: "0xff7d59d9316eba168837e3ef924bcdfd64b237d8",
