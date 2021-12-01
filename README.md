@@ -22,7 +22,7 @@ yarn add @loopring-web/loopring-sdk
 
 Please see the [documentation page](https://loopring.github.io/loopring_sdk/) for information about getting started and developing with the Loopring SDK.
 
-- [JS SDK](https://loopring.github.io/loopring_sdk)
+- [JS SDK](https://github.com/Loopring/loopring_sdk/blob/master/docs/js_sdk/INTRO.md)
 - [Python](https://github.com/Loopring/hello_loopring)
 - [APIs](https://docs.loopring.io/en/)
 
