@@ -35,7 +35,7 @@ let privateKey2 = 'ada29a473e2b777403e7d2dc3876c5be03ca6b60d97e37e9bd335b1ce05a2
 
 let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
 
-describe('Transfer test', function () {
+describe('UserAPI test', function () {
 
     beforeEach(async () => {
         userApi = new UserAPI({chainId: ChainId.GOERLI})
@@ -269,20 +269,22 @@ describe('Transfer test', function () {
             publicKey: {x: eddsaKey.formatedPx, y: eddsaKey.formatedPy,},
             maxFee: {
                 tokenId: 1,
-                volume: '0100000000000000000'},
+                volume: '0100000000000000000'
+            },
             validUntil: VALID_UNTIL,
             nonce: accInfo.nonce as number,
         }
-
-       const result =  userApi.updateAccount({
+        const result = await userApi.updateAccount({
             request,
             web3,
             chainId: ChainId.GOERLI,
-            walletType: ConnectorNames.MetaMask,
+            walletType: ConnectorNames.Unknown,
             isHWAddr: false
         })
-        console.log('updateAccount result: ',JSON.stringify(result))
+        console.log('updateAccount result: ', JSON.stringify(result))
 
     }, DEFAULT_TIMEOUT)
 
 })
+
+
