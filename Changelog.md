@@ -3,16 +3,16 @@
 ## JS SDK Version ChangeLog
 
 ----
-#### v1.3.1 -- no release
+#### v1.3.2 
      1) Fix some bug 
      1) Update withdraw NFT unit test
-#### v1.3.0 -- no release
+
+#### v1.3.0 && v1.3.1 -- !!! revert
      formatter Uint8Array support
+     # !!! revert 
 
 #### v0.2.9 -- no release 
-    No release, but add NFT layer2 Transfer Unit test 
-
-#### v0.2.9
+    No release, but add NFT layer2 Transfer Unit test
     FIX: AccountInfo.fronzen to frozen
 
 #### v0.2.8

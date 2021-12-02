@@ -258,7 +258,7 @@ describe('UserAPI test', function () {
                 address: accInfo.owner,
                 exchangeAddress: exchangeInfo.exchangeAddress,
                 keyNonce: accInfo.nonce - 1,
-                walletType: ConnectorNames.Unknown,
+                walletType: ConnectorNames.MetaMask,
             }
         );
         console.log('eddsakey:', eddsaKey.sk)
