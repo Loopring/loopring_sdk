@@ -45,7 +45,7 @@ export function toHex(mixed: any) {
     return addHexPrefix(mixed.toString(16))
   }
 
-  if (mixed instanceof Buffer) {
+  if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
     return addHexPrefix(mixed.toString('hex'))
   }
 
@@ -133,7 +133,7 @@ export function toGWEI(value: any) {
  * @returns {string}
  */
 export function formatKey(mixed: any) {
-  if (mixed instanceof Buffer) {
+  if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
     return mixed.toString('hex')
   }
 
@@ -149,7 +149,7 @@ export function formatKey(mixed: any) {
  * @returns {string}
  */
 export function formatAddress(mixed: any) {
-  if (mixed instanceof Buffer) {
+  if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
     return ethUtil.toChecksumAddress('0x' + mixed.toString('hex'))
   }
 
