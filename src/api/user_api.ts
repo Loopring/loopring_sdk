@@ -1189,7 +1189,7 @@ export class UserAPI extends BaseAPI {
             try {
                 if (isHWAddr) {
                     await sigHW()
-                } else {
+                } else {               toHex
                     const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 }

@@ -3,6 +3,9 @@
 ## JS SDK Version ChangeLog
 
 ----
+#### v1.3.0 -- no release
+     formatter Uint8Array support
+
 #### v0.2.9 -- no release 
     No release, but add NFT layer2 Transfer Unit test 
 
