@@ -1411,11 +1411,6 @@ export interface NFTWithdrawRequestV3{
     owner: string;
     /**
      *
-     * @type {TokenVolumeV3}
-     * @memberof OriginNFTWithdrawRequestV3
-     */
-    /**
-     *
      * @type {TokenVolumeNFT}
      * @memberof OriginNFTTransferRequestV3
      */

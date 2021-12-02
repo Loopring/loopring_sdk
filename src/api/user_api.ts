@@ -13,9 +13,6 @@ import * as loopring_defs from '../defs/loopring_defs'
 import { isContract } from './ethereum/metaMask'
 
 import * as sign_tools from './sign/sign_tools'
-import { OriginNFTMINTRequestV3WithPatch } from '../defs/loopring_defs';
-import BN from 'bn.js';
-import { toHex } from '../utils';
 
 export function genErr(err: any) {
 
@@ -271,7 +268,7 @@ export class UserAPI extends BaseAPI {
             raw_data
         }
     }
-    
+
     /*
     * Cancel multiple orders using clientOrderIds
     */
@@ -1029,7 +1026,7 @@ export class UserAPI extends BaseAPI {
             request, web3, chainId, walletType,
             eddsaKey, apiKey, isHWAddr: isHWAddrOld,
         } = req
-        request.creatorFeeBips =  request.creatorFeeBips ? request.creatorFeeBips: 0;
+        request.creatorFeeBips = request.creatorFeeBips ? request.creatorFeeBips : 0;
         let isHWAddr = !!isHWAddrOld
 
         let ecdsaSignature = undefined
@@ -1189,7 +1186,7 @@ export class UserAPI extends BaseAPI {
             try {
                 if (isHWAddr) {
                     await sigHW()
-                } else {               toHex
+                } else {
                     const result = (await sign_tools.signUpdateAccountWithDataStructure(web3, request, chainId))
                     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02
                 }

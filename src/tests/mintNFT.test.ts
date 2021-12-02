@@ -44,7 +44,7 @@ describe('Mint test', function () {
     })
 
 
-    it('Mint NFT case', async () => {
+    it('submitNFTMint', async () => {
         try {
 
             // step 0. init web3
@@ -71,7 +71,7 @@ describe('Mint test', function () {
                         address: accInfo.owner,
                         exchangeAddress: exchangeInfo.exchangeAddress,
                         keyNonce: accInfo.nonce - 1,
-                        walletType: ConnectorNames.MetaMask,
+                        walletType: ConnectorNames.Unknown,
                     }
                 )
 
@@ -83,7 +83,7 @@ describe('Mint test', function () {
             }
 
             const {apiKey} = await userApi.getUserApiKey(request, eddsakey.sk)
-
+            console.log(apiKey)
             // step 4 get storageId
             const request2: GetNextStorageIdRequest = {
                 accountId: accInfo.accountId,
@@ -113,7 +113,7 @@ describe('Mint test', function () {
             }
 
             const response = await userApi.submitNFTMint({
-                request: request3, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Trezor,
+                request: request3, web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Unknown,
                 eddsaKey: eddsakey.sk, apiKey: apiKey
             })
 

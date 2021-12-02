@@ -1,10 +1,10 @@
 import { ChainId, ConnectorNames } from '../defs/web3_defs'
-import { UserAPI, ExchangeAPI, WhitelistedUserAPI, get_EddsaSig_NFT_Transfer, } from '../api'
+import { UserAPI, ExchangeAPI, WhitelistedUserAPI, get_EddsaSig_NFT_Withdraw, } from '../api'
 
 
 import {
     GetNextStorageIdRequest, GetNFTOffchainFeeAmtRequest, GetUserApiKeyRequest,
-    OriginNFTTransferRequestV3,
+    NFTWithdrawRequestV3, TokenVolumeNFT, TokenVolumeV3,
 } from '../defs/loopring_defs'
 
 import { 
@@ -37,7 +37,7 @@ let exchange: ExchangeAPI
 //
 // let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
 
-describe('Transfer NFT test', function () {
+describe('Withdraw NFT test', function () {
 
     beforeEach(async() => {
         userApi = new UserAPI({ chainId: ChainId.GOERLI })
@@ -45,13 +45,19 @@ describe('Transfer NFT test', function () {
         whitelistedUserApi = new WhitelistedUserAPI({ chainId: ChainId.GOERLI })
     })
 
-    it('get_EddsaSig_NFT_Transfer', async () => {
-        const request:OriginNFTTransferRequestV3 = {
-            exchange: '0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e',
-            fromAccountId: 10503,
-            fromAddress: '0x34fb65f671f832da2078d0ad4ab1efe29bc42a5b',
-            toAccountId: 10758,
-            toAddress: '0x56f577f9677c8212c7079fcebfa7db5052bd1b1f',
+    it('get_EddsaSig_NFT_Withdraw', async () => {
+        const {accInfo} = await exchange.getAccount({owner: loopring_exported_account.address})
+        if (!accInfo) {
+            return
+        }
+        const {exchangeInfo} = await exchange.getExchangeInfo()
+
+        const request:NFTWithdrawRequestV3 = {
+            minGas: 0,
+            exchange: exchangeInfo.exchangeAddress,
+            accountId:accInfo.accountId,
+            to:accInfo.owner,
+            owner:accInfo.owner,
             token: {
                 tokenId: 32788,
                 nftData: '0x05f797e055ca832ca441ff3a5de6e384af01b35ba764f9146979ff4e7f2fa832',
@@ -62,10 +68,11 @@ describe('Transfer NFT test', function () {
                 amount: '311000000000000000000'
             },
             storageId: 9,
-            validUntil: 1667396982,
+            validUntil: 1667396982
             // memo: '',
         }
-        const result =  get_EddsaSig_NFT_Transfer(request,'')
+
+        const result =  get_EddsaSig_NFT_Withdraw(request,'')
         //0x0f48775268077434670bdba4e64c93dcbf83d8cabee98928a0791390b2a9809b
         console.log(`resultHash:`,result);// 0x0f48775268077434670bdba4e64c93dcbf83d8cabee98928a0791390b2a9809b
         // const request: GetAccountRequest = {
@@ -76,7 +83,7 @@ describe('Transfer NFT test', function () {
     }, DEFAULT_TIMEOUT)
 
 
-    it('test NFT Transfer', async () => {
+    it('submitNFTWithdraw', async () => {
         const provider = new PrivateKeyProvider(
             loopring_exported_account.privateKey,
             "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
@@ -86,6 +93,7 @@ describe('Transfer NFT test', function () {
         if (!accInfo) {
             return
         }
+        const {exchangeInfo} = await exchange.getExchangeInfo()
         const eddsaKey = await sign_tools
             .generateKeyPair({
                     web3,
@@ -95,14 +103,14 @@ describe('Transfer NFT test', function () {
                     walletType: ConnectorNames.Unknown,
                 }
             )
-
+        console.log('eddsakey:', eddsaKey.sk)
         const request: GetUserApiKeyRequest = {
             accountId: accInfo.accountId,
         }
 
-        const {apiKey} = await userApi.getUserApiKey(request, eddsaKey.sk)
+        let { apiKey } = await userApi.getUserApiKey(request, eddsaKey.sk)
+        apiKey = apiKey?? loopring_exported_account.apiKey;
         console.log(apiKey)
-
         const request2: GetNextStorageIdRequest = {
             accountId: accInfo.accountId,
             sellTokenId: 1
@@ -113,34 +121,35 @@ describe('Transfer NFT test', function () {
         const requestFee: GetNFTOffchainFeeAmtRequest = {
             accountId:accInfo.accountId,
             tokenAddress:loopring_exported_account.nftTokenAddress,
-            requestType:OffchainNFTFeeReqType.NFT_TRANSFER,
+            requestType:OffchainNFTFeeReqType.NFT_WITHDRAWAL,
             amount:'0',
         }
         const responseFee = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey)
 
-        const request3:OriginNFTTransferRequestV3 = {
-            exchange: loopring_exported_account.exchangeAddr,
-            fromAccountId: loopring_exported_account.accountId,
-            fromAddress: loopring_exported_account.address,
-            toAccountId: 0,
-            toAddress: loopring_exported_account.addressWhitlisted,
+        const request3:NFTWithdrawRequestV3 = {
+            minGas: 0,
+            exchange: exchangeInfo.exchangeAddress,
+            accountId: accInfo.accountId,
+            to:accInfo.owner,
+            owner:accInfo.owner,
             token: {
-                tokenId:loopring_exported_account.nftTokenID ,
-                nftData: loopring_exported_account.nftData,
+                tokenId: loopring_exported_account.nftTokenID,
+                nftData:loopring_exported_account.nftData,
                 amount: '1',
             },
+            extraData:'',
             maxFee: {
                 tokenId: 1,
-                amount: responseFee.fees[0]?.fee??'3260000000000000'
+                amount: responseFee.fees[0]?.fee??'676000000000000000'
             },
-            storageId: storageId.offchainId,
-            validUntil: 1667396982
-            // memo: '',
+            storageId: storageId?.offchainId??9,
+            validUntil: 1667396982,
         }
 
-        const response = await userApi.submitNFTInTransfer({
+        const response = await userApi.submitNFTWithdraw({
             request:request3,
-            web3, chainId: ChainId.GOERLI, walletType: ConnectorNames.Unknown,
+            web3, chainId: ChainId.GOERLI,
+            walletType: ConnectorNames.Unknown,
             eddsaKey: eddsaKey.sk, apiKey})
         console.log('response:',response)
 
