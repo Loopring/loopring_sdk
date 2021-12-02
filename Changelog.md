@@ -3,6 +3,9 @@
 ## JS SDK Version ChangeLog
 
 ----
+#### v1.3.1 -- no release
+     1) Fix some bug 
+     1) Update withdraw NFT unit test
 #### v1.3.0 -- no release
      formatter Uint8Array support
 

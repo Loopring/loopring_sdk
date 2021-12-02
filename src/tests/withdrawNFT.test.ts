@@ -126,7 +126,9 @@ describe('Withdraw NFT test', function () {
             amount:'0',
         }
         const resultFee = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey)
+
         console.log('requestFee',resultFee)
+
         const request3:NFTWithdrawRequestV3 = {
             minGas: 0,
             exchange: exchangeInfo.exchangeAddress,
@@ -154,7 +156,7 @@ describe('Withdraw NFT test', function () {
             eddsaKey: eddsaKey.sk, apiKey})
         console.log('response:',response)
 
-    }, DEFAULT_TIMEOUT)
+    }, DEFAULT_TIMEOUT+2000)
 
 
 })
