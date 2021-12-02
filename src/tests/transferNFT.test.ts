@@ -92,7 +92,7 @@ describe('Transfer NFT test', function () {
                     address: accInfo.owner,
                     exchangeAddress: loopring_exported_account.exchangeAddr,
                     keyNonce: accInfo.nonce - 1,
-                    walletType: ConnectorNames.Unknown,
+                    walletType: ConnectorNames.MetaMask,
                 }
             )
 

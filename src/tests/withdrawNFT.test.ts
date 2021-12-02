@@ -100,7 +100,7 @@ describe('Withdraw NFT test', function () {
                     address: accInfo.owner,
                     exchangeAddress: loopring_exported_account.exchangeAddr,
                     keyNonce: accInfo.nonce - 1,
-                    walletType: ConnectorNames.Unknown,
+                    walletType: ConnectorNames.MetaMask,
                 }
             )
         console.log('eddsakey:', eddsaKey.sk)
@@ -110,22 +110,23 @@ describe('Withdraw NFT test', function () {
 
         let { apiKey } = await userApi.getUserApiKey(request, eddsaKey.sk)
         apiKey = apiKey?? loopring_exported_account.apiKey;
-        console.log(apiKey)
+        console.log('apiKey',apiKey)
+
         const request2: GetNextStorageIdRequest = {
             accountId: accInfo.accountId,
             sellTokenId: 1
         }
 
         const storageId = await userApi.getNextStorageId(request2, apiKey);
-
+        console.log('storageId',storageId)
         const requestFee: GetNFTOffchainFeeAmtRequest = {
             accountId:accInfo.accountId,
             tokenAddress:loopring_exported_account.nftTokenAddress,
             requestType:OffchainNFTFeeReqType.NFT_WITHDRAWAL,
             amount:'0',
         }
-        const responseFee = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey)
-
+        const resultFee = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey)
+        console.log('requestFee',resultFee)
         const request3:NFTWithdrawRequestV3 = {
             minGas: 0,
             exchange: exchangeInfo.exchangeAddress,
@@ -140,7 +141,7 @@ describe('Withdraw NFT test', function () {
             extraData:'',
             maxFee: {
                 tokenId: 1,
-                amount: responseFee.fees[0]?.fee??'676000000000000000'
+                amount: resultFee.fees[0]?.fee??'676000000000000000'
             },
             storageId: storageId?.offchainId??9,
             validUntil: 1667396982,
@@ -149,7 +150,7 @@ describe('Withdraw NFT test', function () {
         const response = await userApi.submitNFTWithdraw({
             request:request3,
             web3, chainId: ChainId.GOERLI,
-            walletType: ConnectorNames.Unknown,
+            walletType: ConnectorNames.Trezor,
             eddsaKey: eddsaKey.sk, apiKey})
         console.log('response:',response)
 

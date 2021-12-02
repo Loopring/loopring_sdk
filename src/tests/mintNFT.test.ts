@@ -34,7 +34,7 @@ let exchange: ExchangeAPI
 
 // let nftTokenAddress = '0x662168Dc15F4D516bE7741f3BBC3592Ea9A6eDB5'
 //test should change the id number
-let nftId = '0x0000000000000000000000000000000000000000000000000000000000000099'
+let nftId = '0x0000000000000000000000000000000000000000000000000000000000000094'
 describe('Mint test', function () {
 
     beforeEach(async () => {
@@ -71,7 +71,7 @@ describe('Mint test', function () {
                         address: accInfo.owner,
                         exchangeAddress: exchangeInfo.exchangeAddress,
                         keyNonce: accInfo.nonce - 1,
-                        walletType: ConnectorNames.Unknown,
+                        walletType: ConnectorNames.MetaMask,
                     }
                 )
 
@@ -82,7 +82,9 @@ describe('Mint test', function () {
                 accountId: accInfo.accountId,
             }
 
-            const {apiKey} = await userApi.getUserApiKey(request, eddsakey.sk)
+            let {apiKey} = await userApi.getUserApiKey(request, eddsakey.sk)
+            apiKey = apiKey?? loopring_exported_account.apiKey;
+
             console.log(apiKey)
             // step 4 get storageId
             const request2: GetNextStorageIdRequest = {
@@ -104,7 +106,7 @@ describe('Mint test', function () {
                 nftId: nftId,  //nftId.toString(16),
                 amount: '500',
                 validUntil: VALID_UNTIL,
-                storageId: storageId.offchainId,
+                storageId: storageId.offchainId??9,
                 maxFee: {
                     tokenId: 1,
                     amount: '9400000000000000000',
