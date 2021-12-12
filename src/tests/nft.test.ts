@@ -133,10 +133,14 @@ describe("nft test", function () {
 
   it("computeNFTAddress", async () => {
     const response = nft.computeNFTAddress({
-      nftOwner: loopring_exported_account.address,
-      nftFactory,
-      chainId: ChainId.MAINNET,
+      nftOwner: "0xE20cF871f1646d8651ee9dC95AAB1d93160b3467",
+      nftFactory: "0x40F2C1770E11c5bbA3A26aEeF89616D209705C5D",
+      chainId: ChainId.GOERLI,
     });
-    console.log(`computeNFTAddress:`, response);
+    console.log(
+      `computeNFTAddress:`,
+      response,
+      "0xee354d81778a4c5a08fd9dbeb5cfd01a840a746d"
+    );
   });
 });
