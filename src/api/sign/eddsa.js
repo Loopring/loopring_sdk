@@ -3,14 +3,14 @@
 
 // from https://github.com/Loopring/protocols/blob/master/packages/loopring_v3.js/src/eddsa.ts
 
-import { F1Field, utils } from 'ffjavascript';
-import { bigInt } from 'snarkjs';
-import { createHash } from './poseidon';
-import babyJub from './babyjub';
-import createBlakeHash from 'blake-hash';
-import crypto from 'crypto';
+import { F1Field, utils } from "ffjavascript";
+import { bigInt } from "snarkjs";
+import { createHash } from "./poseidon";
+import babyJub from "./babyjub";
+import createBlakeHash from "blake-hash";
+import crypto from "crypto";
 
-var assert = require('assert');
+var assert = require("assert");
 
 function getKeyPair() {
   const entropy = crypto.randomBytes(32);
@@ -28,15 +28,15 @@ function getKeyPair() {
     );
     unpacked = this.unpack(packed);
     if (unpacked == null) {
-      secretKey = Fr.add(secretKey, Fr.e('1'));
+      secretKey = Fr.add(secretKey, Fr.e("1"));
     } else {
       assert(
         unpacked.publicKeyX === publicKey[0].toString(10),
-        'invalid unpack X'
+        "invalid unpack X"
       );
       assert(
         unpacked.publicKeyY === publicKey[1].toString(10),
-        'invalid unpack Y'
+        "invalid unpack Y"
       );
     }
   }
@@ -45,7 +45,7 @@ function getKeyPair() {
       babyJub.F.e(unpacked.publicKeyX),
       babyJub.F.e(unpacked.publicKeyY),
     ]),
-    'invalid point'
+    "invalid point"
   );
 
   const keyPair = {
@@ -64,25 +64,25 @@ function pack(publicKeyX, publicKeyY) {
   for (let i = 0; i < 32; i++) {
     reversed[31 - i] = packed[i];
   }
-  return reversed.toString('hex');
+  return reversed.toString("hex");
 }
 
 function unpack(publicKey) {
-  if (publicKey.startsWith('0x')) {
+  if (publicKey.startsWith("0x")) {
     publicKey = publicKey.slice(2);
   }
   while (publicKey.length < 64) {
-    publicKey = '0' + publicKey;
+    publicKey = "0" + publicKey;
   }
   // Special case for 0
-  if (publicKey === '00'.repeat(32)) {
+  if (publicKey === "00".repeat(32)) {
     const pubKey = {
-      publicKeyX: '0',
-      publicKeyY: '0',
+      publicKeyX: "0",
+      publicKeyY: "0",
     };
     return pubKey;
   } else {
-    let packed = Buffer.from(publicKey, 'hex');
+    let packed = Buffer.from(publicKey, "hex");
     const reversed = Buffer.alloc(32);
     for (let i = 0; i < 32; i++) {
       reversed[31 - i] = packed[i];
@@ -103,9 +103,9 @@ function sign(strKey, msg) {
   const key = bigInt(strKey);
   const prv = bigInt.leInt2Buff(key, 32);
 
-  const h1 = createBlakeHash('blake512').update(prv).digest();
+  const h1 = createBlakeHash("blake512").update(prv).digest();
   const msgBuff = bigInt.leInt2Buff(bigInt(msg), 32);
-  const rBuff = createBlakeHash('blake512')
+  const rBuff = createBlakeHash("blake512")
     .update(Buffer.concat([h1.slice(32, 64), msgBuff]))
     .digest();
   let r = bigInt.leBuff2int(rBuff);

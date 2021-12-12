@@ -1,17 +1,17 @@
-import * as Poseidon from './poseidon';
+import * as Poseidon from "./poseidon";
 
-import * as fm from '../../utils/formatter';
-import * as sigUtil from 'eth-sig-util';
+import * as fm from "../../utils/formatter";
+import * as sigUtil from "eth-sig-util";
 
-import * as abi from 'ethereumjs-abi';
-import * as ethUtil from 'ethereumjs-util';
-import ABI from '../ethereum/contracts';
-import BN from 'bn.js';
-import EdDSA from './eddsa';
-import config from '../config';
-import sha256 from 'crypto-js/sha256';
+import * as abi from "ethereumjs-abi";
+import * as ethUtil from "ethereumjs-util";
+import ABI from "../ethereum/contracts";
+import BN from "bn.js";
+import EdDSA from "./eddsa";
+import config from "../config";
+import sha256 from "crypto-js/sha256";
 
-const assert = require('assert');
+const assert = require("assert");
 
 export function generateKeyPair(seed) {
   return EdDSA.generateKeyPair(seed);
@@ -30,7 +30,7 @@ export function signGetApiKey(request, keyPair) {
     return;
   }
 
-  const method = 'GET';
+  const method = "GET";
   const uri = encodeURIComponent(`${config.getServer()}/api/v2/apiKey`);
   const params = encodeURIComponent(`accountId=${request.accountId}`);
   const message = `${method}&${uri}&${params}`;
@@ -47,44 +47,44 @@ export function signGetApiKey(request, keyPair) {
 
 export function getAccountUpdateEcdsaSigTypedData(data) {
   let publicKey = new BN(
-    EdDSA.pack(data['publicKeyX'], data['publicKeyY']),
+    EdDSA.pack(data["publicKeyX"], data["publicKeyY"]),
     16
   );
 
   let message = {
-    owner: data['owner'],
-    accountID: data['accountId'],
-    feeTokenID: data['feeToken'],
-    maxFee: data['maxFeeAmount'],
+    owner: data["owner"],
+    accountID: data["accountId"],
+    feeTokenID: data["feeToken"],
+    maxFee: data["maxFeeAmount"],
     publicKey: publicKey.toString(),
-    validUntil: data['validUntil'],
-    nonce: data['nonce'],
+    validUntil: data["validUntil"],
+    nonce: data["nonce"],
   };
 
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
       AccountUpdate: [
-        { name: 'owner', type: 'address' },
-        { name: 'accountID', type: 'uint32' },
-        { name: 'feeTokenID', type: 'uint16' },
-        { name: 'maxFee', type: 'uint96' },
-        { name: 'publicKey', type: 'uint256' },
-        { name: 'validUntil', type: 'uint32' },
-        { name: 'nonce', type: 'uint32' },
+        { name: "owner", type: "address" },
+        { name: "accountID", type: "uint32" },
+        { name: "feeTokenID", type: "uint16" },
+        { name: "maxFee", type: "uint96" },
+        { name: "publicKey", type: "uint256" },
+        { name: "validUntil", type: "uint32" },
+        { name: "nonce", type: "uint32" },
       ],
     },
-    primaryType: 'AccountUpdate',
+    primaryType: "AccountUpdate",
     domain: {
-      name: 'Loopring Protocol',
-      version: '3.6.0',
-      chainId: data['chainId'],
-      verifyingContract: data['exchange'],
+      name: "Loopring Protocol",
+      version: "3.6.0",
+      chainId: data["chainId"],
+      verifyingContract: data["exchange"],
     },
     message: message,
   };
@@ -124,46 +124,46 @@ export function signAccountUpdate(data, keyPair) {
 // 3.6
 export function getWithdrawTypedData(data) {
   let message = {
-    owner: data['owner'],
-    accountID: data['accountID'],
-    tokenID: data['tokenID'],
-    amount: data['amount'],
-    feeTokenID: data['feeTokenID'],
-    maxFee: data['maxFeeAmount'],
-    to: data['to'],
-    extraData: data['extraData'],
-    minGas: data['minGas'],
-    validUntil: data['validUntil'],
-    storageID: data['storageID'],
+    owner: data["owner"],
+    accountID: data["accountID"],
+    tokenID: data["tokenID"],
+    amount: data["amount"],
+    feeTokenID: data["feeTokenID"],
+    maxFee: data["maxFeeAmount"],
+    to: data["to"],
+    extraData: data["extraData"],
+    minGas: data["minGas"],
+    validUntil: data["validUntil"],
+    storageID: data["storageID"],
   };
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
       Withdrawal: [
-        { name: 'owner', type: 'address' },
-        { name: 'accountID', type: 'uint32' },
-        { name: 'tokenID', type: 'uint16' },
-        { name: 'amount', type: 'uint96' },
-        { name: 'feeTokenID', type: 'uint16' },
-        { name: 'maxFee', type: 'uint96' },
-        { name: 'to', type: 'address' },
-        { name: 'extraData', type: 'bytes' },
-        { name: 'minGas', type: 'uint256' },
-        { name: 'validUntil', type: 'uint32' },
-        { name: 'storageID', type: 'uint32' },
+        { name: "owner", type: "address" },
+        { name: "accountID", type: "uint32" },
+        { name: "tokenID", type: "uint16" },
+        { name: "amount", type: "uint96" },
+        { name: "feeTokenID", type: "uint16" },
+        { name: "maxFee", type: "uint96" },
+        { name: "to", type: "address" },
+        { name: "extraData", type: "bytes" },
+        { name: "minGas", type: "uint256" },
+        { name: "validUntil", type: "uint32" },
+        { name: "storageID", type: "uint32" },
       ],
     },
-    primaryType: 'Withdrawal',
+    primaryType: "Withdrawal",
     domain: {
-      name: 'Loopring Protocol',
-      version: '3.6.0',
-      chainId: data['chainId'],
-      verifyingContract: data['exchange'],
+      name: "Loopring Protocol",
+      version: "3.6.0",
+      chainId: data["chainId"],
+      verifyingContract: data["exchange"],
     },
     message: message,
   };
@@ -179,40 +179,40 @@ export function getWithdrawEcdsaSig(data) {
 
 export function getTransferTypedData(data) {
   let message = {
-    from: data['from'],
-    to: data['to'],
-    tokenID: data['tokenID'],
-    amount: data['amount'],
-    feeTokenID: data['feeTokenID'],
-    maxFee: data['maxFeeAmount'],
-    validUntil: data['validUntil'],
-    storageID: data['storageID'],
+    from: data["from"],
+    to: data["to"],
+    tokenID: data["tokenID"],
+    amount: data["amount"],
+    feeTokenID: data["feeTokenID"],
+    maxFee: data["maxFeeAmount"],
+    validUntil: data["validUntil"],
+    storageID: data["storageID"],
   };
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
       Transfer: [
-        { name: 'from', type: 'address' },
-        { name: 'to', type: 'address' },
-        { name: 'tokenID', type: 'uint16' },
-        { name: 'amount', type: 'uint96' },
-        { name: 'feeTokenID', type: 'uint16' },
-        { name: 'maxFee', type: 'uint96' },
-        { name: 'validUntil', type: 'uint32' },
-        { name: 'storageID', type: 'uint32' },
+        { name: "from", type: "address" },
+        { name: "to", type: "address" },
+        { name: "tokenID", type: "uint16" },
+        { name: "amount", type: "uint96" },
+        { name: "feeTokenID", type: "uint16" },
+        { name: "maxFee", type: "uint96" },
+        { name: "validUntil", type: "uint32" },
+        { name: "storageID", type: "uint32" },
       ],
     },
-    primaryType: 'Transfer',
+    primaryType: "Transfer",
     domain: {
-      name: 'Loopring Protocol',
-      version: '3.6.0',
-      chainId: data['chainId'],
-      verifyingContract: data['exchange'],
+      name: "Loopring Protocol",
+      version: "3.6.0",
+      chainId: data["chainId"],
+      verifyingContract: data["exchange"],
     },
     message: message,
   };
@@ -256,7 +256,7 @@ export function signTransfer(transfer, keyPair) {
 export function signOffChainWithdraw(withdraw, keyPair) {
   const onchainDataHash = abi
     .soliditySHA3(
-      ['uint256', 'address', 'bytes'],
+      ["uint256", "address", "bytes"],
       [
         withdraw.minGas,
         new BN(fm.clearHexPrefix(withdraw.to), 16),
@@ -290,34 +290,34 @@ export function signOffChainWithdraw(withdraw, keyPair) {
 
 export function getAmmJoinEcdsaTypedData(data) {
   let message = {
-    owner: data['owner'],
-    joinAmounts: data['joinAmounts'],
-    joinStorageIDs: data['joinStorageIDs'],
-    mintMinAmount: data['mintMinAmount'],
-    validUntil: data['validUntil'],
+    owner: data["owner"],
+    joinAmounts: data["joinAmounts"],
+    joinStorageIDs: data["joinStorageIDs"],
+    mintMinAmount: data["mintMinAmount"],
+    validUntil: data["validUntil"],
   };
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
       PoolJoin: [
-        { name: 'owner', type: 'address' },
-        { name: 'joinAmounts', type: 'uint96[]' },
-        { name: 'joinStorageIDs', type: 'uint32[]' },
-        { name: 'mintMinAmount', type: 'uint96' },
-        { name: 'validUntil', type: 'uint32' },
+        { name: "owner", type: "address" },
+        { name: "joinAmounts", type: "uint96[]" },
+        { name: "joinStorageIDs", type: "uint32[]" },
+        { name: "mintMinAmount", type: "uint96" },
+        { name: "validUntil", type: "uint32" },
       ],
     },
-    primaryType: 'PoolJoin',
+    primaryType: "PoolJoin",
     domain: {
-      name: data['name'],
-      version: '1.0.0',
-      chainId: data['chainId'],
-      verifyingContract: data['exchange'],
+      name: data["name"],
+      version: "1.0.0",
+      chainId: data["chainId"],
+      verifyingContract: data["exchange"],
     },
     message: message,
   };
@@ -332,36 +332,36 @@ export function getAmmJoinEcdsaSig(data) {
 
 export function getAmmExitEcdsaTypedData(data) {
   let message = {
-    owner: data['owner'],
-    burnAmount: data['burnAmount'],
-    burnStorageID: data['burnStorageID'],
-    exitMinAmounts: data['exitMinAmounts'],
-    fee: data['fee'],
-    validUntil: data['validUntil'],
+    owner: data["owner"],
+    burnAmount: data["burnAmount"],
+    burnStorageID: data["burnStorageID"],
+    exitMinAmounts: data["exitMinAmounts"],
+    fee: data["fee"],
+    validUntil: data["validUntil"],
   };
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
       PoolExit: [
-        { name: 'owner', type: 'address' },
-        { name: 'burnAmount', type: 'uint96' },
-        { name: 'burnStorageID', type: 'uint32' },
-        { name: 'exitMinAmounts', type: 'uint96[]' },
-        { name: 'fee', type: 'uint96' },
-        { name: 'validUntil', type: 'uint32' },
+        { name: "owner", type: "address" },
+        { name: "burnAmount", type: "uint96" },
+        { name: "burnStorageID", type: "uint32" },
+        { name: "exitMinAmounts", type: "uint96[]" },
+        { name: "fee", type: "uint96" },
+        { name: "validUntil", type: "uint32" },
       ],
     },
-    primaryType: 'PoolExit',
+    primaryType: "PoolExit",
     domain: {
-      name: data['name'],
-      version: '1.0.0',
-      chainId: data['chainId'],
-      verifyingContract: data['exchange'],
+      name: data["name"],
+      version: "1.0.0",
+      chainId: data["chainId"],
+      verifyingContract: data["exchange"],
     },
     message: message,
   };
@@ -379,7 +379,7 @@ export function signSetReferrer(request, keyPair) {
     return;
   }
 
-  const method = 'POST';
+  const method = "POST";
   const uri = encodeURIComponent(`${config.getServer()}/api/v2/refer`);
 
   let params;
@@ -411,7 +411,7 @@ export function signSetReferrer(request, keyPair) {
 }
 
 export function signUpdateDistributeHash(request, keyPair) {
-  const method = 'POST';
+  const method = "POST";
   const uri = encodeURIComponent(
     `${config.getServer()}/api/v2/updateDistributeHash`
   );
@@ -444,16 +444,16 @@ export function createAccountAndDeposit({
 }) {
   try {
     let address, value;
-    if (token.symbol.toUpperCase() === 'ETH') {
-      address = '0x0';
-      value = '0';
+    if (token.symbol.toUpperCase() === "ETH") {
+      address = "0x0";
+      value = "0";
     } else {
       address = token.address;
-      value = fm.toHex(fm.toBig(amount).times('1e' + token.decimals));
+      value = fm.toHex(fm.toBig(amount).times("1e" + token.decimals));
     }
 
     const data = ABI.Contracts.ExchangeContract.encodeInputs(
-      'updateAccountAndDeposit',
+      "updateAccountAndDeposit",
       {
         pubKeyX: fm.toHex(fm.toBN(publicX)),
         pubKeyY: fm.toHex(fm.toBN(publicY)),
@@ -471,10 +471,10 @@ export function createAccountAndDeposit({
       chainId: chainId,
       nonce: nonce.toString(),
       gasPrice: fm.fromGWEI(gasPrice).toFixed(),
-      gas: config.getGasLimitByType('create').gas.toString(),
+      gas: config.getGasLimitByType("create").gas.toString(),
     };
   } catch (err) {
-    console.error('Failed in method createOrUpdateAccount. Error: ', err);
+    console.error("Failed in method createOrUpdateAccount. Error: ", err);
     throw err;
   }
 }
@@ -492,23 +492,23 @@ export function deposit({
 }) {
   let value, data;
   try {
-    value = fm.toBig(amount).times('1e' + token.decimals);
-    if (token.symbol.toUpperCase() === 'ETH') {
-      data = ABI.Contracts.ExchangeContract.encodeInputs('deposit', {
-        tokenAddress: '0x0',
+    value = fm.toBig(amount).times("1e" + token.decimals);
+    if (token.symbol.toUpperCase() === "ETH") {
+      data = ABI.Contracts.ExchangeContract.encodeInputs("deposit", {
+        tokenAddress: "0x0",
         amount: fm.toHex(value),
         from: from,
         to: from,
-        extraData: '',
+        extraData: "",
       });
       value = value.plus(fee);
     } else {
-      data = ABI.Contracts.ExchangeContract.encodeInputs('deposit', {
+      data = ABI.Contracts.ExchangeContract.encodeInputs("deposit", {
         tokenAddress: token.address,
         amount: fm.toHex(value),
         from: from,
         to: from,
-        extraData: '',
+        extraData: "",
       });
       value = fm.toBig(fee);
     }
@@ -526,10 +526,10 @@ export function deposit({
       nonce: nonce.toString(),
       gasPrice: fm.fromGWEI(gasPrice).toFixed(),
       gas: gas,
-      extraData: '',
+      extraData: "",
     };
   } catch (err) {
-    console.error('Failed in method deposit. Error: ', err);
+    console.error("Failed in method deposit. Error: ", err);
     throw err;
   }
 }
@@ -547,7 +547,7 @@ export function forceWithdraw({
 }) {
   try {
     // withdraw is not in 3.6
-    const data = ABI.Contracts.ExchangeContract.encodeInputs('forceWithdraw', {
+    const data = ABI.Contracts.ExchangeContract.encodeInputs("forceWithdraw", {
       owner: from,
       tokenAddress: token,
       accountID: accountID,
@@ -563,22 +563,22 @@ export function forceWithdraw({
       chainId: chainId,
       nonce: nonce.toString(),
       gasPrice: fm.fromGWEI(gasPrice).toFixed(),
-      gas: config.getGasLimitByType('withdraw').gas.toString(),
+      gas: config.getGasLimitByType("withdraw").gas.toString(),
     };
   } catch (err) {
-    console.error('Failed in method withdraw. Error: ', err);
+    console.error("Failed in method withdraw. Error: ", err);
     throw err;
   }
 }
 
 function setupOffChainWithdrawal(withdrawal, tokens) {
   let token, feeToken;
-  if (!withdrawal.token.startsWith('0x')) {
+  if (!withdrawal.token.startsWith("0x")) {
     token = config.getTokenBySymbol(withdrawal.token, tokens);
   } else {
     token = config.getTokenByAddress(withdrawal.token, tokens);
   }
-  if (!withdrawal.tokenF.startsWith('0x')) {
+  if (!withdrawal.tokenF.startsWith("0x")) {
     feeToken = config.getTokenBySymbol(withdrawal.tokenF, tokens);
   } else {
     feeToken = config.getTokenByAddress(withdrawal.tokenF, tokens);
@@ -669,30 +669,30 @@ export function signOrder(_order, keyPair, tokens) {
   // order.signatureS = signature.s;
 
   let signatureRx_Hex = fm.clearHexPrefix(
-    fm.toHex(fm.toBN(signature.Rx.toString('hex')))
+    fm.toHex(fm.toBN(signature.Rx.toString("hex")))
   );
   if (signatureRx_Hex.length < 64) {
     const padding = new Array(64 - signatureRx_Hex.length).fill(0);
-    signatureRx_Hex = padding.join('').toString() + signatureRx_Hex;
+    signatureRx_Hex = padding.join("").toString() + signatureRx_Hex;
   }
 
   let signatureRy_Hex = fm.clearHexPrefix(
-    fm.toHex(fm.toBN(signature.Ry.toString('hex')))
+    fm.toHex(fm.toBN(signature.Ry.toString("hex")))
   );
   if (signatureRy_Hex.length < 64) {
     const padding = new Array(64 - signatureRy_Hex.length).fill(0);
-    signatureRy_Hex = padding.join('').toString() + signatureRy_Hex;
+    signatureRy_Hex = padding.join("").toString() + signatureRy_Hex;
   }
 
   let signatureS_Hex = fm.clearHexPrefix(
-    fm.toHex(fm.toBN(signature.s.toString('hex')))
+    fm.toHex(fm.toBN(signature.s.toString("hex")))
   );
   if (signatureS_Hex.length < 64) {
     const padding = new Array(64 - signatureS_Hex.length).fill(0);
-    signatureS_Hex = padding.join('').toString() + signatureS_Hex;
+    signatureS_Hex = padding.join("").toString() + signatureS_Hex;
   }
 
-  order['eddsaSig'] = '0x' + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
+  order["eddsaSig"] = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
 
   order.buy = undefined;
   order.hash = undefined;
@@ -710,12 +710,12 @@ export function signOrder(_order, keyPair, tokens) {
 
 function setupOrder(order, tokens) {
   let tokenBuy, tokenSell;
-  if (!order.tokenS.startsWith('0x')) {
+  if (!order.tokenS.startsWith("0x")) {
     tokenSell = config.getTokenBySymbol(order.tokenS, tokens);
   } else {
     tokenSell = config.getTokenByAddress(order.tokenS, tokens);
   }
-  if (!order.tokenB.startsWith('0x')) {
+  if (!order.tokenB.startsWith("0x")) {
     tokenBuy = config.getTokenBySymbol(order.tokenB, tokens);
   } else {
     tokenBuy = config.getTokenByAddress(order.tokenB, tokens);
@@ -806,12 +806,12 @@ export function signCancel(_cancel, keyPair) {
 
 function setupCancel(cancel, tokens) {
   let orderToken, feeToken;
-  if (!cancel.orderToken.startsWith('0x')) {
+  if (!cancel.orderToken.startsWith("0x")) {
     orderToken = config.getTokenBySymbol(cancel.orderToken, tokens);
   } else {
     orderToken = config.getTokenByAddress(cancel.orderToken, tokens);
   }
-  if (!cancel.tokenF.startsWith('0x')) {
+  if (!cancel.tokenF.startsWith("0x")) {
     feeToken = config.getTokenBySymbol(cancel.tokenF, tokens);
   } else {
     feeToken = config.getTokenByAddress(cancel.tokenF, tokens);
@@ -829,7 +829,7 @@ function setupCancel(cancel, tokens) {
 }
 
 export function signFlexCancel(request, keyPair) {
-  const method = 'DELETE';
+  const method = "DELETE";
   const uri = encodeURIComponent(`${config.getServer()}/api/v2/orders`);
   let params = `accountId=${request.accountId}`;
 
@@ -863,9 +863,9 @@ export function signFlexCancel(request, keyPair) {
 }
 
 export function batchCancelOrdersByHash(accountId, orderHashes, keyPair) {
-  const method = 'DELETE';
+  const method = "DELETE";
   const uri = encodeURIComponent(`${config.getServer()}/api/v2/orders/byHash`);
-  const coma = encodeURIComponent(',');
+  const coma = encodeURIComponent(",");
   const params = `accountId=${accountId}&orderHash=${orderHashes.join(coma)}`;
   const encodedParams = encodeURIComponent(params);
   const message = `${method}&${uri}&${encodedParams}`;
@@ -886,12 +886,12 @@ export function batchCancelOrdersByClientOrderIds(
   clientOrderIds,
   keyPair
 ) {
-  const method = 'DELETE';
+  const method = "DELETE";
   const uri = encodeURIComponent(
     `${config.getServer()}/api/v2/orders/byClientOrderId`
   );
 
-  const coma = encodeURIComponent(',');
+  const coma = encodeURIComponent(",");
   const params = `accountId=${accountId}&clientOrderId=${clientOrderIds.join(
     coma
   )}`;

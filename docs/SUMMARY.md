@@ -23,7 +23,9 @@
   - [Websocket](./js_sdk/websocket_api.md)
 
 ### more detail
+
 - class
+
   - [AmmpoolAPI](./detail/classes/AmmpoolAPI.md)
   - [ExchangeAPI](./detail/classes/ExchangeAPI.md)
   - [NFTAPI](./detail/classes/NFTAPI.md)
@@ -34,9 +36,8 @@
 
 - [Read More](./detail/modules.md)
 
-
-
 ### Links
+
 - [Python](https://github.com/Loopring/hello_loopring)
 - [APIs](https://docs.loopring.io/en/)
 - [About us](https://loopring.org/#/)

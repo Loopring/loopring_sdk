@@ -1,172 +1,212 @@
-import { 
-    ChainId,
-    AmmPoolSnapshot,
-    GetAmmPoolSnapshotRequest,
-    GetOffchainFeeAmtRequest,
-    OffchainFeeReqType,
-    TokenVolumeV3,
-} from '../defs'
+import {
+  ChainId,
+  AmmPoolSnapshot,
+  GetAmmPoolSnapshotRequest,
+  GetOffchainFeeAmtRequest,
+  OffchainFeeReqType,
+  TokenVolumeV3,
+} from "../defs";
+
+import { AmmpoolAPI, UserAPI, ExchangeAPI } from "../api";
+
+import { dumpError400 } from "../utils/network_tools";
 
 import {
-    AmmpoolAPI, 
-    UserAPI, 
-    ExchangeAPI, 
-} from '../api'
+  makeExitAmmPoolRequest,
+  makeExitAmmPoolRequest2,
+  makeJoinAmmPoolRequest,
+} from "../utils/swap_calc_utils";
 
-import { dumpError400 } from '../utils/network_tools'
+import * as sdk from "..";
 
-import { makeExitAmmPoolRequest, makeExitAmmPoolRequest2, makeJoinAmmPoolRequest } from '../utils/swap_calc_utils'
+import { loopring_exported_account as acc } from "./utils";
 
-import * as sdk from '..'
+const TIMEOUT = 30000;
 
-import {loopring_exported_account as acc} from './utils'
+const testAddress = "0xd4bd7c71b6d4a09217ccc713f740d6ed8f4ea0cd";
 
-const TIMEOUT = 30000
+const poolAddress = "0xfEB069407df0e1e4B365C10992F1bc16c078E34b";
 
-const testAddress = '0xd4bd7c71b6d4a09217ccc713f740d6ed8f4ea0cd'
+describe("amm_calc", function () {
+  beforeEach(async () => {
+    return;
+  }, TIMEOUT);
 
-const poolAddress = '0xfEB069407df0e1e4B365C10992F1bc16c078E34b'
+  it(
+    "amm_calc_test",
+    async () => {
+      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
+      try {
+        const request: GetAmmPoolSnapshotRequest = {
+          poolAddress,
+        };
+        const response = await api.getAmmPoolSnapshot(request);
+        console.log(response.raw_data.pooled);
 
-describe('amm_calc', function () {
+        const covertVal = sdk.toBig("1e+20").toFixed(0, 0);
 
-    beforeEach(async() => {
-    }, TIMEOUT)
+        const coinA_TV = response.ammPoolSnapshot?.pooled[0];
+        const coinB_TV = response.ammPoolSnapshot?.pooled[1];
 
-    it('amm_calc_test', async () => {
-        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
-        try {
-            const request: GetAmmPoolSnapshotRequest = {
-                poolAddress
-            }
-            const response = await api.getAmmPoolSnapshot(request)
-            console.log(response.raw_data.pooled)
+        const output = sdk.ammPoolCalc(
+          covertVal,
+          true,
+          coinA_TV as TokenVolumeV3,
+          coinB_TV as TokenVolumeV3
+        );
 
-            const covertVal = sdk.toBig('1e+20').toFixed(0, 0)
+        console.log("covertVal:", covertVal);
+        console.log("output:", output);
+        console.log("ratio:", output.ratio.toString());
+      } catch (reason) {
+        dumpError400(reason);
+      }
+    },
+    TIMEOUT
+  );
 
-            const coinA_TV = response.ammPoolSnapshot?.pooled[0]
-            const coinB_TV = response.ammPoolSnapshot?.pooled[1]
+  it(
+    "make_join_request",
+    async () => {
+      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
+      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
+      try {
+        const request: GetAmmPoolSnapshotRequest = {
+          poolAddress,
+        };
 
-            const output = sdk.ammPoolCalc(covertVal, true, coinA_TV as TokenVolumeV3, coinB_TV as TokenVolumeV3)
+        const response = await api.getAmmPoolSnapshot(request);
+        console.log(response.raw_data.pooled);
 
-            console.log('covertVal:', covertVal)
-            console.log('output:', output)
-            console.log('ratio:', output.ratio.toString())
+        const request2: GetOffchainFeeAmtRequest = {
+          accountId: acc.accountId,
+          requestType: OffchainFeeReqType.AMM_JOIN,
+          tokenSymbol: "ETH",
+        };
 
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
+        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
 
-    it('make_join_request', async () => {
-        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
-        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
-        try {
+        console.log("---fees:", fees);
 
-            const request: GetAmmPoolSnapshotRequest = {
-                poolAddress
-            }
+        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
 
-            const response = await api.getAmmPoolSnapshot(request)
-            console.log(response.raw_data.pooled)
+        const { request: res } = makeJoinAmmPoolRequest(
+          "100",
+          true,
+          "0.001",
+          acc.address,
+          fees,
+          response.ammPoolSnapshot as AmmPoolSnapshot,
+          tokenSymbolMap,
+          tokenIdIndex,
+          0,
+          0
+        );
 
-            const request2: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.AMM_JOIN,
-                tokenSymbol: 'ETH',
-            }
+        console.log("res:", res);
+      } catch (reason) {
+        dumpError400(reason);
+      }
+    },
+    TIMEOUT
+  );
 
-            const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey)
+  it(
+    "make_exit_request",
+    async () => {
+      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
+      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
+      try {
+        const { ammpools } = await api.getAmmPoolConf();
 
-            console.log('---fees:', fees)
+        const request: GetAmmPoolSnapshotRequest = {
+          poolAddress,
+        };
 
-            const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
+        const response = await api.getAmmPoolSnapshot(request);
+        console.log(response.raw_data.pooled);
 
-            const { request: res } = makeJoinAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0, 0)
+        const request2: GetOffchainFeeAmtRequest = {
+          accountId: acc.accountId,
+          requestType: OffchainFeeReqType.AMM_JOIN,
+          tokenSymbol: "ETH",
+        };
 
-            console.log('res:', res)
+        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
 
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
+        console.log("---fees:", fees);
 
-    it('make_exit_request', async () => {
-        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
-        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
-        try {
+        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
 
-            const { ammpools } = await api.getAmmPoolConf()
+        const { request: res } = makeExitAmmPoolRequest2(
+          "100",
+          "0.001",
+          acc.address,
+          fees,
+          response.ammPoolSnapshot as AmmPoolSnapshot,
+          tokenSymbolMap,
+          tokenIdIndex,
+          0
+        );
 
-            const request: GetAmmPoolSnapshotRequest = {
-                poolAddress
-            }
-            
-            const response = await api.getAmmPoolSnapshot(request)
-            console.log(response.raw_data.pooled)
+        console.log("res:", res);
+      } catch (reason) {
+        dumpError400(reason);
+      }
+    },
+    TIMEOUT
+  );
 
-            const request2: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.AMM_JOIN,
-                tokenSymbol: 'ETH',
-            }
+  it(
+    "make_new_exit_request",
+    async () => {
+      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
+      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
+      try {
+        const { ammpools } = await api.getAmmPoolConf();
 
-            const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey)
+        const request: GetAmmPoolSnapshotRequest = {
+          poolAddress,
+        };
 
-            console.log('---fees:', fees)
+        const response = await api.getAmmPoolSnapshot(request);
+        console.log(response.raw_data.pooled);
 
-            const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
+        const request2: GetOffchainFeeAmtRequest = {
+          accountId: acc.accountId,
+          requestType: OffchainFeeReqType.AMM_JOIN,
+          tokenSymbol: "ETH",
+        };
 
-            const { request: res } = makeExitAmmPoolRequest2('100', '0.001', acc.address, fees, 
-                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
+        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
 
-            console.log('res:', res)
+        console.log("---fees:", fees);
 
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
+        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
 
-    it('make_new_exit_request', async () => {
-        const api = new AmmpoolAPI({ chainId: ChainId.GOERLI })
-        const userApi = new UserAPI({ chainId: ChainId.GOERLI })
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
-        try {
+        const { request: res } = makeExitAmmPoolRequest(
+          "100",
+          true,
+          "0.001",
+          acc.address,
+          fees,
+          response.ammPoolSnapshot as AmmPoolSnapshot,
+          tokenSymbolMap,
+          tokenIdIndex,
+          0
+        );
 
-            const { ammpools } = await api.getAmmPoolConf()
+        console.log("res:", res);
+        console.log("res:", res.exitTokens);
+      } catch (reason) {
+        dumpError400(reason);
+      }
+    },
+    TIMEOUT
+  );
+});
 
-            const request: GetAmmPoolSnapshotRequest = {
-                poolAddress
-            }
-            
-            const response = await api.getAmmPoolSnapshot(request)
-            console.log(response.raw_data.pooled)
-
-            const request2: GetOffchainFeeAmtRequest = {
-                accountId: acc.accountId,
-                requestType: OffchainFeeReqType.AMM_JOIN,
-                tokenSymbol: 'ETH',
-            }
-
-            const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey)
-
-            console.log('---fees:', fees)
-
-            const { tokenSymbolMap , tokenIdIndex, } = await exchangeApi.getTokens()
-
-            const { request: res } = makeExitAmmPoolRequest('100', true, '0.001', acc.address, fees, 
-                response.ammPoolSnapshot as AmmPoolSnapshot, tokenSymbolMap, tokenIdIndex, 0)
-
-            console.log('res:', res)
-            console.log('res:', res.exitTokens)
-
-        } catch (reason) {
-            dumpError400(reason)
-        }
-    }, TIMEOUT)
-
-})
-
-export default {}
+export default {};

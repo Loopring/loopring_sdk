@@ -1,12 +1,12 @@
 // Taken from
 // https://github.com/iden3/circomlib
 
-import { bigInt, bn128 } from 'snarkjs';
-import blake2b from 'blake2b';
-const assert = require('assert');
+import { bigInt, bn128 } from "snarkjs";
+import blake2b from "blake2b";
+const assert = require("assert");
 
 const F = bn128.Fr;
-const SEED = 'poseidon';
+const SEED = "poseidon";
 const NROUNDSF = 8;
 const NROUNDSP = 57;
 const T = 6;
@@ -35,15 +35,15 @@ function allDifferent(v) {
 }
 
 export function getMatrix(t, seed, nRounds) {
-  if (typeof seed === 'undefined') seed = SEED;
-  if (typeof nRounds === 'undefined') nRounds = NROUNDSF + NROUNDSP;
-  if (typeof t === 'undefined') t = T;
-  let nonce = '0000';
-  let cmatrix = getPseudoRandom(seed + '_matrix_' + nonce, t * 2);
+  if (typeof seed === "undefined") seed = SEED;
+  if (typeof nRounds === "undefined") nRounds = NROUNDSF + NROUNDSP;
+  if (typeof t === "undefined") t = T;
+  let nonce = "0000";
+  let cmatrix = getPseudoRandom(seed + "_matrix_" + nonce, t * 2);
   while (!allDifferent(cmatrix)) {
-    nonce = Number(nonce) + 1 + '';
-    while (nonce.length < 4) nonce = '0' + nonce;
-    cmatrix = getPseudoRandom(seed + '_matrix_' + nonce, t * 2);
+    nonce = Number(nonce) + 1 + "";
+    while (nonce.length < 4) nonce = "0" + nonce;
+    cmatrix = getPseudoRandom(seed + "_matrix_" + nonce, t * 2);
   }
 
   const M = new Array(t);
@@ -57,10 +57,10 @@ export function getMatrix(t, seed, nRounds) {
 }
 
 export function getConstants(t, seed, nRounds) {
-  if (typeof seed === 'undefined') seed = SEED;
-  if (typeof nRounds === 'undefined') nRounds = NROUNDSF + NROUNDSP;
-  if (typeof t === 'undefined') t = T;
-  return getPseudoRandom(seed + '_constants', nRounds);
+  if (typeof seed === "undefined") seed = SEED;
+  if (typeof nRounds === "undefined") nRounds = NROUNDSF + NROUNDSP;
+  if (typeof t === "undefined") t = T;
+  return getPseudoRandom(seed + "_constants", nRounds);
 }
 
 function ark(state, c) {
@@ -85,10 +85,10 @@ function mix(state, M) {
 }
 
 export function createHash(t, nRoundsF, nRoundsP, seed) {
-  if (typeof seed === 'undefined') seed = SEED;
-  if (typeof nRoundsF === 'undefined') nRoundsF = NROUNDSF;
-  if (typeof nRoundsP === 'undefined') nRoundsP = NROUNDSP;
-  if (typeof t === 'undefined') t = T;
+  if (typeof seed === "undefined") seed = SEED;
+  if (typeof nRoundsF === "undefined") nRoundsF = NROUNDSF;
+  if (typeof nRoundsP === "undefined") nRoundsP = NROUNDSP;
+  if (typeof t === "undefined") t = T;
 
   assert(nRoundsF % 2 === 0);
   const C = getConstants(t, seed, nRoundsF + nRoundsP);

@@ -1,115 +1,129 @@
-import { ChainId, ExchangeAPI, generateKeyPair, ConnectorNames } from ".."
+import { ChainId, ExchangeAPI, generateKeyPair, ConnectorNames } from "..";
 
-import { loopring_exported_account as acc, web3 as web3_1, } from './utils'
+import { loopring_exported_account as acc, web3 as web3_1 } from "./utils";
 
-import Web3 from 'web3'
-import { genErr } from ".."
+import Web3 from "web3";
+import { genErr } from "..";
 
-const PrivateKeyProvider = require("truffle-privatekey-provider")
+const PrivateKeyProvider = require("truffle-privatekey-provider");
 
-const TIMEOUT = 30000
+const TIMEOUT = 30000;
 
-describe('sign_tools', function () {
+describe("sign_tools", function () {
+  beforeEach(async () => {
+    return;
+  }, TIMEOUT);
 
-    beforeEach(async() => {
-    }, TIMEOUT)
+  it(
+    "gen_Err",
+    async () => {
+      const err = { message: "err: Not supported on this device" };
+      console.log("genErr:", genErr(err));
+    },
+    TIMEOUT
+  );
 
-    it('gen_Err', async () => {
-        const err = { message: 'err: Not supported on this device' }
-        console.log('genErr:', genErr(err))
-    }, TIMEOUT)
+  it(
+    "gen_Err2",
+    async () => {
+      const err = { message: "err: User denied message signature" };
+      console.log("genErr:", genErr(err));
+    },
+    TIMEOUT
+  );
 
-    it('gen_Err2', async () => {
-        const err = { message: 'err: User denied message signature' }
-        console.log('genErr:', genErr(err))
-    }, TIMEOUT)
+  it(
+    "gen_Err3",
+    async () => {
+      const err = { message: "err: User  message signature" };
+      console.log("genErr:", genErr(err));
+    },
+    TIMEOUT
+  );
 
-    it('gen_Err3', async () => {
-        const err = { message: 'err: User  message signature' }
-        console.log('genErr:', genErr(err))
-    }, TIMEOUT)
+  it(
+    "personalSign1",
+    async () => {
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
-    it('personalSign1', async () => {
+      const addr = acc.address;
 
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-        const addr = acc.address
+      console.log("acc:", accInfo);
 
-        const { accInfo } = await exchangeApi.getAccount({owner: addr})
+      const eddsaKey = await generateKeyPair({
+        web3: web3_1,
+        address: addr,
+        exchangeAddress: acc.exchangeAddr,
+        keyNonce: (accInfo?.keyNonce as number) - 1,
+        walletType: ConnectorNames.MetaMask,
+      });
 
-        console.log('acc:', accInfo)
+      console.log("eddsaKey:", eddsaKey);
+    },
+    TIMEOUT
+  );
 
-        const eddsaKey = await generateKeyPair({
-             web3: web3_1,
-                address: addr,
-                exchangeAddress: acc.exchangeAddr,
-                keyNonce: accInfo?.keyNonce as number - 1,
-                walletType: ConnectorNames.MetaMask,
-            }
-            )
+  it(
+    "personalSign2",
+    async () => {
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
-        console.log('eddsaKey:', eddsaKey)
-        
-    }, TIMEOUT)
+      const addr = "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079";
 
-    it('personalSign2', async () => {
+      const provider = new PrivateKeyProvider(
+        "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263",
+        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+      );
+      const web3 = new Web3(provider);
 
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-        const addr = '0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079'
+      console.log("acc:", accInfo);
 
-        const provider = new PrivateKeyProvider(
-            'e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263',
-            "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-          );
-        const web3 = new Web3(provider)
+      const eddsaKey = await generateKeyPair({
+        web3,
+        address: addr,
+        exchangeAddress: acc.exchangeAddr,
+        keyNonce: (accInfo?.keyNonce as number) - 1,
+        walletType: ConnectorNames.MetaMask,
+      });
 
-        const { accInfo } = await exchangeApi.getAccount({owner: addr})
-        
-        console.log('acc:', accInfo)
+      console.log("eddsaKey:", eddsaKey);
+    },
+    TIMEOUT
+  );
 
-        const eddsaKey = await generateKeyPair({
-                web3,
-                address: addr,
-                exchangeAddress: acc.exchangeAddr,
-                keyNonce: accInfo?.keyNonce as number - 1,
-                walletType: ConnectorNames.MetaMask,
-            }
-            )
+  it(
+    "personalSign3",
+    async () => {
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
-        console.log('eddsaKey:', eddsaKey)
-        
-    }, TIMEOUT)
+      const addr = "0x8cdc4B6C1FA234AE54c53e56376359bFC497f2e6";
 
-    it('personalSign3', async () => {
+      const provider = new PrivateKeyProvider(
+        "c065fd2e8249f3e1bb89f1b642790798279182b46545a4b15498bfde08489882",
+        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+      );
+      const web3 = new Web3(provider);
 
-        const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI })
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-        const addr = '0x8cdc4B6C1FA234AE54c53e56376359bFC497f2e6'
-        
-        const provider = new PrivateKeyProvider(
-            'c065fd2e8249f3e1bb89f1b642790798279182b46545a4b15498bfde08489882',
-            "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-          );
-        const web3 = new Web3(provider)
+      console.log("acc:", accInfo);
 
-        const { accInfo } = await exchangeApi.getAccount({owner: addr})
-        
-        console.log('acc:', accInfo)
+      const eddsaKey = await generateKeyPair({
+        web3,
+        address: addr,
+        exchangeAddress: acc.exchangeAddr,
+        keyNonce: (accInfo?.keyNonce as number) - 1,
+        walletType: ConnectorNames.MetaMask,
+      });
 
-        const eddsaKey = await generateKeyPair({
-                web3,
-                address: addr,
-                exchangeAddress: acc.exchangeAddr,
-                keyNonce: accInfo?.keyNonce as number - 1,
-                walletType: ConnectorNames.MetaMask,
-            }
-            )
+      console.log("eddsaKey:", eddsaKey);
+    },
+    TIMEOUT
+  );
+});
 
-        console.log('eddsaKey:', eddsaKey)
-        
-    }, TIMEOUT)
-
-})
-
-export default {}
+export default {};

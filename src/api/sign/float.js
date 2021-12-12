@@ -1,5 +1,5 @@
-import BN from 'bn.js';
-const assert = require('assert');
+import BN from "bn.js";
+const assert = require("assert");
 
 export function toFloat(value, encoding) {
   const maxExponent = (1 << encoding.numBitsExponent) - 1;
@@ -10,9 +10,9 @@ export function toFloat(value, encoding) {
   const maxValue = new BN(maxMantissa).mul(maxExponentValue);
   assert(
     value.lte(maxValue),
-    'Value too large: ' +
+    "Value too large: " +
       value.toString(10) +
-      ', max value: ' +
+      ", max value: " +
       maxValue.toString(10)
   );
 
@@ -29,8 +29,8 @@ export function toFloat(value, encoding) {
   }
   const mantissa = value.div(d).toNumber();
 
-  assert(exponent <= maxExponent, 'Exponent too large');
-  assert(mantissa <= maxMantissa, 'Mantissa too large');
+  assert(exponent <= maxExponent, "Exponent too large");
+  assert(mantissa <= maxMantissa, "Mantissa too large");
   const f = (exponent << encoding.numBitsMantissa) + mantissa;
   return f;
 }
@@ -48,7 +48,7 @@ export function roundToFloatValue(value, encoding) {
   const floatValue = fromFloat(f, encoding);
   assert(
     floatValue.lte(value),
-    'float value can never be higher than the original value'
+    "float value can never be higher than the original value"
   );
   return floatValue;
 }

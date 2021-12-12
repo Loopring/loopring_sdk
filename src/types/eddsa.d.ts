@@ -1,7 +1,7 @@
-declare module 'snarkjs'
+declare module "snarkjs";
 
-declare module 'ffjavascript'
+declare module "ffjavascript";
 
-declare module 'blake-hash'
+declare module "blake-hash";
 
-declare module 'circomlib'
+declare module "circomlib";

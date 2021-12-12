@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "no-console": 1 ,
+    // Remember, this means error!
+    "camelcase": ["warn"],
+    "@typescript-eslint/no-var-requires": "off",
+    "no-case-declarations": "warn"
+  }
+}

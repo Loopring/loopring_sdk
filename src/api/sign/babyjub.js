@@ -1,9 +1,9 @@
 // Taken and modified from
 // https://github.com/iden3/circomlib
 
-const F1Field = require('ffjavascript').F1Field;
-const Scalar = require('ffjavascript').Scalar;
-const utils = require('ffjavascript').utils;
+const F1Field = require("ffjavascript").F1Field;
+const Scalar = require("ffjavascript").Scalar;
+const utils = require("ffjavascript").utils;
 
 exports.addPoint = addPoint;
 exports.mulPointEscalar = mulPointEscalar;
@@ -13,25 +13,25 @@ exports.packPoint = packPoint;
 exports.unpackPoint = unpackPoint;
 
 exports.p = Scalar.fromString(
-  '21888242871839275222246405745257275088548364400416034343698204186575808495617'
+  "21888242871839275222246405745257275088548364400416034343698204186575808495617"
 );
 const F = new F1Field(exports.p);
 exports.F = F;
 
 exports.Base8 = [
   F.e(
-    '16540640123574156134436876038791482806971768689494387082833631921987005038935'
+    "16540640123574156134436876038791482806971768689494387082833631921987005038935"
   ),
   F.e(
-    '20819045374670962167435360035096875258406992893633759881276124905556507972311'
+    "20819045374670962167435360035096875258406992893633759881276124905556507972311"
   ),
 ];
 exports.order = Scalar.fromString(
-  '21888242871839275222246405745257275088614511777268538073601725287587578984328'
+  "21888242871839275222246405745257275088614511777268538073601725287587578984328"
 );
 exports.subOrder = Scalar.shiftRight(exports.order, 3);
-exports.A = F.e('168700');
-exports.D = F.e('168696');
+exports.A = F.e("168700");
+exports.D = F.e("168696");
 
 function addPoint(a, b) {
   const res = [];
@@ -58,7 +58,7 @@ function addPoint(a, b) {
 }
 
 function mulPointEscalar(base, e) {
-  let res = [F.e('0'), F.e('1')];
+  let res = [F.e("0"), F.e("1")];
   let rem = e;
   let exp = base;
 

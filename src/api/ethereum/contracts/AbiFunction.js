@@ -3,9 +3,9 @@ import {
   clearHexPrefix,
   toBuffer,
   toHex,
-} from '../../../utils/formatter'
-import { methodID, rawDecode, rawEncode } from 'ethereumjs-abi'
-import BN from 'bn.js'
+} from "../../../utils/formatter";
+import { methodID, rawDecode, rawEncode } from "ethereumjs-abi";
+import BN from "bn.js";
 
 export default class AbiFunction {
   constructor({ inputs, name, outputs, constant }) {

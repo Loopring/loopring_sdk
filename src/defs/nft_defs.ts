@@ -1,6 +1,6 @@
-import Web3 from 'web3';
-import { ChainId } from './web3_defs';
-import { NFTType } from '../api';
+import Web3 from "web3";
+import { ChainId } from "./web3_defs";
+import { NFTType } from "../api";
 
 /**
  *  @interface DepositNFTParam
@@ -21,19 +21,19 @@ import { NFTType } from '../api';
  *  @property sendByMetaMask boolean
  */
 export interface DepositNFTParam {
-    web3: Web3,
-    from: string,
-    exchangeAddress: string,
-    nftType?: NFTType,
-    tokenAddress: string,
-    nftID: string,
-    amount: number,
-    gasPrice: number,
-    gasLimit: number,
-    chainId?: ChainId,
-    nonce: number,
-    extraData?: any,
-    sendByMetaMask?: boolean
+  web3: Web3;
+  from: string;
+  exchangeAddress: string;
+  nftType?: NFTType;
+  tokenAddress: string;
+  nftID: string;
+  amount: number;
+  gasPrice: number;
+  gasLimit: number;
+  chainId?: ChainId;
+  nonce: number;
+  extraData?: any;
+  sendByMetaMask?: boolean;
 }
 
 /**
@@ -45,11 +45,11 @@ export interface DepositNFTParam {
  * @property tokenAddress  The address of NFT token
  */
 export interface IsApproveParam {
-    web3: Web3,
-    from: string,
-    exchangeAddress: string,
-    nftType: NFTType,
-    tokenAddress: string
+  web3: Web3;
+  from: string;
+  exchangeAddress: string;
+  nftType: NFTType;
+  tokenAddress: string;
 }
 
 /**
@@ -67,22 +67,22 @@ export interface IsApproveParam {
  * @property sendByMetaMask
  */
 export interface ApproveParam {
-    web3: Web3,
-    from: string,
-    depositAddress: string,
-    tokenAddress: string,
-    tokenId: string,
-    nftType: NFTType,
-    gasPrice: number,
-    gasLimit: number,
-    chainId: ChainId,
-    nonce: number,
-    sendByMetaMask?: boolean
+  web3: Web3;
+  from: string;
+  depositAddress: string;
+  tokenAddress: string;
+  tokenId: string;
+  nftType: NFTType;
+  gasPrice: number;
+  gasLimit: number;
+  chainId: ChainId;
+  nonce: number;
+  sendByMetaMask?: boolean;
 }
 
 export interface ContractNFTMetaParam {
-    web3: any,
-    tokenAddress: string,
-    _id: string,
-    nftType?: NFTType
+  web3: any;
+  tokenAddress: string;
+  _id: string;
+  nftType?: NFTType;
 }

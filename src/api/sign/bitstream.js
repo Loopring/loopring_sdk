@@ -1,22 +1,22 @@
-import { BigNumber } from 'bignumber.js';
-import BN from 'bn.js';
-import abi from 'ethereumjs-abi';
+import { BigNumber } from "bignumber.js";
+import BN from "bn.js";
+import abi from "ethereumjs-abi";
 
-const assert = require('assert');
+const assert = require("assert");
 
 class Bitstream {
-  constructor(initialData = '') {
+  constructor(initialData = "") {
     this.data = initialData;
-    if (this.data.startsWith('0x')) {
+    if (this.data.startsWith("0x")) {
       this.data = this.data.slice(2);
     }
   }
 
   getData() {
     if (this.data.length === 0) {
-      return '0x';
+      return "0x";
     } else {
-      return '0x' + this.data;
+      return "0x" + this.data;
     }
   }
 
@@ -27,9 +27,9 @@ class Bitstream {
       assert.equal(
         this.length() % 32,
         0,
-        'Bitstream not compatible with bytes32[]'
+        "Bitstream not compatible with bytes32[]"
       );
-      return this.data.match(/.{1,64}/g).map((element) => '0x' + element);
+      return this.data.match(/.{1,64}/g).map((element) => "0x" + element);
     }
   }
 
@@ -46,8 +46,8 @@ class Bitstream {
   addNumber(x, numBytes = 4) {
     // Check if we need to encode this number as negative
     if (x < 0) {
-      const encoded = abi.rawEncode(['int256'], [x.toString(10)]);
-      const hex = encoded.toString('hex').slice(-(numBytes * 2));
+      const encoded = abi.rawEncode(["int256"], [x.toString(10)]);
+      const hex = encoded.toString("hex").slice(-(numBytes * 2));
       return this.addHex(hex);
     } else {
       return this.addBigNumber(new BigNumber(x), numBytes);
@@ -60,7 +60,7 @@ class Bitstream {
   }
 
   addHex(x) {
-    if (x.startsWith('0x')) {
+    if (x.startsWith("0x")) {
       return this.insert(x.slice(2));
     } else {
       return this.insert(x);
@@ -104,7 +104,7 @@ class Bitstream {
   }
 
   extractAddress(offset) {
-    return '0x' + this.extractData(offset, 20);
+    return "0x" + this.extractData(offset, 20);
   }
 
   extractBytes1(offset) {
@@ -116,7 +116,7 @@ class Bitstream {
   }
 
   extractBytesX(offset, length) {
-    return new Buffer(this.extractData(offset, length), 'hex');
+    return new Buffer(this.extractData(offset, length), "hex");
   }
 
   extractChar(offset) {
@@ -128,7 +128,7 @@ class Bitstream {
     const end = start + length * 2;
     if (this.data.length < end) {
       throw new Error(
-        'substring index out of range:[' + start + ', ' + end + ']'
+        "substring index out of range:[" + start + ", " + end + "]"
       );
     }
     return this.data.slice(start, end);
@@ -149,15 +149,15 @@ class Bitstream {
 function padString(x, targetLength) {
   if (x.length > targetLength) {
     throw Error(
-      '0x' +
+      "0x" +
         x +
-        ' is too big to fit in the requested length (' +
+        " is too big to fit in the requested length (" +
         targetLength +
-        ')'
+        ")"
     );
   }
   while (x.length < targetLength) {
-    x = '0' + x;
+    x = "0" + x;
   }
   return x;
 }

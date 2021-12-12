@@ -1,10 +1,10 @@
-import { methodID } from 'ethereumjs-abi';
-import { toHex } from '../../../utils/formatter';
-import AbiFunction from './AbiFunction';
+import { methodID } from "ethereumjs-abi";
+import { toHex } from "../../../utils/formatter";
+import AbiFunction from "./AbiFunction";
 
 export default class Contract {
   constructor(abi) {
-    const funAbi = abi.filter(({ type }) => type === 'function');
+    const funAbi = abi.filter(({ type }) => type === "function");
     this.abiFunctions = funAbi.reduce((acc, item) => {
       const inputTypes = item.inputs.map(({ type }) => type);
       const key = `${item.name}(${inputTypes.toString()})`;

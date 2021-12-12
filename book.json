@@ -1,12 +1,12 @@
 {
-    "root": "./docs",
-    "description": "loopring sdk",
-    "author": "Loopring Dev Team",
-    "title": "Loopring SDK",
-    "gitbook" : ">=3.0.0",
-    "links" : {
-        "sidebar" : {
-            "Home" : "https://loopring.io"
-        }
-    }    
+  "root": "./docs",
+  "description": "loopring sdk",
+  "author": "Loopring Dev Team",
+  "title": "Loopring SDK",
+  "gitbook": ">=3.0.0",
+  "links": {
+    "sidebar": {
+      "Home": "https://loopring.io"
+    }
+  }
 }

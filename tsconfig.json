@@ -5,11 +5,7 @@
     "outDir": "./dist",
     "module": "esnext",
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "composite": true,
     "sourceMap": true,
     "allowJs": true,
@@ -23,15 +19,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": true
   },
-  "include": [
-    "src",
-    "src/**/*.json",
-    "src/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-  ]
+  "include": ["src", "src/**/*.json", "src/*"],
+  "exclude": ["node_modules", "dist"]
 }

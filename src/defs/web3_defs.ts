@@ -1,22 +1,22 @@
 export enum ChainId {
-    MAINNET = 1,
-    GOERLI = 5,
+  MAINNET = 1,
+  GOERLI = 5,
 }
 
-export const NetworkContextName = 'NETWORK'
+export const NetworkContextName = "NETWORK";
 
 export enum ConnectorNames {
-    Unknown = 'Unknown',
-    MetaMask = 'MetaMask',
-    Network = 'Network',
-    WalletConnect = 'WalletConnect',
-    WalletLink = 'WalletLink',
-    Ledger = 'Ledger',
-    Trezor = 'Trezor',
-    Authereum = 'Authereum',
+  Unknown = "Unknown",
+  MetaMask = "MetaMask",
+  Network = "Network",
+  WalletConnect = "WalletConnect",
+  WalletLink = "WalletLink",
+  Ledger = "Ledger",
+  Trezor = "Trezor",
+  Authereum = "Authereum",
 }
 
 export enum SigSuffix {
-    Suffix02 = '02',
-    Suffix03 = '03',
+  Suffix02 = "02",
+  Suffix03 = "03",
 }

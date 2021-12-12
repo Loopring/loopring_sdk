@@ -1,4 +1,4 @@
-import { PublicKey } from "./loopring_defs"
+import { PublicKey } from "./loopring_defs";
 
 /**
  * AccountInfo
@@ -12,12 +12,12 @@ import { PublicKey } from "./loopring_defs"
  * @property keySeed string KeySeed of users L2 eddsaKey, the L2 key should be generated from this seed, i.e., L2_EDDSA_KEY=eth.sign(keySeed). Otherwise, user may meet error in login loopring DEX
  */
 export interface AccountInfo {
-    accountId: number
-    owner: string
-    frozen: boolean
-    publicKey: PublicKey
-    tags?: string
-    nonce: number
-    keyNonce: number
-    keySeed: string
+  accountId: number;
+  owner: string;
+  frozen: boolean;
+  publicKey: PublicKey;
+  tags?: string;
+  nonce: number;
+  keyNonce: number;
+  keySeed: string;
 }
