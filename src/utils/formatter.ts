@@ -69,6 +69,7 @@ export function toHex(
       ? mixed
       : addHexPrefix(toBuffer(mixed).toString("hex"));
   }
+   /* istanbul ignore next */
   throw new Error("Unsupported type");
 }
 
@@ -95,7 +96,7 @@ export function toNumber(
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
     return Number(mixed.toString("hex"));
   }
-
+  /* istanbul ignore next */
   throw new Error("Unsupported type");
 }
 
@@ -121,7 +122,7 @@ export function toBig(
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
     return new BigNumber(mixed.toString("hex"));
   }
-
+  /* istanbul ignore next */
   throw new Error("Unsupported type");
 }
 
@@ -131,7 +132,7 @@ export function toBig(
  * @returns {BN}
  */
 export function toBN(mixed: any) {
-  return mixed instanceof BN ? mixed : new BN(toBig(mixed).toString(10), 10);
+    return mixed instanceof BN ? mixed : new BigNumber(toBig(mixed).toString(10), 10);
 }
 
 /**
@@ -165,6 +166,7 @@ export function formatKey(mixed: Buffer | string | Uint8Array) {
   if (typeof mixed === "string") {
     return mixed.startsWith("0x") ? mixed.slice(2) : mixed;
   }
+  /* istanbul ignore next */
   throw new Error("Unsupported type");
 }
 
@@ -183,6 +185,7 @@ export function formatAddress(mixed: Buffer | string | Uint8Array) {
       mixed.startsWith("0x") ? mixed : "0x" + mixed
     );
   }
+  /* istanbul ignore next */
   throw new Error("Unsupported type");
 }
 
@@ -273,6 +276,7 @@ export function numberWithCommas(number: any) {
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     } catch (error) {
+      /* istanbul ignore next */
       return "-";
     }
   } else {
