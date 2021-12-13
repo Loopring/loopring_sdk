@@ -132,7 +132,7 @@ export function toBig(
  * @returns {BN}
  */
 export function toBN(mixed: any) {
-    return mixed instanceof BN ? mixed : new BigNumber(toBig(mixed).toString(10), 10);
+  return mixed instanceof BN ? mixed : new BigNumber(toBig(mixed).toString(10), 10);
 }
 
 /**

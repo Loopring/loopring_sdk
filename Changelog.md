@@ -7,6 +7,7 @@
 #### v1.3.4
      1) Improved formatter.ts unit test statement coverage to 100
      2) Fixed bug in formatter.ts - toBN function
+
 #### v1.3.3
      1) add computeNFTAddress
      2) add eslint and prettie for the code format
