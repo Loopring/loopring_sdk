@@ -75,6 +75,7 @@ const loopring_exported_account = {
   nftId,
   nftData,
   nftTokenID: 32777,
+  testNotOx: "ff7d59d9316eba168837e3ef924bcdfd64b237d8",
 };
 
 export {
