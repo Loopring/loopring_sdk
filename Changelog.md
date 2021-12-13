@@ -10,7 +10,7 @@
 #### v1.3.2
 
      1) Fix some bug
-     1) Update withdraw NFT unit test
+     2) Update withdraw NFT unit test
 
 #### v1.3.0 && v1.3.1 -- !!! revert
 
