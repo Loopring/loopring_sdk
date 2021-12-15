@@ -1,38 +1,30 @@
-import { BaseAPI } from "./base_api";
+import {BaseAPI} from "./base_api";
 
-import { ConnectorError } from "../defs/error_codes";
+import {ConnectorError, ErrorMsg} from "../defs/error_codes";
 
-import {
-  ReqMethod,
-  SIG_FLAG,
-  SigPatchField,
-  TradeChannel,
-} from "../defs/loopring_enums";
+import {ReqMethod, SIG_FLAG, SigPatchField, TradeChannel,} from "../defs/loopring_enums";
 
-import { LOOPRING_URLs } from "../defs/url_defs";
+import {LOOPRING_URLs} from "../defs/url_defs";
 
-import { ConnectorNames, SigSuffix } from "../defs/web3_defs";
+import {ConnectorNames, SigSuffix} from "../defs/web3_defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
+import {TX_HASH_API, TX_HASH_RESULT} from "../defs/loopring_defs";
 
-import { isContract } from "./ethereum/metaMask";
+import {isContract} from "./ethereum/metaMask";
 
 import * as sign_tools from "./sign/sign_tools";
-import { myLog } from "../utils/log_tools";
+import {myLog} from "../utils/log_tools";
 
-export function genErr(err: any) {
+export function genErr(err: Error): ErrorMsg {
   if (!err || !err?.message) {
-    return undefined;
+    return new Error('unKnown');
   }
-
   for (const key in ConnectorError) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (err?.message.search(ConnectorError[key]) !== -1) {
-      return { errMsg: key };
+    if (err?.message.search(ConnectorError[key as keyof typeof ConnectorError]) !== -1) {
+      return {errMsg: key as keyof typeof ConnectorError, ...err};
     }
   }
-
   return err;
 }
 
@@ -126,7 +118,7 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    const { orderId, offchainId } = raw_data;
+    const {orderId, offchainId} = raw_data;
     return {
       orderId,
       offchainId,
@@ -719,20 +711,9 @@ export class UserAPI extends BaseAPI {
     };
   }
 
-  private returnTxHash(raw_data: any) {
-    let hash = undefined;
-
-    let resultInfo = undefined;
-
-    if (raw_data?.hash) {
-      hash = raw_data.hash;
-    } else if (raw_data?.resultInfo) {
-      resultInfo = raw_data.resultInfo;
-    }
-
+  private returnTxHash<T extends TX_HASH_API>(raw_data: T): (T & { raw_data: T }) {
     return {
-      hash,
-      resultInfo,
+      ...raw_data,
       raw_data,
     };
   }
@@ -741,9 +722,9 @@ export class UserAPI extends BaseAPI {
    * Submit offchain withdraw request
    */
 
-  public async submitOffchainWithdraw(
+  public async submitOffchainWithdraw<T extends TX_HASH_API>(
     req: loopring_defs.OffChainWithdrawalRequestV3WithPatch
-  ) {
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
     const {
       request,
       web3,
@@ -831,9 +812,9 @@ export class UserAPI extends BaseAPI {
   /*
    * Submit Internal Transfer request
    */
-  public async submitInternalTransfer(
+  public async submitInternalTransfer<T extends TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch
-  ) {
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
     const {
       request,
       web3,
@@ -921,9 +902,9 @@ export class UserAPI extends BaseAPI {
   /*
    * Submit NFT Transfer request
    */
-  public async submitNFTInTransfer(
+  public async submitNFTInTransfer<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch
-  ) {
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
     const {
       request,
       web3,
@@ -1012,9 +993,9 @@ export class UserAPI extends BaseAPI {
   /*
    * Submit NFT Withdraw request
    */
-  public async submitNFTWithdraw(
+  public async submitNFTWithdraw<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch
-  ) {
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
     const {
       request,
       web3,
@@ -1102,9 +1083,9 @@ export class UserAPI extends BaseAPI {
   /*
    * Submit NFT MINT request
    */
-  public async submitNFTMint(
+  public async submitNFTMint<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch
-  ) {
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
     const {
       request,
       web3,
@@ -1267,10 +1248,10 @@ export class UserAPI extends BaseAPI {
   /*
    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
    */
-  public async updateAccount(
+  public async updateAccount<T extends TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch
-  ) {
-    const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld } = req;
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    const {request, web3, chainId, walletType, isHWAddr: isHWAddrOld} = req;
 
     const isHWAddr = !!isHWAddrOld;
 

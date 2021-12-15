@@ -1,32 +1,33 @@
-import { ChainId, ConnectorNames } from "./web3_defs";
+import {ChainId, ConnectorNames} from "./web3_defs";
 
 import Web3 from "web3";
 
 import {
-  ReqMethod,
-  MarketStatus,
-  AssetType,
-  IntervalType,
-  TradeChannel,
-  OrderType,
-  Currency,
-  OffchainFeeReqType,
-  TradingInterval,
-  TxStatus,
-  OrderStatus,
-  Side,
-  TransferType,
-  BillType,
-  TxType,
-  AmmTxType,
-  RuleType,
   AmmPoolActivityStatus,
-  SIG_FLAG,
-  WithdrawalTypes,
-  UserTxTypes,
-  OrderTypeResp,
+  AmmTxType,
+  AssetType,
+  BillType,
+  Currency,
+  IntervalType,
+  MarketStatus,
+  OffchainFeeReqType,
   OffchainNFTFeeReqType,
+  OrderStatus,
+  OrderType,
+  OrderTypeResp,
+  ReqMethod,
+  RuleType,
+  Side,
+  SIG_FLAG,
+  TradeChannel,
+  TradingInterval,
+  TransferType,
+  TxStatus,
+  TxType,
+  UserTxTypes,
+  WithdrawalTypes,
 } from "./loopring_enums";
+import {RESULT_INFO} from "./error_codes";
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -35,6 +36,9 @@ export interface VipFeeRateInfo {
 }
 
 export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo };
+
+export type TX_HASH_API = { hash?: string, resultInfo?: RESULT_INFO }
+export type TX_HASH_RESULT<T> = T & { raw_data: T }
 
 export interface ReqOptions {
   baseUrl?: string;
@@ -330,6 +334,7 @@ export interface TokenVolumeV3 {
    */
   volume: string;
 }
+
 export interface TokenVolumeNFT {
   /**
    * The Loopring\'s token identifier.
@@ -671,6 +676,7 @@ export interface GetOffchainFeeAmtRequest {
   tokenSymbol?: string;
   amount?: string;
 }
+
 export interface GetNFTOffchainFeeAmtRequest {
   accountId: number;
   requestType: OffchainNFTFeeReqType;
@@ -1382,6 +1388,7 @@ export interface OriginNFTTransferRequestV3 {
    */
   clientId?: string;
 }
+
 /**
  *
  * @export
@@ -1584,6 +1591,7 @@ export interface NFTMintRequestV3 {
    */
   hashApproved?: string;
 }
+
 /**
  *
  * @export
@@ -1780,6 +1788,7 @@ export interface OriginTransferRequestV3WithPatch {
   apiKey: string;
   isHWAddr?: boolean;
 }
+
 export interface OriginNFTTransferRequestV3WithPatch {
   request: OriginNFTTransferRequestV3;
   web3: Web3;
@@ -1789,6 +1798,7 @@ export interface OriginNFTTransferRequestV3WithPatch {
   apiKey: string;
   isHWAddr?: boolean;
 }
+
 export interface OriginNFTWithdrawRequestV3WithPatch {
   request: NFTWithdrawRequestV3;
   web3: Web3;
@@ -1798,6 +1808,7 @@ export interface OriginNFTWithdrawRequestV3WithPatch {
   apiKey: string;
   isHWAddr?: boolean;
 }
+
 export interface OriginNFTMINTRequestV3WithPatch {
   request: NFTMintRequestV3;
   web3: Web3;
