@@ -3,6 +3,11 @@
 ## JS SDK Version ChangeLog
 
 ---
+#### v1.3.8
+     1) SDK update for error type
+
+####v1.3.4 - v1.3.7 destroy
+
 #### v1.3.3
      1) add computeNFTAddress
      2) add eslint and prettie for the code format

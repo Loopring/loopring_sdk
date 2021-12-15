@@ -268,28 +268,28 @@ describe("UserAPI test", function () {
       });
       console.log("updateAccount result: ", JSON.stringify(result));
 
-      const { accInfo: accInfoNext } = await exchange.getAccount({
-        owner: loopring_exported_account.address,
-      });
-      if (!accInfoNext) {
-        return;
-      }
-      const eddsaKeyNext = await sign_tools.generateKeyPair({
-        web3,
-        address: accInfoNext.owner,
-        exchangeAddress: loopring_exported_account.exchangeAddr,
-        keyNonce: accInfoNext.nonce - 1,
-        walletType: ConnectorNames.MetaMask,
-      });
-      console.log("eddsakey:", eddsaKeyNext.sk, "nonce", accInfoNext.nonce);
-
-      const { apiKey } = await userApi.getUserApiKey(
-        {
-          accountId: accInfo.accountId,
-        },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+      // const { accInfo: accInfoNext } = await exchange.getAccount({
+      //   owner: loopring_exported_account.address,
+      // });
+      // if (!accInfoNext) {
+      //   return;
+      // }
+      // const eddsaKeyNext = await sign_tools.generateKeyPair({
+      //   web3,
+      //   address: accInfoNext.owner,
+      //   exchangeAddress: loopring_exported_account.exchangeAddr,
+      //   keyNonce: accInfoNext.nonce - 1,
+      //   walletType: ConnectorNames.MetaMask,
+      // });
+      // console.log("eddsakey:", eddsaKeyNext.sk, "nonce", accInfoNext.nonce);
+      //
+      // const { apiKey } = await userApi.getUserApiKey(
+      //   {
+      //     accountId: accInfo.accountId,
+      //   },
+      //   eddsaKey.sk
+      // );
+      // console.log("apiKey:", apiKey);
     },
     DEFAULT_TIMEOUT + 20000
   );

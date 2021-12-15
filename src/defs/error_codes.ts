@@ -43,7 +43,18 @@ export enum LoopringErrorCode {
   Unsupported_Depth_Level = 108001,
 }
 
-export const ConnectorError = {
-  NOT_SUPPORT_ERROR: "Not supported on this device",
-  USER_DENIED: "User denied message signature",
-};
+export enum ConnectorError  {
+  NOT_SUPPORT_ERROR = "Not supported on this device",
+  USER_DENIED ="User denied message signature",
+}
+
+export interface RESULT_INFO {
+  code: number;
+  msg: string;
+}
+export type ERROR_INFO = {
+  resultInfo: RESULT_INFO
+}
+export type ErrorMsg =  {
+  errMsg?: keyof typeof ConnectorError
+} & Error
