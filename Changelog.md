@@ -2,7 +2,9 @@
 
 ## JS SDK Version ChangeLog
 
----
+#### v1.3.9
+     1) Update getLatestTokenPrice url
+
 #### v1.3.8
      1) SDK update for error type
 
