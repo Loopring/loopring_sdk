@@ -243,7 +243,7 @@ describe("UserAPI test", function () {
         web3,
         address: accInfo.owner,
         exchangeAddress: exchangeInfo.exchangeAddress,
-        keyNonce: accInfo.nonce - 1,
+        keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
       });
       console.log("eddsakey:", eddsaKey.sk);
@@ -254,7 +254,7 @@ describe("UserAPI test", function () {
         publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
         maxFee: {
           tokenId: 1,
-          volume: "0100000000000000000",
+          volume: "106500000000000000",
         },
         validUntil: VALID_UNTIL,
         nonce: accInfo.nonce as number,
