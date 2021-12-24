@@ -173,9 +173,17 @@ describe("AmmpoolAPI test", function () {
   it(
     "getAmmPoolActivityRules_test",
     async () => {
-      const response = await api.getAmmPoolActivityRules();
-      console.log("getAmmPoolActivityRules:", response);
-      console.log(response.activityRules["AMM-LRC-ETH"].awardRules);
+      const {activityInProgressRules,
+        activityDateMap,
+        groupByRuleType,
+        groupByActivityStatus,
+        groupByRuleTypeAndStatus,
+        raw_data} = await api.getAmmPoolActivityRules();
+      console.log('activityInProgressRules',activityInProgressRules);
+      console.log( 'activityDateMap',activityDateMap);
+      console.log( 'groupByRuleType',groupByRuleType);
+      console.log( 'groupByActivityStatus',groupByActivityStatus);
+      console.log('groupByRuleTypeAndStatus',groupByRuleTypeAndStatus);
     },
     DEFAULT_TIMEOUT
   );

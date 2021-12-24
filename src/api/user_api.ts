@@ -1,4 +1,4 @@
-import {BaseAPI} from "./base_api";
+import {BaseAPI, isContract} from "./base_api";
 
 import {ConnectorError, ErrorMsg} from "../defs/error_codes";
 
@@ -11,7 +11,6 @@ import {ConnectorNames, SigSuffix} from "../defs/web3_defs";
 import * as loopring_defs from "../defs/loopring_defs";
 import {TX_HASH_API, TX_HASH_RESULT} from "../defs/loopring_defs";
 
-import {isContract} from "./ethereum/metaMask";
 
 import * as sign_tools from "./sign/sign_tools";
 import {myLog} from "../utils/log_tools";

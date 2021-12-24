@@ -1,49 +1,45 @@
-import { BaseAPI } from "./base_api";
+import {BaseAPI} from "./base_api";
 import {
-  GetAmmUserRewardsRequest,
-  GetAmmPoolSnapshotRequest,
-  GetAmmPoolTradesRequest,
-  GetUserAmmPoolTxsRequest,
-  JoinAmmPoolRequest,
-  ExitAmmPoolRequest,
-  AmmPoolRequestPatch,
-  AmmPoolBalance,
-  AmmPoolStat,
-  GetAmmPoolGameRankRequest,
-  GetAmmPoolGameUserRankRequest,
-  TokenVolumeV3,
-  GameRankInfo,
-  AmmPoolSnapshot,
-  AmmUserReward,
-  AmmUserRewardMap,
   AmmPoolActivityRule,
-  JoinAmmPoolResult,
-  ExitAmmPoolResult,
-  LoopringMap,
-  TokenRelatedInfo,
+  AmmPoolBalance,
   AmmPoolInfoV3,
+  AmmPoolInProgressActivityRule,
+  AmmPoolRequestPatch,
+  AmmPoolSnapshot,
+  AmmPoolStat,
   AmmPoolTrade,
   AmmPoolTx,
-  GetAmmPoolTxsRequest,
-  UserAmmPoolTx,
-  ReqParams,
+  AmmUserReward,
+  AmmUserRewardMap,
+  ExitAmmPoolRequest,
+  ExitAmmPoolResult,
+  GameRankInfo,
   GetAmmAssetRequest,
+  GetAmmPoolGameRankRequest,
+  GetAmmPoolGameUserRankRequest,
+  GetAmmPoolSnapshotRequest,
+  GetAmmPoolTradesRequest,
+  GetAmmPoolTxsRequest,
+  GetAmmUserRewardsRequest,
   GetLiquidityMiningRequest,
   GetLiquidityMiningUserHistoryRequest,
-  UserMiningInfo,
+  GetUserAmmPoolTxsRequest,
+  JoinAmmPoolRequest,
+  JoinAmmPoolResult,
+  LoopringMap,
+  ReqParams,
   RewardItem,
+  TokenRelatedInfo,
+  TokenVolumeV3,
+  UserAmmPoolTx,
+  UserMiningInfo,
 } from "../defs/loopring_defs";
 
-import { VALID_UNTIL } from "../defs/loopring_constants";
+import {VALID_UNTIL} from "../defs/loopring_constants";
 
-import {
-  SIG_FLAG,
-  ReqMethod,
-  AmmPoolActivityStatus,
-  SortOrder,
-} from "../defs/loopring_enums";
+import {AmmPoolActivityStatus, ReqMethod, SIG_FLAG, SortOrder,} from "../defs/loopring_enums";
 
-import { LOOPRING_URLs } from "../defs/url_defs";
+import {LOOPRING_URLs} from "../defs/url_defs";
 
 import * as sign_tools from "./sign/sign_tools";
 
@@ -202,13 +198,19 @@ export class AmmpoolAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    const activityRules: LoopringMap<AmmPoolActivityRule> = {};
+    const activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule> = {};
+    const activityDateMap: {
+      [key: number]: {
+        AMM_MINING?: LoopringMap<AmmPoolActivityRule>;
+        ORDERBOOK_MINING?: LoopringMap<AmmPoolActivityRule>;
+        SWAP_VOLUME_RANKING?: LoopringMap<AmmPoolActivityRule>;
+      }
+    } = {}
+    //{AMM_MINING:{},ORDERBOOK_MINING:{},SWAP_VOLUME_RANKING:{}}
 
     const groupByRuleType: LoopringMap<AmmPoolActivityRule[]> = {};
 
-    const groupByRuleTypeAndStatus: LoopringMap<
-      LoopringMap<AmmPoolActivityRule[]>
-    > = {};
+    let groupByRuleTypeAndStatus: LoopringMap<LoopringMap<AmmPoolActivityRule[]>> = {};
 
     const groupByActivityStatus: LoopringMap<AmmPoolActivityRule[]> = {};
 
@@ -220,51 +222,45 @@ export class AmmpoolAPI extends BaseAPI {
           currentTs < item.rangeFrom
             ? AmmPoolActivityStatus.NotStarted
             : currentTs >= item.rangeFrom && currentTs <= item.rangeTo
-            ? AmmPoolActivityStatus.InProgress
-            : AmmPoolActivityStatus.EndOfGame;
+              ? AmmPoolActivityStatus.InProgress
+              : AmmPoolActivityStatus.EndOfGame;
 
         item.status = status;
-
-        activityRules[item.market] = item;
-
-        if (item.ruleType in groupByRuleType) {
-          const ruleList = groupByRuleType[item.ruleType];
-          ruleList.push(item);
-          groupByRuleType[item.ruleType] = ruleList;
-        } else {
-          groupByRuleType[item.ruleType] = [item];
+        if (status === AmmPoolActivityStatus.InProgress) {
+          activityInProgressRules[item.market] = {
+            ...item,
+            ruleType: [
+              ...(activityInProgressRules[item.market] ? (activityInProgressRules[item.market].ruleType ?? []) : []),
+              item.ruleType]
+          };
         }
-
-        if (status in groupByActivityStatus) {
-          const ruleList = groupByActivityStatus[status];
-          ruleList.push(item);
-          groupByActivityStatus[status] = ruleList;
-        } else {
-          groupByActivityStatus[status] = [item];
+        groupByRuleType[item.ruleType] = [...(groupByRuleType[item.ruleType] ?? []), item];
+        groupByActivityStatus[status] = [...(groupByActivityStatus[status] ?? []), item];
+        activityDateMap[item.rangeFrom] = {
+          ...activityDateMap[item.rangeFrom] ?? {},
+          [item.ruleType]: {
+            ...(activityDateMap[item.rangeFrom] ? (activityDateMap[item.rangeFrom][item.ruleType] ?? {}) : {}),
+            [item.market]: item
+          }
         }
+        groupByRuleTypeAndStatus = {
+          ...groupByRuleTypeAndStatus,
+          [item.ruleType]: {
+            ...(groupByRuleTypeAndStatus[item.ruleType] ?? {}),
+            status: [
+              ...(groupByRuleTypeAndStatus[item.ruleType] ?
+                (groupByRuleTypeAndStatus[item.ruleType][status] ?? []) : []),
+              item
+            ]
+          }
+        };
 
-        let ruleMap: LoopringMap<AmmPoolActivityRule[]> = {};
-
-        if (item.ruleType in groupByRuleTypeAndStatus) {
-          ruleMap = groupByRuleTypeAndStatus[item.ruleType];
-        } else {
-          ruleMap = {};
-        }
-
-        if (status in ruleMap) {
-          const ruleList = ruleMap[status];
-          ruleList.push(item);
-          ruleMap[status] = ruleList;
-        } else {
-          ruleMap[status] = [item];
-        }
-
-        groupByRuleTypeAndStatus[item.ruleType] = ruleMap;
       });
     }
 
     return {
-      activityRules,
+      activityInProgressRules,
+      activityDateMap,
       groupByRuleType,
       groupByActivityStatus,
       groupByRuleTypeAndStatus,
@@ -516,7 +512,7 @@ export class AmmpoolAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const { eddsaSig } = sign_tools.get_EddsaSig_JoinAmmPool(request, patch);
+    const {eddsaSig} = sign_tools.get_EddsaSig_JoinAmmPool(request, patch);
 
     request.eddsaSignature = eddsaSig;
 
@@ -545,7 +541,7 @@ export class AmmpoolAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const { eddsaSig } = sign_tools.get_EddsaSig_ExitAmmPool(request, patch);
+    const {eddsaSig} = sign_tools.get_EddsaSig_ExitAmmPool(request, patch);
 
     request.eddsaSignature = eddsaSig;
 

@@ -379,3 +379,6 @@ export async function forceWithdrawal(
     sendByMetaMask
   );
 }
+
+
+export {isContract} from "./base_api";

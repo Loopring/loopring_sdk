@@ -15,7 +15,6 @@ import BigInteger from "bignumber.js";
 import * as fm from "../../utils/formatter";
 import { toBig, toHex } from "../../utils/formatter";
 
-import { personalSign } from "../ethereum/metaMask";
 
 import { ChainId, ConnectorNames } from "../../defs/web3_defs";
 
@@ -34,6 +33,7 @@ import {
 
 import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
+import {personalSign} from "../base_api";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -266,9 +266,6 @@ export async function signEip712WalletConnect(
   typedData: any
 ) {
   try {
-    // console.log('web3.currentProvider:', web3.currentProvider)
-    // console.log('typedData:', typedData)
-    // console.log('account:', account)
 
     const response: any = await web3.currentProvider?.send(
       "eth_signTypedData",

@@ -219,6 +219,17 @@ export interface AmmPoolActivityRule {
 
   status: AmmPoolActivityStatus;
 }
+export interface AmmPoolInProgressActivityRule {
+  market: string;
+  ruleType: RuleType[];
+  rangeFrom: number;
+  rangeTo: number;
+  awardRules: TokenVolumeV3[];
+  maxSpread: number;
+  topK: number;
+
+  status: AmmPoolActivityStatus;
+}
 
 export interface AmmTrade {
   accountId: number;
