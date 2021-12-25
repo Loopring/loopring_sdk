@@ -252,7 +252,7 @@ export class AmmpoolAPI extends BaseAPI {
           ...groupByRuleTypeAndStatus,
           [item.ruleType]: {
             ...(groupByRuleTypeAndStatus[item.ruleType] ? groupByRuleTypeAndStatus[item.ruleType] : {}),
-            status: [
+            [status]: [
               ...(groupByRuleTypeAndStatus[item.ruleType] ?
                 (groupByRuleTypeAndStatus[item.ruleType][status] ? groupByRuleTypeAndStatus[item.ruleType][status] : []) : []),
               item

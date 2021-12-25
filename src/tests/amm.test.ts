@@ -183,7 +183,7 @@ describe("AmmpoolAPI test", function () {
       console.log( 'activityDateMap',activityDateMap);
       console.log( 'groupByRuleType',groupByRuleType);
       console.log( 'groupByActivityStatus',groupByActivityStatus);
-      console.log('groupByRuleTypeAndStatus',groupByRuleTypeAndStatus);
+      console.log('groupByRuleTypeAndStatus',groupByRuleTypeAndStatus,JSON.stringify(groupByRuleTypeAndStatus));
     },
     DEFAULT_TIMEOUT
   );
