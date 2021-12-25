@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
-#### v1.4.1
+#### v1.4.2
      1) update activity
 
 #### v1.3.10
