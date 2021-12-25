@@ -198,7 +198,7 @@ export class AmmpoolAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    const activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule> = {};
+    let activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule> = {};
     const activityDateMap: {
       [key: number]: {
         AMM_MINING?: LoopringMap<AmmPoolActivityRule>;
@@ -227,29 +227,34 @@ export class AmmpoolAPI extends BaseAPI {
 
         item.status = status;
         if (status === AmmPoolActivityStatus.InProgress) {
-          activityInProgressRules[item.market] = {
-            ...item,
-            ruleType: [
-              ...(activityInProgressRules[item.market] ? (activityInProgressRules[item.market].ruleType ?? []) : []),
-              item.ruleType]
+          const ruleType = activityInProgressRules[item.market] ?
+            [...activityInProgressRules[item.market].ruleType, item.ruleType]
+            : [item.ruleType]
+          activityInProgressRules = {
+            ...activityInProgressRules,
+            [item.market]: {...item, ruleType}
           };
         }
-        groupByRuleType[item.ruleType] = [...(groupByRuleType[item.ruleType] ?? []), item];
-        groupByActivityStatus[status] = [...(groupByActivityStatus[status] ?? []), item];
+        groupByRuleType[item.ruleType] = [...(groupByRuleType[item.ruleType]
+          ? groupByRuleType[item.ruleType] : []), item];
+        groupByActivityStatus[status] = [...(groupByActivityStatus[status]
+          ? groupByActivityStatus[status] : []), item];
         activityDateMap[item.rangeFrom] = {
-          ...activityDateMap[item.rangeFrom] ?? {},
+          ...activityDateMap[item.rangeFrom] ? activityDateMap[item.rangeFrom] : {},
           [item.ruleType]: {
-            ...(activityDateMap[item.rangeFrom] ? (activityDateMap[item.rangeFrom][item.ruleType] ?? {}) : {}),
+            ...(activityDateMap[item.rangeFrom] ?
+              (activityDateMap[item.rangeFrom][item.ruleType] ?
+                activityDateMap[item.rangeFrom][item.ruleType] : {}) : {}),
             [item.market]: item
           }
         }
         groupByRuleTypeAndStatus = {
           ...groupByRuleTypeAndStatus,
           [item.ruleType]: {
-            ...(groupByRuleTypeAndStatus[item.ruleType] ?? {}),
+            ...(groupByRuleTypeAndStatus[item.ruleType] ? groupByRuleTypeAndStatus[item.ruleType] : {}),
             status: [
               ...(groupByRuleTypeAndStatus[item.ruleType] ?
-                (groupByRuleTypeAndStatus[item.ruleType][status] ?? []) : []),
+                (groupByRuleTypeAndStatus[item.ruleType][status] ? groupByRuleTypeAndStatus[item.ruleType][status] : []) : []),
               item
             ]
           }

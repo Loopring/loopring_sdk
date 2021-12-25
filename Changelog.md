@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.4.1
+     1) update activity
 
 #### v1.3.10
      1) Add recognizing header for web
