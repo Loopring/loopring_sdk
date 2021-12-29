@@ -28,6 +28,7 @@ import {
   WithdrawalTypes,
 } from "./loopring_enums";
 import {RESULT_INFO} from "./error_codes";
+import {HEBAO_LOCK_STATUS, HEBAO_META_TYPE} from "./loopring_constants";
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -668,6 +669,9 @@ export interface GetCandlestickRequest {
 export interface GetAccountRequest {
   owner: string;
 }
+export interface GetCounterFactualInfoRequest {
+  accountID: number;
+}
 
 export interface GetEthNonceRequest {
   owner: string;
@@ -1087,6 +1091,74 @@ export interface UserTx {
   recipient: string;
 }
 
+
+/**
+ * @param {string} guardian address
+ */
+export interface SendMetaTxRequest {
+  wallet: string;
+  module: string;
+  value: string
+  data: string;
+  nonce: string
+  validUntil: string
+  gasToken: string;
+  gasPrice: string
+  gasLimit: string
+  gasOverhead: string
+  feeRecipient: string;
+  signatures: string;
+  signers: string
+  metaTxType:0,
+  requestId: string
+  securityId: string
+  guardianType: string
+}
+
+/**
+ * @param {string} guardian address
+ */
+export interface GetGuardianApproveListRequest {
+  guardian: string;
+}
+/**
+ * @param {string} owner address
+ */
+export interface GetEnsNameRequest{
+  owner: string;
+}
+
+/**
+ * @param {string} fullName ENSName
+ */
+export interface GetEnsAddressRequest  {
+  fullName: string;
+}
+
+/**
+ * @param {string} approveRecordId
+ * @param {string} securityNumber
+ * @param {string} txAwareHash
+ * @param {string} signer
+ * @param {string} wallet
+ * @param {string} signature
+ */
+export interface SubmitApproveSignatureRequest{
+  approveRecordId: string;
+  txAwareHash: string;
+  securityNumber:number;
+  // signer: string;
+  // signature: string;
+}
+
+/**
+ * @param {string} guardian address
+ * @param {string} protectAddress? address
+ */
+export interface GetProtectorRequest {
+  guardian: string,
+  protectAddress?:string,
+}
 export interface GetUserTradesRequest {
   accountId: number;
   market?: string;
@@ -1993,4 +2065,20 @@ export interface UserNFTTransferHistoryTx {
   payeeAddress: string;
   blockId: number;
   indexInBlock: number;
+}
+
+export type Protector = {
+  ens:string,
+  address:string,
+  lockStatus:HEBAO_LOCK_STATUS
+}
+
+export type  Guardian =  {
+  ens: string,
+  address: string,
+  type: keyof typeof HEBAO_META_TYPE,
+  id: number,
+  messageHash: string,
+  businessDataJson:string,
+  signedRequest: string,
 }

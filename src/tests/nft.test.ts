@@ -58,7 +58,7 @@ describe("nft test", function () {
     DEFAULT_TIMEOUT
   );
   it(
-    "getContractNFTMeta test",
+    "getContractNFTMeta",
     async () => {
       const nonce = await contract.getNonce(
         web3,
@@ -69,7 +69,7 @@ describe("nft test", function () {
         web3: web3,
         tokenAddress:
           "0x1197d20d12bc9f80a4902c04c5a4b88371d32b0c14adce746eeea564850f47a5",
-        _id: "0x000000000000000000000000000000000000000000000000000000000000007b",
+        nftId: "0x000000000000000000000000000000000000000000000000000000000000007b",
         nftType: NFTType.ERC1155,
       });
       console.log(`nonce: ${nonce} getContractNFTMeta: ${response?.result}`);

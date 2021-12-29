@@ -21,3 +21,14 @@ export interface AccountInfo {
   keyNonce: number;
   keySeed: string;
 }
+
+/**
+ *
+ */
+export interface CounterFactualInfo {
+  accountId: number;
+  owner: string;
+  walletFactory:string;
+  walletSalt:string;
+  walletOwner:string;
+}

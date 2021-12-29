@@ -10,7 +10,7 @@ import {
   GetEthBalancesRequest,
   GetEthNonceRequest,
   GetWithdrawalAgentsRequest,
-  GetAccountServicesRequest,
+  GetAccountServicesRequest, GetCounterFactualInfoRequest,
 } from "../defs/loopring_defs";
 
 import { TradingInterval, VipCatergory } from "../defs/loopring_enums";
@@ -66,6 +66,7 @@ describe("ExchangeAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
+
 
   it(
     "getExchangeFeeInfo_Test",
@@ -153,6 +154,20 @@ describe("ExchangeAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
+
+
+  it("getCounterFactualInfo",async () => {
+      const request: GetCounterFactualInfoRequest = {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        accountId: '// TODO',// TODO
+      };
+      const response = await api.getCounterFactualInfo(request);
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+
 
   it(
     "getEthNonce",

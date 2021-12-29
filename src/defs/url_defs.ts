@@ -23,6 +23,7 @@ export enum LOOPRING_URLs {
   GET_TRADES = "/api/v3/trade",
   POST_INTERNAL_TRANSFER = "/api/v3/transfer",
   ACCOUNT_ACTION = "/api/v3/account", // get or update
+  COUNTER_FACTUAL_INFO = "/api/v3/counterFactualInfo",
   GET_USER_REG_TXS = "/api/v3/user/createInfo",
   GET_PWD_RESET_TXS = "/api/v3/user/updateInfo",
   GET_USER_EXCHANGE_BALANCES = "/api/v3/user/balances",
@@ -74,7 +75,15 @@ export enum LOOPRING_URLs {
   GET_USER_TRADE_AMOUNT = "/api/v3/datacenter/getUserTradeAmount",
   GET_TOKEN_PRICES = "/api/wallet/v3/tokenPrices",
   GET_LATEST_TOKEN_PRICES = "/api/v3/datacenter/getLatestTokenPrices",
-
+  GET_GUARDIAN_APPROVE_LIST = "/api/wallet/v3/getGuardianApproveList",
+  GET_PROTECTORS = "/api/wallet/v3/getProtects",
+  SUBMIT_APPROVE_SIGNATURE="/api/wallet/v3/submitApproveSignature",
+  REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",
+  OFFICIAL_LOCK_OR_UNLOCK ="/api/wallet/v3/officialLockOrUnlock",
+  RESOLVE_ENS = "/api/wallet/v3/resolveEns",
+  RESOLVE_NAME ="/api/wallet/v3/resolveName",
+  SEND_META_TX = "/api/wallet/v3/sendMetaTx",
+  
   GET_ACCOUNT_SERVICES = "/api/v3/spi/getAccountServices",
 
   // NFT

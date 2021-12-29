@@ -1,35 +1,9 @@
 import { toBig, toFixed } from "../../utils/formatter";
+// eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
 const config = require("./config.json");
 
 function getMaintenanceMode() {
   return config.maintenanceMode;
-}
-
-function getRelayerHost(restUrl = true) {
-  if (
-    window.location.hostname === "loopring.io" ||
-    window.location.hostname === "www.loopring.io" ||
-    window.location.hostname === "v1.loopring.io" ||
-    window.location.hostname === "www.v1.loopring.io"
-  ) {
-    return restUrl ? config.prodServerUrl : config.prodWsUrl;
-  } else if (
-    window.location.hostname === "exchange.loopring.io" ||
-    window.location.hostname === "www.exchange.loopring.io"
-  ) {
-    return restUrl ? config.prod36ServerUrl : config.prod36WsUrl;
-  } else {
-    // No uat
-    return restUrl ? config.uat2ServerUrl : config.uat2WsUrl;
-  }
-}
-
-function getServer() {
-  return "https://" + getRelayerHost();
-}
-
-function getWsServer() {
-  return "wss://" + getRelayerHost(false) + "/v2/ws";
 }
 
 function getChannelId() {
@@ -55,31 +29,6 @@ function getTokenBySymbol(symbol, tokens) {
   );
 }
 
-function getTokenByName(name, tokens) {
-  if (typeof name === "undefined") {
-    return {};
-  }
-  return (
-    tokens.find((token) => token.name.toLowerCase() === name.toLowerCase()) ||
-    {}
-  );
-}
-
-function getTokenByAddress(address, tokens) {
-  if (typeof address === "undefined") {
-    return {};
-  }
-  return tokens.find(
-    (token) => token.address.toLowerCase() === address.toLowerCase()
-  );
-}
-
-function getTokenByTokenId(tokenId, tokens) {
-  if (typeof tokenId === "undefined") {
-    return {};
-  }
-  return tokens.find((token) => token.tokenId === tokenId);
-}
 
 function fromWEI(symbol, valueInWEI, tokens, { precision, ceil } = {}) {
   try {
@@ -176,13 +125,7 @@ function getFeeByToken(token, fees) {
 
 export default {
   getMaintenanceMode,
-  getRelayerHost,
-  getServer,
-  getWsServer,
   getTokenBySymbol,
-  getTokenByName,
-  getTokenByAddress,
-  getTokenByTokenId,
   getMarketByPair,
   getGasLimitByType,
   getFeeByType,

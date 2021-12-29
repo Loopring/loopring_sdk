@@ -158,6 +158,17 @@ export async function contractWalletValidate2(
   });
 }
 
+export async function fcWalletValid(web3: any,
+                                    account: string,
+                                    msg: string,
+                                    sig: any) {
+  return new Promise((resolve)=>{
+    resolve('')
+  })
+
+}
+
+
 export async function mykeyWalletValid(
   web3: any,
   account: string,
@@ -460,8 +471,6 @@ export async function personalSign(
         account,
         pwd,
         async function (err: any, result: any) {
-          // console.log('msg:', msg)
-          // console.log('walletType:', walletType, ' personal result:', result)
           if (!err) {
             if (walletType === ConnectorNames.WalletLink) {
               const valid: any = await walletLinkValid(account, msg, result);
@@ -489,49 +498,61 @@ export async function personalSign(
             // console.log('try to exc ecRecover !!!')
 
             const valid: any = await ecRecover(web3, account, msg, result);
-            // console.log('ecRecover valid:', valid)
-
-            // const valid: any = await ecRecover2(account, msg, result)
-            // console.log('ecRecover2 valid:', valid)
 
             if (valid.result) {
               resolve({ sig: result });
-            } else {
-              const walletValid: any = await contractWalletValidate(
-                web3,
-                account,
-                msg,
-                result
-              );
-
-              if (walletValid.result) {
-                resolve({ sig: result });
-              } else {
-                const walletValid2: any = await contractWalletValidate2(
-                  web3,
-                  account,
-                  msg,
-                  result
-                );
-
-                if (walletValid2.result) {
-                  resolve({ sig: result });
-                } else {
-                  const myKeyValid: any = await mykeyWalletValid(
-                    web3,
-                    account,
-                    msg,
-                    result
-                  );
-
-                  if (myKeyValid.result) {
-                    resolve({ sig: result });
-                  } else {
-                    resolve({ error: "myKeyValid sig at last!" });
-                  }
-                }
-              }
+              return
             }
+
+            const walletValid: any = await contractWalletValidate(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (walletValid.result) {
+              resolve({ sig: result });
+              return
+            }
+
+            const walletValid2: any = await contractWalletValidate2(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (walletValid2.result) {
+              resolve({ sig: result });
+              return
+            }
+
+            const cfWalletValid: any = await fcWalletValid( web3,
+              account,
+              msg,
+              result)
+
+
+
+
+
+            const myKeyValid: any = await mykeyWalletValid(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (myKeyValid.result) {
+              resolve({ sig: result });
+            } else {
+              resolve({ error: "myKeyValid sig at last!" });
+            }
+
+
+
+
           } else {
             resolve({ error: "personalSign last:" + err });
           }

@@ -254,7 +254,7 @@ describe("UserAPI test", function () {
         publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
         maxFee: {
           tokenId: 1,
-          volume: "109800000000000000",
+          volume: "100000000000000000",
         },
         validUntil: VALID_UNTIL,
         nonce: accInfo.nonce as number,

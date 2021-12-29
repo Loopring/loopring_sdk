@@ -1,6 +1,12 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+
+#### v1.4.3 (alpha)
+     1) bug fix for NFT get contractMeta 
+     2) FC wallet connect signature
+     3) Error code 
+
 #### v1.4.2
      1) update activity
 

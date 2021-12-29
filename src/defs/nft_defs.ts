@@ -83,6 +83,7 @@ export interface ApproveParam {
 export interface ContractNFTMetaParam {
   web3: any;
   tokenAddress: string;
-  _id: string;
+  nftId:string;
+  _id?: string;
   nftType?: NFTType;
 }

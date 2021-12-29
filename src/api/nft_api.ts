@@ -1,7 +1,7 @@
 import { BaseAPI } from "./base_api";
 import { LOOPRING_URLs } from "../defs/url_defs";
 import {
-  ChainId,
+  ChainId, LoopringErrorCode,
   NftData,
   NFTTokenInfo,
   ReqMethod,
@@ -120,24 +120,24 @@ export class NFTAPI extends BaseAPI {
    */
   public async getContractNFTMeta({
     web3,
-    tokenAddress,
-    _id,
+    tokenAddress, nftId,
     nftType = NFTType.ERC1155,
   }: ContractNFTMetaParam) {
     try {
+      myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
       const result = await this.callContractMethod(
         web3,
         NFTMethod.uri,
-        [_id],
+        [web3.utils.hexToNumberString(nftId)],
         tokenAddress,
         nftType
       );
-      myLog(tokenAddress, "_id", _id, result);
-      return await fetch(result.replace("{id}", _id)).then((response) =>
+      return await fetch(result.replace("{id}", web3.utils.hexToNumberString(nftId))).then((response) =>
         response.json()
       );
     } catch (error) {
-      return undefined;
+      return { error:{ code: LoopringErrorCode.ContractNFT_URI,
+          msg: 'contract uri Error',...error}};
     }
   }
 
