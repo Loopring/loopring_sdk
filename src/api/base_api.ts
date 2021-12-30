@@ -11,7 +11,6 @@ import Web3 from "web3";
 import {myLog} from "../utils/log_tools";
 import Transaction from "@ethereumjs/tx";
 import ABI from "./ethereum/contracts";
-import {ExchangeAPI} from "./exchange_api";
 import {LOOPRING_URLs} from "../defs/url_defs";
 
 
@@ -382,9 +381,6 @@ export async function ecRecover2(
 
   const old_v = Number(addHexPrefix(signature.substring(128, 130)));
 
-  // console.log('signature.substring(128, 130):', signature.substring(128, 130),
-  //   addHexPrefix(signature.substring(128, 130)), 'old_v:', old_v)
-
   let v = old_v;
 
   if (v <= 1) v += 27;
@@ -575,15 +571,15 @@ export async function personalSign(
             }
 
             if(accountId){
+              myLog("before fcWalletValid accountId:", valid);
               const fcValid = await fcWalletValid( web3,
                 account,
                 msg,
                 result,accountId,chainId)
               if (fcValid.result){
                 resolve({ sig: result ,counterFactualInfo:fcValid.counterFactualInfo});
+                return
               }
-              resolve({fcValid})
-              return
             }
             
             const myKeyValid: any = await mykeyWalletValid(
@@ -618,11 +614,18 @@ export async function fcWalletValid(web3: any,
                                     accountId:number, chainId:ChainId): Promise<{
   counterFactualInfo?:CounterFactualInfo,error?:any,result?:boolean }> {
   const api = new BaseAPI({ chainId });
-  const {counterFactualInfo} = await api.getCounterFactualInfo({ accountId:accountId})
+  const {counterFactualInfo} = await api.getCounterFactualInfo({ accountId })
   if(counterFactualInfo && counterFactualInfo.walletOwner){
-    const valid: any = await ecRecover(web3, counterFactualInfo.walletOwner, msg, result);
+    let _result:string;
+    if(result.startsWith("0x")) {
+       _result = result.slice(0,132);
+    }else{
+      _result = result;
+    }
+    const valid: any = await ecRecover(web3, counterFactualInfo.walletOwner, msg, _result);
     if (valid.result) {
-      return  {result: result,counterFactualInfo}
+      myLog("fcWalletValid e:", result,counterFactualInfo);
+      return  {result, counterFactualInfo}
     }else{
       return { error:'valid walletOwner failed' }
     }
