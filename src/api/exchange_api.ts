@@ -36,14 +36,13 @@ import {
   GetEthNonceRequest,
   GetWithdrawalAgentsRequest,
   GetAccountServicesRequest,
-  VipFeeRateInfoMap, GetCounterFactualInfoRequest,
+  VipFeeRateInfoMap,
 } from "../defs/loopring_defs";
 
-import {AccountInfo, CounterFactualInfo} from "../defs/account_defs";
+import {AccountInfo} from "../defs/account_defs";
 
 import BigNumber from "bignumber.js";
 import { getBaseQuote } from "../utils/symbol_tools";
-import {RESULT_INFO} from "../defs";
 
 const SEP = ",";
 
@@ -943,39 +942,6 @@ export class ExchangeAPI extends BaseAPI {
 
     return {
       accInfo,
-      error,
-      raw_data,
-    };
-  }
-
-
-  public async getCounterFactualInfo<T extends any>(request: GetCounterFactualInfoRequest):Promise<{
-    raw_data: T,
-    counterFactualInfo: CounterFactualInfo | undefined
-    error?: RESULT_INFO
-  }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.COUNTER_FACTUAL_INFO,
-      queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    let counterFactualInfo: CounterFactualInfo | undefined = {
-      ...raw_data
-    } as CounterFactualInfo;
-    let error:RESULT_INFO| undefined = undefined;
-
-    if (raw_data && raw_data?.resultInfo) {
-      error = raw_data?.resultInfo;
-    } else {
-      counterFactualInfo =  undefined;
-    }
-
-    return {
-      counterFactualInfo,
       error,
       raw_data,
     };

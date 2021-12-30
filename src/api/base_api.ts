@@ -1,12 +1,81 @@
-import {ChainId, ConnectorNames} from "../defs";
+import {
+  ChainId,
+  ConnectorNames,
+  CounterFactualInfo, GetCounterFactualInfoRequest, ReqMethod, ReqParams, RESULT_INFO, SIG_FLAG,
+} from "../defs";
 import { Request } from "./request";
 import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
-import {ecrecover, fromRpcSig, hashPersonalMessage, keccak, keccak256, pubToAddress} from "ethereumjs-util";
+import {ecrecover, fromRpcSig, hashPersonalMessage, keccak, keccak256, pubToAddress, toRpcSig} from "ethereumjs-util";
 import {addHexPrefix, toBuffer, toHex, toNumber} from "../utils";
 import Web3 from "web3";
 import {myLog} from "../utils/log_tools";
 import Transaction from "@ethereumjs/tx";
 import ABI from "./ethereum/contracts";
+import {ExchangeAPI} from "./exchange_api";
+import {LOOPRING_URLs} from "../defs/url_defs";
+
+
+export class BaseAPI {
+  protected baseUrl = "";
+  private timeout: number;
+
+  public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
+    if (param.baseUrl) {
+      this.baseUrl = param.baseUrl;
+    } else if (param.chainId !== undefined) {
+      this.setChainId(param.chainId);
+    } else {
+      this.setChainId(ChainId.GOERLI);
+    }
+
+    this.timeout = timeout;
+  }
+
+  public async getCounterFactualInfo<T extends any>(request: GetCounterFactualInfoRequest):Promise<{
+    raw_data: T,
+    counterFactualInfo: CounterFactualInfo | undefined
+    error?: RESULT_INFO
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.COUNTER_FACTUAL_INFO,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    let counterFactualInfo: CounterFactualInfo | undefined;
+    let error:RESULT_INFO| undefined = undefined;
+
+    if (raw_data && raw_data?.resultInfo) {
+      error = raw_data?.resultInfo;
+    }else{
+      counterFactualInfo = {
+        ...raw_data
+      } as CounterFactualInfo;
+    }
+
+    return {
+      counterFactualInfo,
+      error,
+      raw_data,
+    };
+  }
+
+
+  public setChainId(chainId: ChainId) {
+    this.baseUrl = getBaseUrlByChainId(chainId);
+  }
+
+  public setBaseUrl(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  protected makeReq(): Request {
+    return new Request(this.baseUrl, this.timeout);
+  }
+}
 
 export async function walletLinkValid(account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
@@ -25,7 +94,7 @@ export async function ecRecover(
   web3: Web3,
   account: string,
   msg: string,
-  sig: any
+  sig: any,
 ) {
   return new Promise((resolve) => {
     try {
@@ -158,16 +227,6 @@ export async function contractWalletValidate2(
   });
 }
 
-export async function fcWalletValid(web3: any,
-                                    account: string,
-                                    msg: string,
-                                    sig: any) {
-  return new Promise((resolve)=>{
-    resolve('')
-  })
-
-}
-
 
 export async function mykeyWalletValid(
   web3: any,
@@ -216,7 +275,7 @@ export async function sign(
   web3: any,
   account: string,
   pwd: string,
-  hash: string
+  hash: string,
 ) {
   return new Promise((resolve) => {
     web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
@@ -418,39 +477,24 @@ export interface InitParam {
   baseUrl?: string;
 }
 
-export class BaseAPI {
-  protected baseUrl = "";
-  private timeout: number;
-
-  public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
-    if (param.baseUrl) {
-      this.baseUrl = param.baseUrl;
-    } else if (param.chainId !== undefined) {
-      this.setChainId(param.chainId);
-    } else {
-      this.setChainId(ChainId.GOERLI);
-    }
-
-    this.timeout = timeout;
-  }
-
-  public setChainId(chainId: ChainId) {
-    this.baseUrl = getBaseUrlByChainId(chainId);
-  }
-
-  public setBaseUrl(baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-
-  protected makeReq(): Request {
-    return new Request(this.baseUrl, this.timeout);
-  }
-}
 export async function isContract(web3: any, address: string) {
   const code = await web3.eth.getCode(address);
   return code && code.length > 2;
 }
 
+export function formatSig(rpcSig:string) {
+  const sig = fromRpcSig(rpcSig);
+  return toRpcSig(sig.v, sig.r, sig.s);
+}
+export function recoverSignType(web3:any,account:string, msg: string, sig:string) {
+  const ethRecover:any = ecRecover(web3,account, msg, sig);
+
+  if (ethRecover.result){
+    return "03";
+  } else {
+    return "";
+  }
+}
 
 
 export async function personalSign(
@@ -458,8 +502,10 @@ export async function personalSign(
   account: string | undefined,
   pwd: string,
   msg: string,
-  walletType: ConnectorNames
-) {
+  walletType: ConnectorNames,
+  chainId:ChainId,
+  accountId?:number,
+  ) {
   if (!account) {
     return { error: "personalSign got no account" };
   }
@@ -528,15 +574,18 @@ export async function personalSign(
               return
             }
 
-            const cfWalletValid: any = await fcWalletValid( web3,
-              account,
-              msg,
-              result)
-
-
-
-
-
+            if(accountId){
+              const fcValid = await fcWalletValid( web3,
+                account,
+                msg,
+                result,accountId,chainId)
+              if (fcValid.result){
+                resolve({ sig: result ,counterFactualInfo:fcValid.counterFactualInfo});
+              }
+              resolve({fcValid})
+              return
+            }
+            
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,
@@ -550,9 +599,6 @@ export async function personalSign(
               resolve({ error: "myKeyValid sig at last!" });
             }
 
-
-
-
           } else {
             resolve({ error: "personalSign last:" + err });
           }
@@ -562,4 +608,26 @@ export async function personalSign(
       resolve({ error: reason });
     }
   });
+}
+
+
+export async function fcWalletValid(web3: any,
+                                    account: string,
+                                    msg: string,
+                                    result: any,
+                                    accountId:number, chainId:ChainId): Promise<{
+  counterFactualInfo?:CounterFactualInfo,error?:any,result?:boolean }> {
+  const api = new BaseAPI({ chainId });
+  const {counterFactualInfo} = await api.getCounterFactualInfo({ accountId:accountId})
+  if(counterFactualInfo && counterFactualInfo.walletOwner){
+    const valid: any = await ecRecover(web3, counterFactualInfo.walletOwner, msg, result);
+    if (valid.result) {
+      return  {result: result,counterFactualInfo}
+    }else{
+      return { error:'valid walletOwner failed' }
+    }
+  }else{
+    return { error:'valid walletOwner failed' }
+  }
+
 }

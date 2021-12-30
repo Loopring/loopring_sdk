@@ -102,6 +102,7 @@ describe("Transfer NFT test", function () {
         exchangeAddress: loopring_exported_account.exchangeAddr,
         keyNonce: accInfo.nonce - 1,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
 
       const request: GetUserApiKeyRequest = {

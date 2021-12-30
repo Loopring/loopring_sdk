@@ -91,6 +91,7 @@ describe("UserAPI test", function () {
           exchangeAddress: exchangeInfo.exchangeAddress,
           keyNonce: accInfo.nonce - 1,
           walletType: ConnectorNames.MetaMask,
+          chainId:ChainId.GOERLI,
         });
 
         console.log("eddsakey:", eddsakey.sk);
@@ -245,6 +246,7 @@ describe("UserAPI test", function () {
         exchangeAddress: exchangeInfo.exchangeAddress,
         keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
       console.log("eddsakey:", eddsaKey.sk);
       const request = {

@@ -114,6 +114,7 @@ describe("Withdraw NFT test", function () {
         exchangeAddress: loopring_exported_account.exchangeAddr,
         keyNonce: accInfo.nonce - 1,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
       console.log("eddsakey:", eddsaKey.sk);
       const request: GetUserApiKeyRequest = {

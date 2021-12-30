@@ -59,6 +59,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);
@@ -89,6 +90,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);
@@ -119,6 +121,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
+        chainId:ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);

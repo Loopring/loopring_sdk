@@ -29,6 +29,7 @@ import {
 } from "./loopring_enums";
 import {RESULT_INFO} from "./error_codes";
 import {HEBAO_LOCK_STATUS, HEBAO_META_TYPE} from "./loopring_constants";
+import {CounterFactualInfo} from "./account_defs";
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -670,7 +671,7 @@ export interface GetAccountRequest {
   owner: string;
 }
 export interface GetCounterFactualInfoRequest {
-  accountID: number;
+  accountId: number;
 }
 
 export interface GetEthNonceRequest {
@@ -885,6 +886,7 @@ export interface OffChainWithdrawalRequestV3 {
    * @memberof OffChainWithdrawalRequestV3
    */
   hashApproved?: string;
+  counterFactualInfo?:CounterFactualInfo
 }
 
 export interface GetOrdersRequest {
@@ -1144,11 +1146,11 @@ export interface GetEnsAddressRequest  {
  * @param {string} signature
  */
 export interface SubmitApproveSignatureRequest{
-  approveRecordId: string;
-  txAwareHash: string;
-  securityNumber:number;
-  // signer: string;
-  // signature: string;
+  approveRecordId: string,
+  txAwareHash?: string,//currentRequest.messageHash,
+  securityNumber: string,
+  signer: string,//address,
+  signature: string,
 }
 
 /**
@@ -1378,6 +1380,9 @@ export interface OriginTransferRequestV3 {
    * @memberof OriginTransferRequestV3
    */
   clientId?: string;
+
+  counterFactualInfo?:CounterFactualInfo;
+
 }
 
 /**
@@ -1470,6 +1475,8 @@ export interface OriginNFTTransferRequestV3 {
    * @memberof OriginNFTTransferRequestV3
    */
   clientId?: string;
+  counterFactualInfo?:CounterFactualInfo
+
 }
 
 /**
@@ -1562,6 +1569,8 @@ export interface NFTWithdrawRequestV3 {
    * @memberof OriginNFTWithdrawRequestV3
    */
   hashApproved?: string;
+  counterFactualInfo?:CounterFactualInfo
+
 }
 
 /**
@@ -1673,6 +1682,8 @@ export interface NFTMintRequestV3 {
    * @memberof OriginNFTMintRequestV3
    */
   hashApproved?: string;
+  counterFactualInfo?:CounterFactualInfo
+
 }
 
 /**
@@ -1850,6 +1861,8 @@ export interface UpdateAccountRequestV3 {
   hashApproved?: string;
 
   keySeed?: string;
+  counterFactualInfo?:CounterFactualInfo
+
 }
 
 export interface OffChainWithdrawalRequestV3WithPatch {
@@ -2077,8 +2090,38 @@ export type  Guardian =  {
   ens: string,
   address: string,
   type: keyof typeof HEBAO_META_TYPE,
-  id: number,
+  id: string,
   messageHash: string,
   businessDataJson:string,
-  signedRequest: string,
+  signedRequest: any,
 }
+
+
+/**
+ *
+ * @export
+ * @interface ApproveHebaoRequest
+ */
+export type GuardiaContractAddress =  string
+
+
+
+export interface ApproveHebaoRequestV3WithPatch {
+  request: Guardian & {code:string};
+  web3: Web3;
+  address: string;
+  chainId: ChainId;
+  guardiaContractAddress:GuardiaContractAddress
+  walletType?: ConnectorNames;
+}
+
+export interface RejectHebaoRequestV3WithPatch {
+  request:{ approveRecordId:string  },
+  web3: Web3;
+  address: string;
+  chainId: ChainId;
+  guardiaContractAddress:GuardiaContractAddress
+  walletType?: ConnectorNames;
+}
+
+
