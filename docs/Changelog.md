@@ -1,12 +1,31 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.4.5 
+     1) CF wallet action sign update
 
----
+
+#### v1.4.4 (alpha)
+     1) fix unlock FC wallet
+    
+#### v1.4.3 (alpha)
+     1) bug fix for NFT get contractMeta 
+     2) FC wallet connect signature
+     3) Error code 
+
+#### v1.4.2
+     1) update activity
+
+#### v1.3.10
+     1) Add recognizing header for web
+
+#### v1.3.9
+     1) Update getLatestTokenPrice url
+
 #### v1.3.8
      1) SDK update for error type
 
-####v1.3.4 - v1.3.7 destroy
+#### v1.3.4 - v1.3.7 destroy
 
 #### v1.3.3
      1) add computeNFTAddress

@@ -1,7 +1,13 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.4.5 
+     1) CF wallet action sign update
 
+
+#### v1.4.4 (alpha)
+     1) fix unlock FC wallet
+    
 #### v1.4.3 (alpha)
      1) bug fix for NFT get contractMeta 
      2) FC wallet connect signature

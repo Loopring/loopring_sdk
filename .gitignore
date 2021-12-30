@@ -6,4 +6,4 @@ _book
 dist
 node_modules
 coverage
-docs
+./docs

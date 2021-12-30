@@ -14,7 +14,6 @@ import {TX_HASH_API, TX_HASH_RESULT} from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
 import {myLog} from "../utils/log_tools";
-import {CounterFactualInfo} from "../defs";
 
 export function genErr(err: Error): ErrorMsg {
   if (!err || !err?.message) {
@@ -723,10 +722,9 @@ export class UserAPI extends BaseAPI {
    */
 
   public async submitOffchainWithdraw<T extends TX_HASH_API>(
-    req: loopring_defs.OffChainWithdrawalRequestV3WithPatch ,
-    accountId=0,
-
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {
       request,
       web3,
@@ -736,9 +734,8 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
-
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -765,9 +762,9 @@ export class UserAPI extends BaseAPI {
             request,
             chainId,
             accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
         }
       } catch (err) {
         return {
@@ -778,8 +775,16 @@ export class UserAPI extends BaseAPI {
       const isContractCheck = await isContract(web3, request.owner);
 
       if (isContractCheck) {
-        // signOffchainWithdrawWithDataStructureForContract
-        // console.log('3. signOffchainWithdrawWithDataStructureForContract')
+        const result =
+          await sign_tools.signOffchainWithdrawWithDataStructureForContract(
+            web3,
+            request.owner,
+            request,
+            chainId,
+            accountId
+          );
+        ecdsaSignature = result.ecdsaSig;
+      } else if (counterFactualInfo) {
         const result =
           await sign_tools.signOffchainWithdrawWithDataStructureForContract(
             web3,
@@ -787,10 +792,10 @@ export class UserAPI extends BaseAPI {
             request,
             chainId,
             accountId,
+            counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
-
+        myLog('OffchainWithdraw ecdsaSignature:', ecdsaSignature)
       } else {
         await sigHW();
       }
@@ -801,7 +806,7 @@ export class UserAPI extends BaseAPI {
       eddsaKey
     );
 
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
@@ -825,8 +830,8 @@ export class UserAPI extends BaseAPI {
    */
   public async submitInternalTransfer<T extends TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
-    accountId=0,
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {
       request,
       web3,
@@ -836,9 +841,9 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
 
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -852,21 +857,21 @@ export class UserAPI extends BaseAPI {
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
-
     if (walletType === ConnectorNames.MetaMask) {
+      myLog('submitInternalTransfer iConnectorNames.MetaMask:', walletType)
       try {
         if (isHWAddr) {
           await sigHW();
         } else {
+          myLog('submitInternalTransfer notHWAddr:', isHWAddr)
           const result = await sign_tools.signTransferWithDataStructure(
             web3,
             request.payerAddr,
             request,
             chainId,
-            accountId,
+            accountId
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
         }
       } catch (err) {
         return {
@@ -875,10 +880,18 @@ export class UserAPI extends BaseAPI {
       }
     } else {
       const isContractCheck = await isContract(web3, request.payerAddr);
-
+      myLog('submitInternalTransfer isContractCheck,accountId:', isContractCheck, accountId)
       if (isContractCheck) {
-        // signOffchainWithdrawWithDataStructureForContract
-        // console.log('3. signTransferWithDataStructureForContract')
+        const result =
+          await sign_tools.signTransferWithDataStructureForContract(
+            web3,
+            request.payerAddr,
+            request,
+            chainId,
+            accountId
+          );
+        ecdsaSignature = result.ecdsaSig;
+      } else if (counterFactualInfo) {
         const result =
           await sign_tools.signTransferWithDataStructureForContract(
             web3,
@@ -886,9 +899,11 @@ export class UserAPI extends BaseAPI {
             request,
             chainId,
             accountId,
+            counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
+        myLog('Transfer ecdsaSignature:', ecdsaSignature)
+
       } else {
         await sigHW();
       }
@@ -898,7 +913,7 @@ export class UserAPI extends BaseAPI {
       request,
       eddsaKey
     );
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
@@ -922,8 +937,8 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTInTransfer<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
-    accountId=0,
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {
       request,
       web3,
@@ -933,9 +948,9 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
 
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -960,11 +975,9 @@ export class UserAPI extends BaseAPI {
             request.fromAddress,
             request,
             chainId,
-            accountId,
+            accountId
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
-
         }
       } catch (err) {
         return {
@@ -983,12 +996,23 @@ export class UserAPI extends BaseAPI {
             request.fromAddress,
             request,
             chainId,
-            accountId,
+            accountId
           );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
-
         // console.log('3. result.ecdsaSig:', result.ecdsaSig)
+      } else if (counterFactualInfo) {
+        const result =
+          await sign_tools.signNFTTransferWithDataStructureForContract(
+            web3,
+            request.fromAddress,
+            request,
+            chainId,
+            accountId,
+            counterFactualInfo
+          );
+        ecdsaSignature = result.ecdsaSig;
+        myLog('NFTransfer ecdsaSignature:', ecdsaSignature)
+
       } else {
         await sigHW();
       }
@@ -999,7 +1023,7 @@ export class UserAPI extends BaseAPI {
       request,
       eddsaKey
     );
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
@@ -1023,8 +1047,8 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTWithdraw<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
-    accountId=0
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {
       request,
       web3,
@@ -1034,9 +1058,9 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
 
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -1062,11 +1086,9 @@ export class UserAPI extends BaseAPI {
             request.owner,
             request,
             chainId,
-            accountId,
+            accountId
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
-
         }
       } catch (err) {
         return {
@@ -1085,10 +1107,22 @@ export class UserAPI extends BaseAPI {
             request.owner,
             request,
             chainId,
-            accountId,
+            accountId
           );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
+      } else if (counterFactualInfo) {
+        const result =
+          await sign_tools.signNFTWithdrawWithDataStructureForContract(
+            web3,
+            request.owner,
+            request,
+            chainId,
+            accountId,
+            counterFactualInfo
+          );
+        ecdsaSignature = result.ecdsaSig;
+        myLog('NFTWithdraw ecdsaSignature:', ecdsaSignature)
+
       } else {
         await sigHW();
       }
@@ -1098,7 +1132,7 @@ export class UserAPI extends BaseAPI {
       request,
       eddsaKey
     );
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
@@ -1122,8 +1156,8 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTMint<T extends TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
-    accountId=0
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {
       request,
       web3,
@@ -1133,11 +1167,12 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
+
     request.creatorFeeBips = request.creatorFeeBips
       ? request.creatorFeeBips
       : 0;
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -1163,10 +1198,9 @@ export class UserAPI extends BaseAPI {
             request.minterAddress,
             request,
             chainId,
-            accountId,
+            accountId
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
         }
       } catch (err) {
         return {
@@ -1187,7 +1221,19 @@ export class UserAPI extends BaseAPI {
           accountId,
         );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
+      } else if (counterFactualInfo) {
+        const result =
+          await sign_tools.signNFTMintWithDataStructureForContract(
+            web3,
+            request.minterAddress,
+            request,
+            chainId,
+            accountId,
+            counterFactualInfo
+          );
+        ecdsaSignature = result.ecdsaSig;
+        myLog('NFTMintWithData ecdsaSignature:', ecdsaSignature)
+
       } else {
         await sigHW();
       }
@@ -1197,7 +1243,7 @@ export class UserAPI extends BaseAPI {
       request,
       eddsaKey
     );
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
@@ -1295,12 +1341,12 @@ export class UserAPI extends BaseAPI {
    */
   public async updateAccount<T extends TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch,
-    accountId=0,
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg > {
+    options?: { accountId?: number, counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
     const {request, web3, chainId, walletType, isHWAddr: isHWAddrOld} = req;
+    const {accountId, counterFactualInfo}: any = options ? options : {accountId: 0};
 
     const isHWAddr = !!isHWAddrOld;
-    let counterFactualInfo:CounterFactualInfo|undefined = undefined;
     let ecdsaSignature = undefined;
 
     const sigHW = async () => {
@@ -1323,10 +1369,9 @@ export class UserAPI extends BaseAPI {
             web3,
             request,
             chainId,
-            accountId,
+            accountId
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          counterFactualInfo =  result.counterFactualInfo
         }
       } catch (err) {
         return {
@@ -1338,21 +1383,31 @@ export class UserAPI extends BaseAPI {
 
       if (isContractCheck) {
         // console.log('3. signUpdateAccountWithDataStructureForContract')
+        const result = await sign_tools.signUpdateAccountWithDataStructureForContract(
+            web3,
+            request,
+            chainId,
+            accountId
+        );
+        ecdsaSignature = result.ecdsaSig;
+        // console.log('ecdsaSignature:', ecdsaSignature)
+      } else if (counterFactualInfo) {
         const result =
           await sign_tools.signUpdateAccountWithDataStructureForContract(
             web3,
             request,
             chainId,
             accountId,
+            counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        counterFactualInfo =  result.counterFactualInfo
-        // console.log('ecdsaSignature:', ecdsaSignature)
+        myLog('UpdateAccount ecdsaSignature:', ecdsaSignature)
+
       } else {
         await sigHW();
       }
     }
-    if(counterFactualInfo){
+    if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {

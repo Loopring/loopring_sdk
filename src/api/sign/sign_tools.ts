@@ -34,6 +34,7 @@ import {
 import Web3 from "web3";
 import {myLog} from "../../utils/log_tools";
 import {formatSig, isContract, personalSign, recoverSignType} from "../base_api";
+import {CounterFactualInfo} from "../../defs";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -58,7 +59,8 @@ export interface KeyPairParams {
   walletType: ConnectorNames;
   keySeed?: string;
   chainId: ChainId,
-  accountId?:number
+  accountId?: number,
+  counterFactualInfo?:CounterFactualInfo
 }
 
 export async function generateKeyPair({
@@ -70,6 +72,7 @@ export async function generateKeyPair({
                                         keySeed,
                                         chainId,
                                         accountId,
+                                        counterFactualInfo,
                                       }: KeyPairParams) {
   const result: any = await personalSign(
     web3,
@@ -80,7 +83,8 @@ export async function generateKeyPair({
       : keyMessage + exchangeAddress + " with key nonce: " + keyNonce,
     walletType,
     chainId,
-    accountId
+    accountId,
+    counterFactualInfo
   );
 
   if (!result.error) {
@@ -97,7 +101,7 @@ export async function generateKeyPair({
       formatedPx,
       formatedPy,
       sk,
-      counterFactualInfo:result.counterFactualInfo
+      counterFactualInfo: result.counterFactualInfo
     };
   } else {
     throw Error(result.error);
@@ -328,6 +332,7 @@ export async function getEcDSASig(
   accountId?: number,
   pwd = "",
   walletType?: ConnectorNames,
+  counterFactualInfo?: CounterFactualInfo,
 ) {
   const msgParams = JSON.stringify(typedData);
   const params = [address, msgParams];
@@ -375,7 +380,8 @@ export async function getEcDSASig(
         throw Error("no walletType set!");
       }
 
-      signature = await personalSign(web3, address, pwd, hash, walletType, chainId);
+      signature = await personalSign(web3, address, pwd,
+        hash, walletType, chainId, counterFactualInfo ? counterFactualInfo.accountId:undefined, counterFactualInfo);
 
       if (signature?.sig) {
         return {
@@ -466,6 +472,7 @@ export async function signUpdateAccountWithDataStructure(
   bodyParams: UpdateAccountRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
   // console.log('typedData:', typedData)
@@ -474,7 +481,11 @@ export async function signUpdateAccountWithDataStructure(
     typedData,
     bodyParams.owner,
     GetEcDSASigType.HasDataStruct,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo,
   );
   return result;
 }
@@ -504,6 +515,7 @@ export async function signUpdateAccountWithDataStructureForContract(
   bodyParams: UpdateAccountRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -511,7 +523,11 @@ export async function signUpdateAccountWithDataStructureForContract(
     typedData,
     bodyParams.owner,
     GetEcDSASigType.Contract,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
@@ -607,6 +623,7 @@ export async function signOffchainWithdrawWithDataStructure(
   bodyParams: OffChainWithdrawalRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData = getWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -616,6 +633,7 @@ export async function signOffchainWithdrawWithDataStructure(
     GetEcDSASigType.HasDataStruct,
     chainId,
     accountId,
+    '',ConnectorNames.Unknown,counterFactualInfo
   );
   return result;
 }
@@ -647,6 +665,7 @@ export async function signOffchainWithdrawWithDataStructureForContract(
   bodyParams: OffChainWithdrawalRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -655,7 +674,10 @@ export async function signOffchainWithdrawWithDataStructureForContract(
     owner,
     GetEcDSASigType.Contract,
     chainId,
-    accountId
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
@@ -817,6 +839,8 @@ export async function signNFTWithdrawWithDataStructure(
   bodyParams: NFTWithdrawRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?: CounterFactualInfo
+
 ) {
   const typedData = getNFTWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -825,6 +849,9 @@ export async function signNFTWithdrawWithDataStructure(
     owner,
     GetEcDSASigType.HasDataStruct,
     chainId, accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo,
   );
   return result;
 }
@@ -856,6 +883,7 @@ export async function signNFTWithdrawWithDataStructureForContract(
   bodyParams: NFTWithdrawRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getNFTWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -863,7 +891,11 @@ export async function signNFTWithdrawWithDataStructureForContract(
     typedData,
     owner,
     GetEcDSASigType.Contract,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
@@ -893,6 +925,7 @@ export async function signNFTMintWithDataStructure(
   bodyParams: NFTMintRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData = getNFTMintTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -900,7 +933,11 @@ export async function signNFTMintWithDataStructure(
     typedData,
     owner,
     GetEcDSASigType.HasDataStruct,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo,
   );
   return result;
 }
@@ -932,6 +969,7 @@ export async function signNFTMintWithDataStructureForContract(
   bodyParams: NFTMintRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getNFTMintTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -939,7 +977,11 @@ export async function signNFTMintWithDataStructureForContract(
     typedData,
     owner,
     GetEcDSASigType.Contract,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
@@ -1017,6 +1059,7 @@ export async function signTransferWithDataStructure(
   bodyParams: OriginTransferRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1024,7 +1067,7 @@ export async function signTransferWithDataStructure(
     typedData,
     owner,
     GetEcDSASigType.HasDataStruct,
-    chainId, accountId,
+    chainId, accountId,'',ConnectorNames.Unknown, counterFactualInfo
   );
   return result;
 }
@@ -1056,6 +1099,7 @@ export async function signTransferWithDataStructureForContract(
   bodyParams: OriginTransferRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1063,7 +1107,11 @@ export async function signTransferWithDataStructureForContract(
     typedData,
     owner,
     GetEcDSASigType.Contract,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
@@ -1140,6 +1188,7 @@ export async function signTNFTransferWithDataStructure(
   bodyParams: OriginNFTTransferRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getNFTTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1148,6 +1197,9 @@ export async function signTNFTransferWithDataStructure(
     owner,
     GetEcDSASigType.HasDataStruct,
     chainId, accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo,
   );
   return result;
 }
@@ -1186,6 +1238,7 @@ export async function signNFTTransferWithDataStructureForContract(
   bodyParams: OriginNFTTransferRequestV3,
   chainId: ChainId,
   accountId: number,
+  counterFactualInfo?:CounterFactualInfo
 ) {
   const typedData = getNFTTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1193,7 +1246,11 @@ export async function signNFTTransferWithDataStructureForContract(
     typedData,
     owner,
     GetEcDSASigType.Contract,
-    chainId, accountId,
+    chainId,
+    accountId,
+    "",
+    ConnectorNames.Unknown,
+    counterFactualInfo
   );
   return result;
 }
