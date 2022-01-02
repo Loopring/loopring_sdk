@@ -21,7 +21,7 @@ export enum LoopringErrorCode {
   Invalid_Nonce = 102021,
   Invalid_Transfer_Sender = 102022,
   Invalid_Transfer_Receiver = 102023,
-  Unsuported_Fee_Token = 102024,
+  Unsupported_Fee_Token = 102024,
   Transfer_Token_Is_Not_Consistent_With_Fee_Token = 102025,
 
   Sumbit_Order_Failed = 102027,
@@ -37,7 +37,7 @@ export enum LoopringErrorCode {
 
   User_Cannot_Be_Empty = 107001,
   Orderhash_Cannot_Be_Empty = 107002,
-  Order_Not_Exist = 107003,
+  Non_Existent_Order = 107003,
 
   Unsupported_Market = 108000, //dup
   Unsupported_Depth_Level = 108001,
@@ -46,7 +46,7 @@ export enum LoopringErrorCode {
 
 export enum ConnectorError  {
   NOT_SUPPORT_ERROR = "Not supported on this device",
-  USER_DENIED ="User denied message signature",
+  USER_DENIED = "User denied message signature"
 }
 
 export interface RESULT_INFO {
