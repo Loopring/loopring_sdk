@@ -2124,4 +2124,29 @@ export interface RejectHebaoRequestV3WithPatch {
   walletType?: ConnectorNames;
 }
 
+export interface LockHebaoHebaoParam{
+  web3:Web3,
+  from:string,
+  wallet:string,
+  value?:string,
+  contractAddress:string,
+  gasPrice:number,
+  gasLimit:number,
+  chainId?:ChainId,
+  sendByMetaMask?:boolean,
+}
+
+export interface HebaoOperationLogs {
+  from:string;
+  fromTime:number;
+  to?:string;
+  offset?:number;
+  network?:'ETHEREUM';
+  statues?:string;
+  hebaoTxType?:string ;
+  limit?:number;
+}
+
+
+
 

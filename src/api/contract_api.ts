@@ -152,7 +152,7 @@ export async function sendRawTx(
   value: string,
   data: any,
   chainId: ChainId,
-  nonce: number,
+  nonce: number|undefined|null,
   gasPrice: any,
   gasLimit: number,
   sendByMetaMask = true

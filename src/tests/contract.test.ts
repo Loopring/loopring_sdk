@@ -7,16 +7,6 @@ import { loopring_exported_account as acc, web3 } from "./utils";
 
 import { ExchangeAPI } from "../api/exchange_api";
 import { sleep } from "../utils";
-import { deposit } from "../api/contract_api";
-import { JSONOutput } from "typedoc";
-import { TokenInfo } from "../defs";
-
-// start ganache-cli before
-// ganache-cli --debug --chainId=5 --account="0xadc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf,1000e+18" --secure --unlock "0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8"
-
-//const url = 'http://127.0.0.1:8545'
-
-//const web3 = new Web3(new Web3.providers.HttpProvider(url))
 
 let api: ExchangeAPI;
 

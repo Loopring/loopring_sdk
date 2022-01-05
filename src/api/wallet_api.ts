@@ -1,31 +1,19 @@
 import {BaseAPI, isContract, signMessage} from "./base_api";
 
-import {
-
-  GetUserTradesRequest, Guardian, Protector,
-  ReqParams,
-} from "../defs/loopring_defs";
-
-import { SIG_FLAG, ReqMethod } from "../defs/loopring_enums";
-
-import { LOOPRING_URLs } from "../defs/url_defs";
-
 import * as loopring_defs from "../defs/loopring_defs";
-import {
-  AccountInfo,
-  ChainId,
-  ConnectorNames,
-  ERROR_INFO,
-  HEBAO_LOCK_STATUS,
-  HEBAO_META_TYPE,
-  RESULT_INFO
-} from "../defs";
-import {getEcDSASig, GetEcDSASigType, signHebaoApproveContract} from "./sign/sign_tools";
-import {web3} from "../tests/utils";
+import {GetUserTradesRequest, Guardian, LockHebaoHebaoParam, Protector, ReqParams,} from "../defs/loopring_defs";
+
+import {ReqMethod, SIG_FLAG} from "../defs/loopring_enums";
+import api from "./ethereum/contracts";
+
+import {LOOPRING_URLs} from "../defs/url_defs";
+import {ChainId, HEBAO_META_TYPE, RESULT_INFO} from "../defs";
+import {signHebaoApproveContract} from "./sign/sign_tools";
 import {myLog} from "../utils/log_tools";
-import BigNumber from "bignumber.js";
 import {sha256} from "ethereumjs-util";
 import {toHex} from "../utils";
+import {sendRawTx} from "./contract_api";
+
 
 export class WalletAPI extends BaseAPI {
   /*
@@ -63,19 +51,18 @@ export class WalletAPI extends BaseAPI {
   }
 
 
-
-  private getApproveTypedData(chainId:ChainId,
-                              guardiaContractAddress:any, wallet:any, validUntil:any, newOwner:any) {
+  private getApproveTypedData(chainId: ChainId,
+                              guardiaContractAddress: any, wallet: any, validUntil: any, newOwner: any) {
     const typedData = {
       types: {
         EIP712Domain: [
-          { name: "name", type: "string" },
-          { name: "version", type: "string" },
-          { name: "chainId", type: "uint256" },
-          { name: "verifyingContract", type: "address" },
+          {name: "name", type: "string"},
+          {name: "version", type: "string"},
+          {name: "chainId", type: "uint256"},
+          {name: "verifyingContract", type: "address"},
         ],
         recover: [
-          { name: "wallet", type: "address" },
+          {name: "wallet", type: "address"},
           {
             name: "validUntil",
             type: "uint256",
@@ -101,9 +88,10 @@ export class WalletAPI extends BaseAPI {
     };
     return typedData;
   }
-  public  rejectApproveHash(request:{approveRecordId:any,signer:any}) {
+
+  public rejectApproveHash(request: { approveRecordId: any, signer: any }) {
     const uri = encodeURIComponent(
-      `${ this.baseUrl}/api/wallet/v3/rejectApproveSignature`
+      `${this.baseUrl}/api/wallet/v3/rejectApproveSignature`
     );
     const params = encodeURIComponent(
       JSON.stringify({
@@ -120,20 +108,20 @@ export class WalletAPI extends BaseAPI {
    * @param approveRecordId  request.id
    */
   public async rejectHebao(req: loopring_defs.RejectHebaoRequestV3WithPatch) {
-    const {web3,address,request} = req;
+    const {web3, address, request} = req;
     const hash = this.rejectApproveHash({
-      approveRecordId:request.approveRecordId,
+      approveRecordId: request.approveRecordId,
       signer: address,
     });
 
-    return await signMessage(web3,address,'',hash);
+    return await signMessage(web3, address, '', hash);
   }
 
-  public async approveHebao(req:loopring_defs.ApproveHebaoRequestV3WithPatch){
+  public async approveHebao(req: loopring_defs.ApproveHebaoRequestV3WithPatch) {
     // signMessage
-    const {request, web3,address,chainId,guardiaContractAddress,walletType} = req
-    const _isContract =  await isContract(web3, address);
-    let result:any;
+    const {request, web3, address, chainId, guardiaContractAddress, walletType} = req
+    const _isContract = await isContract(web3, address);
+    let result: any;
     if (_isContract === true) {
       myLog("isContract use approveHebaoForContract");
       const wallet = request.signedRequest.wallet;
@@ -149,14 +137,14 @@ export class WalletAPI extends BaseAPI {
         newOwner
       );
       myLog("approveHebaoForContract typedData", typedData);
-      result = await signHebaoApproveContract( web3,
+      result = await signHebaoApproveContract(web3,
         typedData,
         address,
         walletType,);
       myLog("this.signer.signTypedDataForContract response", result);
       myLog("approveHebaoForContract", result);
-    }  else {
-      result = await signMessage( web3,
+    } else {
+      result = await signMessage(web3,
         address,
         "",
         request.messageHash as string);
@@ -174,18 +162,19 @@ export class WalletAPI extends BaseAPI {
   }
 
 
-  public async submitApproveSignature<R extends any,T extends string>
-  (request:loopring_defs.SubmitApproveSignatureRequest): Promise<{
+  public async submitApproveSignature<R extends any, T extends string>
+  (request: loopring_defs.SubmitApproveSignatureRequest): Promise<{
     address: string | undefined;
-    error:RESULT_INFO|undefined,
-    raw_data:R}>  {
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
     };
-    let error :RESULT_INFO|undefined
+    let error: RESULT_INFO | undefined
     let address: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -193,25 +182,27 @@ export class WalletAPI extends BaseAPI {
     } else {
       address = raw_data.data as T;
     }
-    return  {
+    return {
       address,
       error,
-      raw_data} ;
+      raw_data
+    };
   }
 
 
-  public async getAddressByENS<R extends any,T extends string>
-  (request:loopring_defs.GetEnsAddressRequest): Promise<{
+  public async getAddressByENS<R extends any, T extends string>
+  (request: loopring_defs.GetEnsAddressRequest): Promise<{
     address: string | undefined;
-    error:RESULT_INFO|undefined,
-    raw_data:R}>  {
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.RESOLVE_ENS,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error :RESULT_INFO|undefined
+    let error: RESULT_INFO | undefined
     let address: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -219,24 +210,26 @@ export class WalletAPI extends BaseAPI {
     } else {
       address = raw_data.data as T;
     }
-    return  {
+    return {
       address,
       error,
-      raw_data} ;
+      raw_data
+    };
   }
 
-  public async getEnsByAddress<R extends any,T extends string>
-  (request:loopring_defs.GetEnsNameRequest): Promise<{
+  public async getEnsByAddress<R extends any, T extends string>
+  (request: loopring_defs.GetEnsNameRequest): Promise<{
     ensName: string | undefined;
-    error:RESULT_INFO|undefined,
-    raw_data:R}>  {
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.RESOLVE_NAME,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error :RESULT_INFO|undefined
+    let error: RESULT_INFO | undefined
     let ensName: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -244,58 +237,99 @@ export class WalletAPI extends BaseAPI {
     } else {
       ensName = raw_data.data as T;
     }
-    return  {
+    return {
       ensName,
       error,
-      raw_data} ;
+      raw_data
+    };
+  }
+
+  public async lockHebaoWallet({
+                                 web3,
+                                 from,
+                                 value = '0',
+                                 contractAddress,
+                                 gasPrice,
+                                 gasLimit=150000,
+                                 chainId = 1,
+                                 wallet,
+                                 sendByMetaMask = true,
+                               }: LockHebaoHebaoParam) {
+
+    const data  = api.Contracts.HeBao.encodeInputs("lock", {
+      wallet,
+      guardian:from,
+    });
+    return await sendRawTx(
+      web3,
+      from,
+      contractAddress,
+      value,
+      data,
+      chainId,
+      null,
+      gasPrice,
+      gasLimit,
+      sendByMetaMask
+    );
+  }
+
+  public async getHebaoConfig() {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_HEBAO_CONFIG,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    let error: RESULT_INFO | undefined
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      error = raw_data?.resultInfo;
+    }
+    return {error, raw_data: raw_data.data};
   }
 
 
-
-
-
-  public async sendMetaTx<R extends any,T extends any>
-  (request:loopring_defs.SendMetaTxRequest,apiKey:string)
+  public async sendMetaTx<R extends any, T extends any>
+  (request: loopring_defs.SendMetaTxRequest, apiKey: string)
     : Promise<{
-    error:RESULT_INFO|undefined,
-    raw_data:R}>  {
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.SEND_META_TX,
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
-      bodyParams:request,
+      bodyParams: request,
     };
-    let error :RESULT_INFO|undefined
+    let error: RESULT_INFO | undefined
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
     }
-    return  {
-      error,
-      raw_data} ;
+    return {error, raw_data};
   }
 
 
-
-  public async getGuardianApproveList<R extends any,T extends Guardian>
-  (request:loopring_defs.GetGuardianApproveListRequest): Promise<{
+  public async getGuardianApproveList<R extends any, T extends Guardian>
+  (request: loopring_defs.GetGuardianApproveListRequest): Promise<{
     guardiansArray: Array<T>,
-    error:RESULT_INFO|undefined,
-    raw_data:R}>  {
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_GUARDIAN_APPROVE_LIST,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error :RESULT_INFO|undefined
-    let guardiansArray: Array<T>  = [];
+    let error: RESULT_INFO | undefined
+    let guardiansArray: Array<T> = [];
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
     } else {
-      guardiansArray = raw_data?.data?.guardians.map((r:any) => ({
+      guardiansArray = raw_data?.data?.guardians.map((r: any) => ({
         ens: r.ens ? r.ens : "",
         address: r.wallet,
         type: HEBAO_META_TYPE[r.metaTxType],
@@ -305,11 +339,15 @@ export class WalletAPI extends BaseAPI {
         signedRequest: r.signedRequest,
       }));
     }
-    return  {
+    return {
       guardiansArray,
       error,
-      raw_data} ;
+      raw_data
+    };
   }
+
+
+// /api/wallet/v3/operationLogs?from=0x189a3c44a39c5ab22712543c0f62a9833bbe8df9&fromTime=0&to=&offset=0&network=ETHEREUM&statues=&hebaoTxType=&limit=20
 
 
   /**
@@ -317,34 +355,58 @@ export class WalletAPI extends BaseAPI {
    * @param {GetUserTradesRequest} request
    * @param apiKey
    */
- public  async getProtectors<R extends any,T extends Protector>(request:loopring_defs.GetProtectorRequest,apiKey:string): Promise<{
-   protectorArray: Array<T>,
-   error:RESULT_INFO|undefined,
-   raw_data:R}>  {
-   const reqParams: ReqParams = {
-     url: LOOPRING_URLs.GET_PROTECTORS,
-     apiKey:apiKey,
-     queryParams: request,
-     method: ReqMethod.GET,
-     sigFlag: SIG_FLAG.NO_SIG,
-   };
-   let error :RESULT_INFO|undefined
-   let protectorArray: Array<T>  = [];
-   const raw_data = (await this.makeReq().request(reqParams)).data;
-   if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-     error = raw_data?.resultInfo;
-   } else {
-     protectorArray = raw_data?.data.map((p:any) => ({
-       ens: p.protectEns,
-       address: p.protectAddress,
-       lockStatus: p.walletStatus?.toUpperCase()
-     }));
-   }
-   return  {
-     protectorArray,
-     error,
-     raw_data} ;
- }
+  public async getProtectors<R extends any, T extends Protector>(request: loopring_defs.GetProtectorRequest, apiKey: string): Promise<{
+    protectorArray: Array<T>,
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_PROTECTORS,
+      apiKey: apiKey,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let error: RESULT_INFO | undefined
+    let protectorArray: Array<T> = [];
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      error = raw_data?.resultInfo;
+    } else {
+      protectorArray = raw_data?.data.map((p: any) => ({
+        ens: p.protectEns,
+        address: p.protectAddress,
+        lockStatus: p.walletStatus?.toUpperCase()
+      }));
+    }
+    return {
+      protectorArray,
+      error,
+      raw_data
+    };
+  }
+
+
+  /*
+    * Get user trade amount
+    */
+  public async getHebaoOperationLogs(request: loopring_defs.HebaoOperationLogs) {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_OPERATION_LOGS,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let error: RESULT_INFO | undefined
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      error = raw_data?.resultInfo;
+    }
+    return {
+      raw_data,
+      error,
+    };
+  }
 
   /*
    * Get user trade amount

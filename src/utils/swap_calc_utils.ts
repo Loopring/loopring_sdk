@@ -478,13 +478,6 @@ export function updatePriceImpact_new(
   exceedDepth: boolean,
   depth: DepthData
 ) {
-  // console.debug('asks_prices:', depth.asks_prices)
-  // console.debug('bids_prices:', depth.bids_prices)
-  // console.debug('mid_price:', depth.mid_price)
-
-  // console.log('updatePriceImpact_new: \n reverseIn:', reverseIn,
-  // ' reverseOut:', reverseOut, ' amountS:', amountS, '\n feeBips:', feeBips, ' takerFee:', takerFee,
-  // ' isReversed:', isReversed, ' exceedDepth:', exceedDepth)
 
   let priceImpact = "0";
 

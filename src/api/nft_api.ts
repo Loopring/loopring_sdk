@@ -125,14 +125,16 @@ export class NFTAPI extends BaseAPI {
   }: ContractNFTMetaParam) {
     try {
       myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
-      const result = await this.callContractMethod(
+      let result:string = await this.callContractMethod(
         web3,
         NFTMethod.uri,
         [web3.utils.hexToNumberString(nftId)],
         tokenAddress,
         nftType
       );
-      return await fetch(result.replace("{id}", web3.utils.hexToNumberString(nftId))).then((response) =>
+      result = result.replace('ipfs://', LOOPRING_URLs.IPFS_META_URL)
+      result = result.replace("{id}", web3.utils.hexToNumberString(nftId))
+      return await fetch(result).then((response) =>
         response.json()
       );
     } catch (error) {

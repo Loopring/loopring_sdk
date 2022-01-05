@@ -77,6 +77,9 @@ export enum LOOPRING_URLs {
   GET_LATEST_TOKEN_PRICES = "/api/v3/datacenter/getLatestTokenPrices",
   GET_GUARDIAN_APPROVE_LIST = "/api/wallet/v3/getGuardianApproveList",
   GET_PROTECTORS = "/api/wallet/v3/getProtects",
+  GET_OPERATION_LOGS = "/api/wallet/v3/operationLogs",
+  GET_HEBAO_CONFIG = "api/wallet/v3/getAppConfigs",
+
   SUBMIT_APPROVE_SIGNATURE="/api/wallet/v3/submitApproveSignature",
   REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",
   OFFICIAL_LOCK_OR_UNLOCK ="/api/wallet/v3/officialLockOrUnlock",
@@ -102,4 +105,6 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",
   GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
   GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
+
+  IPFS_META_URL= 'https://freezh.mypinata.cloud/ipfs/',
 }
