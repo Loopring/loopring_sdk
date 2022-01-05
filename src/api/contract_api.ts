@@ -12,6 +12,8 @@ import Contracts from "./ethereum/contracts/Contracts";
 import Common from "@ethereumjs/common";
 
 import BN from "bn.js";
+import {myLog} from "../utils/log_tools";
+import BigNumber from "bignumber.js";
 
 export enum ERC20Method {
   Approve = "approve",
@@ -75,20 +77,20 @@ export async function sendTransaction(web3: any, tx: any) {
           if (!err) {
             resolve({ result: transactionHash });
           } else {
-            resolve({ error: { message: err.message } });
+            myLog(err)
+            resolve({ error: err });
           }
         }
       );
     } catch (reason) {
-      resolve({ error: { message: reason } });
+      resolve({ error: reason });
     }
   });
 
   if (response["result"]) {
     return response;
   } else {
-    const error = response["error"];
-    throw new Error(error);
+    throw response.error
   }
 }
 
@@ -149,7 +151,7 @@ export async function sendRawTx(
   web3: any,
   from: string,
   to: string,
-  value: string,
+  value: any,
   data: any,
   chainId: ChainId,
   nonce: number|undefined|null,
@@ -160,12 +162,10 @@ export async function sendRawTx(
   checkWeb3(web3);
 
   gasPrice = fm.fromGWEI(gasPrice).toNumber();
-
-  const _value = new BN(value);
   const rawTx = {
     from,
     to,
-    value: _value.toString(),
+    value,
     data,
     chainId,
     nonce,

@@ -13,9 +13,9 @@ export enum HEBAO_LOCK_STATUS {
 
 
 export enum HEBAO_META_TYPE {
-  'recovery'=16,
-  'transfer'=18,
-  'add_guardian'= 34,
-  'remove_guardian'=35,
-  'unlock_wallet'=37
+  recovery=16,
+  transfer=18,
+  add_guardian= 34,
+  remove_guardian=35,
+  unlock_wallet=37
 }

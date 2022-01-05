@@ -2085,6 +2085,15 @@ export type Protector = {
   address:string,
   lockStatus:HEBAO_LOCK_STATUS
 }
+export type HebaoOperationLog = {
+  createdAt: number
+  ens: string
+  from: string
+  hebaoTxType: HEBAO_META_TYPE,
+  id: number
+  status: 0|1,
+  to: string
+}
 
 export type  Guardian =  {
   ens: string,
@@ -2094,6 +2103,7 @@ export type  Guardian =  {
   messageHash: string,
   businessDataJson:string,
   signedRequest: any,
+  createAt:number,
 }
 
 
@@ -2128,7 +2138,7 @@ export interface LockHebaoHebaoParam{
   web3:Web3,
   from:string,
   wallet:string,
-  value?:string,
+  value?:string|number,
   contractAddress:string,
   gasPrice:number,
   gasLimit:number,

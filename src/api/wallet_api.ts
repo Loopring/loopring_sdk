@@ -1,7 +1,14 @@
 import {BaseAPI, isContract, signMessage} from "./base_api";
 
 import * as loopring_defs from "../defs/loopring_defs";
-import {GetUserTradesRequest, Guardian, LockHebaoHebaoParam, Protector, ReqParams,} from "../defs/loopring_defs";
+import {
+  GetUserTradesRequest,
+  Guardian,
+  HebaoOperationLog,
+  LockHebaoHebaoParam,
+  Protector,
+  ReqParams,
+} from "../defs/loopring_defs";
 
 import {ReqMethod, SIG_FLAG} from "../defs/loopring_enums";
 import api from "./ethereum/contracts";
@@ -247,7 +254,7 @@ export class WalletAPI extends BaseAPI {
   public async lockHebaoWallet({
                                  web3,
                                  from,
-                                 value = '0',
+                                 value = 0,
                                  contractAddress,
                                  gasPrice,
                                  gasLimit=150000,
@@ -269,7 +276,7 @@ export class WalletAPI extends BaseAPI {
       chainId,
       null,
       gasPrice,
-      gasLimit,
+      Number(gasLimit),
       sendByMetaMask
     );
   }
@@ -337,6 +344,7 @@ export class WalletAPI extends BaseAPI {
         messageHash: r.txAwareHash,
         businessDataJson: r.businessDataJson,
         signedRequest: r.signedRequest,
+        ...r,
       }));
     }
     return {
@@ -390,7 +398,11 @@ export class WalletAPI extends BaseAPI {
   /*
     * Get user trade amount
     */
-  public async getHebaoOperationLogs(request: loopring_defs.HebaoOperationLogs) {
+  public async getHebaoOperationLogs<R extends any, T extends HebaoOperationLog>(request: loopring_defs.HebaoOperationLogs): Promise<{
+    operationArray: Array<T>,
+    error: RESULT_INFO | undefined,
+    raw_data: R
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_OPERATION_LOGS,
       queryParams: request,
@@ -403,6 +415,7 @@ export class WalletAPI extends BaseAPI {
       error = raw_data?.resultInfo;
     }
     return {
+      operationArray:raw_data.data as T[],
       raw_data,
       error,
     };
