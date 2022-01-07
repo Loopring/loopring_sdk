@@ -1126,9 +1126,14 @@ export interface GetGuardianApproveListRequest {
 /**
  * @param {string} owner address
  */
-export interface GetEnsNameRequest{
+export interface GetEnsNameRequest {
   owner: string;
 }
+export interface GET_WALLET_TYPE {
+  wallet: string;
+  network?: string;
+}
+
 
 /**
  * @param {string} fullName ENSName
@@ -2155,6 +2160,11 @@ export interface HebaoOperationLogs {
   statues?:string;
   hebaoTxType?:string ;
   limit?:number;
+}
+
+export interface WalletType {
+  isInCounterFactualStatus: boolean,
+  isContract: boolean
 }
 
 

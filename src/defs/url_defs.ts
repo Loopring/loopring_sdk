@@ -11,6 +11,7 @@ export enum LOOPRING_URLs {
   GET_EXCHANGE_INFO = "/api/v3/exchange/info",
   GET_WITHDRAWAL_AGENTS = "/api/v3/exchange/withdrawalAgents",
   GET_EXCHANGE_FEEINFO = "/api/v3/exchange/feeInfo",
+  GET_IGNORE_WITHDRAW = "/api/v3/exchange/notWithdrawContractTokens",
 
   GET_MIX_MARKETS = "/api/v3/mix/markets",
   GET_DEPTH = "/api/v3/depth",
@@ -79,6 +80,7 @@ export enum LOOPRING_URLs {
   GET_PROTECTORS = "/api/wallet/v3/getProtects",
   GET_OPERATION_LOGS = "/api/wallet/v3/operationLogs",
   GET_HEBAO_CONFIG = "api/wallet/v3/getAppConfigs",
+  GET_WALLET_TYPE = "api/wallet/v3/wallet/type",
 
   SUBMIT_APPROVE_SIGNATURE="/api/wallet/v3/submitApproveSignature",
   REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",

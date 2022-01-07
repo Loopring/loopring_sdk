@@ -5,11 +5,6 @@
         "internalType": "address",
         "name": "wallet",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "guardian",
-        "type": "address"
       }
     ],
     "name": "lock",

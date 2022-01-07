@@ -20,11 +20,11 @@ const GLOBAL_KEY ={
 }
 
 
-export class ActiveApi extends BaseAPI {
+export class GlobalAPI extends BaseAPI {
   public async getActiveFeeInfo(request: { accountId?:number }) {
     const _request:loopring_defs.GetOffchainFeeAmtRequest = {
       accountId: request.accountId?request.accountId : this.chainId === ChainId.MAINNET ? GLOBAL_KEY.MAIN.id : GLOBAL_KEY.GOERLI.id,
-      requestType: OffchainFeeReqType.OPEN_ACCOUNT
+      requestType: OffchainFeeReqType.UPDATE_ACCOUNT
     }
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
@@ -51,6 +51,32 @@ export class ActiveApi extends BaseAPI {
       raw_data,
     };
 
+  }
+  public async getUserBalanceForFee(request: { accountId:number,tokens: string }){
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
+      queryParams: request,
+      apiKey: this.chainId === ChainId.MAINNET ? GLOBAL_KEY.MAIN.key : GLOBAL_KEY.GOERLI.key,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
+      {};
+
+    if (raw_data instanceof Array) {
+      raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
+        userBalances[item.tokenId] = item;
+      });
+    }
+
+    return {
+      userBalances,
+      raw_data,
+    };
   }
 
 

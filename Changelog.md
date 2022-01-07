@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.4.9
+     1) Counter Factual check 
+     2) updateAccount
+
 #### v1.4.7
      1) NFT META 
      2) HEBAO

@@ -15,7 +15,7 @@ let api: WalletAPI;
 
 describe("WalletApi", function () {
   beforeEach(async () => {
-    api = new WalletAPI({ chainId: ChainId.MAINNET });
+    api = new WalletAPI({ chainId: ChainId.GOERLI });
   });
 
   it(
@@ -143,4 +143,19 @@ describe("WalletApi", function () {
     },
     DEFAULT_TIMEOUT
   );
+  it(
+    "getWalletType",
+    async () => {
+      try {
+        const response = await api.getWalletType({
+          wallet:'0x3f87bc7b8f06322f19dfdc51adf2acc73a92200b'
+        });
+        console.log(response);
+      } catch (reason) {
+        console.log(reason);
+      }
+    },
+    DEFAULT_TIMEOUT
+  );
+
 });

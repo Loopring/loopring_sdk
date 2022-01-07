@@ -8,6 +8,7 @@ import {
   LockHebaoHebaoParam,
   Protector,
   ReqParams,
+  WalletType
 } from "../defs/loopring_defs";
 
 import {ReqMethod, SIG_FLAG} from "../defs/loopring_enums";
@@ -224,6 +225,39 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
+  public async getWalletType<T extends any>
+  ({
+     wallet,
+     network = 'eThereum'
+   }: loopring_defs.GET_WALLET_TYPE): Promise<{
+    walletType: WalletType | undefined;
+    error: RESULT_INFO | undefined;
+    raw_data: T
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_WALLET_TYPE,
+      queryParams: {
+        wallet,
+        network,
+      },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let error: RESULT_INFO | undefined
+    let walletType: WalletType | undefined;
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      error = raw_data?.resultInfo;
+    } else {
+      walletType = raw_data.data;
+    }
+    return {
+      walletType,
+      error,
+      raw_data
+    };
+  }
+
   public async getEnsByAddress<R extends any, T extends string>
   (request: loopring_defs.GetEnsNameRequest): Promise<{
     ensName: string | undefined;
@@ -257,15 +291,14 @@ export class WalletAPI extends BaseAPI {
                                  value = 0,
                                  contractAddress,
                                  gasPrice,
-                                 gasLimit=150000,
+                                 gasLimit = 150000,
                                  chainId = 1,
                                  wallet,
                                  sendByMetaMask = true,
                                }: LockHebaoHebaoParam) {
 
-    const data  = api.Contracts.HeBao.encodeInputs("lock", {
+    const data = api.Contracts.HeBao.encodeInputs("lock", {
       wallet,
-      guardian:from,
     });
     return await sendRawTx(
       web3,
@@ -415,7 +448,7 @@ export class WalletAPI extends BaseAPI {
       error = raw_data?.resultInfo;
     }
     return {
-      operationArray:raw_data.data as T[],
+      operationArray: raw_data.data as T[],
       raw_data,
       error,
     };

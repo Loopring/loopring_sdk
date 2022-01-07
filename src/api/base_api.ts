@@ -1,10 +1,15 @@
 import {
   ChainId,
   ConnectorNames,
-  CounterFactualInfo, GetCounterFactualInfoRequest, ReqMethod, ReqParams, RESULT_INFO, SIG_FLAG,
+  CounterFactualInfo,
+  GetCounterFactualInfoRequest,
+  ReqMethod,
+  ReqParams,
+  RESULT_INFO,
+  SIG_FLAG,
 } from "../defs";
-import { Request } from "./request";
-import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
+import {Request} from "./request";
+import {DEFAULT_TIMEOUT} from "../defs/loopring_constants";
 import {ecrecover, fromRpcSig, hashPersonalMessage, keccak, keccak256, pubToAddress, toRpcSig} from "ethereumjs-util";
 import {addHexPrefix, toBuffer, toHex, toNumber} from "../utils";
 import Web3 from "web3";
@@ -16,6 +21,7 @@ import {LOOPRING_URLs} from "../defs/url_defs";
 
 export class BaseAPI {
   protected baseUrl = "";
+  protected chainId:ChainId = ChainId.MAINNET;
   private timeout: number;
 
   public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
@@ -65,6 +71,7 @@ export class BaseAPI {
 
   public setChainId(chainId: ChainId) {
     this.baseUrl = getBaseUrlByChainId(chainId);
+    this.chainId = chainId;
   }
 
   public setBaseUrl(baseUrl: string) {

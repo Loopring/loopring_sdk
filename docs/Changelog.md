@@ -1,9 +1,11 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.4.7
+     1) NFT META 
+     2) HEBAO
 #### v1.4.5 
      1) CF wallet action sign update
-
 
 #### v1.4.4 (alpha)
      1) fix unlock FC wallet

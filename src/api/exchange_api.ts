@@ -878,6 +878,26 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
+
+  /*
+  * Fetches, for all the tokens supported by Loopring, their fiat price.
+  */
+  public async disableWithdrawTokenList() {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_IGNORE_WITHDRAW,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const disableWithdrawTokenList = [...raw_data];
+    return {
+      disableWithdrawTokenList,
+      raw_data,
+    };
+  }
+
+
   /*
    * Query trades with specified market
    */
