@@ -11,8 +11,6 @@ import {
   GetNFTOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   NFTWithdrawRequestV3,
-  TokenVolumeNFT,
-  TokenVolumeV3,
 } from "../defs/loopring_defs";
 
 import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
@@ -29,18 +27,6 @@ let userApi: UserAPI;
 let whitelistedUserApi: WhitelistedUserAPI;
 
 let exchange: ExchangeAPI;
-
-// let address = '0xff7d59d9316eba168837e3ef924bcdfd64b237d8'
-//
-// const privateKey = "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf"
-
-///-----------------
-
-// let addressWhitlisted = '0x35405E1349658BcA12810d0f879Bf6c5d89B512C'
-//
-// let privateKey2 = 'ada29a473e2b777403e7d2dc3876c5be03ca6b60d97e37e9bd335b1ce05a2680'
-//
-// let eddkeyWhitelisted = '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33'
 
 describe("Withdraw NFT test", function () {
   beforeEach(async () => {
@@ -78,17 +64,10 @@ describe("Withdraw NFT test", function () {
         },
         storageId: 9,
         validUntil: 1667396982,
-        // memo: '',
       };
 
       const result = get_EddsaSig_NFT_Withdraw(request, "");
-      //0x0f48775268077434670bdba4e64c93dcbf83d8cabee98928a0791390b2a9809b
-      console.log(`resultHash:`, result); // 0x0f48775268077434670bdba4e64c93dcbf83d8cabee98928a0791390b2a9809b
-      // const request: GetAccountRequest = {
-      //     owner: addressWhitlisted
-      // }
-      // const response = await exchange.getAccount(request)
-      // console.log(response)
+      console.log(`resultHash:`, result);
     },
     DEFAULT_TIMEOUT
   );

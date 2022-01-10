@@ -41,7 +41,8 @@ export enum LoopringErrorCode {
 
   Unsupported_Market = 108000, //dup
   Unsupported_Depth_Level = 108001,
-  ContractNFT_URI= 500001
+  ContractNFT_URI= 500001,
+  ContractNFT_BALANCE= 500002
 }
 
 export enum ConnectorError  {

@@ -18,7 +18,6 @@ const nftTokenAddress = "0x662168Dc15F4D516bE7741f3BBC3592Ea9A6eDB5";
 //test should change the id number
 const nftId =
   "0x000000000000000000000000000000000000000000000000000000000000008c";
-const nftFactory = "0x40F2C1770E11c5bbA3A26aEeF89616D209705C5D";
 describe("nft test", function () {
   beforeEach(() => {
     api = new ExchangeAPI({ chainId: ChainId.GOERLI });
@@ -62,7 +61,7 @@ describe("nft test", function () {
         web3: web3,
         tokenAddress:
           "0x1197d20d12bc9f80a4902c04c5a4b88371d32b0c14adce746eeea564850f47a5",
-        nftId: "0x000000000000000000000000000000000000000000000000000000000000007b",
+        nftId: loopring_exported_account.nftId,
         nftType: NFTType.ERC1155,
       });
       console.log(`nonce: ${nonce} getContractNFTMeta: ${response?.result}`);
@@ -95,7 +94,7 @@ describe("nft test", function () {
         exchangeAddress: loopring_exported_account.exchangeAddr,
         nftType: NFTType.ERC1155,
         tokenAddress: nftTokenAddress,
-        nftID: nftId,
+        nftId: loopring_exported_account.nftId,
         amount: 1,
         gasPrice,
         gasLimit,
@@ -123,6 +122,17 @@ describe("nft test", function () {
     },
     DEFAULT_TIMEOUT
   );
+
+  it("getNFTBalance", async ()=>{
+    const response = await  nft.getNFTBalance({
+      web3,
+      account: loopring_exported_account.address,
+      tokenAddress: nftTokenAddress,
+      nftId: loopring_exported_account.nftId,
+      nftType:NFTType.ERC1155
+    })
+    console.log(response)
+  })
 
   it("computeNFTAddress", async () => {
     const response = nft.computeNFTAddress({

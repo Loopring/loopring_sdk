@@ -1,7 +1,8 @@
 import { BaseAPI } from "./base_api";
 import { LOOPRING_URLs } from "../defs/url_defs";
 import {
-  ChainId, LoopringErrorCode,
+  ChainId,
+  LoopringErrorCode,
   NftData,
   NFTTokenInfo,
   ReqMethod,
@@ -17,6 +18,7 @@ import {
   ContractNFTMetaParam,
   DepositNFTParam,
   IsApproveParam,
+  UserNFTBalanceParam,
 } from "../defs/nft_defs";
 
 const CREATION_CODE = {
@@ -36,6 +38,7 @@ export enum NFTMethod {
   isApprovedForAll = "isApprovedForAll",
   uri = "uri",
   depositNFT = "depositNFT",
+  balanceOf = "balanceOf",
   // Deposit = 'deposit',
   // ForceWithdraw = 'forceWithdraw'
 }
@@ -76,6 +79,53 @@ export class NFTAPI extends BaseAPI {
         : contracts.Contracts.erc721Abi,
       contractAddress
     );
+  }
+
+  /**
+   * getNFTBalance
+   * @param web3
+   * @param tokenAddress
+   * @param account
+   * @param nftId
+   * @param nftType
+   */
+  public async getNFTBalance({
+    web3,
+    tokenAddress,
+    account,
+    nftId,
+    nftType = NFTType.ERC1155,
+  }: UserNFTBalanceParam): Promise<{
+    count?: string;
+    error?: { code: LoopringErrorCode; msg: string };
+  }> {
+    let data = [];
+    if (nftType === NFTType.ERC721) {
+      data = [account];
+    } else {
+      data = [account, web3.utils.hexToNumberString(nftId)];
+    }
+    try {
+      const result: string = await this.callContractMethod(
+        web3,
+        NFTMethod.balanceOf,
+        data,
+        tokenAddress,
+        nftType
+      );
+
+      return {
+        count: result,
+      };
+    } catch (e) {
+      return {
+        error: {
+          code: LoopringErrorCode.ContractNFT_BALANCE,
+          msg: "contract nft balance error",
+          ...e,
+        },
+      };
+    }
   }
 
   /**
@@ -120,26 +170,30 @@ export class NFTAPI extends BaseAPI {
    */
   public async getContractNFTMeta({
     web3,
-    tokenAddress, nftId,
+    tokenAddress,
+    nftId,
     nftType = NFTType.ERC1155,
   }: ContractNFTMetaParam) {
     try {
       myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
-      let result:string = await this.callContractMethod(
+      let result: string = await this.callContractMethod(
         web3,
         NFTMethod.uri,
         [web3.utils.hexToNumberString(nftId)],
         tokenAddress,
         nftType
       );
-      result = result.replace('ipfs://', LOOPRING_URLs.IPFS_META_URL)
-      result = result.replace("{id}", web3.utils.hexToNumberString(nftId))
-      return await fetch(result).then((response) =>
-        response.json()
-      );
+      result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
+      result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
+      return await fetch(result).then((response) => response.json());
     } catch (error) {
-      return { error:{ code: LoopringErrorCode.ContractNFT_URI,
-          msg: 'contract uri Error',...error}};
+      return {
+        error: {
+          code: LoopringErrorCode.ContractNFT_URI,
+          msg: "contract nft uri Error",
+          ...error,
+        },
+      };
     }
   }
 
@@ -234,7 +288,7 @@ export class NFTAPI extends BaseAPI {
    * @param to The account owner's address receiving the funds
    * @param nftType The type of NFT contract address (ERC721/ERC1155/...)
    * @param tokenAddress The address of NFT token
-   * @param nftID The token type 'id`.
+   * @param nftId The token type 'id`.
    * @param amount The amount of tokens to deposit.
    * @param nonce: number,
    * @param gasPrice: number,
@@ -249,7 +303,7 @@ export class NFTAPI extends BaseAPI {
     exchangeAddress,
     nftType = NFTType.ERC1155,
     tokenAddress,
-    nftID,
+    nftId,
     amount,
     gasPrice,
     gasLimit,
@@ -263,7 +317,7 @@ export class NFTAPI extends BaseAPI {
       to: from,
       nftType,
       tokenAddress,
-      nftID,
+      nftId,
       amount,
       extraData: extraData ? extraData : "",
     });

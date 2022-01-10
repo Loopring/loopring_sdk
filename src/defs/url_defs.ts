@@ -30,7 +30,7 @@ export enum LOOPRING_URLs {
   GET_USER_EXCHANGE_BALANCES = "/api/v3/user/balances",
   GET_USER_DEPOSITS_HISTORY = "/api/v3/user/deposits",
   WITHDRAWALS_ACTION = "/api/v3/user/withdrawals", // post get
-  GET_USER_TRANFERS_LIST = "/api/v3/user/transfers",
+  GET_USER_TRANSFERS_LIST = "/api/v3/user/transfers",
   GET_USER_TRADE_HISTORY = "/api/v3/user/trades",
   GET_USER_TXS = "/api/v3/user/transactions",
   GET_USER_FEE_RATE = "/api/v3/user/feeRates", // deprecated

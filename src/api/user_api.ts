@@ -51,11 +51,6 @@ export class UserAPI extends BaseAPI {
       },
     };
 
-    myLog("getUserApiKey request:", request);
-    myLog("sigObj:", {
-      dataToSig,
-      PrivateKey: eddsaKey,
-    });
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     const apiKey = raw_data["apiKey"];
@@ -448,12 +443,12 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user transfer list.
    */
-  public async getUserTranferList(
+  public async getUserTransferList(
     request: loopring_defs.GetUserTransferListRequest,
     apiKey: string
   ) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_TRANFERS_LIST,
+      url: LOOPRING_URLs.GET_USER_TRANSFERS_LIST,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,
@@ -1046,6 +1041,7 @@ export class UserAPI extends BaseAPI {
    * Submit NFT Withdraw request
    */
   public async submitNFTWithdraw<T extends TX_HASH_API>(
+    
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
     options?: { accountId?: number, counterFactualInfo?: any }
   ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
@@ -1208,34 +1204,40 @@ export class UserAPI extends BaseAPI {
         };
       }
     } else {
-      const isContractCheck = await isContract(web3, request.minterAddress);
+      try {
+        const isContractCheck = await isContract(web3, request.minterAddress);
 
-      if (isContractCheck) {
-        // signNFTMintWithDataStructureForContract
-        // console.log('3. signNFTMintWithDataStructureForContract')
-        const result = await sign_tools.signNFTMintWithDataStructureForContract(
-          web3,
-          request.minterAddress,
-          request,
-          chainId,
-          accountId,
-        );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signNFTMintWithDataStructureForContract(
+        if (isContractCheck) {
+          // signNFTMintWithDataStructureForContract
+          // console.log('3. signNFTMintWithDataStructureForContract')
+          const result = await sign_tools.signNFTMintWithDataStructureForContract(
             web3,
             request.minterAddress,
             request,
             chainId,
             accountId,
-            counterFactualInfo
           );
-        ecdsaSignature = result.ecdsaSig;
-        myLog('NFTMintWithData ecdsaSignature:', ecdsaSignature)
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signNFTMintWithDataStructureForContract(
+              web3,
+              request.minterAddress,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          myLog('NFTMintWithData ecdsaSignature:', ecdsaSignature)
 
-      } else {
-        await sigHW();
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        return {
+          ...genErr(err),
+        };
       }
     }
 
@@ -1314,7 +1316,7 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user NFT transfer list.
    */
-  public async getUserNFTTranferHistory(
+  public async getUserNFTTransferHistory(
     request: loopring_defs.GetUserNFTTransferHistoryRequest,
     apiKey: string
   ) {

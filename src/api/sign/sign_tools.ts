@@ -717,14 +717,14 @@ export function get_EddsaSig_NFT_Withdraw(
 
 export function getNftData(request: NFTMintRequestV3) {
   const hasher = Poseidon.createHash(7, 6, 52);
-  const nftIDHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
-  const nftIDLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
+  const nftIdHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
+  const nftIdLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
   const inputs = [
     request.minterAddress,
     request.nftType,
     request.tokenAddress,
-    nftIDLo,
-    nftIDHi,
+    nftIdLo,
+    nftIdHi,
     request.creatorFeeBips,
   ];
   myLog("get hasher *16 hash:", hasher(inputs).toString(16));

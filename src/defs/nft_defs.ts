@@ -1,6 +1,6 @@
 import Web3 from "web3";
-import { ChainId } from "./web3_defs";
-import { NFTType } from "../api";
+import {ChainId} from "./web3_defs";
+import {NFTType} from "../api";
 
 /**
  *  @interface DepositNFTParam
@@ -11,7 +11,7 @@ import { NFTType } from "../api";
  *  @property to The account owner's address receiving the funds
  *  @property nftType The type of NFT contract address (ERC721/ERC1155/...)
  *  @property tokenAddress The address of the token
- *  @property nftID The token type 'id`.
+ *  @property nftId The token type 'id`.
  *  @property amount The amount of tokens to deposit.
  *  @property nonce: number,
  *  @property gasPrice: number,
@@ -26,7 +26,7 @@ export interface DepositNFTParam {
   exchangeAddress: string;
   nftType?: NFTType;
   tokenAddress: string;
-  nftID: string;
+  nftId: string;
   amount: number;
   gasPrice: number;
   gasLimit: number;
@@ -80,10 +80,13 @@ export interface ApproveParam {
   sendByMetaMask?: boolean;
 }
 
-export interface ContractNFTMetaParam {
+export type ContractNFTParam = {
   web3: any;
   tokenAddress: string;
-  nftId:string;
-  _id?: string;
+  nftId: string;
   nftType?: NFTType;
 }
+export type ContractNFTMetaParam = ContractNFTParam & { _id?: string; }
+
+
+export type UserNFTBalanceParam = ContractNFTParam & { account: string }
