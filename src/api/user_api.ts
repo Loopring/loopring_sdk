@@ -51,11 +51,6 @@ export class UserAPI extends BaseAPI {
       },
     };
 
-    myLog("getUserApiKey request:", request);
-    myLog("sigObj:", {
-      dataToSig,
-      PrivateKey: eddsaKey,
-    });
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     const apiKey = raw_data["apiKey"];
