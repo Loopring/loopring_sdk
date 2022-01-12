@@ -1,6 +1,6 @@
 import Web3 from "web3";
-import {ChainId} from "./web3_defs";
-import {NFTType} from "../api";
+import { ChainId } from "./web3_defs";
+import { NFTType } from "../api";
 
 /**
  *  @interface DepositNFTParam
@@ -29,7 +29,7 @@ export interface DepositNFTParam {
   nftId: string;
   amount: number;
   gasPrice: number;
-  gasLimit: number;
+  gasLimit: number | undefined;
   chainId?: ChainId;
   nonce: number;
   extraData?: any;
@@ -74,9 +74,10 @@ export interface ApproveParam {
   tokenId: string;
   nftType: NFTType;
   gasPrice: number;
-  gasLimit: number;
+  gasLimit: number | undefined;
   chainId: ChainId;
   nonce: number;
+  approved?: boolean;
   sendByMetaMask?: boolean;
 }
 
@@ -85,8 +86,7 @@ export type ContractNFTParam = {
   tokenAddress: string;
   nftId: string;
   nftType?: NFTType;
-}
-export type ContractNFTMetaParam = ContractNFTParam & { _id?: string; }
+};
+export type ContractNFTMetaParam = ContractNFTParam & { _id?: string };
 
-
-export type UserNFTBalanceParam = ContractNFTParam & { account: string }
+export type UserNFTBalanceParam = ContractNFTParam & { account: string };

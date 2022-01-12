@@ -79,7 +79,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "nftID",
+        "name": "nftId",
         "type": "uint256"
       },
       {

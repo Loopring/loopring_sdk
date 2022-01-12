@@ -12,7 +12,7 @@ import Contracts from "./ethereum/contracts/Contracts";
 import Common from "@ethereumjs/common";
 
 import BN from "bn.js";
-import {myLog} from "../utils/log_tools";
+import { myLog } from "../utils/log_tools";
 import BigNumber from "bignumber.js";
 
 export enum ERC20Method {
@@ -77,7 +77,7 @@ export async function sendTransaction(web3: any, tx: any) {
           if (!err) {
             resolve({ result: transactionHash });
           } else {
-            myLog(err)
+            myLog(err);
             resolve({ error: err });
           }
         }
@@ -90,7 +90,7 @@ export async function sendTransaction(web3: any, tx: any) {
   if (response["result"]) {
     return response;
   } else {
-    throw response.error
+    throw response.error;
   }
 }
 
@@ -154,9 +154,9 @@ export async function sendRawTx(
   value: any,
   data: any,
   chainId: ChainId,
-  nonce: number|undefined|null,
+  nonce: number | undefined | null,
   gasPrice: any,
-  gasLimit: number,
+  gasLimit: number | undefined,
   sendByMetaMask = true
 ) {
   checkWeb3(web3);
@@ -380,5 +380,4 @@ export async function forceWithdrawal(
   );
 }
 
-
-export {isContract} from "./base_api";
+export { isContract } from "./base_api";

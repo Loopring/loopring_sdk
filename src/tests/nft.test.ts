@@ -14,7 +14,6 @@ const gasPrice = 30;
 
 const gasLimit = 200000;
 
-const nftTokenAddress = "0x662168Dc15F4D516bE7741f3BBC3592Ea9A6eDB5";
 //test should change the id number
 const nftId =
   "0x000000000000000000000000000000000000000000000000000000000000008c";
@@ -25,18 +24,43 @@ describe("nft test", function () {
   });
 
   it(
-    "approveNFT test",
+    "approveNFT",
     async () => {
       const nonce = await contract.getNonce(
         web3,
         loopring_exported_account.address
       );
-
       const response = await nft.approveNFT({
         web3,
         from: loopring_exported_account.address,
         depositAddress: loopring_exported_account.depositAddr,
-        tokenAddress: nftTokenAddress,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
+        tokenId: nftId,
+        nftType: NFTType.ERC1155,
+        gasPrice,
+        gasLimit,
+        chainId: ChainId.GOERLI,
+        nonce,
+        approved: true,
+        sendByMetaMask: true,
+      });
+      console.log(`nonce: ${nonce} approveNFT: ${response?.result}`);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "approveNFT",
+    async () => {
+      const nonce = await contract.getNonce(
+        web3,
+        loopring_exported_account.address
+      );
+      const response = await nft.approveNFT({
+        web3,
+        from: loopring_exported_account.address,
+        depositAddress: loopring_exported_account.depositAddr,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
         tokenId: nftId,
         nftType: NFTType.ERC1155,
         gasPrice,
@@ -50,21 +74,27 @@ describe("nft test", function () {
     DEFAULT_TIMEOUT
   );
   it(
-    "getContractNFTMeta",
+    "notApproveNFT",
     async () => {
       const nonce = await contract.getNonce(
         web3,
         loopring_exported_account.address
       );
-
-      const response = await nft.getContractNFTMeta({
-        web3: web3,
-        tokenAddress:
-          "0x1197d20d12bc9f80a4902c04c5a4b88371d32b0c14adce746eeea564850f47a5",
-        nftId: loopring_exported_account.nftId,
+      const response = await nft.approveNFT({
+        web3,
+        from: loopring_exported_account.address,
+        depositAddress: loopring_exported_account.depositAddr,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
+        tokenId: nftId,
         nftType: NFTType.ERC1155,
+        gasPrice,
+        gasLimit,
+        chainId: ChainId.GOERLI,
+        nonce,
+        approved: false,
+        sendByMetaMask: true,
       });
-      console.log(`nonce: ${nonce} getContractNFTMeta: ${response?.result}`);
+      console.log(`nonce: ${nonce} approveNFT: ${response?.result}`);
     },
     DEFAULT_TIMEOUT
   );
@@ -93,7 +123,7 @@ describe("nft test", function () {
         from: loopring_exported_account.address,
         exchangeAddress: loopring_exported_account.exchangeAddr,
         nftType: NFTType.ERC1155,
-        tokenAddress: nftTokenAddress,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
         nftId: loopring_exported_account.nftId,
         amount: 1,
         gasPrice,
@@ -116,23 +146,23 @@ describe("nft test", function () {
         from: loopring_exported_account.address,
         exchangeAddress: loopring_exported_account.exchangeAddr,
         nftType: NFTType.ERC1155,
-        tokenAddress: nftTokenAddress,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
       });
       console.log(`check is approveNFT`, response);
     },
     DEFAULT_TIMEOUT
   );
 
-  it("getNFTBalance", async ()=>{
-    const response = await  nft.getNFTBalance({
+  it("getNFTBalance", async () => {
+    const response = await nft.getNFTBalance({
       web3,
       account: loopring_exported_account.address,
-      tokenAddress: nftTokenAddress,
+      tokenAddress: loopring_exported_account.nftTokenAddress,
       nftId: loopring_exported_account.nftId,
-      nftType:NFTType.ERC1155
-    })
-    console.log(response)
-  })
+      nftType: NFTType.ERC1155,
+    });
+    console.log(response);
+  });
 
   it("computeNFTAddress", async () => {
     const response = nft.computeNFTAddress({

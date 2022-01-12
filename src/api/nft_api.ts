@@ -2,6 +2,7 @@ import { BaseAPI } from "./base_api";
 import { LOOPRING_URLs } from "../defs/url_defs";
 import {
   ChainId,
+  ConnectorError,
   LoopringErrorCode,
   NftData,
   NFTTokenInfo,
@@ -39,6 +40,7 @@ export enum NFTMethod {
   uri = "uri",
   depositNFT = "depositNFT",
   balanceOf = "balanceOf",
+  ownerOf = "ownerOf",
   // Deposit = 'deposit',
   // ForceWithdraw = 'forceWithdraw'
 }
@@ -99,29 +101,41 @@ export class NFTAPI extends BaseAPI {
     count?: string;
     error?: { code: LoopringErrorCode; msg: string };
   }> {
-    let data = [];
-    if (nftType === NFTType.ERC721) {
-      data = [account];
-    } else {
-      data = [account, web3.utils.hexToNumberString(nftId)];
-    }
     try {
-      const result: string = await this.callContractMethod(
-        web3,
-        NFTMethod.balanceOf,
-        data,
-        tokenAddress,
-        nftType
-      );
-
-      return {
-        count: result,
-      };
+      if (nftType === NFTType.ERC721) {
+        const result: string = await this.callContractMethod(
+          web3,
+          NFTMethod.ownerOf,
+          [nftId],
+          tokenAddress,
+          nftType
+        );
+        if (result.toLowerCase() === account.toLowerCase()) {
+          return {
+            count: "1",
+          };
+        } else {
+          return {
+            count: "0",
+          };
+        }
+      } else {
+        const result: string = await this.callContractMethod(
+          web3,
+          NFTMethod.balanceOf,
+          [account, web3.utils.hexToNumberString(nftId)],
+          tokenAddress,
+          nftType
+        );
+        return {
+          count: result.toString(),
+        };
+      }
     } catch (e) {
       return {
         error: {
-          code: LoopringErrorCode.ContractNFT_BALANCE,
-          msg: "contract nft balance error",
+          code: LoopringErrorCode.CONTRACTNFT_BALANCE,
+          msg: ConnectorError.CONTRACTNFT_BALANCE,
           ...e,
         },
       };
@@ -189,8 +203,8 @@ export class NFTAPI extends BaseAPI {
     } catch (error) {
       return {
         error: {
-          code: LoopringErrorCode.ContractNFT_URI,
-          msg: "contract nft uri Error",
+          code: LoopringErrorCode.CONTRACTNFT_URI,
+          msg: ConnectorError.CONTRACTNFT_URI,
           ...error,
         },
       };
@@ -222,6 +236,7 @@ export class NFTAPI extends BaseAPI {
     gasLimit,
     chainId,
     nonce,
+    approved = true,
     sendByMetaMask = true,
   }: ApproveParam) {
     let data: any;
@@ -229,27 +244,37 @@ export class NFTAPI extends BaseAPI {
     if (nftType === NFTType.ERC1155) {
       data = this._genERC1155Data(NFTMethod.setApprovalForAll, {
         operator: depositAddress,
-        approved: true,
+        approved,
       });
     } else if (nftType === NFTType.ERC721) {
       //TODO list not support now
       data = this._genERC721Data(NFTMethod.setApprovalForAll, {
         operator: depositAddress,
-        approved: true,
+        approved,
       });
     }
-    return await sendRawTx(
-      web3,
-      from,
-      tokenAddress,
-      "0",
-      data,
-      chainId,
-      nonce,
-      gasPrice,
-      gasLimit,
-      sendByMetaMask
-    );
+    try {
+      return await sendRawTx(
+        web3,
+        from,
+        tokenAddress,
+        "0",
+        data,
+        chainId,
+        nonce,
+        gasPrice,
+        gasLimit,
+        sendByMetaMask
+      );
+    } catch (error) {
+      return {
+        error: {
+          code: LoopringErrorCode.CONTRACTNFT_SET_APPROVE,
+          msg: ConnectorError.CONTRACTNFT_SET_APPROVE,
+          ...error,
+        },
+      };
+    }
   }
 
   /**
@@ -277,7 +302,13 @@ export class NFTAPI extends BaseAPI {
       );
       return result;
     } catch (error) {
-      return undefined;
+      return {
+        error: {
+          code: LoopringErrorCode.CONTRACTNFT_IS_APPROVE,
+          msg: ConnectorError.CONTRACTNFT_IS_APPROVE,
+          ...error,
+        },
+      };
     }
   }
 

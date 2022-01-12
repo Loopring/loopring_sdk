@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.5.2
+     1) NFT deposit
+
 #### v1.4.9
      1) Counter Factual check 
      2) updateAccount

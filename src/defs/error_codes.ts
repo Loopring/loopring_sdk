@@ -41,13 +41,19 @@ export enum LoopringErrorCode {
 
   Unsupported_Market = 108000, //dup
   Unsupported_Depth_Level = 108001,
-  ContractNFT_URI= 500001,
-  ContractNFT_BALANCE= 500002
+  CONTRACTNFT_URI = 500001,
+  CONTRACTNFT_BALANCE = 500002,
+  CONTRACTNFT_IS_APPROVE = 500003,
+  CONTRACTNFT_SET_APPROVE = 500004,
 }
 
-export enum ConnectorError  {
+export enum ConnectorError {
   NOT_SUPPORT_ERROR = "Not supported on this device",
-  USER_DENIED ="User denied message signature",
+  USER_DENIED = "User denied message signature",
+  CONTRACTNFT_URI = "contract nft uri Error",
+  CONTRACTNFT_BALANCE = "contract nft balance error",
+  CONTRACTNFT_IS_APPROVE = "ContractNFT is Approve error",
+  CONTRACTNFT_SET_APPROVE = "ContractNFT set Approve error",
 }
 
 export interface RESULT_INFO {
@@ -55,8 +61,8 @@ export interface RESULT_INFO {
   msg: string;
 }
 export type ERROR_INFO = {
-  resultInfo: RESULT_INFO
-}
-export type ErrorMsg =  {
-  errMsg?: keyof typeof ConnectorError
-} & Error
+  resultInfo: RESULT_INFO;
+};
+export type ErrorMsg = {
+  errMsg?: keyof typeof ConnectorError;
+} & Error;
