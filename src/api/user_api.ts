@@ -14,7 +14,11 @@ import { LOOPRING_URLs } from "../defs/url_defs";
 import { ConnectorNames, SigSuffix } from "../defs/web3_defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
-import { TX_HASH_API, TX_HASH_RESULT } from "../defs/loopring_defs";
+import {
+  OriginTransferRequestV3,
+  TX_HASH_API,
+  TX_HASH_RESULT,
+} from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
 import { myLog } from "../utils/log_tools";
@@ -945,6 +949,134 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
+   * Submit NFT Deploy request
+   */
+  public async submitDeployNFT<T extends TX_HASH_API>(
+    req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
+    transfer.maxFee = {
+      volume: "0",
+      tokenId: 0,
+    };
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        transfer.payerAddr,
+        transfer as OriginTransferRequestV3,
+        chainId,
+        walletType,
+        accountId
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (walletType === ConnectorNames.MetaMask) {
+      myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            transfer.payerAddr,
+            transfer as OriginTransferRequestV3,
+            chainId,
+            accountId
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        return {
+          ...genErr(err),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, transfer.payerAddr);
+      myLog(
+        "submitDeployNFT isContractCheck,accountId:",
+        isContractCheck,
+        accountId
+      );
+      if (isContractCheck) {
+        const result =
+          await sign_tools.signTransferWithDataStructureForContract(
+            web3,
+            transfer.payerAddr,
+            transfer as OriginTransferRequestV3,
+            chainId,
+            accountId
+          );
+        ecdsaSignature = result.ecdsaSig;
+      } else if (counterFactualInfo) {
+        const result =
+          await sign_tools.signTransferWithDataStructureForContract(
+            web3,
+            transfer.payerAddr,
+            transfer as OriginTransferRequestV3,
+            chainId,
+            accountId,
+            counterFactualInfo
+          );
+        ecdsaSignature = result.ecdsaSig;
+        myLog("Transfer ecdsaSignature:", ecdsaSignature);
+      } else {
+        await sigHW();
+      }
+    }
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as OriginTransferRequestV3,
+      eddsaKey
+    );
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = new Map();
+    dataToSig.set("nftData", request.nftData);
+    dataToSig.set("tokenAddress", request.tokenAddress);
+    dataToSig.set("transfer", request.transfer);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    myLog("submitDeployNFT:", await this.makeReq().request(reqParams));
+
+    return {
+      ...this.returnTxHash(raw_data),
+    };
+  }
+
+  /*
    * Submit NFT Transfer request
    */
   public async submitNFTInTransfer<T extends TX_HASH_API>(
@@ -1030,7 +1162,6 @@ export class UserAPI extends BaseAPI {
         await sigHW();
       }
     }
-    // console.log('ecdsaSignature:', ecdsaSignature)
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
       request,
@@ -1049,6 +1180,7 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
 
     return {
       ...this.returnTxHash(raw_data),
@@ -1269,7 +1401,7 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo;
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_MINT,
+      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,

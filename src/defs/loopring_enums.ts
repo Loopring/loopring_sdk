@@ -60,8 +60,9 @@ export enum OffchainFeeReqType {
 }
 export enum OffchainNFTFeeReqType {
   NFT_MINT = 9,
-  NFT_WITHDRAWAL,
-  NFT_TRANSFER,
+  NFT_WITHDRAWAL = 10,
+  NFT_TRANSFER = 11,
+  NFT_DEPLOY = 13,
 }
 
 export enum TradingInterval {

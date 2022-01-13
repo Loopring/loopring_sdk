@@ -72,7 +72,7 @@ export class Request {
         // 'Accept-Encoding': 'gzip, deflate, br',
         feeVersion: "v2",
         "Content-Type": "application/json",
-        "pf": "web", // tag for recognizing source
+        pf: "web", // tag for recognizing source
       },
 
       validateStatus: function (status: any) {

@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v1.5.6
+     submitDeployNFT
 #### v1.5.2
      1) NFT deposit
 

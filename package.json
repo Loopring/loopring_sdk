@@ -48,6 +48,7 @@
     "lint": "eslint . --fix --quiet --ext .ts",
     "prepublishOnly": "NODE_ENV=production tsdx build",
     "doc": "typedoc --out docs/detail src\\/",
+    "proxy": "export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;",
     "build-book": "npx honkit build",
     "cp-file-doc": "cp README.md ./docs/README.md;  cp Changelog.md ./docs/Changelog.md; ",
     "build-b": "npm run doc; npm run build-book",

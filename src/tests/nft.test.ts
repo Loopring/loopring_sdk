@@ -1,14 +1,30 @@
-import { ChainId } from "../defs/web3_defs";
+import { ChainId, ConnectorNames } from "../defs/web3_defs";
 import * as contract from "../api/contract_api";
 
-import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
+import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
 
 import { loopring_exported_account, web3 } from "./utils";
 
 import { ExchangeAPI } from "../api/exchange_api";
 import { NFTAPI, NFTType } from "../api/nft_api";
+import Web3 from "web3";
+import * as sign_tools from "../api/sign/sign_tools";
+import {
+  GetNextStorageIdRequest,
+  GetNFTOffchainFeeAmtRequest,
+  GetUserApiKeyRequest,
+  OffchainNFTFeeReqType,
+  OriginDeployNFTRequestV3,
+  OriginTransferRequestV3,
+} from "../defs";
+import { UserAPI, WhitelistedUserAPI } from "../api";
+import { dumpError400 } from "../utils";
+const PrivateKeyProvider = require("truffle-privatekey-provider");
+const { exec } = require("child_process");
 
-let api: ExchangeAPI;
+let exchange: ExchangeAPI,
+  userApi: UserAPI,
+  whitelistedUserApi: WhitelistedUserAPI;
 let nft: NFTAPI;
 const gasPrice = 30;
 
@@ -19,8 +35,13 @@ const nftId =
   "0x000000000000000000000000000000000000000000000000000000000000008c";
 describe("nft test", function () {
   beforeEach(() => {
-    api = new ExchangeAPI({ chainId: ChainId.GOERLI });
+    exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
     nft = new NFTAPI({ chainId: ChainId.GOERLI });
+    userApi = new UserAPI({ chainId: ChainId.GOERLI });
+    whitelistedUserApi = new WhitelistedUserAPI({ chainId: ChainId.GOERLI });
+    exec(
+      "export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087"
+    );
   });
 
   it(
@@ -176,4 +197,86 @@ describe("nft test", function () {
       "0xee354d81778a4c5a08fd9dbeb5cfd01a840a746d"
     );
   });
+  it(
+    "submitDeployNFT",
+    async () => {
+      const provider = new PrivateKeyProvider(
+        loopring_exported_account.privateKey,
+        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+      );
+      const web3 = new Web3(provider);
+      const { accInfo } = await exchange.getAccount({
+        owner: loopring_exported_account.address,
+      });
+      if (!accInfo) {
+        return;
+      }
+      const { broker: payeeAddr } = await userApi.getAvailableBroker();
+
+      const eddsaKey = await sign_tools.generateKeyPair({
+        web3,
+        address: accInfo.owner,
+        exchangeAddress: loopring_exported_account.exchangeAddr,
+        keyNonce: accInfo.nonce - 1,
+        walletType: ConnectorNames.MetaMask,
+        chainId: ChainId.GOERLI,
+      });
+
+      const request: GetUserApiKeyRequest = {
+        accountId: accInfo.accountId,
+      };
+
+      const { apiKey } = await userApi.getUserApiKey(request, eddsaKey.sk);
+      console.log(apiKey);
+      const reStorageId: GetNextStorageIdRequest = {
+        accountId: accInfo.accountId,
+        sellTokenId: 1,
+      };
+      const storageId = await userApi.getNextStorageId(reStorageId, apiKey);
+      const requestFee: GetNFTOffchainFeeAmtRequest = {
+        accountId: accInfo.accountId,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
+        requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL,
+        amount: "0",
+      };
+      const {
+        raw_data: { fees },
+      } = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey);
+      console.log(fees);
+      // OriginDeployNFTRequestV3WithPatch
+      const transfer = {
+        exchange: loopring_exported_account.exchangeAddr,
+        payerAddr: loopring_exported_account.address,
+        payerId: loopring_exported_account.accountId,
+        payeeAddr,
+        storageId: storageId.offchainId,
+        token: {
+          tokenId: 1, //LRC
+          volume: fees[1].fee,
+        },
+        validUntil: VALID_UNTIL,
+      };
+      const submitDeployNFTRequest: OriginDeployNFTRequestV3 = {
+        transfer,
+        tokenAddress: loopring_exported_account.nftTokenAddress,
+        nftData: loopring_exported_account.nftData,
+      };
+      try {
+        const response = await userApi.submitDeployNFT({
+          request: submitDeployNFTRequest,
+          web3,
+          chainId: ChainId.GOERLI,
+          walletType: ConnectorNames.Unknown,
+          eddsaKey: eddsaKey.sk,
+          apiKey: apiKey,
+        });
+
+        console.log(response);
+      } catch (reason) {
+        dumpError400(reason);
+        console.log(reason);
+      }
+    },
+    DEFAULT_TIMEOUT + 20000
+  );
 });

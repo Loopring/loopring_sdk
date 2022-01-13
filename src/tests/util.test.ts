@@ -1,9 +1,22 @@
 import { sleep } from "../utils";
+import { DelegateAPI } from "../api";
+import { ChainId, DEFAULT_TIMEOUT } from "../defs";
+import { BaseAPI } from "../api/base_api";
+
+let api: BaseAPI;
 
 describe("utils test", function () {
   beforeEach(async () => {
-    return;
+    api = new BaseAPI({ chainId: ChainId.GOERLI });
   });
+  it(
+    "getAvailableBroker",
+    async () => {
+      const result = await api.getAvailableBroker();
+      console.log(result);
+    },
+    DEFAULT_TIMEOUT
+  );
 
   it("sleep_test", async () => {
     console.log(new Date().getTime());

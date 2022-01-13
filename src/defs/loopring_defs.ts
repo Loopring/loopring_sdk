@@ -1,4 +1,4 @@
-import {ChainId, ConnectorNames} from "./web3_defs";
+import { ChainId, ConnectorNames } from "./web3_defs";
 
 import Web3 from "web3";
 
@@ -27,9 +27,9 @@ import {
   UserTxTypes,
   WithdrawalTypes,
 } from "./loopring_enums";
-import {RESULT_INFO} from "./error_codes";
-import {HEBAO_LOCK_STATUS, HEBAO_META_TYPE} from "./loopring_constants";
-import {CounterFactualInfo} from "./account_defs";
+import { RESULT_INFO } from "./error_codes";
+import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
+import { CounterFactualInfo } from "./account_defs";
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -39,8 +39,8 @@ export interface VipFeeRateInfo {
 
 export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo };
 
-export type TX_HASH_API = { hash?: string, resultInfo?: RESULT_INFO }
-export type TX_HASH_RESULT<T> = T & { raw_data: T }
+export type TX_HASH_API = { hash?: string; resultInfo?: RESULT_INFO };
+export type TX_HASH_RESULT<T> = T & { raw_data: T };
 
 export interface ReqOptions {
   baseUrl?: string;
@@ -886,7 +886,7 @@ export interface OffChainWithdrawalRequestV3 {
    * @memberof OffChainWithdrawalRequestV3
    */
   hashApproved?: string;
-  counterFactualInfo?:CounterFactualInfo
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 export interface GetOrdersRequest {
@@ -933,7 +933,7 @@ export interface GetUserPwdResetTxsRequest {
   offset?: number;
 }
 
-export type UserPwdResetTx = UserRegTx
+export type UserPwdResetTx = UserRegTx;
 
 export interface GetUserDepositHistoryRequest {
   accountId?: number;
@@ -1093,28 +1093,27 @@ export interface UserTx {
   recipient: string;
 }
 
-
 /**
  * @param {string} guardian address
  */
 export interface SendMetaTxRequest {
   wallet: string;
   module: string;
-  value: string
+  value: string;
   data: string;
-  nonce: string
-  validUntil: string
+  nonce: string;
+  validUntil: string;
   gasToken: string;
-  gasPrice: string
-  gasLimit: string
-  gasOverhead: string
+  gasPrice: string;
+  gasLimit: string;
+  gasOverhead: string;
   feeRecipient: string;
   signatures: string;
-  signers: string
-  metaTxType:0,
-  requestId: string
-  securityId: string
-  guardianType: string
+  signers: string;
+  metaTxType: 0;
+  requestId: string;
+  securityId: string;
+  guardianType: string;
 }
 
 /**
@@ -1134,11 +1133,10 @@ export interface GET_WALLET_TYPE {
   network?: string;
 }
 
-
 /**
  * @param {string} fullName ENSName
  */
-export interface GetEnsAddressRequest  {
+export interface GetEnsAddressRequest {
   fullName: string;
 }
 
@@ -1150,12 +1148,12 @@ export interface GetEnsAddressRequest  {
  * @param {string} wallet
  * @param {string} signature
  */
-export interface SubmitApproveSignatureRequest{
-  approveRecordId: string,
-  txAwareHash?: string,//currentRequest.messageHash,
-  securityNumber: string,
-  signer: string,//address,
-  signature: string,
+export interface SubmitApproveSignatureRequest {
+  approveRecordId: string;
+  txAwareHash?: string; //currentRequest.messageHash,
+  securityNumber: string;
+  signer: string; //address,
+  signature: string;
 }
 
 /**
@@ -1163,8 +1161,8 @@ export interface SubmitApproveSignatureRequest{
  * @param {string} protectAddress? address
  */
 export interface GetProtectorRequest {
-  guardian: string,
-  protectAddress?:string,
+  guardian: string;
+  protectAddress?: string;
 }
 export interface GetUserTradesRequest {
   accountId: number;
@@ -1176,7 +1174,7 @@ export interface GetUserTradesRequest {
   fillTypes?: string;
 }
 
-export type UserTrade = MarketTradeInfo
+export type UserTrade = MarketTradeInfo;
 
 export interface UserTrades {
   totalNum: number;
@@ -1386,10 +1384,37 @@ export interface OriginTransferRequestV3 {
    */
   clientId?: string;
 
-  counterFactualInfo?:CounterFactualInfo;
-
+  counterFactualInfo?: CounterFactualInfo;
 }
 
+/**
+ * Submit Deploy NFT params
+ * @export
+ * @interface OriginDeployNFTRequestV3
+ */
+export interface OriginDeployNFTRequestV3 {
+  transfer: Omit<OriginTransferRequestV3, "payeeId" | "maxFee" | "memo"> & {
+    payeeId?: 0;
+    memo?: string;
+    maxFee?: {
+      volume: "0";
+      tokenId: 0;
+    };
+  };
+  /**
+   * nftData
+   * @type {string}
+   * @memberof OriginDeployNFTRequestV3
+   */
+  nftData: string;
+  /**
+   * NFT address
+   * @type {string}
+   * @memberof OriginDeployNFTRequestV3
+   */
+  tokenAddress: string;
+  counterFactualInfo?: CounterFactualInfo;
+}
 /**
  * Submit internal transfer params
  * @export
@@ -1480,8 +1505,7 @@ export interface OriginNFTTransferRequestV3 {
    * @memberof OriginNFTTransferRequestV3
    */
   clientId?: string;
-  counterFactualInfo?:CounterFactualInfo
-
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 /**
@@ -1574,8 +1598,7 @@ export interface NFTWithdrawRequestV3 {
    * @memberof OriginNFTWithdrawRequestV3
    */
   hashApproved?: string;
-  counterFactualInfo?:CounterFactualInfo
-
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 /**
@@ -1687,8 +1710,7 @@ export interface NFTMintRequestV3 {
    * @memberof OriginNFTMintRequestV3
    */
   hashApproved?: string;
-  counterFactualInfo?:CounterFactualInfo
-
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 /**
@@ -1866,8 +1888,7 @@ export interface UpdateAccountRequestV3 {
   hashApproved?: string;
 
   keySeed?: string;
-  counterFactualInfo?:CounterFactualInfo
-
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 export interface OffChainWithdrawalRequestV3WithPatch {
@@ -1882,6 +1903,16 @@ export interface OffChainWithdrawalRequestV3WithPatch {
 
 export interface OriginTransferRequestV3WithPatch {
   request: OriginTransferRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+
+export interface OriginDeployNFTRequestV3WithPatch {
+  request: OriginDeployNFTRequestV3;
   web3: Web3;
   chainId: ChainId;
   walletType: ConnectorNames;
@@ -2086,87 +2117,80 @@ export interface UserNFTTransferHistoryTx {
 }
 
 export type Protector = {
-  ens:string,
-  address:string,
-  lockStatus:HEBAO_LOCK_STATUS
-}
+  ens: string;
+  address: string;
+  lockStatus: HEBAO_LOCK_STATUS;
+};
 export type HebaoOperationLog = {
-  createdAt: number
-  ens: string
-  from: string
-  hebaoTxType: HEBAO_META_TYPE,
-  id: number
-  status: 0|1,
-  to: string
-}
+  createdAt: number;
+  ens: string;
+  from: string;
+  hebaoTxType: HEBAO_META_TYPE;
+  id: number;
+  status: 0 | 1;
+  to: string;
+};
 
-export type  Guardian =  {
-  ens: string,
-  address: string,
-  type: keyof typeof HEBAO_META_TYPE,
-  id: string,
-  messageHash: string,
-  businessDataJson:string,
-  signedRequest: any,
-  createAt:number,
-}
-
+export type Guardian = {
+  ens: string;
+  address: string;
+  type: keyof typeof HEBAO_META_TYPE;
+  id: string;
+  messageHash: string;
+  businessDataJson: string;
+  signedRequest: any;
+  createAt: number;
+};
 
 /**
  *
  * @export
  * @interface ApproveHebaoRequest
  */
-export type GuardiaContractAddress =  string
-
-
+export type GuardiaContractAddress = string;
 
 export interface ApproveHebaoRequestV3WithPatch {
-  request: Guardian & {code:string};
+  request: Guardian & { code: string };
   web3: Web3;
   address: string;
   chainId: ChainId;
-  guardiaContractAddress:GuardiaContractAddress
+  guardiaContractAddress: GuardiaContractAddress;
   walletType?: ConnectorNames;
 }
 
 export interface RejectHebaoRequestV3WithPatch {
-  request:{ approveRecordId:string  },
+  request: { approveRecordId: string };
   web3: Web3;
   address: string;
   chainId: ChainId;
-  guardiaContractAddress:GuardiaContractAddress
+  guardiaContractAddress: GuardiaContractAddress;
   walletType?: ConnectorNames;
 }
 
-export interface LockHebaoHebaoParam{
-  web3:Web3,
-  from:string,
-  wallet:string,
-  value?:string|number,
-  contractAddress:string,
-  gasPrice:number,
-  gasLimit:number,
-  chainId?:ChainId,
-  sendByMetaMask?:boolean,
+export interface LockHebaoHebaoParam {
+  web3: Web3;
+  from: string;
+  wallet: string;
+  value?: string | number;
+  contractAddress: string;
+  gasPrice: number;
+  gasLimit: number;
+  chainId?: ChainId;
+  sendByMetaMask?: boolean;
 }
 
 export interface HebaoOperationLogs {
-  from:string;
-  fromTime:number;
-  to?:string;
-  offset?:number;
-  network?:'ETHEREUM';
-  statues?:string;
-  hebaoTxType?:string ;
-  limit?:number;
+  from: string;
+  fromTime: number;
+  to?: string;
+  offset?: number;
+  network?: "ETHEREUM";
+  statues?: string;
+  hebaoTxType?: string;
+  limit?: number;
 }
 
 export interface WalletType {
-  isInCounterFactualStatus: boolean,
-  isContract: boolean
+  isInCounterFactualStatus: boolean;
+  isContract: boolean;
 }
-
-
-
-

@@ -8,20 +8,27 @@ import {
   RESULT_INFO,
   SIG_FLAG,
 } from "../defs";
-import {Request} from "./request";
-import {DEFAULT_TIMEOUT} from "../defs/loopring_constants";
-import {ecrecover, fromRpcSig, hashPersonalMessage, keccak, keccak256, pubToAddress, toRpcSig} from "ethereumjs-util";
-import {addHexPrefix, toBuffer, toHex, toNumber} from "../utils";
+import { Request } from "./request";
+import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
+import {
+  ecrecover,
+  fromRpcSig,
+  hashPersonalMessage,
+  keccak,
+  keccak256,
+  pubToAddress,
+  toRpcSig,
+} from "ethereumjs-util";
+import { addHexPrefix, toBuffer, toHex, toNumber } from "../utils";
 import Web3 from "web3";
-import {myLog} from "../utils/log_tools";
+import { myLog } from "../utils/log_tools";
 import Transaction from "@ethereumjs/tx";
 import ABI from "./ethereum/contracts";
-import {LOOPRING_URLs} from "../defs/url_defs";
-
+import { LOOPRING_URLs } from "../defs/url_defs";
 
 export class BaseAPI {
   protected baseUrl = "";
-  protected chainId:ChainId = ChainId.MAINNET;
+  protected chainId: ChainId = ChainId.MAINNET;
   private timeout: number;
 
   public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
@@ -36,10 +43,23 @@ export class BaseAPI {
     this.timeout = timeout;
   }
 
-  public async getCounterFactualInfo<T extends any>(request: GetCounterFactualInfoRequest):Promise<{
-    raw_data: T,
-    counterFactualInfo: CounterFactualInfo | undefined
-    error?: RESULT_INFO
+  public async getAvailableBroker(): Promise<{ broker: string }> {
+    const reqParams: ReqParams = {
+      sigFlag: SIG_FLAG.NO_SIG,
+      url: LOOPRING_URLs.GET_AVAILABLE_BROKER,
+      method: ReqMethod.GET,
+    };
+
+    const result = (await this.makeReq().request(reqParams)).data;
+    return result;
+  }
+
+  public async getCounterFactualInfo<T extends any>(
+    request: GetCounterFactualInfoRequest
+  ): Promise<{
+    raw_data: T;
+    counterFactualInfo: CounterFactualInfo | undefined;
+    error?: RESULT_INFO;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.COUNTER_FACTUAL_INFO,
@@ -51,13 +71,13 @@ export class BaseAPI {
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     let counterFactualInfo: CounterFactualInfo | undefined;
-    let error:RESULT_INFO| undefined = undefined;
+    let error: RESULT_INFO | undefined = undefined;
 
     if (raw_data && raw_data?.resultInfo) {
       error = raw_data?.resultInfo;
-    }else{
+    } else {
       counterFactualInfo = {
-        ...raw_data
+        ...raw_data,
       } as CounterFactualInfo;
     }
 
@@ -67,7 +87,6 @@ export class BaseAPI {
       raw_data,
     };
   }
-
 
   public setChainId(chainId: ChainId) {
     this.baseUrl = getBaseUrlByChainId(chainId);
@@ -100,7 +119,7 @@ export async function ecRecover(
   web3: Web3,
   account: string,
   msg: string,
-  sig: any,
+  sig: any
 ) {
   return new Promise((resolve) => {
     try {
@@ -233,7 +252,6 @@ export async function contractWalletValidate2(
   });
 }
 
-
 export async function mykeyWalletValid(
   web3: any,
   account: string,
@@ -281,7 +299,7 @@ export async function sign(
   web3: any,
   account: string,
   pwd: string,
-  hash: string,
+  hash: string
 ) {
   return new Promise((resolve) => {
     web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
@@ -359,7 +377,6 @@ export async function signMessage(
   const hash = toHex(hashPersonalMessage(keccak256(message)));
   return await sign(web3, account, pwd, hash);
 }
-
 
 export async function ecRecover2(
   account: string,
@@ -459,7 +476,6 @@ export async function sendTransaction(web3: any, tx: any) {
   }
 }
 
-
 const getBaseUrlByChainId = (id: ChainId) => {
   let baseUrl = "";
 
@@ -485,20 +501,24 @@ export async function isContract(web3: any, address: string) {
   return code && code.length > 2;
 }
 
-export function formatSig(rpcSig:string) {
+export function formatSig(rpcSig: string) {
   const sig = fromRpcSig(rpcSig);
   return toRpcSig(sig.v, sig.r, sig.s);
 }
-export function recoverSignType(web3:any,account:string, msg: string, sig:string) {
-  const ethRecover:any = ecRecover(web3,account, msg, sig);
+export function recoverSignType(
+  web3: any,
+  account: string,
+  msg: string,
+  sig: string
+) {
+  const ethRecover: any = ecRecover(web3, account, msg, sig);
 
-  if (ethRecover.result){
+  if (ethRecover.result) {
     return "03";
   } else {
     return "";
   }
 }
-
 
 export async function personalSign(
   web3: any,
@@ -506,10 +526,10 @@ export async function personalSign(
   pwd: string,
   msg: string,
   walletType: ConnectorNames,
-  chainId:ChainId,
-  accountId?:number,
-  counterFactualInfo?:CounterFactualInfo,
-  ) {
+  chainId: ChainId,
+  accountId?: number,
+  counterFactualInfo?: CounterFactualInfo
+) {
   if (!account) {
     return { error: "personalSign got no account" };
   }
@@ -522,15 +542,23 @@ export async function personalSign(
         pwd,
         async function (err: any, result: any) {
           if (!err) {
-            if(counterFactualInfo && accountId){
+            if (counterFactualInfo && accountId) {
               myLog("fcWalletValid counterFactualInfo accountId:");
-              const fcValid = await fcWalletValid( web3,
+              const fcValid = await fcWalletValid(
+                web3,
                 account,
                 msg,
-                result,accountId,chainId,counterFactualInfo)
-              if (fcValid.result){
-                resolve({ sig: result ,counterFactualInfo:fcValid.counterFactualInfo});
-                return
+                result,
+                accountId,
+                chainId,
+                counterFactualInfo
+              );
+              if (fcValid.result) {
+                resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+                return;
               }
             }
 
@@ -563,7 +591,7 @@ export async function personalSign(
 
             if (valid.result) {
               resolve({ sig: result });
-              return
+              return;
             }
 
             const walletValid: any = await contractWalletValidate(
@@ -575,7 +603,7 @@ export async function personalSign(
 
             if (walletValid.result) {
               resolve({ sig: result });
-              return
+              return;
             }
 
             const walletValid2: any = await contractWalletValidate2(
@@ -587,21 +615,28 @@ export async function personalSign(
 
             if (walletValid2.result) {
               resolve({ sig: result });
-              return
+              return;
             }
 
-            if(accountId){
+            if (accountId) {
               myLog("before fcWalletValid accountId:", valid);
-              const fcValid = await fcWalletValid( web3,
+              const fcValid = await fcWalletValid(
+                web3,
                 account,
                 msg,
-                result,accountId,chainId)
-              if (fcValid.result){
-                resolve({ sig: result ,counterFactualInfo:fcValid.counterFactualInfo});
-                return
+                result,
+                accountId,
+                chainId
+              );
+              if (fcValid.result) {
+                resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+                return;
               }
             }
-            
+
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,
@@ -614,7 +649,6 @@ export async function personalSign(
             } else {
               resolve({ error: "myKeyValid sig at last!" });
             }
-
           } else {
             resolve({ error: "personalSign last:" + err });
           }
@@ -626,37 +660,47 @@ export async function personalSign(
   });
 }
 
-
-export async function fcWalletValid(web3: any,
-                                    account: string,
-                                    msg: string,
-                                    result: any,
-                                    accountId:number, chainId:ChainId,
-                                    counterFactualInfo?:CounterFactualInfo): Promise<{
-  counterFactualInfo?:CounterFactualInfo,error?:any,result?:boolean }> {
+export async function fcWalletValid(
+  web3: any,
+  account: string,
+  msg: string,
+  result: any,
+  accountId: number,
+  chainId: ChainId,
+  counterFactualInfo?: CounterFactualInfo
+): Promise<{
+  counterFactualInfo?: CounterFactualInfo;
+  error?: any;
+  result?: boolean;
+}> {
   const api = new BaseAPI({ chainId });
-  if(counterFactualInfo === undefined || !counterFactualInfo.walletOwner){
+  if (counterFactualInfo === undefined || !counterFactualInfo.walletOwner) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    counterFactualInfo = (await api.getCounterFactualInfo({ accountId })).counterFactualInfo;
+    counterFactualInfo = (await api.getCounterFactualInfo({ accountId }))
+      .counterFactualInfo;
   }
 
-  if(counterFactualInfo && counterFactualInfo.walletOwner){
-    let _result:string;
-    if(result.startsWith("0x")) {
-       _result = result.slice(0,132);
-    }else{
+  if (counterFactualInfo && counterFactualInfo.walletOwner) {
+    let _result: string;
+    if (result.startsWith("0x")) {
+      _result = result.slice(0, 132);
+    } else {
       _result = result;
     }
-    const valid: any = await ecRecover(web3, counterFactualInfo.walletOwner, msg, _result);
+    const valid: any = await ecRecover(
+      web3,
+      counterFactualInfo.walletOwner,
+      msg,
+      _result
+    );
     if (valid.result) {
-      myLog("fcWalletValid e:", result,counterFactualInfo);
-      return  {result, counterFactualInfo}
-    }else{
-      return { error:'valid walletOwner failed' }
+      myLog("fcWalletValid e:", result, counterFactualInfo);
+      return { result, counterFactualInfo };
+    } else {
+      return { error: "valid walletOwner failed" };
     }
-  }else{
-    return { error:'valid walletOwner failed' }
+  } else {
+    return { error: "valid walletOwner failed" };
   }
-
 }

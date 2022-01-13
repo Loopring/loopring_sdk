@@ -88,7 +88,7 @@ describe("Transfer test", function () {
           exchangeAddress: exchangeInfo.exchangeAddress,
           keyNonce: accInfo.nonce - 1,
           walletType: ConnectorNames.MetaMask,
-          chainId:ChainId.GOERLI,
+          chainId: ChainId.GOERLI,
         });
 
         console.log("eddsakey:", eddsakey.sk);
@@ -107,7 +107,7 @@ describe("Transfer test", function () {
   );
 
   it(
-    "full_transfer_case",
+    "submitInternalTransfer",
     async () => {
       try {
         // step 0. init web3
@@ -132,11 +132,11 @@ describe("Transfer test", function () {
 
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
-          address: addressWhitlisted,
-          exchangeAddress: exchangeInfo.exchangeAddress,
+          address: accInfo.owner,
+          exchangeAddress: loopring_exported_account.exchangeAddr,
           keyNonce: accInfo.nonce - 1,
-          walletType: ConnectorNames.MetaMask,
-          chainId:ChainId.GOERLI,
+          walletType: ConnectorNames.Unknown,
+          chainId: ChainId.GOERLI,
         });
 
         console.log("eddsakey:", eddsakey.sk);

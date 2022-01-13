@@ -1,4 +1,5 @@
 export enum LOOPRING_URLs {
+  GET_AVAILABLE_BROKER = "/api/v3/getAvailableBroker",
   GET_RELAYER_CURRENT_TIME = "/api/v3/timestamp",
   API_KEY_ACTION = "/api/v3/apiKey", // get update
   GET_NEXT_STORAGE_ID = "/api/v3/storageId",
@@ -62,10 +63,9 @@ export enum LOOPRING_URLs {
   GET_AMMPOOL_GAME_RANK = "/api/v2/game/rank",
   GET_AMMPOOL_GAME_USER_RANK = "/api/v2/game/user/rank",
   GET_LIQUIDITY_MINING = "/api/v2/sidecar/liquidityMining",
-  GET_DELEGATE_GET_CODE = "/api/v2/delegator/getCode",
+  GET_DELEGATE_GET_CODE = "/api/v3/delegator/getCode",
   GET_LIQUIDITY_MINING_USER_HISTORY = "/api/v2/sidecar/liquidityMiningUserHistory",
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
-
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
 
   SET_REFERRER = "/api/v3/refer",
@@ -82,13 +82,13 @@ export enum LOOPRING_URLs {
   GET_HEBAO_CONFIG = "api/wallet/v3/getAppConfigs",
   GET_WALLET_TYPE = "api/wallet/v3/wallet/type",
 
-  SUBMIT_APPROVE_SIGNATURE="/api/wallet/v3/submitApproveSignature",
+  SUBMIT_APPROVE_SIGNATURE = "/api/wallet/v3/submitApproveSignature",
   REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",
-  OFFICIAL_LOCK_OR_UNLOCK ="/api/wallet/v3/officialLockOrUnlock",
+  OFFICIAL_LOCK_OR_UNLOCK = "/api/wallet/v3/officialLockOrUnlock",
   RESOLVE_ENS = "/api/wallet/v3/resolveEns",
-  RESOLVE_NAME ="/api/wallet/v3/resolveName",
+  RESOLVE_NAME = "/api/wallet/v3/resolveName",
   SEND_META_TX = "/api/wallet/v3/sendMetaTx",
-  
+
   GET_ACCOUNT_SERVICES = "/api/v3/spi/getAccountServices",
 
   // NFT
@@ -107,6 +107,7 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",
   GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
   GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
+  GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
 
-  IPFS_META_URL= 'https://freezh.mypinata.cloud/ipfs/',
+  IPFS_META_URL = "https://freezh.mypinata.cloud/ipfs/",
 }
