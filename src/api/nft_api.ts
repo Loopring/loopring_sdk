@@ -21,6 +21,7 @@ import {
   IsApproveParam,
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
+import { values } from "lodash";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -215,7 +216,7 @@ export class NFTAPI extends BaseAPI {
    * approveNFT
    * @param web3
    * @param from  The address that deposits the funds to the exchange
-   * @param to  The address  deposits to
+   * @param to  The address deposits to
    * @param loopringAddress loopring exchange Address
    * @param tokenId: the tokenId
    * @param chainId
@@ -357,7 +358,7 @@ export class NFTAPI extends BaseAPI {
       web3,
       from,
       exchangeAddress,
-      amount.toString(),
+      "0",
       data,
       chainId,
       nonce,

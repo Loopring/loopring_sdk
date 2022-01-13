@@ -1,35 +1,46 @@
-import {BaseAPI} from "./base_api";
+import { BaseAPI } from "./base_api";
 
-import {LOOPRING_URLs} from "../defs/url_defs";
+import { LOOPRING_URLs } from "../defs/url_defs";
 
-import {OffchainFeeReqType, ReqMethod, SIG_FLAG, VipCatergory,} from "../defs/loopring_enums";
+import {
+  OffchainFeeReqType,
+  ReqMethod,
+  SIG_FLAG,
+  VipCatergory,
+} from "../defs/loopring_enums";
 
-import {ReqParams, VipFeeRateInfoMap,} from "../defs/loopring_defs";
-import {ChainId} from "../defs";
+import { ReqParams, VipFeeRateInfoMap } from "../defs/loopring_defs";
+import { ChainId } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 
-const GLOBAL_KEY ={
-  GOERLI : {
-    key: '6ZNfPWXa88yUKLUakKzr8CkzmEb2frzXKkWq6MC85V1QTxPdsp2w1bAaGxAg8CLw',
-    id:10373
+const GLOBAL_KEY = {
+  GOERLI: {
+    key: "6ZNfPWXa88yUKLUakKzr8CkzmEb2frzXKkWq6MC85V1QTxPdsp2w1bAaGxAg8CLw",
+    id: 10373,
   },
-  MAIN:{
-    key: '6ZNfPWXa88yUKLUakKzr8CkzmEb2frzXKkWq6MC85V1QTxPdsp2w1bAaGxAg8CLw',
-    id:22638
-  }
-}
-
+  MAIN: {
+    key: "re356TcrQ6KhlpkvWxP4UN0C4EqxQVV7ZjvLjunwTjaQPZ20ue2ZgClFeT7okpDQ",
+    id: 22638,
+  },
+};
 
 export class GlobalAPI extends BaseAPI {
-  public async getActiveFeeInfo(request: { accountId?:number }) {
-    const _request:loopring_defs.GetOffchainFeeAmtRequest = {
-      accountId: request.accountId?request.accountId : this.chainId === ChainId.MAINNET ? GLOBAL_KEY.MAIN.id : GLOBAL_KEY.GOERLI.id,
-      requestType: OffchainFeeReqType.UPDATE_ACCOUNT
-    }
+  public async getActiveFeeInfo(request: { accountId?: number }) {
+    const _request: loopring_defs.GetOffchainFeeAmtRequest = {
+      accountId: request.accountId
+        ? request.accountId
+        : this.chainId === ChainId.MAINNET
+        ? GLOBAL_KEY.MAIN.id
+        : GLOBAL_KEY.GOERLI.id,
+      requestType: OffchainFeeReqType.UPDATE_ACCOUNT,
+    };
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
       queryParams: _request,
-      apiKey: this.chainId === ChainId.MAINNET ? GLOBAL_KEY.MAIN.key : GLOBAL_KEY.GOERLI.key,
+      apiKey:
+        this.chainId === ChainId.MAINNET
+          ? GLOBAL_KEY.MAIN.key
+          : GLOBAL_KEY.GOERLI.key,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -50,14 +61,18 @@ export class GlobalAPI extends BaseAPI {
       gasPrice,
       raw_data,
     };
-
   }
-  public async getUserBalanceForFee(request: { accountId:number,tokens: string }){
-
+  public async getUserBalanceForFee(request: {
+    accountId: number;
+    tokens: string;
+  }) {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
       queryParams: request,
-      apiKey: this.chainId === ChainId.MAINNET ? GLOBAL_KEY.MAIN.key : GLOBAL_KEY.GOERLI.key,
+      apiKey:
+        this.chainId === ChainId.MAINNET
+          ? GLOBAL_KEY.MAIN.key
+          : GLOBAL_KEY.GOERLI.key,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -78,6 +93,4 @@ export class GlobalAPI extends BaseAPI {
       raw_data,
     };
   }
-
-
 }
