@@ -10,4 +10,4 @@ export * from "./contract_api";
 export * from "./sign/sign_tools";
 export * from "./nft_api";
 export * from "./global_api";
-
+export * from "./delegate_api";
