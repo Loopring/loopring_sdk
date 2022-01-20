@@ -1,8 +1,10 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####v1.5.7
+     1) 721 NFT URI function
 #### v1.5.6
-     submitDeployNFT
+     1) submitDeployNFT
 #### v1.5.2
      1) NFT deposit
 

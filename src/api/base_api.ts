@@ -585,8 +585,6 @@ export async function personalSign(
               return;
             }
 
-            // console.log('try to exc ecRecover !!!')
-
             const valid: any = await ecRecover(web3, account, msg, result);
 
             if (valid.result) {

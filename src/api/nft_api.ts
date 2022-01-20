@@ -39,6 +39,7 @@ export enum NFTMethod {
   setApprovalForAll = "setApprovalForAll",
   isApprovedForAll = "isApprovedForAll",
   uri = "uri",
+  tokenURI = "tokenURI",
   depositNFT = "depositNFT",
   balanceOf = "balanceOf",
   ownerOf = "ownerOf",
@@ -191,13 +192,26 @@ export class NFTAPI extends BaseAPI {
   }: ContractNFTMetaParam) {
     try {
       myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
-      let result: string = await this.callContractMethod(
+      let result: string;
+      result = await this.callContractMethod(
         web3,
-        NFTMethod.uri,
+        nftType === NFTType.ERC1155 ? NFTMethod.uri : NFTMethod.tokenURI,
         [web3.utils.hexToNumberString(nftId)],
         tokenAddress,
         nftType
       );
+      // if (nftType === NFTType.ERC1155) {
+      //
+      // } else {
+      //   result = await this.callContractMethod(
+      //     web3,
+      //     NFTMethod.tokenURI,
+      //     [web3.utils.hexToNumberString(nftId)],
+      //     tokenAddress,
+      //     nftType
+      //   );
+      // }
+
       result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
       return await fetch(result).then((response) => response.json());
