@@ -293,37 +293,6 @@ export async function signEip712WalletConnect(
   }
 }
 
-export async function signHebaoApproveContract(
-  web3: any,
-  typedData: any,
-  account: string,
-  walletType?: ConnectorNames
-) {
-  try {
-    const result = await web3.currentProvider.send("eth_signTypedData", [
-      JSON.stringify(typedData),
-      account,
-    ]);
-    let signType = "";
-    let sig = result;
-    const _isContract = await isContract(web3, account);
-    if (!_isContract) {
-      sig = formatSig(sig);
-      // const hash = TypedDataUtils.sign(typedData);
-      signType = recoverSignType(web3, account, JSON.stringify(typedData), sig);
-    }
-
-    return {
-      result: {
-        sig: result,
-        signType: signType,
-      },
-    };
-  } catch (e) {
-    return { error: e };
-  }
-}
-
 export async function getEcDSASig(
   web3: any,
   typedData: any,

@@ -106,7 +106,7 @@ export class Request {
       headers["X-API-KEY"] = params?.apiKey;
     }
 
-    let sig: any = undefined;
+    let sig: any = params.sigObj?.sig;
 
     if (params.sigFlag !== SIG_FLAG.NO_SIG && !params?.sigObj?.dataToSig) {
       throw Error("no dataToSig field!");

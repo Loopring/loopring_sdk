@@ -62,7 +62,7 @@ export interface ReqParams {
 
   sigObj?: {
     dataToSig?: any;
-
+    sig?: string;
     sigPatch?: string;
 
     PrivateKey?: string;
@@ -1140,6 +1140,16 @@ export interface GetEnsAddressRequest {
   fullName: string;
 }
 
+export interface SubmitApproveSignatureRequestWithPatch {
+  request: ApproveSignatureRequest;
+  guardian: Guardian;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
 /**
  * @param {string} approveRecordId
  * @param {string} securityNumber
@@ -1148,7 +1158,7 @@ export interface GetEnsAddressRequest {
  * @param {string} wallet
  * @param {string} signature
  */
-export interface SubmitApproveSignatureRequest {
+export interface ApproveSignatureRequest {
   approveRecordId: string;
   txAwareHash?: string; //currentRequest.messageHash,
   securityNumber: string;
@@ -2137,7 +2147,7 @@ export type Guardian = {
   type: keyof typeof HEBAO_META_TYPE;
   id: string;
   messageHash: string;
-  businessDataJson: string;
+  businessDataJson: any;
   signedRequest: any;
   createAt: number;
 };
@@ -2159,7 +2169,7 @@ export interface ApproveHebaoRequestV3WithPatch {
 }
 
 export interface RejectHebaoRequestV3WithPatch {
-  request: { approveRecordId: string };
+  request: { approveRecordId: string; signer: string };
   web3: Web3;
   address: string;
   chainId: ChainId;

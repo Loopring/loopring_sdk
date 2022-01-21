@@ -361,23 +361,6 @@ export async function signEip712(
   }
 }
 
-/**
- * @description sign message
- * @param web3
- * @param account
- * @param message
- * @returns {Promise}
- */
-export async function signMessage(
-  web3: any,
-  account: string,
-  pwd: string,
-  message: string
-) {
-  const hash = toHex(hashPersonalMessage(keccak256(message)));
-  return await sign(web3, account, pwd, hash);
-}
-
 export async function ecRecover2(
   account: string,
   message: string,

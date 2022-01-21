@@ -1,4 +1,4 @@
-import {BaseAPI, isContract, signMessage} from "./base_api";
+import { BaseAPI, isContract, personalSign } from "./base_api";
 
 import * as loopring_defs from "../defs/loopring_defs";
 import {
@@ -8,22 +8,38 @@ import {
   LockHebaoHebaoParam,
   Protector,
   ReqParams,
-  WalletType
+  TX_HASH_API,
+  WalletType,
 } from "../defs/loopring_defs";
 
-import {ReqMethod, SIG_FLAG} from "../defs/loopring_enums";
+import { ReqMethod, SIG_FLAG } from "../defs/loopring_enums";
 import api from "./ethereum/contracts";
 
-import {LOOPRING_URLs} from "../defs/url_defs";
-import {ChainId, HEBAO_META_TYPE, RESULT_INFO} from "../defs";
-import {signHebaoApproveContract} from "./sign/sign_tools";
-import {myLog} from "../utils/log_tools";
-import {sha256} from "ethereumjs-util";
-import {toHex} from "../utils";
-import {sendRawTx} from "./contract_api";
-
+import { LOOPRING_URLs } from "../defs/url_defs";
+import {
+  ChainId,
+  ConnectorNames,
+  HEBAO_META_TYPE,
+  RESULT_INFO,
+  SigSuffix,
+} from "../defs";
+import { getEcDSASig, GetEcDSASigType } from "./sign/sign_tools";
+import { sha256 } from "ethereumjs-util";
+import { toHex } from "../utils";
+import { sendRawTx } from "./contract_api";
+import { genErr } from "./user_api";
+import Web3 from "web3";
+import { myLog } from "../utils/log_tools";
 
 export class WalletAPI extends BaseAPI {
+  private returnTxHash<T extends TX_HASH_API>(
+    raw_data: T
+  ): T & { raw_data: T } {
+    return {
+      ...raw_data,
+      raw_data,
+    };
+  }
   /*
    * Get user assets
    */
@@ -58,19 +74,23 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-
-  private getApproveTypedData(chainId: ChainId,
-                              guardiaContractAddress: any, wallet: any, validUntil: any, newOwner: any) {
+  private getApproveTypedData(
+    chainId: ChainId,
+    guardiaContractAddress: any,
+    wallet: any,
+    validUntil: any,
+    newOwner: any
+  ) {
     const typedData = {
       types: {
         EIP712Domain: [
-          {name: "name", type: "string"},
-          {name: "version", type: "string"},
-          {name: "chainId", type: "uint256"},
-          {name: "verifyingContract", type: "address"},
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+          { name: "verifyingContract", type: "address" },
         ],
         recover: [
-          {name: "wallet", type: "address"},
+          { name: "wallet", type: "address" },
           {
             name: "validUntil",
             type: "uint256",
@@ -97,9 +117,9 @@ export class WalletAPI extends BaseAPI {
     return typedData;
   }
 
-  public rejectApproveHash(request: { approveRecordId: any, signer: any }) {
+  public rejectApproveHash(request: { approveRecordId: any; signer: any }) {
     const uri = encodeURIComponent(
-      `${this.baseUrl}/api/wallet/v3/rejectApproveSignature`
+      `${this.baseUrl + LOOPRING_URLs.REJECT_APPROVE_SIGNATURE}`
     );
     const params = encodeURIComponent(
       JSON.stringify({
@@ -108,7 +128,9 @@ export class WalletAPI extends BaseAPI {
       })
     );
     const message = `${ReqMethod.POST}&${uri}&${params}`;
-    return toHex(sha256(Buffer.from(message)).toString());
+    myLog("rejectApproveHash", message);
+    myLog("rejectApproveHash hash", toHex(sha256(Buffer.from(message))));
+    return toHex(sha256(Buffer.from(message)));
   }
 
   /**
@@ -116,93 +138,195 @@ export class WalletAPI extends BaseAPI {
    * @param approveRecordId  request.id
    */
   public async rejectHebao(req: loopring_defs.RejectHebaoRequestV3WithPatch) {
-    const {web3, address, request} = req;
-    const hash = this.rejectApproveHash({
+    const { web3, address, request, chainId } = req;
+    const signHash = this.rejectApproveHash({
       approveRecordId: request.approveRecordId,
-      signer: address,
+      signer: request.signer,
     });
-
-    return await signMessage(web3, address, '', hash);
-  }
-
-  public async approveHebao(req: loopring_defs.ApproveHebaoRequestV3WithPatch) {
-    // signMessage
-    const {request, web3, address, chainId, guardiaContractAddress, walletType} = req
-    const _isContract = await isContract(web3, address);
-    let result: any;
-    if (_isContract === true) {
-      myLog("isContract use approveHebaoForContract");
-      const wallet = request.signedRequest.wallet;
-      const validUntil = request.signedRequest.validUntil;
-      const obj = JSON.parse(request.businessDataJson);
-      const newOwner = obj.value.value.newOwner;
-      myLog("businessDataJson", obj);
-      const typedData = this.getApproveTypedData(
-        chainId,
-        guardiaContractAddress,
-        wallet,
-        validUntil,
-        newOwner
-      );
-      myLog("approveHebaoForContract typedData", typedData);
-      result = await signHebaoApproveContract(web3,
-        typedData,
-        address,
-        walletType,);
-      myLog("this.signer.signTypedDataForContract response", result);
-      myLog("approveHebaoForContract", result);
-    } else {
-      result = await signMessage(web3,
-        address,
-        "",
-        request.messageHash as string);
-      myLog("approveHebaoSignMessage", result);
-
-    }
-    const response = await this.submitApproveSignature({
-      approveRecordId: request.id,
-      txAwareHash: request.messageHash,
-      securityNumber: request.code,
-      signer: address,
-      signature: result.result.sig + result.result.signType
-    });
-    return response
-  }
-
-
-  public async submitApproveSignature<R extends any, T extends string>
-  (request: loopring_defs.SubmitApproveSignatureRequest): Promise<{
-    address: string | undefined;
-    error: RESULT_INFO | undefined,
-    raw_data: R
-  }> {
+    const result: any = await personalSign(
+      web3,
+      address,
+      "",
+      signHash,
+      ConnectorNames.Unknown,
+      chainId
+    );
+    const dataToSig: Map<string, any> = new Map();
+    dataToSig.set("approveRecordId", request.approveRecordId);
+    dataToSig.set("signer", address);
     const reqParams: ReqParams = {
-      url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
-      queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
+      queryParams: {},
+      method: ReqMethod.POST,
+      bodyParams: request,
+      apiKey: "",
+      sigFlag: SIG_FLAG.NO_SIG,
+      sigObj: {
+        sig: result?.sig.slice(0, 132),
+      },
     };
-    let error: RESULT_INFO | undefined
-    let address: T | undefined;
+
+    let error: RESULT_INFO | undefined;
+    let hash: string | undefined = undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
     } else {
-      address = raw_data.data as T;
+      hash = raw_data.data;
     }
     return {
-      address,
+      hash,
       error,
-      raw_data
+      raw_data,
     };
   }
 
+  public async signHebaoApproveWithoutDataStructure(
+    web3: Web3,
+    owner: string,
+    guardian: Guardian,
+    chainId: ChainId,
+    walletType: ConnectorNames
+  ) {
+    const result = await personalSign(
+      web3,
+      owner,
+      "",
+      guardian.messageHash,
+      walletType,
+      chainId
+    );
+    return result;
+  }
 
-  public async getAddressByENS<R extends any, T extends string>
-  (request: loopring_defs.GetEnsAddressRequest): Promise<{
+  public async signHebaoApproveWithDataStructureForContract(
+    web3: Web3,
+    owner: string,
+    guardian: Guardian,
+    chainId: ChainId,
+    newOwner = ""
+  ) {
+    const typedData = this.getApproveTypedData(
+      chainId,
+      guardian,
+      guardian.signedRequest.wallet,
+      guardian.signedRequest.validUntil,
+      newOwner
+    );
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      owner,
+      GetEcDSASigType.Contract,
+      chainId,
+      undefined,
+      "",
+      ConnectorNames.Unknown
+      // counterFactualInfo
+    );
+    return { sig: result.ecdsaSig };
+  }
+
+  public async submitApproveSignature<R extends any, T extends string>(
+    req: loopring_defs.SubmitApproveSignatureRequestWithPatch
+  ): Promise<{
+    hash: string | undefined;
+    error: RESULT_INFO | undefined;
+    raw_data: R;
+  }> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      guardian,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result: any = await this.signHebaoApproveWithoutDataStructure(
+        web3,
+        request.signer,
+        guardian,
+        chainId,
+        walletType
+      );
+      ecdsaSignature = result?.sig; //+ SigSuffix.Suffix03;
+    };
+    // metamask not import hw wallet.
+    if (walletType === ConnectorNames.MetaMask) {
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          const result: any = await this.signHebaoApproveWithoutDataStructure(
+            web3,
+            request.signer,
+            guardian,
+            chainId,
+            walletType
+          );
+          ecdsaSignature = result?.sig; //+ SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        return {
+          ...genErr(err),
+        } as any;
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.signer);
+
+      if (isContractCheck) {
+        const newOwner =
+          guardian.businessDataJson && guardian.businessDataJson.newOwner
+            ? guardian.businessDataJson.newOwner
+            : "";
+        const result = await this.signHebaoApproveWithDataStructureForContract(
+          web3,
+          request.signer,
+          guardian,
+          chainId,
+          newOwner
+        );
+        ecdsaSignature = result.sig;
+      } else {
+        await sigHW();
+      }
+    }
+    request.signature = ecdsaSignature;
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    let error: RESULT_INFO | undefined;
+    let hash: string | undefined = undefined;
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      error = raw_data?.resultInfo;
+    } else {
+      hash = raw_data.data;
+    }
+    return {
+      hash,
+      error,
+      raw_data,
+    };
+  }
+
+  public async getAddressByENS<R extends any, T extends string>(
+    request: loopring_defs.GetEnsAddressRequest
+  ): Promise<{
     address: string | undefined;
-    error: RESULT_INFO | undefined,
-    raw_data: R
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.RESOLVE_ENS,
@@ -210,7 +334,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     let address: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -221,18 +345,17 @@ export class WalletAPI extends BaseAPI {
     return {
       address,
       error,
-      raw_data
+      raw_data,
     };
   }
 
-  public async getWalletType<T extends any>
-  ({
-     wallet,
-     network = 'eThereum'
-   }: loopring_defs.GET_WALLET_TYPE): Promise<{
+  public async getWalletType<T extends any>({
+    wallet,
+    network = "eThereum",
+  }: loopring_defs.GET_WALLET_TYPE): Promise<{
     walletType: WalletType | undefined;
     error: RESULT_INFO | undefined;
-    raw_data: T
+    raw_data: T;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_WALLET_TYPE,
@@ -243,7 +366,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     let walletType: WalletType | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -254,15 +377,16 @@ export class WalletAPI extends BaseAPI {
     return {
       walletType,
       error,
-      raw_data
+      raw_data,
     };
   }
 
-  public async getEnsByAddress<R extends any, T extends string>
-  (request: loopring_defs.GetEnsNameRequest): Promise<{
+  public async getEnsByAddress<R extends any, T extends string>(
+    request: loopring_defs.GetEnsNameRequest
+  ): Promise<{
     ensName: string | undefined;
-    error: RESULT_INFO | undefined,
-    raw_data: R
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.RESOLVE_NAME,
@@ -270,7 +394,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     let ensName: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -281,22 +405,21 @@ export class WalletAPI extends BaseAPI {
     return {
       ensName,
       error,
-      raw_data
+      raw_data,
     };
   }
 
   public async lockHebaoWallet({
-                                 web3,
-                                 from,
-                                 value = 0,
-                                 contractAddress,
-                                 gasPrice,
-                                 gasLimit = 150000,
-                                 chainId = 1,
-                                 wallet,
-                                 sendByMetaMask = true,
-                               }: LockHebaoHebaoParam) {
-
+    web3,
+    from,
+    value = 0,
+    contractAddress,
+    gasPrice,
+    gasLimit = 150000,
+    chainId = 1,
+    wallet,
+    sendByMetaMask = true,
+  }: LockHebaoHebaoParam) {
     const data = api.Contracts.HeBao.encodeInputs("lock", {
       wallet,
     });
@@ -321,19 +444,19 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
     }
-    return {error, raw_data: raw_data.data};
+    return { error, raw_data: raw_data.data };
   }
 
-
-  public async sendMetaTx<R extends any, T extends any>
-  (request: loopring_defs.SendMetaTxRequest, apiKey: string)
-    : Promise<{
-    error: RESULT_INFO | undefined,
-    raw_data: R
+  public async sendMetaTx<R extends any, T extends any>(
+    request: loopring_defs.SendMetaTxRequest,
+    apiKey: string
+  ): Promise<{
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.SEND_META_TX,
@@ -342,20 +465,20 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       bodyParams: request,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
     }
-    return {error, raw_data};
+    return { error, raw_data };
   }
 
-
-  public async getGuardianApproveList<R extends any, T extends Guardian>
-  (request: loopring_defs.GetGuardianApproveListRequest): Promise<{
-    guardiansArray: Array<T>,
-    error: RESULT_INFO | undefined,
-    raw_data: R
+  public async getGuardianApproveList<R extends any, T extends Guardian>(
+    request: loopring_defs.GetGuardianApproveListRequest
+  ): Promise<{
+    guardiansArray: Array<T>;
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_GUARDIAN_APPROVE_LIST,
@@ -363,7 +486,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     let guardiansArray: Array<T> = [];
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -383,23 +506,24 @@ export class WalletAPI extends BaseAPI {
     return {
       guardiansArray,
       error,
-      raw_data
+      raw_data,
     };
   }
 
-
-// /api/wallet/v3/operationLogs?from=0x189a3c44a39c5ab22712543c0f62a9833bbe8df9&fromTime=0&to=&offset=0&network=ETHEREUM&statues=&hebaoTxType=&limit=20
-
+  // /api/wallet/v3/operationLogs?from=0x189a3c44a39c5ab22712543c0f62a9833bbe8df9&fromTime=0&to=&offset=0&network=ETHEREUM&statues=&hebaoTxType=&limit=20
 
   /**
    * getProtectors
    * @param {GetUserTradesRequest} request
    * @param apiKey
    */
-  public async getProtectors<R extends any, T extends Protector>(request: loopring_defs.GetProtectorRequest, apiKey: string): Promise<{
-    protectorArray: Array<T>,
-    error: RESULT_INFO | undefined,
-    raw_data: R
+  public async getProtectors<R extends any, T extends Protector>(
+    request: loopring_defs.GetProtectorRequest,
+    apiKey: string
+  ): Promise<{
+    protectorArray: Array<T>;
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_PROTECTORS,
@@ -408,7 +532,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     let protectorArray: Array<T> = [];
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -417,24 +541,28 @@ export class WalletAPI extends BaseAPI {
       protectorArray = raw_data?.data.map((p: any) => ({
         ens: p.protectEns,
         address: p.protectAddress,
-        lockStatus: p.walletStatus?.toUpperCase()
+        lockStatus: p.walletStatus?.toUpperCase(),
       }));
     }
     return {
       protectorArray,
       error,
-      raw_data
+      raw_data,
     };
   }
 
-
   /*
-    * Get user trade amount
-    */
-  public async getHebaoOperationLogs<R extends any, T extends HebaoOperationLog>(request: loopring_defs.HebaoOperationLogs): Promise<{
-    operationArray: Array<T>,
-    error: RESULT_INFO | undefined,
-    raw_data: R
+   * Get user trade amount
+   */
+  public async getHebaoOperationLogs<
+    R extends any,
+    T extends HebaoOperationLog
+  >(
+    request: loopring_defs.HebaoOperationLogs
+  ): Promise<{
+    operationArray: Array<T>;
+    error: RESULT_INFO | undefined;
+    raw_data: R;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_OPERATION_LOGS,
@@ -442,7 +570,7 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined
+    let error: RESULT_INFO | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       error = raw_data?.resultInfo;
