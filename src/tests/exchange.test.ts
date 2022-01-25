@@ -10,7 +10,8 @@ import {
   GetEthBalancesRequest,
   GetEthNonceRequest,
   GetWithdrawalAgentsRequest,
-  GetAccountServicesRequest, GetCounterFactualInfoRequest,
+  GetAccountServicesRequest,
+  GetCounterFactualInfoRequest,
 } from "../defs/loopring_defs";
 
 import { TradingInterval, VipCatergory } from "../defs/loopring_enums";
@@ -58,7 +59,7 @@ describe("ExchangeAPI test", function () {
     async () => {
       api = new ExchangeAPI({ chainId: ChainId.MAINNET });
 
-      const response = await api.getExchangeFeeInfo();
+      const response = await api.getExchangeFeeInfo<any>();
       console.log(response);
       console.log(
         response.raw_data[VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN]
@@ -67,13 +68,12 @@ describe("ExchangeAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-
   it(
     "getExchangeFeeInfo_Test",
     async () => {
       api = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
-      const response = await api.getExchangeFeeInfo();
+      const response = await api.getExchangeFeeInfo<any>();
       console.log(response);
       console.log(
         response.raw_data[VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN]
@@ -87,7 +87,7 @@ describe("ExchangeAPI test", function () {
     async () => {
       api = new ExchangeAPI({ chainId: ChainId.MAINNET });
 
-      const response = await api.getRecommendedMarkets();
+      const response = await api.getRecommendedMarkets<any>();
       console.log(response);
     },
     DEFAULT_TIMEOUT
@@ -155,19 +155,19 @@ describe("ExchangeAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-
-  it("getCounterFactualInfo",async () => {
+  it(
+    "getCounterFactualInfo",
+    async () => {
       const request: GetCounterFactualInfoRequest = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        accountId: '// TODO',// TODO
+        accountId: "// TODO", // TODO
       };
       const response = await api.getCounterFactualInfo(request);
       console.log(response);
     },
     DEFAULT_TIMEOUT
   );
-
 
   it(
     "getEthNonce",
@@ -208,7 +208,7 @@ describe("ExchangeAPI test", function () {
       const req: GetMarketTradesRequest = {
         market: "LRC-ETH_Not_Existed",
       };
-      const response = await api.getMarketTrades(req);
+      const response = await api.getMarketTrades<any>(req);
       console.log(response);
       console.log(response.raw_data.trades);
     },
@@ -221,7 +221,7 @@ describe("ExchangeAPI test", function () {
       const req: GetMarketTradesRequest = {
         market: "ETH-USDT",
       };
-      const response = await api.getMarketTrades(req);
+      const response = await api.getMarketTrades<any>(req);
       console.log(response);
       console.log(response.raw_data.trades);
     },
@@ -435,7 +435,7 @@ describe("ExchangeAPI test", function () {
   it(
     "getTokens",
     async () => {
-      const response = await api.getTokens();
+      const response = await api.getTokens<any>();
       console.log(response);
       console.log(response.raw_data[0]);
     },
@@ -583,8 +583,8 @@ describe("ExchangeAPI test", function () {
   it(
     "getAllMixTickers0",
     async () => {
-      const response = await api.getAllMixTickers();
-      console.log(response.tickMap);
+      const response: any = await api.getAllMixTickers();
+      console.log(response?.tickMap);
     },
     DEFAULT_TIMEOUT
   );
@@ -592,7 +592,7 @@ describe("ExchangeAPI test", function () {
   it(
     "getAllMixTickers1",
     async () => {
-      const response = await api.getAllMixTickers("AMM-LRC-ETH");
+      const response: any = await api.getAllMixTickers("AMM-LRC-ETH");
       console.log(response.tickMap);
     },
     DEFAULT_TIMEOUT
@@ -601,7 +601,7 @@ describe("ExchangeAPI test", function () {
   it(
     "getAllMixTickers2",
     async () => {
-      const response = await api.getAllMixTickers("AMM-LRC-ETH,LRC-ETH");
+      const response: any = await api.getAllMixTickers("AMM-LRC-ETH,LRC-ETH");
       console.log(response.tickMap);
     },
     DEFAULT_TIMEOUT
@@ -638,7 +638,7 @@ describe("ExchangeAPI test", function () {
         interval: TradingInterval.min15,
         limit: 96,
       };
-      const response = await api.getMixCandlestick(request);
+      const response = await api.getMixCandlestick<any>(request);
       console.log(response);
       console.log(response.raw_data.candlesticks.length);
       console.log(response.candlesticks.length);

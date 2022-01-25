@@ -40,7 +40,7 @@ describe("amm_calc", function () {
         const request: GetAmmPoolSnapshotRequest = {
           poolAddress,
         };
-        const response = await api.getAmmPoolSnapshot(request);
+        const response = await api.getAmmPoolSnapshot<any>(request);
         console.log(response.raw_data.pooled);
 
         const covertVal = sdk.toBig("1e+20").toFixed(0, 0);
@@ -76,7 +76,7 @@ describe("amm_calc", function () {
           poolAddress,
         };
 
-        const response = await api.getAmmPoolSnapshot(request);
+        const response = await api.getAmmPoolSnapshot<any>(request);
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
@@ -125,7 +125,7 @@ describe("amm_calc", function () {
           poolAddress,
         };
 
-        const response = await api.getAmmPoolSnapshot(request);
+        const response = await api.getAmmPoolSnapshot<any>(request);
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
@@ -172,7 +172,7 @@ describe("amm_calc", function () {
           poolAddress,
         };
 
-        const response = await api.getAmmPoolSnapshot(request);
+        const response = await api.getAmmPoolSnapshot<any>(request);
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
