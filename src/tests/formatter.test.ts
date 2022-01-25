@@ -186,6 +186,13 @@ describe("formatter test", function () {
   it("test toBig", async () => {
     expect(toBig("0x" + BUFFER)).toEqual(new BigNumber("0x" + BUFFER));
   });
+  it("test toBig ", async () => {
+    console.log(
+      toBig("426702000000000000000")
+        .div("1e" + 18)
+        .toString()
+    );
+  });
 
   it("test toBN", async () => {
     // expect(toBN("0x" + BIG_NUMBER)).toEqual(BIG_NUMBER);

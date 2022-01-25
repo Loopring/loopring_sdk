@@ -8,7 +8,6 @@ import {
   LockHebaoHebaoParam,
   Protector,
   ReqParams,
-  TX_HASH_API,
   WalletType,
 } from "../defs/loopring_defs";
 
@@ -16,30 +15,15 @@ import { ReqMethod, SIG_FLAG } from "../defs/loopring_enums";
 import api from "./ethereum/contracts";
 
 import { LOOPRING_URLs } from "../defs/url_defs";
-import {
-  ChainId,
-  ConnectorNames,
-  HEBAO_META_TYPE,
-  RESULT_INFO,
-  SigSuffix,
-} from "../defs";
+import { ChainId, ConnectorNames, HEBAO_META_TYPE } from "../defs";
 import { getEcDSASig, GetEcDSASigType } from "./sign/sign_tools";
 import { sha256 } from "ethereumjs-util";
 import { toHex } from "../utils";
 import { sendRawTx } from "./contract_api";
-import { genErr } from "./user_api";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 
 export class WalletAPI extends BaseAPI {
-  private returnTxHash<T extends TX_HASH_API>(
-    raw_data: T
-  ): T & { raw_data: T } {
-    return {
-      ...raw_data,
-      raw_data,
-    };
-  }
   /*
    * Get user assets
    */
@@ -52,6 +36,12 @@ export class WalletAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
 
     const assetSeries: string[] = [];
     const timestampSeries: number[] = [];
@@ -166,17 +156,18 @@ export class WalletAPI extends BaseAPI {
       },
     };
 
-    let error: RESULT_INFO | undefined;
     let hash: string | undefined = undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       hash = raw_data.data;
     }
     return {
       hash,
-      error,
       raw_data,
     };
   }
@@ -231,7 +222,6 @@ export class WalletAPI extends BaseAPI {
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch
   ): Promise<{
     hash: string | undefined;
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const {
@@ -273,7 +263,7 @@ export class WalletAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         } as any;
       }
     } else {
@@ -305,18 +295,19 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    let error: RESULT_INFO | undefined;
     let hash: string | undefined = undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       hash = raw_data.data;
     }
     return {
       hash,
-      error,
       raw_data,
     };
   }
@@ -325,7 +316,6 @@ export class WalletAPI extends BaseAPI {
     request: loopring_defs.GetEnsAddressRequest
   ): Promise<{
     address: string | undefined;
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -334,17 +324,18 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     let address: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       address = raw_data.data as T;
     }
     return {
       address,
-      error,
       raw_data,
     };
   }
@@ -354,7 +345,6 @@ export class WalletAPI extends BaseAPI {
     network = "eThereum",
   }: loopring_defs.GET_WALLET_TYPE): Promise<{
     walletType: WalletType | undefined;
-    error: RESULT_INFO | undefined;
     raw_data: T;
   }> {
     const reqParams: ReqParams = {
@@ -366,17 +356,18 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     let walletType: WalletType | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       walletType = raw_data.data;
     }
     return {
       walletType,
-      error,
       raw_data,
     };
   }
@@ -385,7 +376,6 @@ export class WalletAPI extends BaseAPI {
     request: loopring_defs.GetEnsNameRequest
   ): Promise<{
     ensName: string | undefined;
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -394,17 +384,18 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     let ensName: T | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       ensName = raw_data.data as T;
     }
     return {
       ensName,
-      error,
       raw_data,
     };
   }
@@ -444,18 +435,19 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    let error: RESULT_INFO | undefined;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     }
-    return { error, raw_data: raw_data.data };
+    return { raw_data: raw_data.data };
   }
 
   public async sendMetaTx<R extends any, T extends any>(
     request: loopring_defs.SendMetaTxRequest,
     apiKey: string
   ): Promise<{
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -465,19 +457,20 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       bodyParams: request,
     };
-    let error: RESULT_INFO | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     }
-    return { error, raw_data };
+    return { raw_data };
   }
 
   public async getGuardianApproveList<R extends any, T extends Guardian>(
     request: loopring_defs.GetGuardianApproveListRequest
   ): Promise<{
     guardiansArray: Array<T>;
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -486,11 +479,13 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     let guardiansArray: Array<T> = [];
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       guardiansArray = raw_data?.data?.guardians.map((r: any) => ({
         ens: r.ens ? r.ens : "",
@@ -505,7 +500,6 @@ export class WalletAPI extends BaseAPI {
     }
     return {
       guardiansArray,
-      error,
       raw_data,
     };
   }
@@ -522,7 +516,7 @@ export class WalletAPI extends BaseAPI {
     apiKey: string
   ): Promise<{
     protectorArray: Array<T>;
-    error: RESULT_INFO | undefined;
+
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -532,11 +526,13 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     let protectorArray: Array<T> = [];
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     } else {
       protectorArray = raw_data?.data.map((p: any) => ({
         ens: p.protectEns,
@@ -546,7 +542,6 @@ export class WalletAPI extends BaseAPI {
     }
     return {
       protectorArray,
-      error,
       raw_data,
     };
   }
@@ -561,7 +556,6 @@ export class WalletAPI extends BaseAPI {
     request: loopring_defs.HebaoOperationLogs
   ): Promise<{
     operationArray: Array<T>;
-    error: RESULT_INFO | undefined;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -570,15 +564,16 @@ export class WalletAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    let error: RESULT_INFO | undefined;
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      error = raw_data?.resultInfo;
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
     }
     return {
       operationArray: raw_data.data as T[],
       raw_data,
-      error,
     };
   }
 
@@ -593,7 +588,12 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     // console.log({ raw_data });
 
     return {
@@ -614,7 +614,12 @@ export class WalletAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     const priceSeries: string[] = [];
     const timestampSeries: number[] = [];
 
@@ -648,7 +653,12 @@ export class WalletAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     const tokenPrices: loopring_defs.LoopringMap<number> = {};
 
     if (raw_data?.data instanceof Array) {

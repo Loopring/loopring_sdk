@@ -11,9 +11,7 @@ import Contracts from "./ethereum/contracts/Contracts";
 
 import Common from "@ethereumjs/common";
 
-import BN from "bn.js";
 import { myLog } from "../utils/log_tools";
-import BigNumber from "bignumber.js";
 
 export enum ERC20Method {
   Approve = "approve",

@@ -7,6 +7,7 @@ import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
 
 import { getEdDSASig, getEdDSASigWithPoseidon } from "./sign/sign_tools";
 import { sortObject } from "../utils/obj_tools";
+import { myLog } from "../utils/log_tools";
 
 /**
  *
@@ -168,7 +169,7 @@ export class Request {
       url: this.baseOptions.baseURL + urlPathStr,
     };
 
-    // console.log(optInOne)
+    // myLog(optInOne);
 
     return await this._axios.request(optInOne);
   }

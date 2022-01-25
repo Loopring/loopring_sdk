@@ -45,11 +45,13 @@ export class GlobalAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const gasPrice = parseInt(raw_data.gasPrice);
-
     const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {};
-
     if (raw_data?.fees instanceof Array) {
       raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
         fees[item.token] = item;
@@ -78,7 +80,11 @@ export class GlobalAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
       {};
 

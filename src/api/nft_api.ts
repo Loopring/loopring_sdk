@@ -161,6 +161,11 @@ export class NFTAPI extends BaseAPI {
         queryParams: { nftDatas: nftDatas.join(",") },
       };
       const raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
       const result = raw_data.reduce(
         (prev: { [key: string]: NFTTokenInfo }, item: any) => {
           prev[item.nftData] = item;

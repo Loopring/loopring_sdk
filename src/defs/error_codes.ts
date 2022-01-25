@@ -45,6 +45,7 @@ export enum LoopringErrorCode {
   CONTRACTNFT_BALANCE = 500002,
   CONTRACTNFT_IS_APPROVE = 500003,
   CONTRACTNFT_SET_APPROVE = 500004,
+  SIGN_COMMON = 600000,
 }
 
 export enum ConnectorError {
@@ -57,12 +58,10 @@ export enum ConnectorError {
 }
 
 export interface RESULT_INFO {
-  code: number;
-  msg: string;
+  code?: number;
+  msg?: string;
+  message?: string;
 }
 export type ERROR_INFO = {
   resultInfo: RESULT_INFO;
 };
-export type ErrorMsg = {
-  errMsg?: keyof typeof ConnectorError;
-} & Error;

@@ -1,52 +1,31 @@
+/* eslint-disable camelcase  */
+
 import { BaseAPI, isContract } from "./base_api";
 
-import { ConnectorError, ErrorMsg } from "../defs/error_codes";
-
 import {
+  RESULT_INFO,
   ReqMethod,
   SIG_FLAG,
   SigPatchField,
   TradeChannel,
-} from "../defs/loopring_enums";
-
-import { LOOPRING_URLs } from "../defs/url_defs";
-
-import { ConnectorNames, SigSuffix } from "../defs/web3_defs";
+  LOOPRING_URLs,
+  ConnectorNames,
+  SigSuffix,
+} from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
-import {
-  OriginTransferRequestV3,
-  TX_HASH_API,
-  TX_HASH_RESULT,
-} from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
 import { myLog } from "../utils/log_tools";
-
-export function genErr(err: Error): ErrorMsg {
-  if (!err || !err?.message) {
-    return new Error("unKnown");
-  }
-  for (const key in ConnectorError) {
-    if (
-      err?.message.search(
-        ConnectorError[key as keyof typeof ConnectorError]
-      ) !== -1
-    ) {
-      return { errMsg: key as keyof typeof ConnectorError, ...err };
-    }
-  }
-  return err;
-}
 
 export class UserAPI extends BaseAPI {
   /*
    * Get the ApiKey associated with the user's account.
    */
-  public async getUserApiKey(
+  public async getUserApiKey<R>(
     request: loopring_defs.GetUserApiKeyRequest,
     eddsaKey: string
-  ) {
+  ): Promise<{ raw_data: R; apiKey: string }> {
     const dataToSig: Map<string, any> = new Map();
 
     dataToSig.set("accountId", request.accountId);
@@ -64,7 +43,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const apiKey = raw_data["apiKey"];
 
     return {
@@ -77,11 +60,11 @@ export class UserAPI extends BaseAPI {
    * Change the ApiKey associated with the user's account.
    * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
    */
-  public async updateUserApiKey(
+  public async updateUserApiKey<R>(
     request: loopring_defs.UpdateUserApiKeyRequest,
     apiKey: string,
     eddsaKey: string
-  ) {
+  ): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = new Map();
 
     dataToSig.set("accountId", request.accountId);
@@ -99,7 +82,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       raw_data,
     };
@@ -111,10 +98,10 @@ export class UserAPI extends BaseAPI {
    * the order id can be initially fetched through the API and then managed locally.
    * Each new order id can be derived from adding 2 to the last one
    */
-  public async getNextStorageId(
+  public async getNextStorageId<R>(
     request: loopring_defs.GetNextStorageIdRequest,
     apiKey: string
-  ) {
+  ): Promise<{ raw_data: R; orderId: number; offchainId: number }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NEXT_STORAGE_ID,
       queryParams: request,
@@ -124,6 +111,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const { orderId, offchainId } = raw_data;
     return {
       orderId,
@@ -135,10 +127,10 @@ export class UserAPI extends BaseAPI {
   /*
    * Get the details of an order based on order hash.
    */
-  public async getOrderDetails(
+  public async getOrderDetails<R>(
     request: loopring_defs.GetOrderDetailsRequest,
     apiKey: string
-  ) {
+  ): Promise<{ raw_data: R; orderDetail: loopring_defs.OrderDetail }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
       queryParams: request,
@@ -147,20 +139,27 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const raw_data: loopring_defs.OrderDetail = (
-      await this.makeReq().request(reqParams)
-    ).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data;
 
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       orderDetail: raw_data,
       raw_data,
     };
   }
 
-  public async getOrders(
+  public async getOrders<R>(
     request: loopring_defs.GetOrdersRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    orders: loopring_defs.OrderDetail[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_MULTI_ORDERS,
       queryParams: request,
@@ -170,6 +169,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const totalNum: number = raw_data.totalNum;
     const orders: loopring_defs.OrderDetail[] = raw_data.orders;
 
@@ -227,11 +231,11 @@ export class UserAPI extends BaseAPI {
   /*
    * Cancel order using order hash or client-side ID.
    */
-  public async cancelOrder(
+  public async cancelOrder<R>(
     request: loopring_defs.CancelOrderRequest,
     PrivateKey: string,
     apiKey: string
-  ) {
+  ): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = new Map();
 
     dataToSig.set("accountId", request.accountId);
@@ -252,7 +256,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       raw_data,
     };
@@ -261,11 +269,11 @@ export class UserAPI extends BaseAPI {
   /*
    * Cancel multiple orders using order hashes
    */
-  public async cancelMultiOrdersByHash(
+  public async cancelMultiOrdersByHash<R>(
     request: loopring_defs.CancelMultiOrdersByHashRequest,
     PrivateKey: string,
     apiKey: string
-  ) {
+  ): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = new Map();
     dataToSig.set("accountId", request.accountId);
     dataToSig.set("orderHash", request.orderHash);
@@ -282,7 +290,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       raw_data,
     };
@@ -291,11 +303,11 @@ export class UserAPI extends BaseAPI {
   /*
    * Cancel multiple orders using clientOrderIds
    */
-  public async cancelMultiOrdersByCreditOrderId(
+  public async cancelMultiOrdersByCreditOrderId<R>(
     request: loopring_defs.CancelMultiOrdersByClientOrderIdRequest,
     PrivateKey: string,
     apiKey: string
-  ) {
+  ): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = new Map();
     dataToSig.set("accountId", request.accountId);
     dataToSig.set("clientOrderId", request.clientOrderId);
@@ -312,7 +324,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       raw_data,
     };
@@ -321,10 +337,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Returns a list Ethereum transactions from users for exchange account registration.
    */
-  public async getUserRegTxs(
+  public async getUserRegTxs<R>(
     request: loopring_defs.GetUserRegTxsRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userRegTxs: loopring_defs.UserRegTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_REG_TXS,
       queryParams: request,
@@ -334,9 +354,12 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userRegTxs: loopring_defs.UserRegTx[] = raw_data.transactions;
-
     return {
       totalNum: raw_data.totalNum,
       userRegTxs,
@@ -347,10 +370,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Returns a list Ethereum transactions from users for resetting exchange passwords.
    */
-  public async getUserPwdResetTxs(
+  public async getUserPwdResetTxs<R>(
     request: loopring_defs.GetUserPwdResetTxsRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userPwdResetTxs: loopring_defs.UserPwdResetTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_PWD_RESET_TXS,
       queryParams: request,
@@ -360,10 +387,13 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userPwdResetTxs: loopring_defs.UserPwdResetTx[] =
       raw_data.transactions;
-
     return {
       totalNum: raw_data.totalNum,
       userPwdResetTxs,
@@ -374,10 +404,13 @@ export class UserAPI extends BaseAPI {
   /*
    * Returns user's Ether and token balances on exchange.
    */
-  public async getUserBalances(
+  public async getUserBalances<R>(
     request: loopring_defs.GetUserBalancesRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
       queryParams: request,
@@ -387,7 +420,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
       {};
 
@@ -406,10 +443,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Returns user's deposit records.
    */
-  public async getUserDepositHistory(
+  public async getUserDepositHistory<R>(
     request: loopring_defs.GetUserDepositHistoryRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userDepositHistory: loopring_defs.UserDepositHistoryTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
       queryParams: request,
@@ -419,7 +460,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userDepositHistory:
@@ -431,10 +476,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user onchain withdrawal history.
    */
-  public async getUserOnchainWithdrawalHistory(
+  public async getUserOnchainWithdrawalHistory<R>(
     request: loopring_defs.GetUserOnchainWithdrawalHistoryRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userOnchainWithdrawalHistory: loopring_defs.UserOnchainWithdrawalHistoryTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.WITHDRAWALS_ACTION,
       queryParams: request,
@@ -444,6 +493,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userOnchainWithdrawalHistory:
@@ -455,10 +509,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user transfer list.
    */
-  public async getUserTransferList(
+  public async getUserTransferList<R>(
     request: loopring_defs.GetUserTransferListRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userTransfers: loopring_defs.UserTransferRecord[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TRANSFERS_LIST,
       queryParams: request,
@@ -468,7 +526,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userTransfers:
@@ -480,10 +542,15 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user txs
    */
-  public async getUserTxs(
+  public async getUserTxs<R>(
     request: loopring_defs.GetUserTxsRequest,
+
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userTxs: loopring_defs.UserTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TXS,
       queryParams: request,
@@ -493,7 +560,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userTxs: loopring_defs.UserTx[] = [];
 
     if (raw_data?.transactions instanceof Array) {
@@ -512,10 +583,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user trade history
    */
-  public async getUserTrades(
+  public async getUserTrades<R>(
     request: loopring_defs.GetUserTradesRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userTrades: loopring_defs.UserTrade[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TRADE_HISTORY,
       queryParams: request,
@@ -525,7 +600,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const userTrades: loopring_defs.UserTrade[] = [];
 
     if (raw_data?.trades instanceof Array) {
@@ -553,10 +632,13 @@ export class UserAPI extends BaseAPI {
    * deprecated
    * Returns the fee rate of users placing orders in specific markets
    */
-  public async getUserFeeRate(
+  public async getUserFeeRate<R>(
     request: loopring_defs.GetUserFeeRateRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo>;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_FEE_RATE,
       queryParams: request,
@@ -566,6 +648,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
 
     const userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> =
       {};
@@ -585,10 +672,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Returns the user order fee rate of users placing orders in specific markets
    */
-  public async getUserOrderFeeRate(
+  public async getUserOrderFeeRate<R>(
     request: loopring_defs.GetUserOrderFeeRateRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    feeRate: loopring_defs.FeeRateInfo;
+    gasPrice: number;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_ORDER_FEE_RATE,
       queryParams: request,
@@ -598,7 +689,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const gasPrice = parseInt(raw_data.gasPrice);
 
     return {
@@ -611,10 +706,16 @@ export class UserAPI extends BaseAPI {
   /*
    * Query current token minimum amount to place order based on users VIP level and max fee bips
    */
-  public async getMinimumTokenAmt(
+  public async getMinimumTokenAmt<R>(
     request: loopring_defs.GetMinimumTokenAmtRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount];
+    amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount>;
+    gasPrice: number;
+    cacheOverdueAt: any;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
       queryParams: request,
@@ -624,7 +725,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const gasPrice = parseInt(raw_data.gasPrice);
 
     const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] =
@@ -650,10 +755,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Query current fee amount
    */
-  public async getOffchainFeeAmt(
+  public async getOffchainFeeAmt<R>(
     request: loopring_defs.GetOffchainFeeAmtRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>;
+    gasPrice: number;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
       queryParams: request,
@@ -663,7 +772,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const gasPrice = parseInt(raw_data.gasPrice);
 
     const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {};
@@ -684,12 +797,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Query current NFT fee amount
    */
-
   //TODO：UT
-  public async getNFTOffchainFeeAmt(
+  public async getNFTOffchainFeeAmt<R>(
     request: loopring_defs.GetNFTOffchainFeeAmtRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>;
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NFT_OFFCHAIN_FEE_AMT,
       queryParams: request,
@@ -699,11 +814,13 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
 
-    // const gasPrice = parseInt(raw_data.gasPrice)
-    //
     const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {};
-    //
     if (raw_data?.fees instanceof Array) {
       raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
         fees[item.token] = item;
@@ -712,16 +829,6 @@ export class UserAPI extends BaseAPI {
 
     return {
       fees,
-      // gasPrice,
-      raw_data,
-    };
-  }
-
-  private returnTxHash<T extends TX_HASH_API>(
-    raw_data: T
-  ): T & { raw_data: T } {
-    return {
-      ...raw_data,
       raw_data,
     };
   }
@@ -730,10 +837,10 @@ export class UserAPI extends BaseAPI {
    * Submit offchain withdraw request
    */
 
-  public async submitOffchainWithdraw<T extends TX_HASH_API>(
+  public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -779,7 +886,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -831,18 +938,16 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Submit Internal Transfer request
    */
-  public async submitInternalTransfer<T extends TX_HASH_API>(
+  public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -888,7 +993,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -943,18 +1048,16 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Submit NFT Deploy request
    */
-  public async submitDeployNFT<T extends TX_HASH_API>(
+  public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -982,7 +1085,7 @@ export class UserAPI extends BaseAPI {
       const result = await sign_tools.signTransferWithoutDataStructure(
         web3,
         transfer.payerAddr,
-        transfer as OriginTransferRequestV3,
+        transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
         walletType,
         accountId
@@ -999,7 +1102,7 @@ export class UserAPI extends BaseAPI {
           const result = await sign_tools.signTransferWithDataStructure(
             web3,
             transfer.payerAddr,
-            transfer as OriginTransferRequestV3,
+            transfer as loopring_defs.OriginTransferRequestV3,
             chainId,
             accountId
           );
@@ -1007,7 +1110,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -1022,7 +1125,7 @@ export class UserAPI extends BaseAPI {
           await sign_tools.signTransferWithDataStructureForContract(
             web3,
             transfer.payerAddr,
-            transfer as OriginTransferRequestV3,
+            transfer as loopring_defs.OriginTransferRequestV3,
             chainId,
             accountId
           );
@@ -1032,7 +1135,7 @@ export class UserAPI extends BaseAPI {
           await sign_tools.signTransferWithDataStructureForContract(
             web3,
             transfer.payerAddr,
-            transfer as OriginTransferRequestV3,
+            transfer as loopring_defs.OriginTransferRequestV3,
             chainId,
             accountId,
             counterFactualInfo
@@ -1048,7 +1151,7 @@ export class UserAPI extends BaseAPI {
       transfer.counterFactualInfo = counterFactualInfo;
     }
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as OriginTransferRequestV3,
+      transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey
     );
     transfer.ecdsaSignature = ecdsaSignature;
@@ -1069,20 +1172,17 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    myLog("submitDeployNFT:", await this.makeReq().request(reqParams));
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Submit NFT Transfer request
    */
-  public async submitNFTInTransfer<T extends TX_HASH_API>(
+  public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -1127,7 +1227,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -1180,20 +1280,17 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Submit NFT Withdraw request
    */
-  public async submitNFTWithdraw<T extends TX_HASH_API>(
+  public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -1239,7 +1336,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -1292,18 +1389,16 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Submit NFT MINT request
    */
-  public async submitNFTMint<T extends TX_HASH_API>(
+  public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -1352,7 +1447,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -1388,7 +1483,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     }
@@ -1411,18 +1506,20 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+    return this.returnTxHash(raw_data);
   }
 
   /*
    * Returns User NFT deposit records.
    */
-  public async getUserNFTDepositHistory(
+  public async getUserNFTDepositHistory<R>(
     request: loopring_defs.GetUserNFTDepositHistoryRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTDepositHistory: loopring_defs.UserNFTDepositHistoryTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_DEPOSIT_HISTORY,
       queryParams: request,
@@ -1432,7 +1529,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userNFTDepositHistory:
@@ -1444,10 +1545,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get User NFT Withdrawal History.
    */
-  public async getUserNFTWithdrawalHistory(
+  public async getUserNFTWithdrawalHistory<R>(
     request: loopring_defs.GetUserNFTWithdrawalHistoryRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTWithdrawalHistory: loopring_defs.UserNFTWithdrawalHistoryTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
       queryParams: request,
@@ -1457,6 +1562,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userNFTWithdrawalHistory:
@@ -1468,10 +1578,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user NFT transfer list.
    */
-  public async getUserNFTTransferHistory(
+  public async getUserNFTTransferHistory<R>(
     request: loopring_defs.GetUserNFTTransferHistoryRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTTransfers: loopring_defs.UserNFTTransferHistoryTx[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
       queryParams: request,
@@ -1481,7 +1595,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userNFTTransfers:
@@ -1493,10 +1611,10 @@ export class UserAPI extends BaseAPI {
   /*
    * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
    */
-  public async updateAccount<T extends TX_HASH_API>(
+  public async updateAccount<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<TX_HASH_RESULT<T> | ErrorMsg> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld } = req;
     const { accountId, counterFactualInfo }: any = options
       ? options
@@ -1531,7 +1649,7 @@ export class UserAPI extends BaseAPI {
         }
       } catch (err) {
         return {
-          ...genErr(err),
+          ...this.genErr(err),
         };
       }
     } else {
@@ -1575,15 +1693,14 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return {
-      ...this.returnTxHash(raw_data),
-    };
+
+    return this.returnTxHash(raw_data);
   }
 
-  public async SetReferrer(
+  public async SetReferrer<R>(
     request: loopring_defs.SetReferrerRequest,
     eddsaKey: string
-  ) {
+  ): Promise<{ raw_data: R; result: any }> {
     const dataToSig: Map<string, any> = new Map();
 
     dataToSig.set("address", request.address);
@@ -1604,7 +1721,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       result: raw_data?.result,
       raw_data,
@@ -1613,10 +1734,14 @@ export class UserAPI extends BaseAPI {
 
   // Get users NFT balance, besides amount, it also includes tokenId and nftData
 
-  public async getUserNFTBalances(
+  public async getUserNFTBalances<R>(
     request: loopring_defs.GetUserNFTBalancesRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_BALANCES,
       queryParams: request,
@@ -1626,7 +1751,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
@@ -1634,9 +1763,9 @@ export class UserAPI extends BaseAPI {
     };
   }
 
-  public async getUserVIPAssets(
+  public async getUserVIPAssets<R>(
     request: loopring_defs.getUserVIPAssetsRequest
-  ) {
+  ): Promise<{ raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_VIP_ASSETS,
       queryParams: request,
@@ -1645,16 +1774,28 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       raw_data,
     };
   }
 
-  public async getUserVIPInfo(
+  public async getUserVIPInfo<R>(
     request: loopring_defs.GetUserVIPInfoRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    vipInfo: {
+      createdAt: number;
+      validTo: string;
+      org: any;
+      vipTag: any;
+    };
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_VIP_INFO,
       queryParams: request,
@@ -1664,7 +1805,11 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const vipInfo = {
       createdAt: raw_data.created_at,
       validTo: raw_data.valid_to,

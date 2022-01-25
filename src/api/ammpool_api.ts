@@ -1,4 +1,5 @@
-import {BaseAPI} from "./base_api";
+/* eslint-disable camelcase  */
+import { BaseAPI } from "./base_api";
 import {
   AmmPoolActivityRule,
   AmmPoolBalance,
@@ -33,13 +34,13 @@ import {
   TokenVolumeV3,
   UserAmmPoolTx,
   UserMiningInfo,
-} from "../defs/loopring_defs";
+} from "../defs";
 
-import {VALID_UNTIL} from "../defs/loopring_constants";
+import { VALID_UNTIL } from "../defs";
 
-import {AmmPoolActivityStatus, ReqMethod, SIG_FLAG, SortOrder,} from "../defs/loopring_enums";
+import { AmmPoolActivityStatus, ReqMethod, SIG_FLAG, SortOrder } from "../defs";
 
-import {LOOPRING_URLs} from "../defs/url_defs";
+import { LOOPRING_URLs } from "../defs";
 
 import * as sign_tools from "./sign/sign_tools";
 
@@ -47,7 +48,11 @@ export class AmmpoolAPI extends BaseAPI {
   /*
    * Returns the fee rate of users placing orders in specific markets
    */
-  public async getAmmPoolConf() {
+  public async getAmmPoolConf<R>(): Promise<{
+    raw_data: R;
+    ammpools: LoopringMap<AmmPoolInfoV3>;
+    pairs: LoopringMap<TokenRelatedInfo>;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_AMM_POOLS_CONF,
       method: ReqMethod.GET,
@@ -55,6 +60,11 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const ammpools: LoopringMap<AmmPoolInfoV3> = {};
 
     const pairs: LoopringMap<TokenRelatedInfo> = {};
@@ -63,10 +73,8 @@ export class AmmpoolAPI extends BaseAPI {
       raw_data.pools.forEach((item: any) => {
         const market: string = item.market;
         ammpools[market] = item;
-
-        let base = "";
-        let quote = "";
-
+        let base = "",
+          quote = "";
         const ind = market.indexOf("-");
         const ind2 = market.lastIndexOf("-");
         base = market.substring(ind + 1, ind2);
@@ -91,6 +99,11 @@ export class AmmpoolAPI extends BaseAPI {
         }
       });
     }
+    // if (raw_data.code) {
+    //   return {
+    //     ...raw_data,
+    //   };
+    // }
 
     return {
       ammpools,
@@ -101,7 +114,12 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolUserRewards(request: GetAmmUserRewardsRequest) {
+  public async getAmmPoolUserRewards<R>(
+    request: GetAmmUserRewardsRequest
+  ): Promise<{
+    raw_data: R;
+    ammUserRewardMap: AmmUserRewardMap;
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_AMMPOOL_USER_REWARDS,
@@ -109,8 +127,13 @@ export class AmmpoolAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const raw_data: AmmUserReward[] = (await this.makeReq().request(reqParams))
-      .data.data;
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
 
     const ammUserRewardMap: AmmUserRewardMap = {};
 
@@ -128,7 +151,13 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolGameRank(request: GetAmmPoolGameRankRequest) {
+  public async getAmmPoolGameRank<R>(
+    request: GetAmmPoolGameRankRequest
+  ): Promise<{
+    raw_data: R;
+    totalRewards: TokenVolumeV3[];
+    userRankList: GameRankInfo[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_AMMPOOL_GAME_RANK,
@@ -137,13 +166,17 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    const totalRewards: TokenVolumeV3[] = raw_data.data?.totalRewards
-      ? raw_data.data.totalRewards
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    const totalRewards: TokenVolumeV3[] = raw_data?.totalRewards
+      ? raw_data.totalRewards
       : [];
 
-    const userRankList: GameRankInfo[] = raw_data.data?.userRankList
-      ? raw_data.data.userRankList
+    const userRankList: GameRankInfo[] = raw_data?.userRankList
+      ? raw_data.userRankList
       : [];
 
     return {
@@ -155,10 +188,13 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolGameUserRank(
+  public async getAmmPoolGameUserRank<R>(
     request: GetAmmPoolGameUserRankRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    userRank: GameRankInfo;
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       apiKey,
@@ -168,12 +204,17 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+        msg: raw_data.resultInfo.message,
+      };
+    }
     const userRank: GameRankInfo = raw_data.data;
 
     return {
       userRank,
-      raw_data,
+      raw_data: raw_data.data,
     };
   }
 
@@ -189,7 +230,18 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolActivityRules() {
+  public async getAmmPoolActivityRules<R>(): Promise<{
+    raw_data: R;
+    activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule>;
+    activityDateMap: LoopringMap<{
+      AMM_MINING?: LoopringMap<AmmPoolActivityRule>;
+      ORDERBOOK_MINING?: LoopringMap<AmmPoolActivityRule>;
+      SWAP_VOLUME_RANKING?: LoopringMap<AmmPoolActivityRule>;
+    }>;
+    groupByRuleType: LoopringMap<AmmPoolActivityRule[]>;
+    groupByActivityStatus: LoopringMap<AmmPoolActivityRule[]>;
+    groupByRuleTypeAndStatus: LoopringMap<LoopringMap<AmmPoolActivityRule[]>>;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_AMM_ACTIVITY_RULES,
       method: ReqMethod.GET,
@@ -198,19 +250,26 @@ export class AmmpoolAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    let activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule> = {};
-    const activityDateMap: {
-      [key: number]: {
-        AMM_MINING?: LoopringMap<AmmPoolActivityRule>;
-        ORDERBOOK_MINING?: LoopringMap<AmmPoolActivityRule>;
-        SWAP_VOLUME_RANKING?: LoopringMap<AmmPoolActivityRule>;
-      }
-    } = {}
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+
+    let activityInProgressRules: LoopringMap<AmmPoolInProgressActivityRule> =
+      {};
+    const activityDateMap: LoopringMap<{
+      AMM_MINING?: LoopringMap<AmmPoolActivityRule>;
+      ORDERBOOK_MINING?: LoopringMap<AmmPoolActivityRule>;
+      SWAP_VOLUME_RANKING?: LoopringMap<AmmPoolActivityRule>;
+    }> = {};
     //{AMM_MINING:{},ORDERBOOK_MINING:{},SWAP_VOLUME_RANKING:{}}
 
     const groupByRuleType: LoopringMap<AmmPoolActivityRule[]> = {};
 
-    let groupByRuleTypeAndStatus: LoopringMap<LoopringMap<AmmPoolActivityRule[]>> = {};
+    let groupByRuleTypeAndStatus: LoopringMap<
+      LoopringMap<AmmPoolActivityRule[]>
+    > = {};
 
     const groupByActivityStatus: LoopringMap<AmmPoolActivityRule[]> = {};
 
@@ -222,44 +281,60 @@ export class AmmpoolAPI extends BaseAPI {
           currentTs < item.rangeFrom
             ? AmmPoolActivityStatus.NotStarted
             : currentTs >= item.rangeFrom && currentTs <= item.rangeTo
-              ? AmmPoolActivityStatus.InProgress
-              : AmmPoolActivityStatus.EndOfGame;
+            ? AmmPoolActivityStatus.InProgress
+            : AmmPoolActivityStatus.EndOfGame;
 
         item.status = status;
         if (status === AmmPoolActivityStatus.InProgress) {
-          const ruleType = activityInProgressRules[item.market] ?
-            [...activityInProgressRules[item.market].ruleType, item.ruleType]
-            : [item.ruleType]
+          const ruleType = activityInProgressRules[item.market]
+            ? [...activityInProgressRules[item.market].ruleType, item.ruleType]
+            : [item.ruleType];
           activityInProgressRules = {
             ...activityInProgressRules,
-            [item.market]: {...item, ruleType}
+            [item.market]: { ...item, ruleType },
           };
         }
-        groupByRuleType[item.ruleType] = [...(groupByRuleType[item.ruleType]
-          ? groupByRuleType[item.ruleType] : []), item];
-        groupByActivityStatus[status] = [...(groupByActivityStatus[status]
-          ? groupByActivityStatus[status] : []), item];
+        groupByRuleType[item.ruleType] = [
+          ...(groupByRuleType[item.ruleType]
+            ? groupByRuleType[item.ruleType]
+            : []),
+          item,
+        ];
+        groupByActivityStatus[status] = [
+          ...(groupByActivityStatus[status]
+            ? groupByActivityStatus[status]
+            : []),
+          item,
+        ];
         activityDateMap[item.rangeFrom] = {
-          ...activityDateMap[item.rangeFrom] ? activityDateMap[item.rangeFrom] : {},
+          ...(activityDateMap[item.rangeFrom]
+            ? activityDateMap[item.rangeFrom]
+            : {}),
           [item.ruleType]: {
-            ...(activityDateMap[item.rangeFrom] ?
-              (activityDateMap[item.rangeFrom][item.ruleType] ?
-                activityDateMap[item.rangeFrom][item.ruleType] : {}) : {}),
-            [item.market]: item
-          }
-        }
+            ...(activityDateMap[item.rangeFrom]
+              ? activityDateMap[item.rangeFrom][item.ruleType]
+                ? activityDateMap[item.rangeFrom][item.ruleType]
+                : {}
+              : {}),
+            [item.market]: item,
+          },
+        };
         groupByRuleTypeAndStatus = {
           ...groupByRuleTypeAndStatus,
           [item.ruleType]: {
-            ...(groupByRuleTypeAndStatus[item.ruleType] ? groupByRuleTypeAndStatus[item.ruleType] : {}),
+            ...(groupByRuleTypeAndStatus[item.ruleType]
+              ? groupByRuleTypeAndStatus[item.ruleType]
+              : {}),
             [status]: [
-              ...(groupByRuleTypeAndStatus[item.ruleType] ?
-                (groupByRuleTypeAndStatus[item.ruleType][status] ? groupByRuleTypeAndStatus[item.ruleType][status] : []) : []),
-              item
-            ]
-          }
+              ...(groupByRuleTypeAndStatus[item.ruleType]
+                ? groupByRuleTypeAndStatus[item.ruleType][status]
+                  ? groupByRuleTypeAndStatus[item.ruleType][status]
+                  : []
+                : []),
+              item,
+            ],
+          },
         };
-
       });
     }
 
@@ -275,7 +350,12 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmAssetHistory(request: GetAmmAssetRequest) {
+  public async getAmmAssetHistory<R>(request: GetAmmAssetRequest): Promise<{
+    raw_data: R;
+    poolAddress: string;
+    market: string;
+    dataSeries: any;
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_AMM_ASSET_HISTORY,
@@ -284,7 +364,11 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const poolAddress = raw_data.poolAddress;
     const market = raw_data.market;
     const dataSeries = raw_data.data;
@@ -299,7 +383,10 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolStats() {
+  public async getAmmPoolStats<R>(): Promise<{
+    raw_data: R;
+    ammPoolStats: LoopringMap<AmmPoolStat>;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_AMM_POOL_STATS,
       method: ReqMethod.GET,
@@ -307,10 +394,15 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+        msg: raw_data.resultInfo.message,
+      };
+    }
     const ammPoolStats: LoopringMap<AmmPoolStat> = {};
 
-    if (raw_data?.data instanceof Array) {
+    if (raw_data.data instanceof Array) {
       raw_data.data.forEach((item: AmmPoolStat) => {
         ammPoolStats[item.market] = item;
       });
@@ -324,7 +416,12 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolSnapshot(request: GetAmmPoolSnapshotRequest) {
+  public async getAmmPoolSnapshot<R>(
+    request: GetAmmPoolSnapshotRequest
+  ): Promise<{
+    raw_data: R;
+    ammPoolSnapshot: AmmPoolSnapshot;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_AMM_POOLS_SNAPSHOT,
       queryParams: request,
@@ -334,25 +431,25 @@ export class AmmpoolAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    let ammPoolSnapshot: AmmPoolSnapshot | undefined = undefined;
-    let error: any;
-
     if (raw_data?.resultInfo) {
-      error = raw_data?.resultInfo;
-    } else {
-      ammPoolSnapshot = raw_data;
+      return {
+        ...raw_data?.resultInfo,
+      };
     }
+    const ammPoolSnapshot: AmmPoolSnapshot = raw_data;
 
     return {
       ammPoolSnapshot,
-      error,
       raw_data,
     };
   }
 
   /*
    */
-  public async getAmmPoolBalances() {
+  public async getAmmPoolBalances<R>(): Promise<{
+    raw_data: R;
+    ammpoolsbalances: LoopringMap<AmmPoolBalance>;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_AMM_POOLS_BALANCES,
       method: ReqMethod.GET,
@@ -360,7 +457,11 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const ammpoolsbalances: LoopringMap<AmmPoolBalance> = {};
 
     if (raw_data instanceof Array) {
@@ -392,10 +493,13 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getLiquidityMining(
+  public async getLiquidityMining<R>(
     request: GetLiquidityMiningRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    rewards: RewardItem[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       apiKey,
@@ -405,27 +509,43 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
 
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     return {
       rewards: raw_data?.data ? (raw_data.data as RewardItem[]) : [],
-      resultInfo: raw_data.resultInfo,
+
       raw_data,
     };
   }
 
   /*
    */
-  public async getLiquidityMiningUserHistory(
+  public async getLiquidityMiningUserHistory<R>(
     request: GetLiquidityMiningUserHistoryRequest
-  ) {
+  ): Promise<{
+    raw_data: R;
+    userMiningInfos: UserMiningInfo[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
+
       url: LOOPRING_URLs.GET_LIQUIDITY_MINING_USER_HISTORY,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
 
     return {
       userMiningInfos: raw_data.data as UserMiningInfo[],
@@ -435,10 +555,14 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getUserAmmPoolTxs(
+  public async getUserAmmPoolTxs<R>(
     request: GetUserAmmPoolTxsRequest,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userAmmPoolTxs: UserAmmPoolTx[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       apiKey,
@@ -448,6 +572,11 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
 
     return {
       totalNum: raw_data.totalNum,
@@ -458,7 +587,11 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolTxs(request: GetAmmPoolTxsRequest) {
+  public async getAmmPoolTxs<R>(request: GetAmmPoolTxsRequest): Promise<{
+    raw_data: R;
+    totalNum: number;
+    transactions: AmmPoolTx[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_AMM_POOL_TXS,
@@ -468,10 +601,17 @@ export class AmmpoolAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
+
     let transactions = undefined;
 
-    if (raw_data?.data?.transactions) {
-      transactions = raw_data?.data?.transactions;
+    if (raw_data?.data.transactions) {
+      transactions = raw_data?.data.transactions;
     }
 
     return {
@@ -483,7 +623,11 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async getAmmPoolTrades(request: GetAmmPoolTradesRequest) {
+  public async getAmmPoolTrades<R>(request: GetAmmPoolTradesRequest): Promise<{
+    raw_data: R;
+    totalNum: number;
+    ammPoolTrades: AmmPoolTrade[];
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_AMM_POOL_TRADE_TXS,
@@ -492,7 +636,11 @@ export class AmmpoolAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       totalNum: raw_data.totalNum,
       ammPoolTrades: raw_data.transactions as AmmPoolTrade[],
@@ -502,11 +650,14 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async joinAmmPool(
+  public async joinAmmPool<R>(
     request: JoinAmmPoolRequest,
     patch: AmmPoolRequestPatch,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    joinAmmPoolResult: JoinAmmPoolResult;
+  }> {
     if (!request?.validUntil) request.validUntil = VALID_UNTIL;
 
     const reqParams: ReqParams = {
@@ -517,12 +668,16 @@ export class AmmpoolAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const {eddsaSig} = sign_tools.get_EddsaSig_JoinAmmPool(request, patch);
+    const { eddsaSig } = sign_tools.get_EddsaSig_JoinAmmPool(request, patch);
 
     request.eddsaSignature = eddsaSig;
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       joinAmmPoolResult: raw_data as JoinAmmPoolResult,
       raw_data,
@@ -531,11 +686,14 @@ export class AmmpoolAPI extends BaseAPI {
 
   /*
    */
-  public async exitAmmPool(
+  public async exitAmmPool<R>(
     request: ExitAmmPoolRequest,
     patch: AmmPoolRequestPatch,
     apiKey: string
-  ) {
+  ): Promise<{
+    raw_data: R;
+    exitAmmPoolResult: ExitAmmPoolResult;
+  }> {
     if (!request?.validUntil) request.validUntil = VALID_UNTIL;
 
     const reqParams: ReqParams = {
@@ -546,12 +704,16 @@ export class AmmpoolAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const {eddsaSig} = sign_tools.get_EddsaSig_ExitAmmPool(request, patch);
+    const { eddsaSig } = sign_tools.get_EddsaSig_ExitAmmPool(request, patch);
 
     request.eddsaSignature = eddsaSig;
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       exitAmmPoolResult: raw_data as ExitAmmPoolResult,
       raw_data,

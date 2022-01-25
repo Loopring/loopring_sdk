@@ -18,7 +18,12 @@ export class WsAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    const wsKey = raw_data["key"];
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    const wsKey = raw_data.key;
     return {
       wsKey,
       raw_data,

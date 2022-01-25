@@ -1,17 +1,15 @@
+/* eslint-disable camelcase  */
+
 import { BaseAPI } from "./base_api";
 
-import { LOOPRING_URLs } from "../defs/url_defs";
-
 import {
+  LOOPRING_URLs,
   SIG_FLAG,
   ReqMethod,
   Side,
   MarketStatus,
   VipCatergory,
   TradingInterval,
-} from "../defs/loopring_enums";
-
-import {
   ReqParams,
   TokenInfo,
   MarketTradeInfo,
@@ -37,12 +35,11 @@ import {
   GetWithdrawalAgentsRequest,
   GetAccountServicesRequest,
   VipFeeRateInfoMap,
-} from "../defs/loopring_defs";
-
-import {AccountInfo} from "../defs/account_defs";
+  AccountInfo,
+} from "../defs";
 
 import BigNumber from "bignumber.js";
-import { getBaseQuote } from "../utils/symbol_tools";
+import { getBaseQuote } from "../utils";
 
 const SEP = ",";
 
@@ -159,7 +156,11 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the relayer's current time in millisecond
    */
-  public async getRelayerCurrentTime() {
+  public async getRelayerCurrentTime<R>(): Promise<
+    {
+      raw_data: R;
+    } & R
+  > {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_RELAYER_CURRENT_TIME,
       method: ReqMethod.GET,
@@ -167,7 +168,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       ...raw_data,
       raw_data,
@@ -177,7 +182,11 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns Protocol Portrait
    */
-  public async getProtocolPortrait() {
+  public async getProtocolPortrait<R>(): Promise<
+    {
+      raw_data: R;
+    } & R
+  > {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_PROTOCOL_PORTRAIT,
       method: ReqMethod.GET,
@@ -185,7 +194,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       ...raw_data,
       raw_data,
@@ -195,7 +208,13 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns exchange fee info
    */
-  public async getExchangeFeeInfo() {
+  public async getExchangeFeeInfo<R>(): Promise<{
+    raw_data: R;
+    orderbookTradingFeesStablecoin: VipFeeRateInfoMap;
+    orderbookTradingFees: VipFeeRateInfoMap;
+    ammTradingFees: VipFeeRateInfoMap;
+    otherFees: { [key: string]: string };
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_EXCHANGE_FEEINFO,
       method: ReqMethod.GET,
@@ -203,7 +222,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       orderbookTradingFeesStablecoin: raw_data[
         VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN
@@ -219,7 +242,12 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getWithdrawalAgents(request: GetWithdrawalAgentsRequest) {
+  public async getWithdrawalAgents<R>(
+    request: GetWithdrawalAgentsRequest
+  ): Promise<{
+    raw_data: R;
+    supportTokenMap: { [key: string]: any };
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_WITHDRAWAL_AGENTS,
@@ -228,7 +256,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const supportTokenMap: { [key: string]: any } = {};
 
     if (raw_data && raw_data.length > 0) {
@@ -245,7 +277,10 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getRecommendedMarkets() {
+  public async getRecommendedMarkets<R>(): Promise<{
+    raw_data: R;
+    recommended: string[];
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_RECOMENDED_MARKETS,
       method: ReqMethod.GET,
@@ -253,7 +288,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     let recommended = [];
 
     if (raw_data?.recommended) {
@@ -273,7 +312,15 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the configurations of all supported markets (trading pairs)
    */
-  public async getMarkets(url: string = LOOPRING_URLs.GET_MARKETS) {
+  public async getMarkets<R>(url: string = LOOPRING_URLs.GET_MARKETS): Promise<{
+    markets: LoopringMap<MarketInfo>;
+    pairs: LoopringMap<TokenRelatedInfo>;
+    tokenArr: string[];
+    tokenArrStr: string;
+    marketArr: string[];
+    marketArrStr: string;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url,
       method: ReqMethod.GET,
@@ -281,7 +328,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const markets: LoopringMap<MarketInfo> = {};
 
     const pairs: LoopringMap<TokenRelatedInfo> = {};
@@ -336,9 +387,9 @@ export class ExchangeAPI extends BaseAPI {
       });
     }
 
-    const marketArr = Reflect.ownKeys(markets);
+    const marketArr: string[] = Reflect.ownKeys(markets) as string[];
 
-    const tokenArr = Reflect.ownKeys(pairs);
+    const tokenArr: string[] = Reflect.ownKeys(pairs) as string[];
 
     return {
       markets,
@@ -361,7 +412,21 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the configurations of all supported tokens, including Ether.
    */
-  public async getTokens() {
+  public async getTokens<R>(): Promise<{
+    tokenSymbolMap: LoopringMap<TokenInfo>;
+    tokenIdMap: LoopringMap<TokenInfo>;
+    tokenIdIndex: LoopringMap<string>;
+    tokenAddressMap: LoopringMap<TokenInfo>;
+
+    tokenSymbolArr: string[];
+    tokenSymbolArrStr: string;
+    tokenIdArr: string[];
+    tokenIdArrStr: string;
+    tokenAddressArr: string[];
+    tokenAddressArrStr: string;
+
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_TOKENS,
       method: ReqMethod.GET,
@@ -369,7 +434,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const tokenSymbolMap: LoopringMap<TokenInfo> = {};
     const tokenIdMap: LoopringMap<TokenInfo> = {};
     const tokenIdIndex: LoopringMap<string> = {};
@@ -389,16 +458,15 @@ export class ExchangeAPI extends BaseAPI {
       });
     }
 
-    const tokenSymbolArr = Reflect.ownKeys(tokenSymbolMap);
-    const tokenIdArr = Reflect.ownKeys(tokenIdMap);
-    const tokenAddressArr = Reflect.ownKeys(tokenAddressMap);
+    const tokenSymbolArr = Reflect.ownKeys(tokenSymbolMap) as string[];
+    const tokenIdArr = Reflect.ownKeys(tokenIdMap) as string[];
+    const tokenAddressArr = Reflect.ownKeys(tokenAddressMap) as string[];
 
     return {
       tokenSymbolMap,
       tokenIdMap,
       tokenIdIndex,
       tokenAddressMap,
-
       tokenSymbolArr,
       tokenSymbolArrStr: tokenSymbolArr.join(SEP),
       tokenIdArr,
@@ -442,7 +510,10 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the balances of all supported tokens, including Ether.
    */
-  public async getEthBalances(request: GetEthBalancesRequest) {
+  public async getEthBalances<R>(request: GetEthBalancesRequest): Promise<{
+    raw_data: R;
+    ethBalance: string;
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_ETH_BALANCES,
@@ -451,7 +522,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const ethBalance = raw_data.amount;
 
     return {
@@ -463,10 +538,13 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the balances of all supported tokens, including Ether.
    */
-  public async getTokenBalances(
+  public async getTokenBalances<R>(
     request: GetTokenBalancesRequest,
     tokens: LoopringMap<TokenInfo>
-  ) {
+  ): Promise<{
+    tokenBalances: LoopringMap<string>;
+    raw_data: R;
+  }> {
     const { tokenArray, token } = this.splitTokens(request.token, tokens);
 
     request.token = token;
@@ -479,7 +557,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const tokenBalances: LoopringMap<string> = {};
 
     if (raw_data?.amount instanceof Array) {
@@ -497,7 +579,13 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the allowances of all supported tokens
    */
-  public async getAllowances(request: GetAllowancesRequest, tokens: any) {
+  public async getAllowances<R>(
+    request: GetAllowancesRequest,
+    tokens: any
+  ): Promise<{
+    raw_data: R;
+    tokenAllowances: LoopringMap<string>;
+  }> {
     const { tokenArray, token } = this.splitTokens(request.token, tokens);
 
     request.token = token;
@@ -510,7 +598,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const tokenAllowances: LoopringMap<string> = {};
 
     if (raw_data?.allowances instanceof Array) {
@@ -528,7 +620,10 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Return various configurations of Loopring.io
    */
-  public async getExchangeInfo() {
+  public async getExchangeInfo<R>(): Promise<{
+    exchangeInfo: ExchangeInfo;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_EXCHANGE_INFO,
       method: ReqMethod.GET,
@@ -536,7 +631,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const exchangeInfo: ExchangeInfo = {
       ammExitFees: getFeeMap(raw_data.ammExitFees),
       chainId: raw_data.chainId,
@@ -556,17 +655,20 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getMixDepth(request: GetDepthRequest) {
-    return await this.getDepth(request, LOOPRING_URLs.GET_MIX_DEPTH);
+  public async getMixDepth<R>(request: GetDepthRequest) {
+    return await this.getDepth<R>(request, LOOPRING_URLs.GET_MIX_DEPTH);
   }
 
   /*
    * Returns the order book of a given trading pair.
    */
-  public async getDepth(
+  public async getDepth<R>(
     request: GetDepthRequest,
     url: string = LOOPRING_URLs.GET_DEPTH
-  ) {
+  ): Promise<{
+    depth: DepthData;
+    raw_data: R;
+  }> {
     if (request?.level === undefined) {
       request.level = 0;
     }
@@ -583,7 +685,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const timestamp = raw_data["timestamp"];
 
     const { asks, bids, mid_price } = getMidPrice({
@@ -616,18 +722,22 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getMixTicker(request: GetTickerRequest) {
-    return await this.getTicker(request, LOOPRING_URLs.GET_MIX_TICKER);
+  public async getMixTicker<R>(request: GetTickerRequest) {
+    return await this.getTicker<R>(request, LOOPRING_URLs.GET_MIX_TICKER);
   }
 
   /*
    * Gets a markets ticker.
    * Generally speaking, a ticker in Loopring consists in data from the market taken last 24Hours.
    */
-  public async getTicker(
+  public async getTicker<R>(
     request: GetTickerRequest,
     url: string = LOOPRING_URLs.GET_TICKER
-  ) {
+  ): Promise<{
+    tickMap: LoopringMap<TickerData>;
+    tickList: TickerData[];
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url,
       queryParams: request,
@@ -635,13 +745,18 @@ export class ExchangeAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    const raw_data = (await this.makeReq().request(reqParams)).data["tickers"];
-
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    const tickers = raw_data.ticker;
     const tickMap: LoopringMap<TickerData> = {};
     const tickList: TickerData[] = [];
 
-    if (raw_data instanceof Array) {
-      raw_data.forEach((item: any, ind: number, arr: any) => {
+    if (tickers instanceof Array) {
+      tickers.forEach((item: any, ind: number, arr: any) => {
         const open = parseFloat(item[4]);
         const close = parseFloat(item[7]);
 
@@ -688,35 +803,47 @@ export class ExchangeAPI extends BaseAPI {
   }
 
   public async getAllMixTickers(markets: string | undefined = undefined) {
+    let request: GetTickerRequest;
     if (!markets) {
-      const { marketArrStr } = await this.getMixMarkets();
-
-      markets = marketArrStr;
+      const result = await this.getMixMarkets();
+      if (result.marketArrStr) {
+        request = {
+          market: result.marketArrStr,
+        };
+      } else {
+        return result;
+      }
+    } else {
+      request = {
+        market: markets,
+      };
     }
-
-    const request: GetTickerRequest = {
-      market: markets,
-    };
 
     return this.getMixTicker(request);
   }
 
   public async getAllTickers(markets: string | undefined = undefined) {
+    let request: GetTickerRequest;
     if (!markets) {
-      const { marketArrStr } = await this.getMarkets();
-
-      markets = marketArrStr;
+      const result = await this.getMarkets();
+      if (result.marketArrStr) {
+        request = {
+          market: result.marketArrStr,
+        };
+      } else {
+        return result;
+      }
+    } else {
+      request = {
+        market: markets,
+      };
     }
-
-    const request: GetTickerRequest = {
-      market: markets,
-    };
 
     return this.getTicker(request);
   }
 
-  public async getMixCandlestick(request: GetCandlestickRequest) {
-    return await this.getCandlestick(
+  public async getMixCandlestick<R>(request: GetCandlestickRequest) {
+    return await this.getCandlestick<R>(
       request,
       LOOPRING_URLs.GET_MIX_CANDLESTICK
     );
@@ -725,10 +852,13 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Gets candlesticks.
    */
-  public async getCandlestick(
+  public async getCandlestick<R>(
     request: GetCandlestickRequest,
     url: string = LOOPRING_URLs.GET_CANDLESTICK
-  ) {
+  ): Promise<{
+    candlesticks: Candlestick[];
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url,
       queryParams: request,
@@ -737,7 +867,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     let tsStep = 60000;
 
     switch (request.interval) {
@@ -854,7 +988,7 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Fetches, for all the tokens supported by Loopring, their fiat price.
    */
-  public async getFiatPrice(request: GetFiatPriceRequest) {
+  public async getFiatPrice<R>(request: GetFiatPriceRequest) {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_FIAT_PRICE,
       queryParams: request,
@@ -863,7 +997,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const fiatPrices: LoopringMap<FiatPriceInfo> = {};
 
     if (raw_data?.prices instanceof Array) {
@@ -878,11 +1016,13 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-
   /*
-  * Fetches, for all the tokens supported by Loopring, their fiat price.
-  */
-  public async disableWithdrawTokenList() {
+   * Fetches, for all the tokens supported by Loopring, their fiat price.
+   */
+  public async disableWithdrawTokenList<R>(): Promise<{
+    raw_data: R;
+    disableWithdrawTokenList: any[];
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_IGNORE_WITHDRAW,
       method: ReqMethod.GET,
@@ -890,6 +1030,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const disableWithdrawTokenList = [...raw_data];
     return {
       disableWithdrawTokenList,
@@ -897,11 +1042,14 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-
   /*
    * Query trades with specified market
    */
-  public async getMarketTrades(request: GetMarketTradesRequest) {
+  public async getMarketTrades<R>(request: GetMarketTradesRequest): Promise<{
+    totalNum: number;
+    marketTrades: MarketTradeInfo[];
+    raw_data: R;
+  }> {
     if (request.limit === undefined) {
       request.limit = 20;
     }
@@ -914,7 +1062,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const marketTrades: MarketTradeInfo[] = [];
 
     if (raw_data?.trades instanceof Array) {
@@ -941,7 +1093,10 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns data associated with the user's exchange account.
    */
-  public async getAccount(request: GetAccountRequest) {
+  public async getAccount<R>(request: GetAccountRequest): Promise<{
+    accInfo: AccountInfo;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.ACCOUNT_ACTION,
       queryParams: request,
@@ -950,26 +1105,23 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    let accInfo: AccountInfo | undefined = undefined;
-    let error: any;
-
     if (raw_data?.resultInfo) {
-      error = raw_data?.resultInfo;
-    } else {
-      accInfo = raw_data as AccountInfo;
+      return {
+        ...raw_data?.resultInfo,
+      };
     }
-
+    const accInfo: AccountInfo = raw_data as AccountInfo;
     return {
       accInfo,
-      error,
       raw_data,
     };
   }
 
   /*
    */
-  public async getEthNonce(request: GetEthNonceRequest) {
+  public async getEthNonce<R>(
+    request: GetEthNonceRequest
+  ): Promise<{ nonce: number; raw_data: R }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_ETH_NONCE,
@@ -978,18 +1130,23 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    const nonce = raw_data?.nonce;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
-      nonce,
+      nonce: raw_data?.nonce,
       raw_data,
     };
   }
 
   /*
    */
-  public async getGasPrice() {
+  public async getGasPrice<R>(): Promise<{
+    gasPrice: number;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_GAS_PRICE,
       method: ReqMethod.GET,
@@ -997,6 +1154,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
 
     const gasPrice = raw_data?.price;
 
@@ -1008,7 +1170,10 @@ export class ExchangeAPI extends BaseAPI {
 
   /*
    */
-  public async getGasPriceRange() {
+  public async getGasPriceRange<R>(): Promise<{
+    gasPriceRanges: any;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_GAS_PRICE_RANGE,
       method: ReqMethod.GET,
@@ -1016,7 +1181,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     const gasPriceRanges = raw_data?.ranges;
 
     return {
@@ -1025,7 +1194,15 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getAccountServices(request: GetAccountServicesRequest) {
+  public async getAccountServices<R>(
+    request: GetAccountServicesRequest
+  ): Promise<{
+    register: any;
+    order: any;
+    joinAmm: any;
+    dAppTrade: any;
+    raw_data: R;
+  }> {
     const reqParams: ReqParams = {
       queryParams: request,
       url: LOOPRING_URLs.GET_ACCOUNT_SERVICES,
@@ -1034,7 +1211,11 @@ export class ExchangeAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       register: raw_data?.register,
       order: raw_data?.order,

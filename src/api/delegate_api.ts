@@ -12,7 +12,12 @@ export class DelegateAPI extends BaseAPI {
       bodyParams: { address },
     };
 
-    const code = (await this.makeReq().request(reqParams)).data;
-    return code;
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return raw_data;
   }
 }

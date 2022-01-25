@@ -34,7 +34,12 @@ export class WhitelistedUserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     return {
       raw_data,
     };
@@ -62,7 +67,12 @@ export class WhitelistedUserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+        msg: raw_data?.resultInfo.message,
+      };
+    }
     return {
       raw_data,
     };

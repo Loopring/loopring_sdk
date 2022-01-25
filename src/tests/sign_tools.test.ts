@@ -1,25 +1,30 @@
-import {ChainId, ConnectorNames, ExchangeAPI, generateKeyPair, genErr} from "..";
+import { ChainId, ConnectorNames, ExchangeAPI, generateKeyPair } from "..";
 
-import {loopring_exported_account as acc, web3 as web3_1} from "./utils";
+import { loopring_exported_account as acc, web3 as web3_1 } from "./utils";
 
 import Web3 from "web3";
+import { BaseAPI } from "../api/base_api";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 const TIMEOUT = 30000;
-
+let api: TextMocAPI;
+export class TextMocAPI extends BaseAPI {
+  public testGenErr(err: any) {
+    this.genErr(err);
+  }
+}
 describe("sign_tools", function () {
   beforeEach(async () => {
+    api = new TextMocAPI({ chainId: ChainId.GOERLI });
     return;
   }, TIMEOUT);
 
   it(
     "gen_Err",
     async () => {
-      const err = new Error(
-        "err: Not supported on this device"
-      );
-      console.log("genErr:", genErr(err));
+      const err = new Error("err: Not supported on this device");
+      console.log("genErr:", api.testGenErr(err));
     },
     TIMEOUT
   );
@@ -28,7 +33,7 @@ describe("sign_tools", function () {
     "gen_Err2",
     async () => {
       const err = new Error("err: User denied message signature");
-      console.log("genErr:", genErr(err));
+      console.log("genErr:", api.testGenErr(err));
     },
     TIMEOUT
   );
@@ -37,7 +42,7 @@ describe("sign_tools", function () {
     "gen_Err3",
     async () => {
       const err = new Error("err: User  message signature");
-      console.log("genErr:", genErr(err));
+      console.log("genErr:", api.testGenErr(err));
     },
     TIMEOUT
   );
@@ -45,11 +50,11 @@ describe("sign_tools", function () {
   it(
     "personalSign1",
     async () => {
-      const exchangeApi = new ExchangeAPI({chainId: ChainId.GOERLI});
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
       const addr = acc.address;
 
-      const {accInfo} = await exchangeApi.getAccount({owner: addr});
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
       console.log("acc:", accInfo);
 
@@ -59,7 +64,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
-        chainId:ChainId.GOERLI,
+        chainId: ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);
@@ -70,7 +75,7 @@ describe("sign_tools", function () {
   it(
     "personalSign2",
     async () => {
-      const exchangeApi = new ExchangeAPI({chainId: ChainId.GOERLI});
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
       const addr = "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079";
 
@@ -80,7 +85,7 @@ describe("sign_tools", function () {
       );
       const web3 = new Web3(provider);
 
-      const {accInfo} = await exchangeApi.getAccount({owner: addr});
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
       console.log("acc:", accInfo);
 
@@ -90,7 +95,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
-        chainId:ChainId.GOERLI,
+        chainId: ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);
@@ -101,7 +106,7 @@ describe("sign_tools", function () {
   it(
     "personalSign3",
     async () => {
-      const exchangeApi = new ExchangeAPI({chainId: ChainId.GOERLI});
+      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
       const addr = "0x8cdc4B6C1FA234AE54c53e56376359bFC497f2e6";
 
@@ -111,7 +116,7 @@ describe("sign_tools", function () {
       );
       const web3 = new Web3(provider);
 
-      const {accInfo} = await exchangeApi.getAccount({owner: addr});
+      const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
       console.log("acc:", accInfo);
 
@@ -121,7 +126,7 @@ describe("sign_tools", function () {
         exchangeAddress: acc.exchangeAddr,
         keyNonce: (accInfo?.keyNonce as number) - 1,
         walletType: ConnectorNames.MetaMask,
-        chainId:ChainId.GOERLI,
+        chainId: ChainId.GOERLI,
       });
 
       console.log("eddsaKey:", eddsaKey);

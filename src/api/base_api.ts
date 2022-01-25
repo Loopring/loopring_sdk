@@ -1,12 +1,15 @@
 import {
   ChainId,
+  ConnectorError,
   ConnectorNames,
   CounterFactualInfo,
   GetCounterFactualInfoRequest,
+  LoopringErrorCode,
   ReqMethod,
   ReqParams,
   RESULT_INFO,
   SIG_FLAG,
+  TX_HASH_API,
 } from "../defs";
 import { Request } from "./request";
 import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
@@ -29,6 +32,52 @@ import { LOOPRING_URLs } from "../defs/url_defs";
 export class BaseAPI {
   protected baseUrl = "";
   protected chainId: ChainId = ChainId.MAINNET;
+  protected genErr(err: Error): RESULT_INFO {
+    if (!err || !err?.message) {
+      return {
+        ...err,
+        msg: "unKnown",
+        code: LoopringErrorCode.SIGN_COMMON,
+      };
+    }
+    for (const key in ConnectorError) {
+      if (
+        err?.message.search(
+          ConnectorError[key as keyof typeof ConnectorError]
+        ) !== -1
+      ) {
+        return {
+          // errMsg: key as keyof typeof ConnectorError,
+          ...err,
+          msg: key as keyof typeof ConnectorError,
+          code: LoopringErrorCode.SIGN_COMMON,
+        };
+      }
+    }
+    return {
+      ...err,
+      msg: err && err.message ? err.message : "unKnown",
+      code: LoopringErrorCode.SIGN_COMMON,
+    };
+  }
+  protected returnTxHash<T extends TX_HASH_API>(
+    raw_data: T
+  ):
+    | (Omit<T, "resultInfo"> & { raw_data: Omit<T, "resultInfo"> })
+    | RESULT_INFO {
+    if (raw_data?.resultInfo) {
+      return {
+        msg: raw_data.resultInfo?.msg
+          ? raw_data.resultInfo?.msg
+          : raw_data?.resultInfo.message,
+        ...raw_data.resultInfo,
+      };
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    };
+  }
   private timeout: number;
 
   public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {

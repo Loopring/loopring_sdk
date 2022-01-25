@@ -13,6 +13,7 @@ import {
   AmmPoolSnapshot,
   GetLiquidityMiningRequest,
   GetLiquidityMiningUserHistoryRequest,
+  RESULT_INFO,
 } from "../defs";
 
 import { loopring_exported_account as acc } from "./utils";
@@ -41,30 +42,28 @@ describe("AmmpoolAPI test", function () {
   it(
     "getAmmPoolConf",
     async () => {
-      const { ammpools, pairs } = await api.getAmmPoolConf();
-      console.log(ammpools);
-      console.log(pairs);
+      const response = await api.getAmmPoolConf();
+      console.log(response.ammpools);
+      console.log(response.pairs);
     },
     DEFAULT_TIMEOUT
   );
 
   it(
-    "getAmmPoolUserRewards1",
+    "getAmmPoolUserRewards",
     async () => {
-      const response = await api.getAmmPoolUserRewards({
+      const response = await api.getAmmPoolUserRewards<any[]>({
         owner: acc.accountId,
       });
       console.log("getAmmPoolUserRewards:", response);
       console.log(
         "getAmmPoolUserRewards feeRewards:",
-        response.raw_data[0].feeRewards
+        response.ammUserRewardMap
       );
       console.log(
-        "getAmmPoolUserRewards extraRewards:",
-        response.raw_data[0].extraRewards
-      );
-      console.log(
-        "getAmmPoolUserRewards currentRewards:",
+        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        response.raw_data[0].feeRewards,
+        response.raw_data[0].extraRewards,
         response.raw_data[0].currentRewards
       );
     },
@@ -72,23 +71,21 @@ describe("AmmpoolAPI test", function () {
   );
 
   it(
-    "getAmmPoolUserRewards2",
+    "getAmmPoolUserRewards-LRC-ETH",
     async () => {
-      const response = await api.getAmmPoolUserRewards({
+      const response = await api.getAmmPoolUserRewards<any[]>({
         owner: acc.accountId,
         ammPoolMarkets: "AMM-LRC-ETH",
       });
       console.log("getAmmPoolUserRewards:", response);
       console.log(
         "getAmmPoolUserRewards feeRewards:",
-        response.raw_data[0].feeRewards
+        response.ammUserRewardMap
       );
       console.log(
-        "getAmmPoolUserRewards extraRewards:",
-        response.raw_data[0].extraRewards
-      );
-      console.log(
-        "getAmmPoolUserRewards currentRewards:",
+        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        response.raw_data[0].feeRewards,
+        response.raw_data[0].extraRewards,
         response.raw_data[0].currentRewards
       );
     },
@@ -96,23 +93,21 @@ describe("AmmpoolAPI test", function () {
   );
 
   it(
-    "getAmmPoolUserRewards3",
+    'getAmmPoolUserRewards-LRC-ETH_ETH-USDT"',
     async () => {
-      const response = await api.getAmmPoolUserRewards({
+      const response = await api.getAmmPoolUserRewards<any[]>({
         owner: acc.accountId,
         ammPoolMarkets: "AMM-LRC-ETH,AMM-ETH-USDT",
       });
       console.log("getAmmPoolUserRewards:", response);
       console.log(
         "getAmmPoolUserRewards feeRewards:",
-        response.raw_data[0].feeRewards
+        response.ammUserRewardMap
       );
       console.log(
-        "getAmmPoolUserRewards extraRewards:",
-        response.raw_data[0].extraRewards
-      );
-      console.log(
-        "getAmmPoolUserRewards currentRewards:",
+        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        response.raw_data[0].feeRewards,
+        response.raw_data[0].extraRewards,
         response.raw_data[0].currentRewards
       );
     },
@@ -173,17 +168,23 @@ describe("AmmpoolAPI test", function () {
   it(
     "getAmmPoolActivityRules_test",
     async () => {
-      const {activityInProgressRules,
+      const {
+        activityInProgressRules,
         activityDateMap,
         groupByRuleType,
         groupByActivityStatus,
         groupByRuleTypeAndStatus,
-        raw_data} = await api.getAmmPoolActivityRules();
-      console.log('activityInProgressRules',activityInProgressRules);
-      console.log( 'activityDateMap',activityDateMap);
-      console.log( 'groupByRuleType',groupByRuleType);
-      console.log( 'groupByActivityStatus',groupByActivityStatus);
-      console.log('groupByRuleTypeAndStatus',groupByRuleTypeAndStatus,JSON.stringify(groupByRuleTypeAndStatus));
+        raw_data,
+      } = await api.getAmmPoolActivityRules();
+      console.log("activityInProgressRules", activityInProgressRules);
+      console.log("activityDateMap", activityDateMap);
+      console.log("groupByRuleType", groupByRuleType);
+      console.log("groupByActivityStatus", groupByActivityStatus);
+      console.log(
+        "groupByRuleTypeAndStatus",
+        groupByRuleTypeAndStatus,
+        JSON.stringify(groupByRuleTypeAndStatus)
+      );
     },
     DEFAULT_TIMEOUT
   );
@@ -228,7 +229,7 @@ describe("AmmpoolAPI test", function () {
   );
 
   it(
-    "getLiquidityMiningUserHistory_OK",
+    "getLiquidityMiningUserHistory",
     async () => {
       const request: GetLiquidityMiningUserHistoryRequest = {
         accountId: acc.accountId,
@@ -274,7 +275,7 @@ describe("AmmpoolAPI test", function () {
     async () => {
       api = new AmmpoolAPI({ chainId: ChainId.MAINNET });
       const response = await api.getAmmPoolBalances();
-
+      console.log(response.ammpoolsbalances);
       console.log(response.ammpoolsbalances["AMM-LRC-ETH"].poolAddress);
       console.log(response.ammpoolsbalances["AMM-LRC-ETH"].pooled);
       console.log(response.ammpoolsbalances["AMM-LRC-ETH"].lp);
