@@ -207,7 +207,7 @@ describe("AmmpoolAPI test", function () {
       const request: GetAmmPoolSnapshotRequest = {
         poolAddress,
       };
-      const response = await api.getAmmPoolSnapshot(request);
+      const response = await api.getAmmPoolSnapshot<any>(request);
       console.log(response);
       console.log(response.raw_data.pooled);
     },
@@ -263,7 +263,7 @@ describe("AmmpoolAPI test", function () {
       const request: GetAmmPoolSnapshotRequest = {
         poolAddress,
       };
-      const response = await api.getAmmPoolSnapshot(request);
+      const response = await api.getAmmPoolSnapshot<any>(request);
       console.log(response);
       console.log(response.raw_data.pooled);
     },
@@ -290,7 +290,7 @@ describe("AmmpoolAPI test", function () {
       const request: GetAmmPoolTradesRequest = {
         ammPoolAddress: poolAddress,
       };
-      const response = await api.getAmmPoolTrades(request);
+      const response = await api.getAmmPoolTrades<any>(request);
       console.log(response);
       console.log(response.raw_data.trades[0]);
     },
@@ -322,7 +322,7 @@ describe("AmmpoolAPI test", function () {
         const request: GetUserAmmPoolTxsRequest = {
           accountId: acc.accountId,
         };
-        const response = await api.getUserAmmPoolTxs(request, acc.apiKey);
+        const response = await api.getUserAmmPoolTxs<any>(request, acc.apiKey);
         console.log(response);
         console.log(response.raw_data.transactions[0]);
       } catch (reason) {
