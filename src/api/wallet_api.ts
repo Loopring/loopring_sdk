@@ -39,7 +39,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
 
@@ -161,7 +160,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       hash = raw_data.data;
@@ -301,7 +299,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       hash = raw_data.data;
@@ -329,7 +326,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       address = raw_data.data as T;
@@ -361,7 +357,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       walletType = raw_data.data;
@@ -389,7 +384,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       ensName = raw_data.data as T;
@@ -438,7 +432,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     return { raw_data: raw_data.data };
@@ -461,7 +454,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     return { raw_data };
@@ -484,7 +476,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       guardiansArray = raw_data?.data?.guardians.map((r: any) => ({
@@ -531,7 +522,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     } else {
       protectorArray = raw_data?.data.map((p: any) => ({
@@ -568,7 +558,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     return {
@@ -591,7 +580,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     // console.log({ raw_data });
@@ -617,7 +605,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     const priceSeries: string[] = [];
@@ -656,7 +643,6 @@ export class WalletAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
     const tokenPrices: loopring_defs.LoopringMap<number> = {};

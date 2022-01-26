@@ -101,7 +101,6 @@ export class NFTAPI extends BaseAPI {
     nftType = NFTType.ERC1155,
   }: UserNFTBalanceParam): Promise<{
     count?: string;
-    error?: { code: LoopringErrorCode; msg: string };
   }> {
     try {
       if (nftType === NFTType.ERC721) {
@@ -135,11 +134,9 @@ export class NFTAPI extends BaseAPI {
       }
     } catch (e) {
       return {
-        error: {
-          code: LoopringErrorCode.CONTRACTNFT_BALANCE,
-          msg: ConnectorError.CONTRACTNFT_BALANCE,
-          ...e,
-        },
+        ...e,
+        code: LoopringErrorCode.CONTRACTNFT_BALANCE,
+        message: ConnectorError.CONTRACTNFT_BALANCE,
       };
     }
   }
@@ -222,11 +219,9 @@ export class NFTAPI extends BaseAPI {
       return await fetch(result).then((response) => response.json());
     } catch (error) {
       return {
-        error: {
-          code: LoopringErrorCode.CONTRACTNFT_URI,
-          msg: ConnectorError.CONTRACTNFT_URI,
-          ...error,
-        },
+        code: LoopringErrorCode.CONTRACTNFT_URI,
+        message: ConnectorError.CONTRACTNFT_URI,
+        ...error,
       };
     }
   }
@@ -288,11 +283,9 @@ export class NFTAPI extends BaseAPI {
       );
     } catch (error) {
       return {
-        error: {
-          code: LoopringErrorCode.CONTRACTNFT_SET_APPROVE,
-          msg: ConnectorError.CONTRACTNFT_SET_APPROVE,
-          ...error,
-        },
+        ...error,
+        code: LoopringErrorCode.CONTRACTNFT_SET_APPROVE,
+        message: ConnectorError.CONTRACTNFT_SET_APPROVE,
       };
     }
   }
@@ -323,11 +316,9 @@ export class NFTAPI extends BaseAPI {
       return result;
     } catch (error) {
       return {
-        error: {
-          code: LoopringErrorCode.CONTRACTNFT_IS_APPROVE,
-          msg: ConnectorError.CONTRACTNFT_IS_APPROVE,
-          ...error,
-        },
+        ...error,
+        code: LoopringErrorCode.CONTRACTNFT_IS_APPROVE,
+        message: ConnectorError.CONTRACTNFT_IS_APPROVE,
       };
     }
   }

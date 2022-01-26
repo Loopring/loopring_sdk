@@ -560,7 +560,7 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    if (raw_data?.resultInfo) {
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
       };
@@ -600,7 +600,7 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    if (raw_data?.resultInfo) {
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
       };
@@ -1765,7 +1765,7 @@ export class UserAPI extends BaseAPI {
 
   public async getUserVIPAssets<R>(
     request: loopring_defs.getUserVIPAssetsRequest
-  ): Promise<{ raw_data: R }> {
+  ): Promise<{ raw_data: { data: R }; vipAsset: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_VIP_ASSETS,
       queryParams: request,
@@ -1780,6 +1780,7 @@ export class UserAPI extends BaseAPI {
       };
     }
     return {
+      vipAsset: raw_data.data,
       raw_data,
     };
   }

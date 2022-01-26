@@ -751,11 +751,11 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const tickers = raw_data.ticker;
+    const tickers = raw_data.tickers;
     const tickMap: LoopringMap<TickerData> = {};
     const tickList: TickerData[] = [];
 
-    if (tickers instanceof Array) {
+    if (tickers && tickers.length) {
       tickers.forEach((item: any, ind: number, arr: any) => {
         const open = parseFloat(item[4]);
         const close = parseFloat(item[7]);
@@ -819,7 +819,7 @@ export class ExchangeAPI extends BaseAPI {
       };
     }
 
-    return this.getMixTicker(request);
+    return await this.getMixTicker(request);
   }
 
   public async getAllTickers(markets: string | undefined = undefined) {
@@ -839,7 +839,7 @@ export class ExchangeAPI extends BaseAPI {
       };
     }
 
-    return this.getTicker(request);
+    return await this.getTicker(request);
   }
 
   public async getMixCandlestick<R>(request: GetCandlestickRequest) {

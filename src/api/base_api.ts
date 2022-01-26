@@ -36,7 +36,7 @@ export class BaseAPI {
     if (!err || !err?.message) {
       return {
         ...err,
-        msg: "unKnown",
+        message: "unKnown",
         code: LoopringErrorCode.SIGN_COMMON,
       };
     }
@@ -47,16 +47,14 @@ export class BaseAPI {
         ) !== -1
       ) {
         return {
-          // errMsg: key as keyof typeof ConnectorError,
           ...err,
-          msg: key as keyof typeof ConnectorError,
+          message: key as keyof typeof ConnectorError,
           code: LoopringErrorCode.SIGN_COMMON,
         };
       }
     }
     return {
       ...err,
-      msg: err && err.message ? err.message : "unKnown",
       code: LoopringErrorCode.SIGN_COMMON,
     };
   }
@@ -67,10 +65,10 @@ export class BaseAPI {
     | RESULT_INFO {
     if (raw_data?.resultInfo) {
       return {
-        msg: raw_data.resultInfo?.msg
+        ...raw_data.resultInfo,
+        message: raw_data.resultInfo?.msg
           ? raw_data.resultInfo?.msg
           : raw_data?.resultInfo.message,
-        ...raw_data.resultInfo,
       };
     }
     return {
@@ -151,10 +149,14 @@ export class BaseAPI {
   }
 }
 
-export async function walletLinkValid(account: string, msg: string, sig: any) {
+export async function walletLinkValid(
+  account: string,
+  message: string,
+  sig: any
+) {
   return new Promise((resolve) => {
     const signature = fromRpcSig(sig);
-    const hash = hashPersonalMessage(toBuffer(msg));
+    const hash = hashPersonalMessage(toBuffer(message));
     const recAddress = toHex(
       pubToAddress(ecrecover(hash, signature.v, signature.r, signature.s))
     );

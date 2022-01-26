@@ -1,12 +1,18 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####v1.6.3
+     1) Error format bug fix {code:number,message:string}
+
 ####v1.6.0
      1) Error format `{code:number, msg|message: string}`
+
 ####v1.5.7
      1) 721 NFT URI function
+
 #### v1.5.6
      1) submitDeployNFT
+
 #### v1.5.2
      1) NFT deposit
 

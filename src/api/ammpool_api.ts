@@ -207,7 +207,6 @@ export class AmmpoolAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-        msg: raw_data.resultInfo.message,
       };
     }
     const userRank: GameRankInfo = raw_data.data;
@@ -397,7 +396,6 @@ export class AmmpoolAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-        msg: raw_data.resultInfo.message,
       };
     }
     const ammPoolStats: LoopringMap<AmmPoolStat> = {};
@@ -512,8 +510,6 @@ export class AmmpoolAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-
-        msg: raw_data?.resultInfo.message,
       };
     }
     return {
@@ -543,7 +539,6 @@ export class AmmpoolAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
 
@@ -604,7 +599,6 @@ export class AmmpoolAPI extends BaseAPI {
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-        msg: raw_data?.resultInfo.message,
       };
     }
 
