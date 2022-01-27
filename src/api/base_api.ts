@@ -37,7 +37,7 @@ export class BaseAPI {
       return {
         ...err,
         message: "unKnown",
-        code: LoopringErrorCode.SIGN_COMMON,
+        code: LoopringErrorCode.SKD_UNKNOW,
       };
     }
     for (const key in ConnectorError) {
@@ -49,13 +49,13 @@ export class BaseAPI {
         return {
           ...err,
           message: key as keyof typeof ConnectorError,
-          code: LoopringErrorCode.SIGN_COMMON,
+          code: LoopringErrorCode.SKD_UNKNOW,
         };
       }
     }
     return {
       ...err,
-      code: LoopringErrorCode.SIGN_COMMON,
+      code: LoopringErrorCode.SKD_UNKNOW,
     };
   }
   protected returnTxHash<T extends TX_HASH_API>(

@@ -93,3 +93,35 @@ const response = await api.submitInternalTransfer(
   true
 );
 ```
+
+
+
+## Error code 
+
+### Error format
+```ts
+   /* 
+    * @param ErrorCode
+    * Service side code is from  100000 - 199999
+    * SDK side code is from  500000 - 599999
+    * 
+    * @param message
+    * Service side message show to devlopr debug
+    * 
+    * @param msg?
+    * UI level used, shw to customer, inculde information about error resson and solution 
+    */
+
+    export interface RESULT_INFO {
+      code?: number;
+      msg?: string;
+      message?: string;
+    }
+```
+> We3 Function or API, catch or get any error, will only return a `RESULT_INFO`
+> Loopring API current now have two common Error format,
+> From sdk it will convert v3/wallet follow dex rule.
+> -  v3/wallet: `api will always return a resultInfo object` 
+> -  other dex/v3: `api will return a resultInfo object only when catch error`
+>
+More detail please read code error_codes.ts
