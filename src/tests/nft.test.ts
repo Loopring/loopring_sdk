@@ -95,6 +95,25 @@ describe("nft test", function () {
     DEFAULT_TIMEOUT
   );
   it(
+    "getContractNFTMeta",
+    async () => {
+      const tokenAddress = "0x372c1a427ed867b666c99cfd6dbe7ec44c0bd6f7"; //loopring_exported_account.nftTokenAddress;
+      const _nftId = 55; // nftId;
+      const provider = new PrivateKeyProvider(
+        loopring_exported_account.privateKey,
+        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+      );
+      const web3 = new Web3(provider);
+      const result = await nft.getContractNFTMeta({
+        web3,
+        tokenAddress,
+        nftId: _nftId.toString(),
+        nftType: NFTType.ERC1155,
+      });
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
     "notApproveNFT",
     async () => {
       const nonce = await contract.getNonce(

@@ -21,7 +21,6 @@ import {
   IsApproveParam,
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
-import { values } from "lodash";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
