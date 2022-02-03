@@ -1496,7 +1496,7 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo;
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
+      url: LOOPRING_URLs.POST_NFT_MINT,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
