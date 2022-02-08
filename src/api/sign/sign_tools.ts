@@ -32,12 +32,7 @@ import {
 
 import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
-import {
-  formatSig,
-  isContract,
-  personalSign,
-  recoverSignType,
-} from "../base_api";
+import { personalSign } from "../base_api";
 import { CounterFactualInfo } from "../../defs";
 
 export enum GetEcDSASigType {
@@ -45,10 +40,6 @@ export enum GetEcDSASigType {
   WithoutDataStruct,
   Contract,
 }
-
-const keyMessage = "Sign this message to access Loopring Exchange: ";
-
-const transferMessage = "Sign this message to authorize Loopring Pay: ";
 
 const SNARK_SCALAR_FIELD = new BigInteger(
   "21888242871839275222246405745257275088548364400416034343698204186575808495617",
@@ -58,10 +49,10 @@ const SNARK_SCALAR_FIELD = new BigInteger(
 export interface KeyPairParams {
   web3: any;
   address: string;
-  exchangeAddress: string;
-  keyNonce: number;
+  // exchangeAddress: string;
+  // keyNonce: number;
   walletType: ConnectorNames;
-  keySeed?: string;
+  keySeed: string;
   chainId: ChainId;
   accountId?: number;
   counterFactualInfo?: CounterFactualInfo;
@@ -70,8 +61,8 @@ export interface KeyPairParams {
 export async function generateKeyPair({
   web3,
   address,
-  exchangeAddress,
-  keyNonce,
+  // exchangeAddress,
+  // keyNonce,
   walletType,
   keySeed,
   chainId,
@@ -82,9 +73,13 @@ export async function generateKeyPair({
     web3,
     address,
     "",
-    keySeed
-      ? keySeed
-      : keyMessage + exchangeAddress + " with key nonce: " + keyNonce,
+    keySeed,
+    // ? keySeed
+    // : KEY_MESSAGE.replace("${exchangeAddress}", exchangeAddress).replace(
+    //     "${nonce}",
+    //     keyNonce.toString()
+    //   ),
+    //keyMessage + exchangeAddress + " with key nonce: " + keyNonce,
     walletType,
     chainId,
     accountId,

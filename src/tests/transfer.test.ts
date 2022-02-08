@@ -19,6 +19,7 @@ const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
+import { BaseAPI } from "../api/base_api";
 
 let userApi: UserAPI;
 
@@ -77,16 +78,20 @@ describe("Transfer test", function () {
         if (!accInfo) {
           return;
         }
-
-        const { exchangeInfo } = await exchange.getExchangeInfo();
+        /*
+         * @replace loopring_exported_account.exchangeAddr  exchangeInfo.exchangeAddress
+         */
+        // const { exchangeInfo } = await exchange.getExchangeInfo();
 
         console.log("accInfo:", accInfo);
 
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
           address: accInfo.owner,
-          exchangeAddress: exchangeInfo.exchangeAddress,
-          keyNonce: accInfo.nonce - 1,
+          keySeed: BaseAPI.KEY_MESSAGE.replace(
+            "${exchangeAddress}",
+            loopring_exported_account.exchangeAddr
+          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
           walletType: ConnectorNames.MetaMask,
           chainId: ChainId.GOERLI,
         });
@@ -126,15 +131,20 @@ describe("Transfer test", function () {
           return;
         }
 
-        const { exchangeInfo } = await exchange.getExchangeInfo();
+        /*
+         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         */
+        // const { exchangeInfo } = await exchange.getExchangeInfo();
 
         console.log("accInfo:", accInfo);
 
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
           address: accInfo.owner,
-          exchangeAddress: loopring_exported_account.exchangeAddr,
-          keyNonce: accInfo.nonce - 1,
+          keySeed: BaseAPI.KEY_MESSAGE.replace(
+            "${exchangeAddress}",
+            loopring_exported_account.exchangeAddr
+          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
           walletType: ConnectorNames.Unknown,
           chainId: ChainId.GOERLI,
         });
@@ -157,7 +167,7 @@ describe("Transfer test", function () {
 
         // step 5 transfer
         const request3: OriginTransferRequestV3 = {
-          exchange: exchangeInfo.exchangeAddress,
+          exchange: loopring_exported_account.exchangeAddr,
           payerAddr: accInfo.owner,
           payerId: accInfo.accountId,
           payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
@@ -206,7 +216,10 @@ describe("Transfer test", function () {
 
         console.log("accInfo:", accInfo);
 
-        const { exchangeInfo } = await exchange.getExchangeInfo();
+        /*
+         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         */
+        // const { exchangeInfo } = await exchange.getExchangeInfo();
 
         // step 2 get apikey
         const request: GetUserApiKeyRequest = {
@@ -229,7 +242,7 @@ describe("Transfer test", function () {
 
         // step 4 transfer
         const request3: OriginTransferRequestV3 = {
-          exchange: exchangeInfo.exchangeAddress,
+          exchange: loopring_exported_account.exchangeAddr, //exchangeInfo.exchangeAddress,
           payerAddr: addressWhitlisted,
           payerId: accInfo.accountId,
           payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",

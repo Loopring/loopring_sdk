@@ -1,6 +1,6 @@
 import { ChainId, ConnectorNames, ExchangeAPI, generateKeyPair } from "..";
 
-import { loopring_exported_account as acc, web3 as web3_1 } from "./utils";
+import { loopring_exported_account, web3 as web3_1 } from "./utils";
 
 import Web3 from "web3";
 import { BaseAPI } from "../api/base_api";
@@ -52,17 +52,19 @@ describe("sign_tools", function () {
     async () => {
       const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
 
-      const addr = acc.address;
+      const addr = loopring_exported_account.address;
 
       const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-      console.log("acc:", accInfo);
+      console.log("loopring_exported_account:", accInfo);
 
       const eddsaKey = await generateKeyPair({
         web3: web3_1,
         address: addr,
-        exchangeAddress: acc.exchangeAddr,
-        keyNonce: (accInfo?.keyNonce as number) - 1,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          loopring_exported_account.exchangeAddr
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });
@@ -87,13 +89,15 @@ describe("sign_tools", function () {
 
       const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-      console.log("acc:", accInfo);
+      console.log("loopring_exported_account:", accInfo);
 
       const eddsaKey = await generateKeyPair({
         web3,
         address: addr,
-        exchangeAddress: acc.exchangeAddr,
-        keyNonce: (accInfo?.keyNonce as number) - 1,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          loopring_exported_account.exchangeAddr
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });
@@ -118,13 +122,15 @@ describe("sign_tools", function () {
 
       const { accInfo } = await exchangeApi.getAccount({ owner: addr });
 
-      console.log("acc:", accInfo);
+      console.log("loopring_exported_account:", accInfo);
 
       const eddsaKey = await generateKeyPair({
         web3,
         address: addr,
-        exchangeAddress: acc.exchangeAddr,
-        keyNonce: (accInfo?.keyNonce as number) - 1,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          loopring_exported_account.exchangeAddr
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });

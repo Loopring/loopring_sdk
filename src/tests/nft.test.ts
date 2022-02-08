@@ -15,10 +15,10 @@ import {
   GetUserApiKeyRequest,
   OffchainNFTFeeReqType,
   OriginDeployNFTRequestV3,
-  OriginTransferRequestV3,
 } from "../defs";
 import { UserAPI, WhitelistedUserAPI } from "../api";
 import { dumpError400 } from "../utils";
+import { BaseAPI } from "../api/base_api";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 const { exec } = require("child_process");
 
@@ -32,7 +32,7 @@ const gasLimit = 200000;
 
 //test should change the id number
 const nftId =
-  "0x000000000000000000000000000000000000000000000000000000000000008c";
+  "0x000000000000000000000000000000000000000000000000000000000000007d";
 describe("nft test", function () {
   beforeEach(() => {
     exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
@@ -235,8 +235,10 @@ describe("nft test", function () {
       const eddsaKey = await sign_tools.generateKeyPair({
         web3,
         address: accInfo.owner,
-        exchangeAddress: loopring_exported_account.exchangeAddr,
-        keyNonce: accInfo.nonce - 1,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          loopring_exported_account.exchangeAddr
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });

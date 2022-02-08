@@ -29,7 +29,13 @@ import Transaction from "@ethereumjs/tx";
 import ABI from "./ethereum/contracts";
 import { LOOPRING_URLs } from "../defs/url_defs";
 
+export const KEY_MESSAGE =
+  "Sign this message to access Loopring Exchange: " +
+  "${exchangeAddress}" +
+  " with key nonce: " +
+  "${nonce}";
 export class BaseAPI {
+  static KEY_MESSAGE: string = KEY_MESSAGE;
   protected baseUrl = "";
   protected chainId: ChainId = ChainId.MAINNET;
   protected genErr(err: Error): RESULT_INFO {
@@ -86,7 +92,9 @@ export class BaseAPI {
     } else {
       this.setChainId(ChainId.GOERLI);
     }
-
+    if (param.keySeed) {
+      BaseAPI.KEY_MESSAGE = param.keySeed;
+    }
     this.timeout = timeout;
   }
 
@@ -525,9 +533,14 @@ const getBaseUrlByChainId = (id: ChainId) => {
   return baseUrl;
 };
 
+/**
+ * @default chainId 1
+ * @default keySeed `Sign this message to access Loopring Exchange: ${exchangeAddress} with key nonce: ${nonce}`
+ */
 export interface InitParam {
   chainId?: ChainId;
   baseUrl?: string;
+  keySeed?: string;
 }
 
 export async function isContract(web3: any, address: string) {

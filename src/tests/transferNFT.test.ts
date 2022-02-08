@@ -21,6 +21,7 @@ import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
 import * as sign_tools from "../api/sign/sign_tools";
 import { OffchainNFTFeeReqType } from "../defs";
+import { BaseAPI } from "../api/base_api";
 
 let userApi: UserAPI;
 
@@ -87,8 +88,12 @@ describe("Transfer NFT test", function () {
       const eddsaKey = await sign_tools.generateKeyPair({
         web3,
         address: accInfo.owner,
-        exchangeAddress: loopring_exported_account.exchangeAddr,
-        keyNonce: accInfo.nonce - 1,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          loopring_exported_account.exchangeAddr
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+        // exchangeAddress: exchangeInfo.exchangeAddress,
+        // keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });

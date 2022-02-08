@@ -14,6 +14,7 @@ import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
 import * as sign_tools from "../api/sign/sign_tools";
 import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
+import { BaseAPI } from "../api/base_api";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -59,10 +60,14 @@ describe("Mint test", function () {
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
           address: accInfo.owner,
-          exchangeAddress: exchangeInfo.exchangeAddress,
-          keyNonce: accInfo.nonce - 1,
+          keySeed: BaseAPI.KEY_MESSAGE.replace(
+            "${exchangeAddress}",
+            exchangeInfo.exchangeAddress
+          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+          // exchangeAddress: exchangeInfo.exchangeAddress,
+          // keyNonce: accInfo.nonce - 1,
           walletType: ConnectorNames.MetaMask,
-          chainId:ChainId.GOERLI
+          chainId: ChainId.GOERLI,
         });
 
         console.log("eddsakey:", eddsakey.sk);

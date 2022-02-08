@@ -15,6 +15,7 @@ import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
 import * as sign_tools from "../api/sign/sign_tools";
 import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
+import { BaseAPI } from "../api/base_api";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -81,6 +82,9 @@ describe("UserAPI test", function () {
           return;
         }
 
+        /*
+         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         */
         const { exchangeInfo } = await exchange.getExchangeInfo();
 
         console.log("accInfo:", accInfo);
@@ -88,8 +92,12 @@ describe("UserAPI test", function () {
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
           address: loopring_exported_account.addressWhitlisted,
-          exchangeAddress: exchangeInfo.exchangeAddress,
-          keyNonce: accInfo.nonce - 1,
+          keySeed: BaseAPI.KEY_MESSAGE.replace(
+            "${exchangeAddress}",
+            exchangeInfo.exchangeAddress
+          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+          // exchangeAddress: exchangeInfo.exchangeAddress,
+          // keyNonce: accInfo.nonce,
           walletType: ConnectorNames.MetaMask,
           chainId: ChainId.GOERLI,
         });
@@ -161,6 +169,9 @@ describe("UserAPI test", function () {
 
         console.log("accInfo:", accInfo);
 
+        /*
+         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         */
         const { exchangeInfo } = await exchange.getExchangeInfo();
 
         // step 2 get apikey
@@ -237,14 +248,21 @@ describe("UserAPI test", function () {
         return;
       }
 
+      /*
+       * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+       */
       const { exchangeInfo } = await exchange.getExchangeInfo();
 
       console.log("accInfo:", accInfo);
       const eddsaKey = await sign_tools.generateKeyPair({
         web3,
         address: accInfo.owner,
-        exchangeAddress: exchangeInfo.exchangeAddress,
-        keyNonce: accInfo.nonce,
+        keySeed: BaseAPI.KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          exchangeInfo.exchangeAddress
+        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+        // exchangeAddress: exchangeInfo.exchangeAddress,
+        // keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });
