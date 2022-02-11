@@ -109,5 +109,5 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
 
-  IPFS_META_URL = "https://freezh.mypinata.cloud/ipfs/",
+  IPFS_META_URL = "https://ipfs.io/ipfs/",
 }

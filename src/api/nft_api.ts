@@ -21,6 +21,7 @@ import {
   IsApproveParam,
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
+import BN from "bn.js";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -201,18 +202,6 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType
       );
-      // if (nftType === NFTType.ERC1155) {
-      //
-      // } else {
-      //   result = await this.callContractMethod(
-      //     web3,
-      //     NFTMethod.tokenURI,
-      //     [web3.utils.hexToNumberString(nftId)],
-      //     tokenAddress,
-      //     nftType
-      //   );
-      // }
-
       result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
       return await fetch(result).then((response) => response.json());
@@ -287,6 +276,14 @@ export class NFTAPI extends BaseAPI {
         message: ConnectorError.CONTRACTNFT_SET_APPROVE,
       };
     }
+  }
+  public ipfsCid0ToNftID(cidV0Str: string): string {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const CID = require("cids");
+    const cid = new CID(cidV0Str);
+    const hashHex = Buffer.from(cid.multihash.slice(2)).toString("hex");
+    const hashBN = new BN(hashHex, 16);
+    return "0x" + hashBN.toString("hex");
   }
 
   /**

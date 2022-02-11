@@ -1,4 +1,5 @@
-import { LoopringErrorCode } from "../defs";
+import { DEFAULT_TIMEOUT, LoopringErrorCode } from "../defs";
+// import fetch from "node-fetch";
 import {
   addHexPrefix,
   clearHexPrefix,
@@ -44,6 +45,17 @@ describe("formatter test", function () {
     },
     TIMEOUT
   );
+  // it(
+  //   "META_JSON",
+  //   async () => {
+  //     const ipfs = "QmayP595tA9L7D9XYhY6FzkixXWDPFZ3Y8Q3c9TUq3hqns";
+  //     const value = await fetch(`https://localhost:8080/ipfs/${ipfs}`).then(
+  //       (response) => response.json()
+  //     );
+  //     console.log(`ipfsCid0ToNftID: meta: `, ipfs, value);
+  //   },
+  //   DEFAULT_TIMEOUT + 20000
+  // );
 
   it(
     "formatter1",

@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
@@ -89,6 +89,7 @@
     "@types/mocha": "^8.2.2",
     "@types/ms": "^0.7.31",
     "@types/node": "^12.0.0",
+    "@types/node-fetch": "^3.0.3",
     "@types/request": "^2.48.6",
     "@types/request-promise": "^4.1.48",
     "@typescript-eslint/eslint-plugin": "^4.6.0",

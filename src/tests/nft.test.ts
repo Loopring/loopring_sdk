@@ -216,6 +216,15 @@ describe("nft test", function () {
       "0xee354d81778a4c5a08fd9dbeb5cfd01a840a746d"
     );
   });
+  it("ipfsCid0ToNftID", () => {
+    const ipfs = "QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d";
+    console.log(
+      `ipfsCid0ToNftID: ipfs: `,
+      ipfs,
+      nft.ipfsCid0ToNftID("QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d")
+    );
+  });
+
   it(
     "submitDeployNFT",
     async () => {
