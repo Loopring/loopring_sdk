@@ -738,7 +738,7 @@ export function getNFTMintTypedData(
         { name: "toAccountId", type: "uint32" },
         { name: "nftType", type: "string" },
         { name: "amount", type: "uint96" },
-        { name: "nftId", type: "uint16" },
+        { name: "nftId", type: "uint256" },
         { name: "nftAddress", type: "address" },
         { name: "feeTokenID", type: "uint16" },
         { name: "maxFee", type: "uint96" },
