@@ -5,6 +5,7 @@ import {
   ConnectorError,
   LoopringErrorCode,
   NftData,
+  NFTFactory,
   NFTTokenInfo,
   ReqMethod,
   ReqParams,
@@ -375,6 +376,7 @@ export class NFTAPI extends BaseAPI {
   }
 
   /**
+   *
    * @function computeNFTAddress
    * @param owner {string} nftOwner address
    * @param nftFactory {string} Hash address
@@ -384,14 +386,20 @@ export class NFTAPI extends BaseAPI {
    */
   public computeNFTAddress({
     nftOwner,
-    nftFactory,
+    nftFactory = "0xDB42E6F6cB2A2eFcF4c638cb7A61AdE5beD82609",
     chainId = ChainId.MAINNET,
   }: {
     nftOwner: string;
-    nftFactory: string;
+    nftFactory?: string;
     chainId?: ChainId;
   }): { tokenAddress: string } {
     try {
+      if (!nftFactory) {
+        if (!chainId) {
+          chainId = ChainId.MAINNET;
+        }
+        nftFactory = NFTFactory[chainId];
+      }
       if (nftOwner.startsWith("0x")) {
         nftOwner = nftOwner.slice(2);
       }

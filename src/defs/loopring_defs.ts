@@ -2203,4 +2203,5 @@ export interface HebaoOperationLogs {
 export interface WalletType {
   isInCounterFactualStatus: boolean;
   isContract: boolean;
+  loopringWalletContractVersion: string;
 }
