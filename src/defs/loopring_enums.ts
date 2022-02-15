@@ -112,6 +112,13 @@ export enum UserTxTypes {
   FORCE_WITHDRAWAL = "force_withdrawal",
 }
 
+export enum UserNFTTxTypes {
+  DEPOSIT = "deposit",
+  TRANSFER = "transfer",
+  WITHDRAW = "onchain_withdrawal",
+  MINT = "mint",
+}
+
 export enum TransferType {
   transfer = "transfer",
   transfer_red = "transfer_red",
@@ -135,6 +142,14 @@ export enum TxType {
   TRANSFER = "TRANSFER",
   DEPOSIT = "DEPOSIT",
   OFFCHAIN_WITHDRAWAL = "OFFCHAIN_WITHDRAWAL",
+}
+
+export enum TxNFTType {
+  TRANSFER = "TRANSFER",
+  DEPOSIT = "DEPOSIT",
+  WITHDRAW = "WITHDRAW",
+  ALL = "ALL",
+  MINT = "MINT",
 }
 
 export enum AmmTxType {

@@ -107,6 +107,8 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",
   GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
   GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
+  GET_USER_NFT_TRANSACTION_HISTORY = "/api/v3/user/nft/transactions",
+  GET_USER_NFT_MINT_HISTORY = "/api/v3/user/nft/mints",
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
 
   IPFS_META_URL = "https://ipfs.io/ipfs/",

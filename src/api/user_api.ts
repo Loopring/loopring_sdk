@@ -11,6 +11,10 @@ import {
   LOOPRING_URLs,
   ConnectorNames,
   SigSuffix,
+  GetUserNFTMintHistoryRequest,
+  UserNFTMintHistoryTx,
+  GetUserNFTTxsRequest,
+  UserNFTTxsHistory,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -1604,6 +1608,72 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userNFTTransfers:
         raw_data.transfers as loopring_defs.UserNFTTransferHistoryTx[],
+      raw_data,
+    };
+  }
+
+  /**
+   * Get user NFT Mint list.
+   * @param request
+   * @param apiKey
+   */
+  public async getUserNFTMintHistory<R>(
+    request: loopring_defs.GetUserNFTMintHistoryRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTMints: loopring_defs.UserNFTMintHistoryTx[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_NFT_MINT_HISTORY,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      totalNum: raw_data?.totalNum,
+      userNFTMints: raw_data.transfers as loopring_defs.UserNFTMintHistoryTx[],
+      raw_data,
+    };
+  }
+
+  /*
+   * Get user All NFT Transaction list.
+   *
+   */
+  public async getUserNFTTransactionHistory<R>(
+    request: loopring_defs.GetUserNFTTxsRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTTxs: loopring_defs.UserNFTTxsHistory[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_NFT_TRANSACTION_HISTORY,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      totalNum: raw_data?.totalNum,
+      userNFTTxs: raw_data.transactions as loopring_defs.UserNFTTxsHistory[],
       raw_data,
     };
   }

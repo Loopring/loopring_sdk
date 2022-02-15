@@ -24,6 +24,7 @@ import {
   TransferType,
   TxStatus,
   TxType,
+  UserNFTTxTypes,
   UserTxTypes,
   WithdrawalTypes,
 } from "./loopring_enums";
@@ -1069,6 +1070,16 @@ export interface GetUserTxsRequest {
   types?: UserTxTypes[] | string;
 }
 
+export interface GetUserNFTTxsRequest {
+  accountId: number;
+  // tokenSymbol?: string;
+  start?: number;
+  end?: number;
+  offset?: number;
+  limit?: number;
+  types?: UserNFTTxTypes[] | string;
+}
+
 export interface UserTx {
   id: number;
   txType: string;
@@ -2037,6 +2048,19 @@ export type GetUserNFTTransferHistoryRequest = {
   // transferTypes?: string // transfer, transfer_red
 };
 
+export type GetUserNFTMintHistoryRequest = {
+  accountId: number;
+  nftData?: string;
+  start?: number;
+  startId?: number;
+  end?: number;
+  hashes?: string;
+  txStatus?: string;
+  limit?: number;
+  // offset?: number
+  // transferTypes?: string // transfer, transfer_red
+};
+
 export type GetUserNFTDepositHistoryRequest = {
   accountId: number;
   nftData?: string;
@@ -2101,10 +2125,16 @@ export interface UserNFTWithdrawalHistoryTx {
   distributeHash: string;
   fastWithdrawStatus: string;
   isFast: false;
-  blockId: number;
-  indexInBlock: number;
+  blockIdInfo: {
+    blockId: number;
+    indexInBlock: number;
+  };
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
 }
-
 export interface UserNFTTransferHistoryTx {
   id: string;
   requestId: number;
@@ -2122,8 +2152,87 @@ export interface UserNFTTransferHistoryTx {
   memo: string;
   payeeId: number;
   payeeAddress: string;
-  blockId: number;
-  indexInBlock: number;
+  blockIdInfo: {
+    blockId: number;
+    indexInBlock: number;
+  };
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
+}
+export type UserNFTMintHistoryTx = {
+  id: string;
+  requestId: number;
+  hash: string;
+  txHash: string;
+  accountId: number;
+  owner: string;
+  status: string;
+  nftData: string;
+  amount: string;
+  feeTokenSymbol: string;
+  feeAmount: string;
+  createdAt: number;
+  updatedAt: number;
+  memo: string;
+  minterId: number;
+  minterAddress: string;
+  blockIdInfo: {
+    blockId: number;
+    indexInBlock: number;
+  };
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
+};
+
+export interface UserNFTTxsHistory {
+  id: string;
+  requestId: number;
+  hash: string;
+  txHash: string;
+  accountId: number;
+  owner: string;
+  nftData: string;
+  amount: string;
+  feeTokenSymbol: string;
+  feeAmount: string;
+  createdAt: number;
+  updatedAt: number;
+  memo: string;
+  payeeId: number;
+  payeeAddress: string;
+  nftTxType: string;
+  symbol: string;
+  receiver: number;
+  status: TxStatus;
+  progress: string;
+  timestamp: number;
+  blockNum: number;
+  distributeHash: string;
+  receiverAddress: string;
+  senderAddress: string;
+  fastStatus: string;
+  recipient: string;
+  minterInfo: { accountId: number; minter: string; originalMinter: string };
+  // blockIdInfo: {
+  //   blockId: number;
+  //   indexInBlock: number;
+  // };
+  withdrawalInfo: {
+    distributeHash: string;
+    fastStatus: boolean;
+    recipient: string;
+  };
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
 }
 
 export type Protector = {
