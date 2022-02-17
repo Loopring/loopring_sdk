@@ -19,6 +19,7 @@ import {
 import { UserAPI, WhitelistedUserAPI } from "../api";
 import { dumpError400 } from "../utils";
 import { BaseAPI } from "../api/base_api";
+import { isEqual } from "lodash";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 const { exec } = require("child_process");
 
@@ -218,11 +219,19 @@ describe("nft test", function () {
   });
   it("ipfsCid0ToNftID", () => {
     const ipfs = "QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d";
-    console.log(
-      `ipfsCid0ToNftID: ipfs: `,
-      ipfs,
-      nft.ipfsCid0ToNftID("QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d")
-    );
+    const nftID =
+      "0x6b04cd991b972198cc63115c8abc3bf4ed73f07353c44271e940841b466a66f8";
+    console.log(`ipfsCid0ToNftID: ipfs: `, ipfs, nft.ipfsCid0ToNftID(ipfs));
+    expect(nft.ipfsCid0ToNftID(ipfs)).toBe(nftID);
+  });
+
+  it("ipfsNftIDToCid", () => {
+    const ipfs = "QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d";
+    const nftID =
+      "0x6b04cd991b972198cc63115c8abc3bf4ed73f07353c44271e940841b466a66f8";
+
+    console.log(`ipfsCid0ToNftID: nftID: `, nftID, nft.ipfsNftIDToCid(nftID));
+    expect(nft.ipfsNftIDToCid(nftID)).toBe(ipfs);
   });
 
   it(

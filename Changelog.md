@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####v1.7.2
+     1) NFT ACTION          
+     2) AMM Bug
+
 ####v1.6.6
      1) NFT MINT IPFS
 

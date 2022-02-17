@@ -40,6 +40,7 @@ import {
 
 import BigNumber from "bignumber.js";
 import { getBaseQuote } from "../utils";
+import { DelegateAPI } from "./delegate_api";
 
 const SEP = ",";
 

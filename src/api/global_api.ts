@@ -12,6 +12,7 @@ import {
 import { ReqParams, VipFeeRateInfoMap } from "../defs/loopring_defs";
 import { ChainId } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
+import { DelegateAPI } from "./delegate_api";
 
 const GLOBAL_KEY = {
   GOERLI: {

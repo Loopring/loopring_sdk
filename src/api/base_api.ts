@@ -92,9 +92,6 @@ export class BaseAPI {
     } else {
       this.setChainId(ChainId.GOERLI);
     }
-    if (param.keySeed) {
-      BaseAPI.KEY_MESSAGE = param.keySeed;
-    }
     this.timeout = timeout;
   }
 
@@ -540,7 +537,6 @@ const getBaseUrlByChainId = (id: ChainId) => {
 export interface InitParam {
   chainId?: ChainId;
   baseUrl?: string;
-  keySeed?: string;
 }
 
 export async function isContract(web3: any, address: string) {

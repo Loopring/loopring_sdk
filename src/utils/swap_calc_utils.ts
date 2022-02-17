@@ -478,7 +478,6 @@ export function updatePriceImpact_new(
   exceedDepth: boolean,
   depth: DepthData
 ) {
-
   let priceImpact = "0";
 
   if (isEmpty(reverseIn) || isEmpty(reverseOut) || isEmpty(feeBips)) {
@@ -794,6 +793,20 @@ export function ammPoolCalc(
   };
 }
 
+/**
+ *
+ * @param rawVal
+ * @param isAtoB
+ * @param slippageTolerance
+ * @param owner
+ * @param fees
+ * @param ammPoolSnapshot
+ * @param tokenMap
+ * @param idIdx
+ * @param coinAOffchainId
+ * @param coinBOffchainId
+ * @param rawValMatchForRawVal first time add to pool
+ */
 export function makeJoinAmmPoolRequest(
   rawVal: string,
   isAtoB: boolean,
@@ -804,7 +817,8 @@ export function makeJoinAmmPoolRequest(
   tokenMap: LoopringMap<TokenInfo>,
   idIdx: LoopringMap<string>,
   coinAOffchainId = 0,
-  coinBOffchainId = 0
+  coinBOffchainId = 0,
+  rawValMatchForRawVal?: string
 ) {
   const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0];
   const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1];
@@ -822,18 +836,26 @@ export function makeJoinAmmPoolRequest(
     .times(BIG10.pow(isAtoB ? baseToken.decimals : quoteToken.decimals))
     .toFixed(0, 0);
 
-  const { output, ratio } = ammPoolCalc(rawVal, isAtoB, coinA, coinB);
-
+  // eslint-disable-next-line prefer-const
+  let { output, ratio } = ammPoolCalc(rawVal, isAtoB, coinA, coinB);
+  let volLp;
+  if (output === "0" && rawValMatchForRawVal) {
+    output = fm
+      .toBig(rawValMatchForRawVal)
+      .times(BIG10.pow(isAtoB ? quoteToken.decimals : baseToken.decimals))
+      .toFixed(0, 0);
+    // ratio = fm.toBig("1");
+    volLp = "1";
+  } else {
+    const rest = BIG1.minus(fm.toBig(slippageTolerance));
+    volLp = fm
+      .toBig(ammPoolSnapshot.lp.volume)
+      .times(ratio)
+      .times(rest)
+      .toFixed(0, 0);
+  }
   const volA = isAtoB ? rawVal : output;
   const volB = isAtoB ? output : rawVal;
-
-  const rest = BIG1.minus(fm.toBig(slippageTolerance));
-
-  const volLp = fm
-    .toBig(ammPoolSnapshot.lp.volume)
-    .times(ratio)
-    .times(rest)
-    .toFixed(0, 0);
 
   const request: JoinAmmPoolRequest = {
     owner,

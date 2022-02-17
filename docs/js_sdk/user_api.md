@@ -1,5 +1,128 @@
 # User API
 
+## Customer KeySeed
+
+### Customer KeySeed format
+
+Customer KeySeed
+```ts 
+    /**
+     * Customer KEY_MESSAGE as a const at website local
+     * @description Suggest follow this format,but you can use your owne message.
+     * But make sure noece is include, ${nonce} important for support reset user apikey
+     *
+     *  @example Loopring office keyseed format example
+     * export const KEY_MESSAGE =
+     * "Sign this message to access Loopring Exchange: " +
+     * "${exchangeAddress}" +
+     * " with key nonce: " +
+     * "${nonce}";  //plese keep nonce varibale is inside the message; 
+     */
+    export const KEY_MESSAGE = 
+        "*** your message **** " +
+        "${exchangeAddress}" +
+        " *** your message **** " +
+        "${nonce}";
+
+    const eddsakey = await sign_tools.generateKeyPair({
+      web3,
+      address: accInfo.owner,
+      // if KEY_MESSAGE is emyty,please keep loopring KEY_MESSAGE work
+      keySeed: KEY_MESSAGE ? KEY_MESSAGE.replace(
+          "${exchangeAddress}",
+          exchangeInfo.exchangeAddress
+        ).replace("${nonce}", (accInfo.nonce-1).toString()) 
+        : GlobalAPI.KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        exchangeInfo.exchangeAddress
+      ).replace("${nonce}", (accInfo.nonce-1).toString()),
+      walletType: ConnectorNames.MetaMask,
+      chainId: ChainId.GOERLI,
+    });
+```
+ 
+
+### Customer KeySeed Init
+BaseAPI.KEY_MESSAGE  is a static for BaseAPI, storage loopring Sign message
+
+>_**Preview loopring customer keySeed is default value,
+> Api will return an empty keySeed,
+> please keep them signature follow the loopring message
+> ```BaseAPI.KEY_MESSAGE.replace("${exchangeAddress}",exchangeInfo.exchangeAddress).replace("${nonce}", (nonce - 1).toString())```**_
+ 
+extends BaseAPI list:  
+ - AmmpoolAPI 
+ - DelegateAPI 
+ - ExchangeAPI 
+ - GlobalAPI 
+ - NFTAPI 
+ - UserAPI  
+ - WalletAPI 
+ - WhitelistedUserAPI 
+ - WsAPI
+
+updateAccount generateKeyPair
+```ts
+    export const KEY_MESSAGE =
+          "Sign this message to access Loopring Exchange: " +
+          "${exchangeAddress}" +
+          " with key nonce: " +
+          "${nonce}";
+    const api = new BaseAPI({ chainId: ChainId.GOERLI});
+    const userApi = new UserApi({ chainId: ChainId.GOERLI});
+    const eddsaKey = await sign_tools.generateKeyPair({
+      web3,
+      address: accInfo.owner,
+      keySeed: KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        exchangeInfo.exchangeAddress
+      ).replace("${nonce}", (accInfo.nonce).toString()),
+      walletType: ConnectorNames.MetaMask,
+      chainId: ChainId.GOERLI,
+    });
+```
+
+
+### Customer KeySeed return
+if Customer keySeed is set up `getAccount`, will return the string `.keySeed`.
+`generateKeyPair` directory use this keySeed
+
+```ts
+    const { accInfo } = await exchange.getAccount({
+    owner: loopring_exported_account.address,
+    });
+    accInfo.keySeed
+```
+
+### generateKeyPair
+generateKeyPair when signature accInfo.keySeed
+```ts
+  const { accInfo } = await exchange.getAccount({
+    owner: loopring_exported_account.address,
+  });
+  const nonce = accInfo.nonce;
+  const eddsaKey = await sign_tools.generateKeyPair({
+    web3,
+    address: accInfo.owner,
+    /**
+     * Preview loopring customer keySeed is default value,
+     * Api will return an empty keySeed, 
+     * please keep them signature follow the loopring message
+     * please keep using loopring KEY_MESSAGE  
+     * "Sign this message to access Loopring Exchange: " + "${exchangeAddress}" + " with key nonce: " + "${nonce}";
+     */
+    keySeed: account.keySeed && account.keySeed !== ""
+      ? account.keySeed
+      : GlobalAPI.KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        exchangeInfo.exchangeAddress
+      ).replace("${nonce}", (nonce - 1).toString()),
+    walletType: ConnectorNames.MetaMask,
+    chainId: ChainId.GOERLI,
+  });
+  console.log("eddsakey:", eddsaKey.sk);
+```
+
 ## getUserApiKey
 
 ```javascript

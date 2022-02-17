@@ -23,6 +23,8 @@ import {
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
 import BN from "bn.js";
+import { DelegateAPI } from "./delegate_api";
+import { GlobalAPI } from "./global_api";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -287,6 +289,22 @@ export class NFTAPI extends BaseAPI {
     return "0x" + hashBN.toString("hex");
   }
 
+  /**
+   *
+   * @param nftId  16
+   */
+  public ipfsNftIDToCid(nftId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const CID = require("cids");
+    const hashBN = new BN(nftId.replace("0x", ""), 16);
+    const hex = hashBN.toString(16);
+    const buf = Buffer.concat([
+      new Uint8Array([18, 32]),
+      Buffer.from(hex, "hex"),
+    ]);
+    const cid = new CID(buf);
+    return cid.toString();
+  }
   /**
    * isApprovedForAll
    * @param web3

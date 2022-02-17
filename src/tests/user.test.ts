@@ -18,6 +18,7 @@ import { loopring_exported_account } from "./utils";
 import { BaseAPI } from "../api/base_api";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
+const KEY_MESSAGE = BaseAPI.KEY_MESSAGE; // OR customer Message
 
 let userApi: UserAPI;
 
@@ -252,15 +253,19 @@ describe("UserAPI test", function () {
        * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
        */
       const { exchangeInfo } = await exchange.getExchangeInfo();
-
+      // const keySeed = : BaseAPI.KEY_MESSAGE.replace(
+      //   "${exchangeAddress}",
+      //   exchangeInfo.exchangeAddress
+      // ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+      const keySeed = KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        exchangeInfo.exchangeAddress
+      ).replace("${nonce}", accInfo.nonce.toString());
       console.log("accInfo:", accInfo);
       const eddsaKey = await sign_tools.generateKeyPair({
         web3,
         address: accInfo.owner,
-        keySeed: BaseAPI.KEY_MESSAGE.replace(
-          "${exchangeAddress}",
-          exchangeInfo.exchangeAddress
-        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+        keySeed,
         // exchangeAddress: exchangeInfo.exchangeAddress,
         // keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
@@ -276,6 +281,7 @@ describe("UserAPI test", function () {
           tokenId: 1,
           volume: "100000000000000000",
         },
+        keySeed,
         validUntil: VALID_UNTIL,
         nonce: accInfo.nonce as number,
       };
@@ -289,5 +295,39 @@ describe("UserAPI test", function () {
       console.log("updateAccount result: ", JSON.stringify(result));
     },
     DEFAULT_TIMEOUT + 20000
+  );
+
+  it(
+    "getUserApiKey",
+    async () => {
+      const provider = new PrivateKeyProvider(
+        loopring_exported_account.privateKey,
+        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+      );
+
+      const web3 = new Web3(provider);
+
+      const { accInfo } = await exchange.getAccount({
+        owner: loopring_exported_account.address,
+      });
+      const nonce = accInfo.nonce;
+      const eddsaKey = await sign_tools.generateKeyPair({
+        web3,
+        address: accInfo.owner,
+        keySeed:
+          accInfo.keySeed && accInfo.keySeed !== ""
+            ? accInfo.keySeed
+            : BaseAPI.KEY_MESSAGE.replace(
+                "${exchangeAddress}",
+                loopring_exported_account.exchangeAddr
+              ).replace("${nonce}", (nonce - 1).toString()),
+        // exchangeAddress: exchangeInfo.exchangeAddress,
+        // keyNonce: accInfo.nonce,
+        walletType: ConnectorNames.MetaMask,
+        chainId: ChainId.GOERLI,
+      });
+      console.log("eddsakey:", eddsaKey.sk);
+    },
+    DEFAULT_TIMEOUT
   );
 });

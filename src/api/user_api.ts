@@ -11,10 +11,6 @@ import {
   LOOPRING_URLs,
   ConnectorNames,
   SigSuffix,
-  GetUserNFTMintHistoryRequest,
-  UserNFTMintHistoryTx,
-  GetUserNFTTxsRequest,
-  UserNFTTxsHistory,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
