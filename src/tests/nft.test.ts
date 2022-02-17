@@ -19,7 +19,6 @@ import {
 import { UserAPI, WhitelistedUserAPI } from "../api";
 import { dumpError400 } from "../utils";
 import { BaseAPI } from "../api/base_api";
-import { isEqual } from "lodash";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 const { exec } = require("child_process");
 
