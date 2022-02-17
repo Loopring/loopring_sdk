@@ -3,6 +3,7 @@
 ## Customer KeySeed
 
 ### Customer KeySeed format
+> more detail read unit test updateAccount & getUserApiKey & customer_keySeed
 
 Customer KeySeed
 ```ts 
@@ -79,6 +80,26 @@ updateAccount generateKeyPair
       ).replace("${nonce}", (accInfo.nonce).toString()),
       walletType: ConnectorNames.MetaMask,
       chainId: ChainId.GOERLI,
+    });
+    const request = {
+      exchange: exchangeInfo.exchangeAddress,
+      owner: accInfo.owner,
+      accountId: accInfo.accountId,
+      publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
+      maxFee: {
+        tokenId: 1,
+        volume: "100000000000000000",
+      },
+      keySeed,
+      validUntil: VALID_UNTIL,
+      nonce: accInfo.nonce as number,
+    };
+    const result = await userApi.updateAccount({
+      request,
+      web3,
+      chainId: ChainId.GOERLI,
+      walletType: ConnectorNames.Unknown,
+      isHWAddr: false,
     });
 ```
 
