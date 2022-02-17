@@ -34,8 +34,14 @@ export const KEY_MESSAGE =
   "${exchangeAddress}" +
   " with key nonce: " +
   "${nonce}";
+
+export const CUSTOM_KEY_MESSAGE =
+  "${customMessage}" +
+  " with key nonce: " +
+  "${nonce}";
 export class BaseAPI {
   static KEY_MESSAGE: string = KEY_MESSAGE;
+  static CUSTOM_KEY_MESSAGE: string = CUSTOM_KEY_MESSAGE;
   protected baseUrl = "";
   protected chainId: ChainId = ChainId.MAINNET;
   protected genErr(err: Error): RESULT_INFO {
