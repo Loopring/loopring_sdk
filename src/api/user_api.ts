@@ -1412,8 +1412,8 @@ export class UserAPI extends BaseAPI {
     const { accountId, counterFactualInfo }: any = options
       ? options
       : { accountId: 0 };
-    if (!request.counterFactualInfo) {
-      request.counterFactualInfo = {
+    if (request.counterFactualNftInfo === undefined) {
+      request.counterFactualNftInfo = {
         nftFactory: NFTFactory[chainId],
         nftOwner: request.minterAddress,
         nftBaseUri: "",
@@ -1511,7 +1511,7 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
     };
-    // myLog("NFTMint request", request);
+    myLog("NFTMint request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);

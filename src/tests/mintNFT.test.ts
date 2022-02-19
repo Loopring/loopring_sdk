@@ -1,5 +1,5 @@
-import { ChainId, ConnectorNames } from "../defs/web3_defs";
-import { ExchangeAPI, UserAPI, WhitelistedUserAPI } from "../api";
+import { ChainId, ConnectorNames, NFTFactory } from "../defs/web3_defs";
+import { ExchangeAPI, NFTAPI, UserAPI, WhitelistedUserAPI } from "../api";
 
 import { dumpError400 } from "../utils/network_tools";
 
@@ -15,10 +15,12 @@ import * as sign_tools from "../api/sign/sign_tools";
 import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
 import { BaseAPI } from "../api/base_api";
+import { myLog } from "../utils/log_tools";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 let userApi: UserAPI;
+let nftAPI: NFTAPI;
 
 let whitelistedUserApi: WhitelistedUserAPI;
 
@@ -30,6 +32,7 @@ describe("Mint test", function () {
   beforeEach(async () => {
     userApi = new UserAPI({ chainId: ChainId.GOERLI });
     exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
+    nftAPI = new NFTAPI({ chainId: ChainId.GOERLI });
     whitelistedUserApi = new WhitelistedUserAPI({ chainId: ChainId.GOERLI });
   });
 
@@ -86,6 +89,16 @@ describe("Mint test", function () {
           accountId: accInfo.accountId,
           sellTokenId: 1,
         };
+        const counterFactualNftInfo = {
+          nftOwner: accInfo.owner,
+          nftFactory: NFTFactory[ChainId.GOERLI],
+          nftBaseUri: "",
+        };
+
+        const nftTokenAddress =
+          nftAPI?.computeNFTAddress(counterFactualNftInfo).tokenAddress || "";
+        myLog("nftTokenAddress", nftTokenAddress);
+
         const storageId = await userApi.getNextStorageId(request2, apiKey);
         // let hash: any = new BN(nftId,'hex')
         // hash = toHex(hash);//new BigInteger(sha256(nftId.toString()).toString(), 16)
@@ -97,7 +110,7 @@ describe("Mint test", function () {
           toAccountId: accInfo.accountId,
           toAddress: accInfo.owner,
           nftType: 0,
-          tokenAddress: loopring_exported_account.nftTokenAddress,
+          tokenAddress: nftTokenAddress,
           nftId: nftId, //nftId.toString(16),
           amount: "10",
           validUntil: VALID_UNTIL,
@@ -106,11 +119,7 @@ describe("Mint test", function () {
             tokenId: 1,
             amount: "9400000000000000000",
           },
-          // counterFactualInfo: {
-          //   nftFactory: NFTFactory[ChainId.GOERLI],
-          //   nftOwner: accInfo.owner,
-          //   nftBaseUri: "",
-          // },
+          counterFactualNftInfo,
           forceToMint: true,
         };
 
@@ -128,6 +137,6 @@ describe("Mint test", function () {
         dumpError400(reason);
       }
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT + DEFAULT_TIMEOUT
   );
 });

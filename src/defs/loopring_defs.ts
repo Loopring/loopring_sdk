@@ -1731,7 +1731,8 @@ export interface NFTMintRequestV3 {
    * @memberof OriginNFTMintRequestV3
    */
   hashApproved?: string;
-  counterFactualInfo?: NFTCounterFactualInfo;
+  counterFactualNftInfo?: NFTCounterFactualInfo | null;
+  counterFactualInfo?: CounterFactualInfo;
 }
 
 /**

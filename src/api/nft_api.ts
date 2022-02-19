@@ -402,31 +402,29 @@ export class NFTAPI extends BaseAPI {
   public computeNFTAddress({
     nftOwner,
     nftFactory = "0xDB42E6F6cB2A2eFcF4c638cb7A61AdE5beD82609",
-    chainId = ChainId.MAINNET,
+    nftBaseUri = "",
   }: {
     nftOwner: string;
     nftFactory?: string;
-    chainId?: ChainId;
+    nftBaseUri?: string;
   }): { tokenAddress: string } {
     try {
       if (!nftFactory) {
-        if (!chainId) {
-          chainId = ChainId.MAINNET;
-        }
-        nftFactory = NFTFactory[chainId];
+        nftFactory = NFTFactory[this.chainId];
       }
       if (nftOwner.startsWith("0x")) {
         nftOwner = nftOwner.slice(2);
       }
 
+      myLog("computeNFTAddress nftFactory nftOwner", nftFactory, nftOwner);
       const saltBuf = Buffer.concat([
         Buffer.from("NFT_CONTRACT_CREATION", "utf8"),
         Buffer.from(nftOwner, "hex"),
-        Buffer.from("", "utf8"),
+        Buffer.from(nftBaseUri, "utf8"),
       ]);
 
       const codeHash = ethUtil.keccak(
-        Buffer.from(CREATION_CODE[chainId], "hex")
+        Buffer.from(CREATION_CODE[this.chainId], "hex")
       );
 
       const saltHash = ethUtil.keccak(saltBuf);
