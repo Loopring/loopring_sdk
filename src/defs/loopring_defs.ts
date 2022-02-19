@@ -30,7 +30,7 @@ import {
 } from "./loopring_enums";
 import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
-import { CounterFactualInfo } from "./account_defs";
+import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -1731,7 +1731,7 @@ export interface NFTMintRequestV3 {
    * @memberof OriginNFTMintRequestV3
    */
   hashApproved?: string;
-  counterFactualInfo?: CounterFactualInfo;
+  counterFactualInfo?: NFTCounterFactualInfo;
 }
 
 /**

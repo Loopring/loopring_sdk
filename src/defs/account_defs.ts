@@ -28,7 +28,13 @@ export interface AccountInfo {
 export interface CounterFactualInfo {
   accountId: number;
   owner: string;
-  walletFactory:string;
-  walletSalt:string;
-  walletOwner:string;
+  walletFactory: string;
+  walletSalt: string;
+  walletOwner: string;
+}
+
+export interface NFTCounterFactualInfo {
+  nftFactory: string;
+  nftOwner: string;
+  nftBaseUri: string;
 }

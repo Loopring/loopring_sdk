@@ -99,14 +99,19 @@ describe("Mint test", function () {
           nftType: 0,
           tokenAddress: loopring_exported_account.nftTokenAddress,
           nftId: nftId, //nftId.toString(16),
-          amount: "500",
+          amount: "10",
           validUntil: VALID_UNTIL,
           storageId: storageId.offchainId ?? 9,
           maxFee: {
             tokenId: 1,
             amount: "9400000000000000000",
           },
-          forceToMint: false,
+          // counterFactualInfo: {
+          //   nftFactory: NFTFactory[ChainId.GOERLI],
+          //   nftOwner: accInfo.owner,
+          //   nftBaseUri: "",
+          // },
+          forceToMint: true,
         };
 
         const response = await userApi.submitNFTMint({

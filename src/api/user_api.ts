@@ -11,6 +11,7 @@ import {
   LOOPRING_URLs,
   ConnectorNames,
   SigSuffix,
+  NFTFactory,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -1411,6 +1412,13 @@ export class UserAPI extends BaseAPI {
     const { accountId, counterFactualInfo }: any = options
       ? options
       : { accountId: 0 };
+    if (!request.counterFactualInfo) {
+      request.counterFactualInfo = {
+        nftFactory: NFTFactory[chainId],
+        nftOwner: request.minterAddress,
+        nftBaseUri: "",
+      };
+    }
 
     request.creatorFeeBips = request.creatorFeeBips
       ? request.creatorFeeBips
@@ -1503,7 +1511,7 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
     };
-
+    // myLog("NFTMint request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
