@@ -2296,6 +2296,7 @@ export interface LockHebaoHebaoParam {
   gasPrice: number;
   gasLimit: number;
   chainId?: ChainId;
+  isVersion1: boolean;
   sendByMetaMask?: boolean;
 }
 

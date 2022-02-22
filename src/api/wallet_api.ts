@@ -15,7 +15,7 @@ import { ReqMethod, SIG_FLAG } from "../defs/loopring_enums";
 import api from "./ethereum/contracts";
 
 import { LOOPRING_URLs } from "../defs/url_defs";
-import { ChainId, ConnectorNames, HEBAO_META_TYPE } from "../defs";
+import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from "../defs";
 import { getEcDSASig, GetEcDSASigType } from "./sign/sign_tools";
 import { sha256 } from "ethereumjs-util";
 import { toHex } from "../utils";
@@ -242,7 +242,7 @@ export class WalletAPI extends BaseAPI {
         chainId,
         walletType
       );
-      ecdsaSignature = result?.sig; //+ SigSuffix.Suffix03;
+      ecdsaSignature = result?.sig + SigSuffix.Suffix03;
     };
     // metamask not import hw wallet.
     if (walletType === ConnectorNames.MetaMask) {
@@ -257,7 +257,7 @@ export class WalletAPI extends BaseAPI {
             chainId,
             walletType
           );
-          ecdsaSignature = result?.sig; //+ SigSuffix.Suffix02;
+          ecdsaSignature = result?.sig + SigSuffix.Suffix03;
         }
       } catch (err) {
         return {
@@ -403,23 +403,40 @@ export class WalletAPI extends BaseAPI {
     gasLimit = 150000,
     chainId = 1,
     wallet,
+    isVersion1,
     sendByMetaMask = true,
   }: LockHebaoHebaoParam) {
-    const data = api.Contracts.HeBao.encodeInputs("lock", {
-      wallet,
-    });
-    return await sendRawTx(
-      web3,
-      from,
-      contractAddress,
-      value,
-      data,
-      chainId,
-      null,
-      gasPrice,
-      Number(gasLimit),
-      sendByMetaMask
-    );
+    if (isVersion1) {
+      const data = api.Contracts.HeBao.encodeInputs("lock", {
+        wallet,
+      });
+      return await sendRawTx(
+        web3,
+        from,
+        contractAddress,
+        value,
+        data,
+        chainId,
+        null,
+        gasPrice,
+        Number(gasLimit),
+        sendByMetaMask
+      );
+    } else {
+      // const data = api.Contracts.HeBao.encodeInputs("lock", {});
+      return await sendRawTx(
+        web3,
+        from,
+        contractAddress,
+        value,
+        "0xf83d08ba",
+        chainId,
+        null,
+        gasPrice,
+        Number(gasLimit),
+        sendByMetaMask
+      );
+    }
   }
 
   public async getHebaoConfig() {
