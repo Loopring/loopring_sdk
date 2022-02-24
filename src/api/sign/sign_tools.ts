@@ -28,6 +28,7 @@ import {
   OriginTransferRequestV3,
   PublicKey,
   UpdateAccountRequestV3,
+  NFTOrderRequestV3
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
@@ -40,6 +41,8 @@ export enum GetEcDSASigType {
   WithoutDataStruct,
   Contract,
 }
+
+const MIN_NFT_TOKENID = 32768;
 
 const SNARK_SCALAR_FIELD = new BigInteger(
   "21888242871839275222246405745257275088548364400416034343698204186575808495617",
@@ -893,6 +896,41 @@ export function get_EddsaSig_NFT_Mint(
     request.maxFee.amount,
     request.validUntil,
     request.storageId,
+  ];
+  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+}
+
+export function get_Is_Nft_Token(
+  tokenId: number
+) {
+  return tokenId >= MIN_NFT_TOKENID;
+}
+
+// NFT Order
+export function get_EddsaSig_NFT_Order(
+  request: NFTOrderRequestV3,
+  eddsaKey: string
+) {
+  let fillAmountBOrS = 0;
+  if (request.fillAmountBOrS) {
+    fillAmountBOrS = 1;
+  }
+  let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
+  if (get_Is_Nft_Token(request.sellToken.tokenId)) {
+    buyTokenId = request.buyToken.tokenId.toString();
+  }
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.storageId,
+    request.accountId,
+    request.sellToken.tokenId,
+    buyTokenId,
+    request.sellToken.amount,
+    request.buyToken.amount,
+    request.validUntil,
+    request.maxFeeBips,
+    fillAmountBOrS,
+    new BN(ethUtil.toBuffer(request.taker)).toString()
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
