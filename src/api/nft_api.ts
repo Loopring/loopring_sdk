@@ -416,7 +416,6 @@ export class NFTAPI extends BaseAPI {
         nftOwner = nftOwner.slice(2);
       }
 
-      myLog("computeNFTAddress nftFactory nftOwner", nftFactory, nftOwner);
       const saltBuf = Buffer.concat([
         Buffer.from("NFT_CONTRACT_CREATION", "utf8"),
         Buffer.from(nftOwner, "hex"),

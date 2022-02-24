@@ -1,16 +1,17 @@
 import * as sdk from "..";
 
 let api: sdk.WsAPI;
-
+let apiMain: sdk.WsAPI;
 describe("WsAPI test", function () {
   beforeEach(() => {
     api = new sdk.WsAPI({ chainId: sdk.ChainId.GOERLI });
+    apiMain = new sdk.WsAPI({ chainId: sdk.ChainId.MAINNET });
   });
 
   it(
     "getWsKey",
     async () => {
-      const response = await api.getWsKey();
+      const response = await apiMain.getWsKey();
       console.log(response);
     },
     sdk.DEFAULT_TIMEOUT
