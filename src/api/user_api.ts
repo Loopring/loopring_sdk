@@ -1518,6 +1518,36 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
+   * Submit NFT Validate Order request
+   */
+  public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      eddsaKey,
+      apiKey
+    } = req;
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
+      request,
+      eddsaKey
+    );
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG
+    };
+    myLog("NFT Validate Order request", request);
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
    * Returns User NFT deposit records.
    */
   public async getUserNFTDepositHistory<R>(
