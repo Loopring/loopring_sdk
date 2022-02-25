@@ -139,7 +139,7 @@ describe("nft test", function () {
     DEFAULT_TIMEOUT
   );
   it(
-    "getInfoForNFTTokens test",
+    "getInfoForNFTTokens",
     async () => {
       const response = await nft.getInfoForNFTTokens({
         nftDatas: [
@@ -208,7 +208,6 @@ describe("nft test", function () {
     const response = nft.computeNFTAddress({
       nftOwner: "0xE20cF871f1646d8651ee9dC95AAB1d93160b3467",
       nftFactory: "0x40F2C1770E11c5bbA3A26aEeF89616D209705C5D",
-      chainId: ChainId.GOERLI,
     });
     console.log(
       `computeNFTAddress:`,

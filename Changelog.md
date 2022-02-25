@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
-v1.7.9
+####  v1.8.1
+     1）validateNftOrder
+     2）NFTCounterFactualInfo
+#### v1.7.9
      1) nftMint NFTCounterFactualInfo
 ####v1.7.6
      1) Doc update,UT update

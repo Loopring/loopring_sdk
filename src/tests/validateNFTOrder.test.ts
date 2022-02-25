@@ -6,7 +6,7 @@ import { dumpError400 } from "../utils/network_tools";
 import {
   GetNextStorageIdRequest,
   GetUserApiKeyRequest,
-  NFTOrderRequestV3
+  NFTOrderRequestV3,
 } from "../defs/loopring_defs";
 
 import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
@@ -15,7 +15,6 @@ import * as sign_tools from "../api/sign/sign_tools";
 import Web3 from "web3";
 import { loopring_exported_account } from "./utils";
 import { BaseAPI } from "../api/base_api";
-import { myLog } from "../utils/log_tools";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -23,8 +22,6 @@ let userApi: UserAPI;
 let nftAPI: NFTAPI;
 
 let exchange: ExchangeAPI;
-const nftTokenId = 2;
-const nftData = "";
 
 // prepare: account need minted some NFT before test
 describe("NFT Validate Order Test", function () {
@@ -97,18 +94,18 @@ describe("NFT Validate Order Test", function () {
           accountId: accInfo.accountId,
           storageId: storageId.orderId,
           sellToken: {
-            tokenId: nftTokenId,
-            nftData: nftData,
-            amount: "1"
+            tokenId: loopring_exported_account.nftTokenID,
+            nftData: loopring_exported_account.nftData,
+            amount: "1",
           },
           buyToken: {
             tokenId: 1,
-            amount: "10000000000000"
+            amount: "10000000000000",
           },
           allOrNone: false,
           fillAmountBOrS: false,
           validUntil: VALID_UNTIL,
-          maxFeeBips: 80
+          maxFeeBips: 80,
         };
 
         const response = await userApi.submitNFTValidateOrder({
