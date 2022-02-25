@@ -1548,6 +1548,30 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
+   * Submit NFT Trade request
+   */
+  public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginNFTTradeRequestV3WithPatch
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      apiKey
+    } = req;
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NFT_TRADE,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG
+    };
+    myLog("NFT Trade request", request);
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
    * Returns User NFT deposit records.
    */
   public async getUserNFTDepositHistory<R>(

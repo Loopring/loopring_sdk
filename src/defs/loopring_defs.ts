@@ -1836,6 +1836,38 @@ export interface NFTOrderRequestV3 {
 /**
  *
  * @export
+ * @interface NFTTradeRequestV3
+ */
+export interface NFTTradeRequestV3 {
+  /**
+   * maker order
+   * @type {NFTOrderRequestV3}
+   * @memberof NFTTradeRequestV3
+   */
+  maker: NFTOrderRequestV3;
+  /**
+   * maker fee bips
+   * @type {number}
+   * @memberof NFTOrderRequestV3
+   */
+  makerFeeBips: number;
+  /**
+   * taker order
+   * @type {NFTOrderRequestV3}
+   * @memberof NFTTradeRequestV3
+   */
+  taker: NFTOrderRequestV3;
+  /**
+   * taker fee bips
+   * @type {number}
+   * @memberof NFTTradeRequestV3
+   */
+  takerFeeBips: number;
+}
+
+/**
+ *
+ * @export
  * @interface OffChainWithdrawalRequestV3
  */
 export interface OffChainWithdrawalRequestV3 {
@@ -2073,6 +2105,16 @@ export interface OriginNFTMINTRequestV3WithPatch {
 
 export interface OriginNFTValidateOrderRequestV3WithPatch {
   request: NFTOrderRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+
+export interface OriginNFTTradeRequestV3WithPatch {
+  request: NFTTradeRequestV3;
   web3: Web3;
   chainId: ChainId;
   walletType: ConnectorNames;
