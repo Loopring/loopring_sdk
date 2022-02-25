@@ -6,7 +6,8 @@ import { dumpError400 } from "../utils/network_tools";
 import {
   GetNextStorageIdRequest,
   GetUserApiKeyRequest,
-  NFTOrderRequestV3
+  NFTOrderRequestV3,
+  NFTTradeRequestV3
 } from "../defs/loopring_defs";
 
 import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
@@ -23,11 +24,12 @@ let userApi: UserAPI;
 let nftAPI: NFTAPI;
 
 let exchange: ExchangeAPI;
+// Need fill test data before test
 const nftTokenId = 2;
 const nftData = "";
 
 // prepare: account need minted some NFT before test
-describe("NFT Validate Order Test", function () {
+describe("NFT Trade Test", function () {
   beforeEach(async () => {
     userApi = new UserAPI({ chainId: ChainId.GOERLI });
     exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
@@ -35,12 +37,16 @@ describe("NFT Validate Order Test", function () {
   });
 
   it(
-    "validateNftOrder",
+    "NFTTrade",
     async () => {
       try {
         // step 0. init web3
         const provider = new PrivateKeyProvider(
           loopring_exported_account.privateKey,
+          "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+        );
+        const provider2 = new PrivateKeyProvider(
+          loopring_exported_account.privateKey2,
           "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
         );
         const web3 = new Web3(provider);
@@ -54,9 +60,16 @@ describe("NFT Validate Order Test", function () {
           return;
         }
 
-        const { exchangeInfo } = await exchange.getExchangeInfo();
+        let accInfo2 = await exchange.getAccount({
+          owner: loopring_exported_account.address2,
+        });
 
-        console.log("accInfo:", accInfo);
+        if (!accInfo2.accInfo) {
+          return;
+        }
+        console.log("accInfo2:", accInfo2.accInfo);
+
+        const { exchangeInfo } = await exchange.getExchangeInfo();
 
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
@@ -65,13 +78,24 @@ describe("NFT Validate Order Test", function () {
             "${exchangeAddress}",
             exchangeInfo.exchangeAddress
           ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-          // exchangeAddress: exchangeInfo.exchangeAddress,
-          // keyNonce: accInfo.nonce - 1,
           walletType: ConnectorNames.MetaMask,
           chainId: ChainId.GOERLI,
         });
 
         console.log("eddsakey:", eddsakey.sk);
+
+        const eddsakey2 = await sign_tools.generateKeyPair({
+          web3,
+          address: accInfo2.accInfo.owner,
+          keySeed: BaseAPI.KEY_MESSAGE.replace(
+            "${exchangeAddress}",
+            exchangeInfo.exchangeAddress
+          ).replace("${nonce}", (accInfo2.accInfo.nonce - 1).toString()),
+          walletType: ConnectorNames.MetaMask,
+          chainId: ChainId.GOERLI,
+        });
+
+        console.log("eddsakey2:", eddsakey.sk);
 
         // step 3 get apikey
         const request: GetUserApiKeyRequest = {
@@ -79,9 +103,15 @@ describe("NFT Validate Order Test", function () {
         };
 
         let { apiKey } = await userApi.getUserApiKey(request, eddsakey.sk);
-        apiKey = apiKey ?? loopring_exported_account.apiKey;
+        console.log("apiKey1:", apiKey);
 
-        console.log(apiKey);
+        const requestApikey2: GetUserApiKeyRequest = {
+          accountId: accInfo2.accInfo.accountId,
+        };
+
+        let apiKey2 = await userApi.getUserApiKey(requestApikey2, eddsakey2.sk);
+        console.log("apiKey2:", apiKey2);
+
         // step 4 get storageId
         const request2: GetNextStorageIdRequest = {
           accountId: accInfo.accountId,
@@ -89,10 +119,15 @@ describe("NFT Validate Order Test", function () {
         };
 
         const storageId = await userApi.getNextStorageId(request2, apiKey);
-        // let hash: any = new BN(nftId,'hex')
-        // hash = toHex(hash);//new BigInteger(sha256(nftId.toString()).toString(), 16)
 
-        const request3: NFTOrderRequestV3 = {
+        const requestSid2: GetNextStorageIdRequest = {
+          accountId: accInfo2.accInfo.accountId,
+          sellTokenId: 1,
+        };
+
+        const storageId2 = await userApi.getNextStorageId(requestSid2, apiKey);
+
+        const sellOrder: NFTOrderRequestV3 = {
           exchange: exchangeInfo.exchangeAddress,
           accountId: accInfo.accountId,
           storageId: storageId.orderId,
@@ -111,8 +146,44 @@ describe("NFT Validate Order Test", function () {
           maxFeeBips: 80
         };
 
-        const response = await userApi.submitNFTValidateOrder({
-          request: request3,
+        sellOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
+          sellOrder,
+          eddsakey.sk
+        );
+
+        const buyOrder: NFTOrderRequestV3 = {
+          exchange: exchangeInfo.exchangeAddress,
+          accountId: accInfo2.accInfo.accountId,
+          storageId: storageId2.orderId,
+          sellToken: {
+            tokenId: 1,
+            amount: "10000000000000"
+          },
+          buyToken: {
+            tokenId: nftTokenId,
+            nftData: nftData,
+            amount: "1"
+          },
+          allOrNone: false,
+          fillAmountBOrS: false,
+          validUntil: VALID_UNTIL,
+          maxFeeBips: 80
+        };
+
+        buyOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
+          buyOrder,
+          eddsakey.sk
+        );
+
+        const tradeRequest: NFTTradeRequestV3 = {
+          maker: sellOrder,
+          makerFeeBips: 80,
+          taker: buyOrder,
+          takerFeeBips: 80
+        }
+
+        const response = await userApi.submitNFTTrade({
+          request: tradeRequest,
           web3,
           chainId: ChainId.GOERLI,
           walletType: ConnectorNames.Unknown,
