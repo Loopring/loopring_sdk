@@ -1738,6 +1738,136 @@ export interface NFTMintRequestV3 {
 /**
  *
  * @export
+ * @interface NFTOrderRequestV3
+ */
+export interface NFTOrderRequestV3 {
+  /**
+   * exchange address
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  exchange: string;
+  /**
+   * account ID
+   * @type {number}
+   * @memberof NFTOrderRequestV3
+   */
+  accountId: number;
+  /**
+   * storage ID
+   * @type {number}
+   * @memberof NFTOrderRequestV3
+   */
+  storageId: number;
+  /**
+   * sell token info
+   * @type {NFTTokenAmountInfo}
+   * @memberof NFTOrderRequestV3
+   */
+  sellToken: NFTTokenAmountInfo;
+  /**
+   * buy token info
+   * @type {NFTTokenAmountInfo}
+   * @memberof NFTOrderRequestV3
+   */
+  buyToken: NFTTokenAmountInfo;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof NFTOrderRequestV3
+   */
+  allOrNone: boolean;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof NFTOrderRequestV3
+   */
+  fillAmountBOrS: boolean;
+  /**
+   * Timestamp for order to become invalid
+   * @type {number}
+   * @memberof NFTOrderRequestV3
+   */
+  validUntil: number;
+   /**
+   * max fee bips.
+   * @type {number | 0}
+   * @memberof NFTOrderRequestV3
+   */
+  maxFeeBips?: number | 0;
+  /**
+   * eddsa signature.
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  eddsaSignature?: string;
+  /**
+   * client order id.
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  clientOrderId?: string;
+  /**
+   * order type
+   * @type{string}
+   * @memberof NFTOrderRequestV3
+   */
+  orderType?: string;
+  /**
+   * trade channel
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  tradeChannel?: string;
+  /**
+   * taker address
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  taker?: string;
+  /**
+   * affiliate account id
+   * @type {string}
+   * @memberof NFTOrderRequestV3
+   */
+  affiliate?: string;
+}
+
+/**
+ *
+ * @export
+ * @interface NFTTradeRequestV3
+ */
+export interface NFTTradeRequestV3 {
+  /**
+   * maker order
+   * @type {NFTOrderRequestV3}
+   * @memberof NFTTradeRequestV3
+   */
+  maker: NFTOrderRequestV3;
+  /**
+   * maker fee bips
+   * @type {number}
+   * @memberof NFTOrderRequestV3
+   */
+  makerFeeBips: number;
+  /**
+   * taker order
+   * @type {NFTOrderRequestV3}
+   * @memberof NFTTradeRequestV3
+   */
+  taker: NFTOrderRequestV3;
+  /**
+   * taker fee bips
+   * @type {number}
+   * @memberof NFTTradeRequestV3
+   */
+  takerFeeBips: number;
+}
+
+/**
+ *
+ * @export
  * @interface OffChainWithdrawalRequestV3
  */
 export interface OffChainWithdrawalRequestV3 {
@@ -1973,6 +2103,26 @@ export interface OriginNFTMINTRequestV3WithPatch {
   isHWAddr?: boolean;
 }
 
+export interface OriginNFTValidateOrderRequestV3WithPatch {
+  request: NFTOrderRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+
+export interface OriginNFTTradeRequestV3WithPatch {
+  request: NFTTradeRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+
 export interface UpdateAccountRequestV3WithPatch {
   request: UpdateAccountRequestV3;
   web3: Web3;
@@ -2035,6 +2185,12 @@ export interface NFTTokenInfo {
   nftId: string;
   creatorFeeBips: 0;
   status: boolean;
+}
+
+export interface NFTTokenAmountInfo {
+  tokenId: number;
+  nftData?: string;
+  amount: string;
 }
 
 export type GetUserNFTTransferHistoryRequest = {

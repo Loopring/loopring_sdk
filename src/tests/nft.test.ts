@@ -139,7 +139,7 @@ describe("nft test", function () {
     DEFAULT_TIMEOUT
   );
   it(
-    "getInfoForNFTTokens test",
+    "getInfoForNFTTokens",
     async () => {
       const response = await nft.getInfoForNFTTokens({
         nftDatas: [
