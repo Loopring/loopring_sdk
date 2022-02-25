@@ -397,30 +397,31 @@ export class WalletAPI extends BaseAPI {
   public async lockHebaoWallet({
     web3,
     from,
-    value = 0,
     contractAddress,
     gasPrice,
     gasLimit = 150000,
     chainId = 1,
     wallet,
+    nonce,
     isVersion1,
-    sendByMetaMask = true,
-  }: LockHebaoHebaoParam) {
+  }: // sendByMetaMask = true,
+  LockHebaoHebaoParam) {
     if (isVersion1) {
       const data = api.Contracts.HeBao.encodeInputs("lock", {
         wallet,
       });
+
       return await sendRawTx(
         web3,
         from,
         contractAddress,
-        value,
+        0,
         data,
         chainId,
-        null,
+        nonce,
         gasPrice,
         Number(gasLimit),
-        sendByMetaMask
+        true
       );
     } else {
       // const data = api.Contracts.HeBao.encodeInputs("lock", {});
@@ -428,13 +429,13 @@ export class WalletAPI extends BaseAPI {
         web3,
         from,
         contractAddress,
-        value,
+        0,
         "0xf83d08ba",
         chainId,
-        null,
+        nonce,
         gasPrice,
         Number(gasLimit),
-        sendByMetaMask
+        true
       );
     }
   }

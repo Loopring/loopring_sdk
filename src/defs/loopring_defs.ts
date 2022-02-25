@@ -1772,13 +1772,13 @@ export interface NFTOrderRequestV3 {
    */
   buyToken: NFTTokenAmountInfo;
   /**
-   * 
+   *
    * @type {boolean}
    * @memberof NFTOrderRequestV3
    */
   allOrNone: boolean;
   /**
-   * 
+   *
    * @type {boolean}
    * @memberof NFTOrderRequestV3
    */
@@ -1789,7 +1789,7 @@ export interface NFTOrderRequestV3 {
    * @memberof NFTOrderRequestV3
    */
   validUntil: number;
-   /**
+  /**
    * max fee bips.
    * @type {number | 0}
    * @memberof NFTOrderRequestV3
@@ -2452,6 +2452,7 @@ export interface LockHebaoHebaoParam {
   gasPrice: number;
   gasLimit: number;
   chainId?: ChainId;
+  nonce: number;
   isVersion1: boolean;
   sendByMetaMask?: boolean;
 }
