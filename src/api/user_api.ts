@@ -914,7 +914,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
+        // myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }
@@ -977,12 +977,12 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
     if (walletType === ConnectorNames.MetaMask) {
-      myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
+      // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
       try {
         if (isHWAddr) {
           await sigHW();
         } else {
-          myLog("submitInternalTransfer notHWAddr:", isHWAddr);
+          // myLog("submitInternalTransfer notHWAddr:", isHWAddr);
           const result = await sign_tools.signTransferWithDataStructure(
             web3,
             request.payerAddr,
@@ -999,11 +999,11 @@ export class UserAPI extends BaseAPI {
       }
     } else {
       const isContractCheck = await isContract(web3, request.payerAddr);
-      myLog(
-        "submitInternalTransfer isContractCheck,accountId:",
-        isContractCheck,
-        accountId
-      );
+      // myLog(
+      //   "submitInternalTransfer isContractCheck,accountId:",
+      //   isContractCheck,
+      //   accountId
+      // );
       if (isContractCheck) {
         const result =
           await sign_tools.signTransferWithDataStructureForContract(
@@ -1025,7 +1025,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }
@@ -1094,12 +1094,12 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
     if (walletType === ConnectorNames.MetaMask) {
-      myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
       try {
         if (isHWAddr) {
           await sigHW();
         } else {
-          myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
           const result = await sign_tools.signTransferWithDataStructure(
             web3,
             transfer.payerAddr,
@@ -1116,11 +1116,11 @@ export class UserAPI extends BaseAPI {
       }
     } else {
       const isContractCheck = await isContract(web3, transfer.payerAddr);
-      myLog(
-        "submitDeployNFT isContractCheck,accountId:",
-        isContractCheck,
-        accountId
-      );
+      // myLog(
+      //   "submitDeployNFT isContractCheck,accountId:",
+      //   isContractCheck,
+      //   accountId
+      // );
       if (isContractCheck) {
         const result =
           await sign_tools.signTransferWithDataStructureForContract(
@@ -1142,7 +1142,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }
@@ -1258,7 +1258,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
+        // myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }
@@ -1366,7 +1366,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
+        // myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }
@@ -1394,7 +1394,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT MINT request
+   * Submit NFT 55544555555555555555555545555 request
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
@@ -1485,7 +1485,7 @@ export class UserAPI extends BaseAPI {
               counterFactualInfo
             );
           ecdsaSignature = result.ecdsaSig;
-          myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
+          // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
         } else {
           await sigHW();
         }
@@ -1511,7 +1511,7 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
     };
-    myLog("NFTMint request", request);
+    // myLog("NFTMint request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
@@ -1523,11 +1523,7 @@ export class UserAPI extends BaseAPI {
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      eddsaKey,
-      apiKey
-    } = req;
+    const { request, eddsaKey, apiKey } = req;
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
       request,
@@ -1539,9 +1535,9 @@ export class UserAPI extends BaseAPI {
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG
+      sigFlag: SIG_FLAG.NO_SIG,
     };
-    myLog("NFT Validate Order request", request);
+    // myLog("NFT Validate Order request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
@@ -1551,13 +1547,9 @@ export class UserAPI extends BaseAPI {
    * Submit NFT Trade request
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTTradeRequestV3WithPatch,
+    req: loopring_defs.OriginNFTTradeRequestV3WithPatch
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      eddsaKey,
-      apiKey
-    } = req;
+    const { request, apiKey, eddsaKey } = req;
 
     const dataToSig: Map<string, any> = new Map();
     dataToSig.set("maker", request.maker);
@@ -1576,10 +1568,11 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
+        // sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: eddsaKey,
       },
     };
-    myLog("NFT Trade request", request);
+    // myLog("NFT Trade request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
@@ -1818,7 +1811,7 @@ export class UserAPI extends BaseAPI {
             counterFactualInfo
           );
         ecdsaSignature = result.ecdsaSig;
-        myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
+        // myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
       } else {
         await sigHW();
       }

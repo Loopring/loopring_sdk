@@ -142,7 +142,7 @@ export class Request {
     } else if (params?.eddsaSignature) {
       headers["X-API-SIG"] = params?.eddsaSignature;
     }
-    myLog('headers["X-API-SIG"]', headers["X-API-SIG"]);
+    // myLog('headers["X-API-SIG"]', headers["X-API-SIG"]);
     if (params?.bodyParams) {
       const bodyParams = params?.bodyParams;
       if (sig && params.sigObj?.sigPatch) {

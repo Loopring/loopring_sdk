@@ -224,10 +224,10 @@ export const getEdDSASigWithPoseidon = (
   PrivateKey: string | undefined
 ) => {
   const hasher = Poseidon.createHash(inputs.length + 1, 6, 53);
-  // myLog('getEdDSASigWithPoseidon *16 hash:', hasher(inputs).toString(16))
   const hash = hasher(inputs).toString(10);
 
-  // myLog('getEdDSASigWithPoseidon hash:', hash)
+  // myLog("getEdDSASigWithPoseidon *16 hash:", hasher(inputs).toString(16));
+  // myLog("getEdDSASigWithPoseidon hash:", hash);
 
   return genSigWithPadding(PrivateKey, hash);
 };
@@ -709,7 +709,7 @@ export function getNftData(request: NFTMintRequestV3) {
     nftIdHi,
     request.creatorFeeBips,
   ];
-  myLog("get hasher *16 hash:", hasher(inputs).toString(16));
+  // myLog("get hasher *16 hash:", hasher(inputs).toString(16));
   return hasher(inputs).toString(10);
 }
 
@@ -916,36 +916,35 @@ export function get_EddsaSig_NFT_Order(
     fillAmountBOrS = 1;
   }
 
-  let sellToken: any = undefined,
-    buyToken: any = undefined;
-  // let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
-  // if (get_Is_Nft_Token(request.sellToken.tokenId)) {
-  //   buyTokenId = request.buyToken.tokenId.toString();
+  // let sellToken: any = undefined,
+  //   buyToken: any = undefined;
+  // sellToken = {
+  //   ...request.sellToken,
+  //   // tokenId,
+  // };
+  // buyToken = {
+  //   ...request.buyToken,
+  // };
+  // if ((request.sellToken as NFTTokenAmountInfo).nftData) {
+  //   const tokenId = new BN(
+  //     ethUtil.toBuffer((request.sellToken as NFTTokenAmountInfo).nftData)
+  //   ).toString();
+  //
+  //   // myLog(request.accountId, buyToken, sellToken);
   // }
-  if (request.sellToken && (request.sellToken as NFTTokenAmountInfo).nftData) {
-    const tokenId = new BN(
-      ethUtil.toBuffer((request.sellToken as NFTTokenAmountInfo).nftData)
-    ).toString();
-    sellToken = {
-      ...request.sellToken,
-      tokenId,
-    };
-    buyToken = {
-      ...request.buyToken,
-    };
-  }
-  if (request.buyToken && (request.buyToken as NFTTokenAmountInfo).nftData) {
-    const tokenId = new BN(
-      ethUtil.toBuffer((request.buyToken as NFTTokenAmountInfo).nftData)
-    ).toString();
-    buyToken = {
-      ...request.buyToken,
-      tokenId,
-    };
-    sellToken = {
-      ...request.sellToken,
-    };
-  }
+  // if ((request.buyToken as NFTTokenAmountInfo).nftData) {
+  //   // const tokenId = new BN(
+  //   //   ethUtil.toBuffer((request.buyToken as NFTTokenAmountInfo).nftData)
+  //   // ).toString();
+  //   buyToken = {
+  //     ...request.buyToken,
+  //     // tokenId,
+  //   };
+  //   sellToken = {
+  //     ...request.sellToken,
+  //   };
+  //   // myLog(request.accountId, buyToken, sellToken);
+  // }
   // let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
   // if (get_Is_Nft_Token(request.sellToken.tokenId)) {
   //   buyTokenId = request.buyToken.tokenId.toString();
@@ -954,10 +953,10 @@ export function get_EddsaSig_NFT_Order(
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
-    sellToken?.tokenId ? sellToken.tokenId : "",
-    buyToken?.tokenId ? buyToken.tokenId : "",
-    sellToken?.amount ? sellToken.amount : 0,
-    buyToken?.amount ? buyToken.amount : 0,
+    request.sellToken?.tokenId ? request.sellToken.tokenId : "",
+    request.buyToken?.tokenId ? request.buyToken.tokenId : "",
+    request.sellToken?.amount ? request.sellToken.amount : 0,
+    request.buyToken?.amount ? request.buyToken.amount : 0,
     request.validUntil,
     request.maxFeeBips,
     fillAmountBOrS,

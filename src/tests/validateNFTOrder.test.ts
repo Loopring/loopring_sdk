@@ -58,17 +58,19 @@ describe("NFT Validate Order Test", function () {
         const eddsakey = await sign_tools.generateKeyPair({
           web3,
           address: accInfo.owner,
-          keySeed: BaseAPI.KEY_MESSAGE.replace(
-            "${exchangeAddress}",
-            exchangeInfo.exchangeAddress
-          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+          keySeed:
+            accInfo.keySeed ??
+            BaseAPI.KEY_MESSAGE.replace(
+              "${exchangeAddress}",
+              exchangeInfo.exchangeAddress
+            ).replace("${nonce}", (accInfo.nonce - 1).toString()),
           // exchangeAddress: exchangeInfo.exchangeAddress,
           // keyNonce: accInfo.nonce - 1,
           walletType: ConnectorNames.MetaMask,
           chainId: ChainId.GOERLI,
         });
 
-        console.log("eddsakey:", eddsakey.sk);
+        console.log("eddsakey:", accInfo.keySeed, eddsakey.sk);
 
         // step 3 get apikey
         const request: GetUserApiKeyRequest = {
@@ -107,7 +109,7 @@ describe("NFT Validate Order Test", function () {
           validUntil: VALID_UNTIL,
           maxFeeBips: 80,
         };
-
+        console.log("sellNFT NFTOrderRequestV3", request3);
         const response = await userApi.submitNFTValidateOrder({
           request: request3,
           web3,
@@ -118,6 +120,28 @@ describe("NFT Validate Order Test", function () {
         });
 
         console.log(response);
+        const request4 = {
+          ...request3,
+          sellToken: {
+            tokenId: 1,
+            amount: "10000000000000",
+          },
+          buyToken: {
+            tokenId: loopring_exported_account.nftTokenID,
+            nftData: loopring_exported_account.nftData,
+            amount: "1",
+          },
+        };
+        console.log("buyNFT NFTOrderRequestV3", request4);
+        const response2 = await userApi.submitNFTValidateOrder({
+          request: request4,
+          web3,
+          chainId: ChainId.GOERLI,
+          walletType: ConnectorNames.Unknown,
+          eddsaKey: eddsakey.sk,
+          apiKey: apiKey,
+        });
+        console.log(response2);
       } catch (reason) {
         dumpError400(reason);
       }

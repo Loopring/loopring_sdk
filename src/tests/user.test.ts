@@ -278,7 +278,7 @@ describe("UserAPI test", function () {
         publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
         maxFee: {
           tokenId: 1,
-          volume: "122700000000000000",
+          volume: "171600000000000000",
         },
         keySeed,
         validUntil: VALID_UNTIL,
