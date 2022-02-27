@@ -1555,15 +1555,26 @@ export class UserAPI extends BaseAPI {
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
+      eddsaKey,
       apiKey
     } = req;
+
+    const dataToSig: Map<string, any> = new Map();
+    dataToSig.set("maker", request.maker);
+    dataToSig.set("makerFeeBips", request.makerFeeBips);
+    dataToSig.set("taker", request.taker);
+    dataToSig.set("takerFeeBips", request.takerFeeBips);
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_TRADE,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
     };
     myLog("NFT Trade request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
