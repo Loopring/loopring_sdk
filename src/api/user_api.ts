@@ -1551,7 +1551,7 @@ export class UserAPI extends BaseAPI {
    * Submit NFT Trade request
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTTradeRequestV3WithPatch
+    req: loopring_defs.OriginNFTTradeRequestV3WithPatch,
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
@@ -1564,7 +1564,10 @@ export class UserAPI extends BaseAPI {
     dataToSig.set("makerFeeBips", request.makerFeeBips);
     dataToSig.set("taker", request.taker);
     dataToSig.set("takerFeeBips", request.takerFeeBips);
-
+    // request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    //   request,
+    //   eddsaKey
+    // );
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_TRADE,
       bodyParams: request,

@@ -130,7 +130,7 @@ describe("NFT Trade Test", function () {
 
         const storageId2 = await userApi.getNextStorageId(requestSid2, apiKey);
 
-        const sellOrder: NFTOrderRequestV3 = {
+        const makerOrder: NFTOrderRequestV3 = {
           exchange: exchangeInfo.exchangeAddress,
           accountId: accInfo.accountId,
           storageId: storageId.orderId,
@@ -149,12 +149,12 @@ describe("NFT Trade Test", function () {
           maxFeeBips: 80,
         };
 
-        sellOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
-          sellOrder,
+        makerOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
+          makerOrder,
           eddsakey_1.sk
         );
 
-        const buyOrder: NFTOrderRequestV3 = {
+        const takerOrder: NFTOrderRequestV3 = {
           exchange: exchangeInfo.exchangeAddress,
           accountId: accInfo2.accountId,
           storageId: storageId2.orderId,
@@ -173,15 +173,15 @@ describe("NFT Trade Test", function () {
           maxFeeBips: 80,
         };
 
-        buyOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
-          buyOrder,
+        takerOrder.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
+          takerOrder,
           eddsakey_2.sk
         );
 
         const tradeRequest: NFTTradeRequestV3 = {
-          maker: sellOrder,
+          maker: makerOrder,
           makerFeeBips: 80,
-          taker: buyOrder,
+          taker: takerOrder,
           takerFeeBips: 80,
         };
 

@@ -28,7 +28,9 @@ import {
   OriginTransferRequestV3,
   PublicKey,
   UpdateAccountRequestV3,
-  NFTOrderRequestV3
+  NFTOrderRequestV3,
+  NFTTokenAmountInfo,
+  TokenVolumeV3,
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
@@ -900,9 +902,7 @@ export function get_EddsaSig_NFT_Mint(
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
 
-export function get_Is_Nft_Token(
-  tokenId: number
-) {
+export function get_Is_Nft_Token(tokenId: number) {
   return tokenId >= MIN_NFT_TOKENID;
 }
 
@@ -915,22 +915,53 @@ export function get_EddsaSig_NFT_Order(
   if (request.fillAmountBOrS) {
     fillAmountBOrS = 1;
   }
-  let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
-  if (get_Is_Nft_Token(request.sellToken.tokenId)) {
-    buyTokenId = request.buyToken.tokenId.toString();
+
+  let sellToken: any = undefined,
+    buyToken: any = undefined;
+  // let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
+  // if (get_Is_Nft_Token(request.sellToken.tokenId)) {
+  //   buyTokenId = request.buyToken.tokenId.toString();
+  // }
+  if (request.sellToken && (request.sellToken as NFTTokenAmountInfo).nftData) {
+    const tokenId = new BN(
+      ethUtil.toBuffer((request.sellToken as NFTTokenAmountInfo).nftData)
+    ).toString();
+    sellToken = {
+      ...request.sellToken,
+      tokenId,
+    };
+    buyToken = {
+      ...request.buyToken,
+    };
   }
+  if (request.buyToken && (request.buyToken as NFTTokenAmountInfo).nftData) {
+    const tokenId = new BN(
+      ethUtil.toBuffer((request.buyToken as NFTTokenAmountInfo).nftData)
+    ).toString();
+    buyToken = {
+      ...request.buyToken,
+      tokenId,
+    };
+    sellToken = {
+      ...request.sellToken,
+    };
+  }
+  // let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
+  // if (get_Is_Nft_Token(request.sellToken.tokenId)) {
+  //   buyTokenId = request.buyToken.tokenId.toString();
+  // }
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
-    request.sellToken.tokenId,
-    buyTokenId,
-    request.sellToken.amount,
-    request.buyToken.amount,
+    sellToken?.tokenId ? sellToken.tokenId : "",
+    buyToken?.tokenId ? buyToken.tokenId : "",
+    sellToken?.amount ? sellToken.amount : 0,
+    buyToken?.amount ? buyToken.amount : 0,
     request.validUntil,
     request.maxFeeBips,
     fillAmountBOrS,
-    new BN(ethUtil.toBuffer(request.taker)).toString()
+    new BN(ethUtil.toBuffer(request.taker)).toString(),
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }

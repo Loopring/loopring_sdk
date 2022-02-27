@@ -31,6 +31,10 @@ import {
 import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
+export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+export type XOR<T, U> = T | U extends { [key: string]: any }
+  ? (Without<T, U> & U) | (Without<U, T> & T)
+  : T | U;
 
 export interface VipFeeRateInfo {
   symbol: string;
@@ -347,6 +351,21 @@ export interface TokenVolumeV3 {
    * @memberof TokenVolumeV3
    */
   volume: string;
+}
+
+export interface TokenVolumeV5 {
+  /**
+   * The Loopring\'s token identifier.
+   * @type {string}
+   * @memberof TokenVolumeV3
+   */
+  tokenId: string | number;
+  /**
+   * The volume of the token
+   * @type {string}
+   * @memberof TokenVolumeV3
+   */
+  amount: string;
 }
 
 export interface TokenVolumeNFT {
@@ -1740,7 +1759,7 @@ export interface NFTMintRequestV3 {
  * @export
  * @interface NFTOrderRequestV3
  */
-export interface NFTOrderRequestV3 {
+export type NFTOrderRequestV3 = {
   /**
    * exchange address
    * @type {string}
@@ -1759,18 +1778,7 @@ export interface NFTOrderRequestV3 {
    * @memberof NFTOrderRequestV3
    */
   storageId: number;
-  /**
-   * sell token info
-   * @type {NFTTokenAmountInfo}
-   * @memberof NFTOrderRequestV3
-   */
-  sellToken: NFTTokenAmountInfo;
-  /**
-   * buy token info
-   * @type {NFTTokenAmountInfo}
-   * @memberof NFTOrderRequestV3
-   */
-  buyToken: NFTTokenAmountInfo;
+
   /**
    *
    * @type {boolean}
@@ -1831,7 +1839,36 @@ export interface NFTOrderRequestV3 {
    * @memberof NFTOrderRequestV3
    */
   affiliate?: string;
-}
+} & XOR<
+  {
+    /**
+     * sell token info
+     * @type {NFTTokenAmountInfo}
+     * @memberof NFTOrderRequestV3
+     */
+    sellToken: NFTTokenAmountInfo;
+    /**
+     * buy token info
+     * @type {TokenVolumeV5}
+     * @memberof NFTOrderRequestV3
+     */
+    buyToken: TokenVolumeV5;
+  },
+  {
+    /**
+     * sell token info
+     * @type {TokenVolumeV5}
+     * @memberof NFTOrderRequestV3
+     */
+    sellToken: TokenVolumeV5;
+    /**
+     * buy token info
+     * @type {NFTTokenAmountInfo}
+     * @memberof NFTOrderRequestV3
+     */
+    buyToken: NFTTokenAmountInfo;
+  }
+>;
 
 /**
  *
