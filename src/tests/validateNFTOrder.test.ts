@@ -131,6 +131,7 @@ describe("NFT Validate Order Test", function () {
             nftData: loopring_exported_account.nftData,
             amount: "1",
           },
+          fillAmountBOrS: true,
         };
         console.log("buyNFT NFTOrderRequestV3", request4);
         const response2 = await userApi.submitNFTValidateOrder({

@@ -915,40 +915,6 @@ export function get_EddsaSig_NFT_Order(
   if (request.fillAmountBOrS) {
     fillAmountBOrS = 1;
   }
-
-  // let sellToken: any = undefined,
-  //   buyToken: any = undefined;
-  // sellToken = {
-  //   ...request.sellToken,
-  //   // tokenId,
-  // };
-  // buyToken = {
-  //   ...request.buyToken,
-  // };
-  // if ((request.sellToken as NFTTokenAmountInfo).nftData) {
-  //   const tokenId = new BN(
-  //     ethUtil.toBuffer((request.sellToken as NFTTokenAmountInfo).nftData)
-  //   ).toString();
-  //
-  //   // myLog(request.accountId, buyToken, sellToken);
-  // }
-  // if ((request.buyToken as NFTTokenAmountInfo).nftData) {
-  //   // const tokenId = new BN(
-  //   //   ethUtil.toBuffer((request.buyToken as NFTTokenAmountInfo).nftData)
-  //   // ).toString();
-  //   buyToken = {
-  //     ...request.buyToken,
-  //     // tokenId,
-  //   };
-  //   sellToken = {
-  //     ...request.sellToken,
-  //   };
-  //   // myLog(request.accountId, buyToken, sellToken);
-  // }
-  // let buyTokenId = new BN(ethUtil.toBuffer(request.buyToken.nftData)).toString();
-  // if (get_Is_Nft_Token(request.sellToken.tokenId)) {
-  //   buyTokenId = request.buyToken.tokenId.toString();
-  // }
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,

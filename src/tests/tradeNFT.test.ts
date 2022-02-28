@@ -190,7 +190,7 @@ describe("NFT Trade Test", function () {
             amount: "1",
           },
           allOrNone: false,
-          fillAmountBOrS: false,
+          fillAmountBOrS: true,
           validUntil: VALID_UNTIL,
           maxFeeBips: 80,
         };
