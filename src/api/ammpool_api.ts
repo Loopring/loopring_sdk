@@ -604,8 +604,8 @@ export class AmmpoolAPI extends BaseAPI {
 
     let transactions = undefined;
 
-    if (raw_data?.data.transactions) {
-      transactions = raw_data?.data.transactions;
+    if (raw_data?.transactions) {
+      transactions = raw_data?.transactions;
     }
 
     return {
