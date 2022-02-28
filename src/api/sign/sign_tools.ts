@@ -954,7 +954,9 @@ export function get_EddsaSig_NFT_Order(
     request.storageId,
     request.accountId,
     request.sellToken?.tokenId ? request.sellToken.tokenId : "",
-    request.buyToken?.tokenId ? request.buyToken.tokenId : "",
+    (request.buyToken as any)?.nftData
+      ? (request.buyToken as NFTTokenAmountInfo).nftData
+      : request.buyToken.tokenId,
     request.sellToken?.amount ? request.sellToken.amount : 0,
     request.buyToken?.amount ? request.buyToken.amount : 0,
     request.validUntil,
