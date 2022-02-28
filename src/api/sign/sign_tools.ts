@@ -720,7 +720,7 @@ export function getNFTMintTypedData(
   const message = {
     minterAddress: data.minterAddress,
     toAccountId: data.toAccountId,
-    nftType: data.nftType,
+    nftType: data.nftType.toString(),
     amount: data.amount,
     nftId: data.nftId,
     nftAddress: data.tokenAddress,
