@@ -1425,9 +1425,7 @@ export class UserAPI extends BaseAPI {
       : 0;
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
-    if (request.nftId.startsWith("0x")) {
-      request.nftId = web3.utils.hexToNumberString(request.nftId);
-    }
+
     const sigHW = async () => {
       const result = await sign_tools.signNFTMintWithoutDataStructure(
         web3,
@@ -1917,7 +1915,7 @@ export class UserAPI extends BaseAPI {
       };
     }
     return {
-      vipAsset: raw_data.data,
+      vipAsset: raw_data.data ? raw_data.data : raw_data,
       raw_data,
     };
   }

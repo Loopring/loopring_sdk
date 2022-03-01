@@ -715,14 +715,19 @@ export function getNftData(request: NFTMintRequestV3) {
 
 export function getNFTMintTypedData(
   data: NFTMintRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
+  web3: Web3
 ): EIP712TypedData {
+  let nftId = data.nftId;
+  if (data.nftId.startsWith("0x")) {
+    nftId = web3.utils.hexToNumberString(data.nftId);
+  }
   const message = {
     minterAddress: data.minterAddress,
     toAccountId: data.toAccountId,
     nftType: data.nftType.toString(),
     amount: data.amount,
-    nftId: data.nftId,
+    nftId: nftId,
     nftAddress: data.tokenAddress,
     feeTokenID: data.maxFee.tokenId,
     maxFee: data.maxFee.amount,
@@ -941,7 +946,7 @@ export async function signNFTMintWithDataStructure(
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
-  const typedData = getNFTMintTypedData(bodyParams, chainId);
+  const typedData = getNFTMintTypedData(bodyParams, chainId, web3);
   const result = await getEcDSASig(
     web3,
     typedData,
@@ -964,7 +969,7 @@ export async function signNFTMintWithoutDataStructure(
   walletType: ConnectorNames,
   accountId: number
 ) {
-  const typedData: any = getNFTMintTypedData(bodyParams, chainId);
+  const typedData: any = getNFTMintTypedData(bodyParams, chainId, web3);
   const result = await getEcDSASig(
     web3,
     typedData,
@@ -986,7 +991,7 @@ export async function signNFTMintWithDataStructureForContract(
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
-  const typedData = getNFTMintTypedData(bodyParams, chainId);
+  const typedData = getNFTMintTypedData(bodyParams, chainId, web3);
   const result = await getEcDSASig(
     web3,
     typedData,
