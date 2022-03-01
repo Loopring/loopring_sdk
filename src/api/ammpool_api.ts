@@ -609,7 +609,7 @@ export class AmmpoolAPI extends BaseAPI {
     }
 
     return {
-      totalNum: raw_data.data.totalNum,
+      totalNum: raw_data.totalNum,
       transactions: transactions as AmmPoolTx[],
       raw_data,
     };

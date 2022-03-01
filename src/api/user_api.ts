@@ -1425,7 +1425,9 @@ export class UserAPI extends BaseAPI {
       : 0;
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
-
+    if (request.nftId.startsWith("0x")) {
+      request.nftId = web3.utils.hexToNumberString(request.nftId);
+    }
     const sigHW = async () => {
       const result = await sign_tools.signNFTMintWithoutDataStructure(
         web3,

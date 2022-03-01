@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####  v1.8.7
+     1）getAmmPoolTxs V3
 ####  v1.8.5
      1）validateNftOrder
 
