@@ -1438,7 +1438,7 @@ export interface OriginDeployNFTRequestV3 {
     memo?: string;
     maxFee?: {
       volume: "0";
-      tokenId: 0;
+      tokenId: number | string;
     };
   };
   /**

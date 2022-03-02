@@ -1079,7 +1079,7 @@ export class UserAPI extends BaseAPI {
     transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
     transfer.maxFee = {
       volume: "0",
-      tokenId: 0,
+      tokenId: transfer.token.tokenId,
     };
 
     const sigHW = async () => {
