@@ -30,7 +30,6 @@ import {
   UpdateAccountRequestV3,
   NFTOrderRequestV3,
   NFTTokenAmountInfo,
-  TokenVolumeV3,
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
@@ -449,6 +448,7 @@ export async function signUpdateAccountWithDataStructure(
   web3: Web3,
   bodyParams: UpdateAccountRequestV3,
   chainId: ChainId,
+  walletType: ConnectorNames,
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
@@ -473,7 +473,8 @@ export async function signUpdateAccountWithoutDataStructure(
   bodyParams: UpdateAccountRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -484,7 +485,8 @@ export async function signUpdateAccountWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }
@@ -625,7 +627,8 @@ export async function signOffchainWithdrawWithoutDataStructure(
   bodyParams: OffChainWithdrawalRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -636,7 +639,8 @@ export async function signOffchainWithdrawWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }
@@ -825,6 +829,7 @@ export async function signNFTWithdrawWithDataStructure(
   owner: string,
   bodyParams: NFTWithdrawRequestV3,
   chainId: ChainId,
+  walletType: ConnectorNames,
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
@@ -849,7 +854,8 @@ export async function signNFTWithdrawWithoutDataStructure(
   bodyParams: NFTWithdrawRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getNFTWithdrawTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -860,7 +866,8 @@ export async function signNFTWithdrawWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }
@@ -943,6 +950,7 @@ export async function signNFTMintWithDataStructure(
   owner: string,
   bodyParams: NFTMintRequestV3,
   chainId: ChainId,
+  walletType: ConnectorNames,
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
@@ -967,7 +975,8 @@ export async function signNFTMintWithoutDataStructure(
   bodyParams: NFTMintRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getNFTMintTypedData(bodyParams, chainId, web3);
   const result = await getEcDSASig(
@@ -978,7 +987,8 @@ export async function signNFTMintWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }
@@ -1078,6 +1088,7 @@ export async function signTransferWithDataStructure(
   owner: string,
   bodyParams: OriginTransferRequestV3,
   chainId: ChainId,
+  walletType: ConnectorNames,
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
@@ -1102,7 +1113,8 @@ export async function signTransferWithoutDataStructure(
   bodyParams: OriginTransferRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1113,7 +1125,8 @@ export async function signTransferWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }
@@ -1212,6 +1225,7 @@ export async function signTNFTransferWithDataStructure(
   owner: string,
   bodyParams: OriginNFTTransferRequestV3,
   chainId: ChainId,
+  walletType: ConnectorNames,
   accountId: number,
   counterFactualInfo?: CounterFactualInfo
 ) {
@@ -1236,7 +1250,8 @@ export async function signNFTTransferWithoutDataStructure(
   bodyParams: OriginNFTTransferRequestV3,
   chainId: ChainId,
   walletType: ConnectorNames,
-  accountId: number
+  accountId: number,
+  counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData: any = getNFTTransferTypedData(bodyParams, chainId);
   const result = await getEcDSASig(
@@ -1247,7 +1262,8 @@ export async function signNFTTransferWithoutDataStructure(
     chainId,
     accountId,
     "",
-    walletType
+    walletType,
+    counterFactualInfo
   );
   return result;
 }

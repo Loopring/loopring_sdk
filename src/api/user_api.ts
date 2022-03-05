@@ -864,7 +864,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -972,7 +973,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -988,7 +990,9 @@ export class UserAPI extends BaseAPI {
             request.payerAddr,
             request,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
@@ -1089,7 +1093,8 @@ export class UserAPI extends BaseAPI {
         transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -1105,7 +1110,9 @@ export class UserAPI extends BaseAPI {
             transfer.payerAddr,
             transfer as loopring_defs.OriginTransferRequestV3,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
@@ -1207,7 +1214,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -1222,7 +1230,9 @@ export class UserAPI extends BaseAPI {
             request.fromAddress,
             request,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
@@ -1315,7 +1325,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -1331,7 +1342,9 @@ export class UserAPI extends BaseAPI {
             request.owner,
             request,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
@@ -1433,7 +1446,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -1449,7 +1463,9 @@ export class UserAPI extends BaseAPI {
             request.minterAddress,
             request,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
@@ -1764,7 +1780,8 @@ export class UserAPI extends BaseAPI {
         request,
         chainId,
         walletType,
-        accountId
+        accountId,
+        counterFactualInfo
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
@@ -1778,7 +1795,9 @@ export class UserAPI extends BaseAPI {
             web3,
             request,
             chainId,
-            accountId
+            walletType,
+            accountId,
+            counterFactualInfo
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }

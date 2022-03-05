@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####  v1.8.13
+     1）Update web3_defs.ts  CREATION_CODE
+     2）submitDeployNFT transfer.maxFee tokenId: transfer.token.tokenId,
+####  v1.8.7
+     1）getAmmPoolTxs V3
 ####  v1.8.5
      1）validateNftOrder
 
