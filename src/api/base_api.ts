@@ -628,8 +628,16 @@ export async function personalSign(
               return;
             }
 
-            const valid: any = await ecRecover(web3, account, msg, result);
+            if (
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              (window?.ethereum.isImToken || window?.ethereum.isMetaMask) &&
+              !web3.eth.personal.ecRecover
+            ) {
+              return resolve({ sig: result });
+            }
 
+            const valid: any = await ecRecover(web3, account, msg, result);
             if (valid.result) {
               resolve({ sig: result });
               return;
