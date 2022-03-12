@@ -627,20 +627,27 @@ export async function personalSign(
               }
               return;
             }
-
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const address: string[] = await window.ethereum.request({
+              method: "eth_requestAccounts",
+            });
             if (
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               (window?.ethereum.isImToken || window?.ethereum.isMetaMask) &&
-              !web3.eth.personal.ecRecover
+              walletType === ConnectorNames.MetaMask &&
+              address.find(
+                (item) => item.toLowerCase() === account.toLowerCase()
+              )
             ) {
               return resolve({ sig: result });
-            }
-
-            const valid: any = await ecRecover(web3, account, msg, result);
-            if (valid.result) {
-              resolve({ sig: result });
-              return;
+            } else {
+              const valid: any = await ecRecover(web3, account, msg, result);
+              if (valid.result) {
+                resolve({ sig: result });
+                return;
+              }
             }
 
             const walletValid: any = await contractWalletValidate(
@@ -668,7 +675,6 @@ export async function personalSign(
             }
 
             if (accountId) {
-              myLog("before fcWalletValid accountId:", valid);
               const fcValid = await fcWalletValid(
                 web3,
                 account,
