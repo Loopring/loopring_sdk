@@ -1727,6 +1727,12 @@ export interface NFTMintRequestV3 {
    */
   maxFee: Pick<TokenVolumeV3, "tokenId"> & { amount: string };
   /**
+   * 0-50
+   * @type number
+   * @memberof OriginNFTMintRequestV3
+   */
+  royaltyPercentage: number;
+  /**
    * force to mint, regardless the previous mint record
    * @type {boolean}
    * @memberof OriginNFTMintRequestV3

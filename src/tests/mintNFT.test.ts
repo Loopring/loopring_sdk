@@ -119,6 +119,7 @@ describe("Mint test", function () {
             tokenId: 1,
             amount: "9400000000000000000",
           },
+          royaltyPercentage: 5,
           counterFactualNftInfo,
           forceToMint: true,
         };
