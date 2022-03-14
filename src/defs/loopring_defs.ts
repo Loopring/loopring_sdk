@@ -1701,12 +1701,6 @@ export interface NFTMintRequestV3 {
    * @memberof TokenVolumeV3
    */
   amount: string;
-  /**
-   * fee to the creator of each NFT transaction.
-   * @type {number | 0}
-   * @memberof OriginNFTTransferRequestV3
-   */
-  creatorFeeBips?: number | 0;
 
   /**
    * Timestamp for order to become invalid
@@ -2226,7 +2220,6 @@ export interface NFTTokenInfo {
   nftType: string;
   tokenAddress: string;
   nftId: string;
-  creatorFeeBips: 0;
   status: boolean;
 }
 

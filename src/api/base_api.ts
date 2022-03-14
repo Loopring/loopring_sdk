@@ -629,13 +629,13 @@ export async function personalSign(
             }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const address: string[] = await window.ethereum.request({
+            const address: string[] = await window?.ethereum?.request({
               method: "eth_requestAccounts",
             });
             if (
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
-              (window?.ethereum.isImToken || window?.ethereum.isMetaMask) &&
+              (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
               walletType === ConnectorNames.MetaMask &&
               address.find(
                 (item) => item.toLowerCase() === account.toLowerCase()

@@ -711,7 +711,7 @@ export function getNftData(request: NFTMintRequestV3) {
     request.tokenAddress,
     nftIdLo,
     nftIdHi,
-    request.creatorFeeBips,
+    request.royaltyPercentage,
   ];
   // myLog("get hasher *16 hash:", hasher(inputs).toString(16));
   return hasher(inputs).toString(10);

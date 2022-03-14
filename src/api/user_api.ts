@@ -1433,8 +1433,8 @@ export class UserAPI extends BaseAPI {
       };
     }
 
-    request.creatorFeeBips = request.creatorFeeBips
-      ? request.creatorFeeBips
+    request.royaltyPercentage = request.royaltyPercentage
+      ? request.royaltyPercentage
       : 0;
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
