@@ -154,23 +154,6 @@ export class BaseAPI {
   }
 }
 
-export async function walletLinkValid(
-  account: string,
-  message: string,
-  sig: any
-) {
-  return new Promise((resolve) => {
-    const signature = fromRpcSig(sig);
-    const hash = hashPersonalMessage(toBuffer(message));
-    const recAddress = toHex(
-      pubToAddress(ecrecover(hash, signature.v, signature.r, signature.s))
-    );
-    resolve({
-      result: recAddress.toLowerCase() === account.toLowerCase(),
-    });
-  });
-}
-
 export async function ecRecover(
   web3: Web3,
   account: string,
@@ -197,44 +180,44 @@ export async function ecRecover(
     }
   });
 }
-
-// Authereum account contract hashes the data in the validation function,
-// so we must send the data plain text.
-export async function authereumValid(
-  web3: any,
-  account: string,
-  msg: string,
-  sig: any
-) {
-  return new Promise((resolve) => {
-    const hash = toBuffer(msg);
-    const data = ABI.Contracts.ContractWallet.encodeInputs(
-      "isValidSignature(bytes,bytes)",
-      {
-        _data: hash,
-        _signature: toBuffer(sig),
-      }
-    );
-
-    web3.eth.call(
-      {
-        to: account, // contract addr
-        data: data,
-      },
-      function (err: any, result: any) {
-        if (!err) {
-          const valid = ABI.Contracts.ContractWallet.decodeOutputs(
-            "isValidSignature(bytes,bytes)",
-            result
-          );
-          resolve({
-            result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
-          });
-        } else resolve({ error: "authereumValid:" + err });
-      }
-    );
-  });
-}
+//
+// // Authereum account contract hashes the data in the validation function,
+// // so we must send the data plain text.
+// export async function authereumValid(
+//   web3: any,
+//   account: string,
+//   msg: string,
+//   sig: any
+// ) {
+//   return new Promise((resolve) => {
+//     const hash = toBuffer(msg);
+//     const data = ABI.Contracts.ContractWallet.encodeInputs(
+//       "isValidSignature(bytes,bytes)",
+//       {
+//         _data: hash,
+//         _signature: toBuffer(sig),
+//       }
+//     );
+//
+//     web3.eth.call(
+//       {
+//         to: account, // contract addr
+//         data: data,
+//       },
+//       function (err: any, result: any) {
+//         if (!err) {
+//           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
+//             "isValidSignature(bytes,bytes)",
+//             result
+//           );
+//           resolve({
+//             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
+//           });
+//         } else resolve({ error: "authereumValid:" + err });
+//       }
+//     );
+//   });
+// }
 
 export async function contractWalletValidate(
   web3: any,
@@ -604,29 +587,6 @@ export async function personalSign(
                 return;
               }
             }
-
-            if (walletType === ConnectorNames.WalletLink) {
-              const valid: any = await walletLinkValid(account, msg, result);
-              if (valid.result) {
-                resolve({ sig: result });
-              } else {
-                resolve({ error: "Failed to valid using WalletLink/Trezor" });
-              }
-              return;
-            } else if (walletType === ConnectorNames.Authereum) {
-              const valid: any = await authereumValid(
-                web3,
-                account,
-                msg,
-                result
-              );
-              if (valid.result) {
-                resolve({ sig: result });
-              } else {
-                resolve({ error: "invalid sig using Authereum" });
-              }
-              return;
-            }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const address: string[] = await window?.ethereum?.request({
@@ -645,8 +605,7 @@ export async function personalSign(
             } else {
               const valid: any = await ecRecover(web3, account, msg, result);
               if (valid.result) {
-                resolve({ sig: result });
-                return;
+                return resolve({ sig: result });
               }
             }
 
@@ -658,8 +617,7 @@ export async function personalSign(
             );
 
             if (walletValid.result) {
-              resolve({ sig: result });
-              return;
+              return resolve({ sig: result });
             }
 
             const walletValid2: any = await contractWalletValidate2(
@@ -670,8 +628,7 @@ export async function personalSign(
             );
 
             if (walletValid2.result) {
-              resolve({ sig: result });
-              return;
+              return resolve({ sig: result });
             }
 
             if (accountId) {
@@ -684,11 +641,10 @@ export async function personalSign(
                 chainId
               );
               if (fcValid.result) {
-                resolve({
+                return resolve({
                   sig: result,
                   counterFactualInfo: fcValid.counterFactualInfo,
                 });
-                return;
               }
             }
 

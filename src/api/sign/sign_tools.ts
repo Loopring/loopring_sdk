@@ -53,8 +53,6 @@ const SNARK_SCALAR_FIELD = new BigInteger(
 export interface KeyPairParams {
   web3: any;
   address: string;
-  // exchangeAddress: string;
-  // keyNonce: number;
   walletType: ConnectorNames;
   keySeed: string;
   chainId: ChainId;
@@ -65,8 +63,6 @@ export interface KeyPairParams {
 export async function generateKeyPair({
   web3,
   address,
-  // exchangeAddress,
-  // keyNonce,
   walletType,
   keySeed,
   chainId,
@@ -134,20 +130,6 @@ const makeRequestParamStr = (request: Map<string, any>) => {
   return encodeURIComponent(paramlist.join("&")).replace("%2C", "%252C");
 };
 
-/*
-const genSig = (PrivateKey: string, hash: any) => {
-
-  const signature = EdDSA.sign(PrivateKey, hash)
-
-  return (
-    fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
-    fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
-    fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s))))
-  )
-
-}
-*/
-
 //submitOrderV3
 const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
   const signature = EdDSA.sign(PrivateKey, hash);
@@ -208,9 +190,6 @@ export function getEdDSASig(
   const message = `${method}&${uri}&${params}`;
   let hash: any = new BigInteger(sha256(message).toString(), 16);
 
-  // myLog("getEdDSASig", "message:", message);
-  // myLog("getEdDSASig", "hash:", hash.toFormat(0, 0, {}));
-
   hash = hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
 
   const sig = genSigWithPadding(PrivateKey, hash);
@@ -224,9 +203,6 @@ export const getEdDSASigWithPoseidon = (
 ) => {
   const hasher = Poseidon.createHash(inputs.length + 1, 6, 53);
   const hash = hasher(inputs).toString(10);
-
-  // myLog("getEdDSASigWithPoseidon *16 hash:", hasher(inputs).toString(16));
-  // myLog("getEdDSASigWithPoseidon hash:", hash);
 
   return genSigWithPadding(PrivateKey, hash);
 };
@@ -398,7 +374,6 @@ export function convertPublicKey(pk: PublicKey) {
   return new BN(EdDSA.pack(publicKeyX, publicKeyY), 16);
 }
 
-// update account
 export function getUpdateAccountEcdsaTypedData(
   data: UpdateAccountRequestV3,
   chainId: ChainId
