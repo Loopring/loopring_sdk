@@ -19,7 +19,8 @@ For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
     + when `v4` signature is failed for any step, we will try `personal_sign` and `web3.eth.personal.ecRecover` validate signature
   - For Dapp 
     + when loopring Dex is inside Dapp WebView & connect by `window.ethereum`, we remove the `web3.eth.personal.ecRecover` validate 
-  
+
+### Loopring Smart wallet:  
   - For Smart wallet
     
 
