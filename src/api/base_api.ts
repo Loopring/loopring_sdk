@@ -597,7 +597,7 @@ export async function personalSign(
               // @ts-ignore
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
               walletType === ConnectorNames.MetaMask &&
-              address.find(
+              address?.find(
                 (item) => item.toLowerCase() === account.toLowerCase()
               )
             ) {
@@ -656,12 +656,14 @@ export async function personalSign(
             );
 
             if (myKeyValid.result) {
-              resolve({ sig: result });
+              return resolve({ sig: result });
             } else {
               resolve({ error: "myKeyValid sig at last!" });
             }
           } else {
-            resolve({ error: "personalSign last:" + err });
+            return resolve({
+              error: "personalSign err before Validate:" + err,
+            });
           }
         }
       );
