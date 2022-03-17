@@ -219,43 +219,43 @@ export async function ecRecover(
 //   });
 // }
 
-export async function contractWalletValidate(
-  web3: any,
-  account: string,
-  msg: string,
-  sig: any
-) {
-  return new Promise((resolve) => {
-    const hash = hashPersonalMessage(toBuffer(msg));
-    const data = ABI.Contracts.ContractWallet.encodeInputs(
-      "isValidSignature(bytes,bytes)",
-      {
-        _data: hash,
-        _signature: toBuffer(sig),
-      }
-    );
+// export async function contractWalletValidate(
+//   web3: any,
+//   account: string,
+//   msg: string,
+//   sig: any
+// ) {
+//   return new Promise((resolve) => {
+//     const hash = hashPersonalMessage(toBuffer(msg));
+//     const data = ABI.Contracts.ContractWallet.encodeInputs(
+//       "isValidSignature(bytes,bytes)",
+//       {
+//         _data: hash,
+//         _signature: toBuffer(sig),
+//       }
+//     );
+//
+//     web3.eth.call(
+//       {
+//         to: account, // contract addr
+//         data: data,
+//       },
+//       function (err: any, result: any) {
+//         if (!err) {
+//           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
+//             "isValidSignature(bytes,bytes)",
+//             result
+//           );
+//           resolve({
+//             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
+//           });
+//         } else resolve({ error: err });
+//       }
+//     );
+//   });
+// }
 
-    web3.eth.call(
-      {
-        to: account, // contract addr
-        data: data,
-      },
-      function (err: any, result: any) {
-        if (!err) {
-          const valid = ABI.Contracts.ContractWallet.decodeOutputs(
-            "isValidSignature(bytes,bytes)",
-            result
-          );
-          resolve({
-            result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
-          });
-        } else resolve({ error: err });
-      }
-    );
-  });
-}
-
-export async function contractWalletValidate2(
+export async function contractWalletValidate32(
   web3: any,
   account: string,
   msg: string,
@@ -611,20 +611,20 @@ export async function personalSign(
               }
             }
 
-            // Valid: 3. contractWallet signature Valid `isValidSignature(bytes,bytes)`
-            const walletValid: any = await contractWalletValidate(
-              web3,
-              account,
-              msg,
-              result
-            );
+            // // Valid: 3. contractWallet signature Valid `isValidSignature(bytes,bytes)`
+            // const walletValid: any = await contractWalletValidate(
+            //   web3,
+            //   account,
+            //   msg,
+            //   result
+            // );
+            //
+            // if (walletValid.result) {
+            //   return resolve({ sig: result });
+            // }
 
-            if (walletValid.result) {
-              return resolve({ sig: result });
-            }
-
-            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
-            const walletValid2: any = await contractWalletValidate2(
+            // Valid: 3. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            const walletValid2: any = await contractWalletValidate32(
               web3,
               account,
               msg,
@@ -635,7 +635,7 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
-            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
+            // Valid: 4. counter Factual signature Valid when no counterFactualInfo
             if (accountId) {
               const fcValid = await fcWalletValid(
                 web3,
@@ -653,7 +653,7 @@ export async function personalSign(
               }
             }
 
-            // Valid: 6. myKeyValid Valid again
+            // Valid: 5. myKeyValid Valid again
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,
@@ -668,10 +668,10 @@ export async function personalSign(
             // Valid: Error cannot pass personalSign Valid
             // eslint-disable-next-line no-console
             console.log(
-              "web3.eth.personal.sign Valid, valid 6 ways, all failed!"
+              "web3.eth.personal.sign Valid, valid 5 ways, all failed!"
             );
             return resolve({
-              error: "web3.eth.personal.sign Valid, valid 6 ways, all failed!",
+              error: "web3.eth.personal.sign Valid, valid 5 ways, all failed!",
             });
           } else {
             return resolve({
