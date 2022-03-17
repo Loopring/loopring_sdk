@@ -568,6 +568,7 @@ export async function personalSign(
         pwd,
         async function (err: any, result: any) {
           if (!err) {
+            // Valid:1. counter Factual signature Valid
             if (counterFactualInfo && accountId) {
               myLog("fcWalletValid counterFactualInfo accountId:");
               const fcValid = await fcWalletValid(
@@ -592,6 +593,7 @@ export async function personalSign(
             const address: string[] = await window?.ethereum?.request({
               method: "eth_requestAccounts",
             });
+            // Valid: 2. webview signature Valid | EOA signature Valid by ecRecover
             if (
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
@@ -609,6 +611,7 @@ export async function personalSign(
               }
             }
 
+            // Valid: 3. contractWallet signature Valid `isValidSignature(bytes,bytes)`
             const walletValid: any = await contractWalletValidate(
               web3,
               account,
@@ -620,6 +623,7 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
+            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate2(
               web3,
               account,
@@ -631,6 +635,7 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
+            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
             if (accountId) {
               const fcValid = await fcWalletValid(
                 web3,
@@ -648,6 +653,7 @@ export async function personalSign(
               }
             }
 
+            // Valid: 6. myKeyValid Valid again
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,
@@ -657,9 +663,16 @@ export async function personalSign(
 
             if (myKeyValid.result) {
               return resolve({ sig: result });
-            } else {
-              resolve({ error: "myKeyValid sig at last!" });
             }
+
+            // Valid: Error cannot pass personalSign Valid
+            // eslint-disable-next-line no-console
+            console.log(
+              "web3.eth.personal.sign Valid, valid 6 ways, all failed!"
+            );
+            return resolve({
+              error: "web3.eth.personal.sign Valid, valid 6 ways, all failed!",
+            });
           } else {
             return resolve({
               error: "personalSign err before Validate:" + err,

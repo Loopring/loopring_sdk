@@ -21,9 +21,140 @@ For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
     + when loopring Dex is inside Dapp WebView & connect by `window.ethereum`, we remove the `web3.eth.personal.ecRecover` validate 
 
 ### Loopring Smart wallet:  
-  - For Smart wallet
-    
+  - For Smart wallet we send `eth_signTypedData` by walletConnect & validate by two ways
+    ABI.Contracts.ContractWallet.encodeInputs `isValidSignature(bytes,bytes)`|`isValidSignature(bytes32,bytes)` 
 
 > ❗ when add `SigSuffix` `02|03`
 >- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
 >- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
+
+## Code: validate signature 
+[github: src/api/base_api.ts#personalSign](https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549)         
+```
+  export async function personalSign(
+  web3: any,
+  account: string | undefined,
+  pwd: string,
+  msg: string,
+  walletType: ConnectorNames,
+  chainId: ChainId,
+  accountId?: number,
+  counterFactualInfo?: CounterFactualInfo
+) {
+  if (!account) {
+    return { error: "personalSign got no account" };
+  }
+
+  return new Promise((resolve) => {
+    try {
+      web3.eth.personal.sign(
+        msg,
+        account,
+        pwd,
+        async function (err: any, result: any) {
+          if (!err) {
+            if (counterFactualInfo && accountId) {
+              myLog("fcWalletValid counterFactualInfo accountId:");
+              const fcValid = await fcWalletValid(
+                web3,
+                account,
+                msg,
+                result,
+                accountId,
+                chainId,
+                counterFactualInfo
+              );
+              if (fcValid.result) {
+                resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+                return;
+              }
+            }
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const address: string[] = await window?.ethereum?.request({
+              method: "eth_requestAccounts",
+            });
+            if (
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
+              walletType === ConnectorNames.MetaMask &&
+              address?.find(
+                (item) => item.toLowerCase() === account.toLowerCase()
+              )
+            ) {
+              return resolve({ sig: result });
+            } else {
+              const valid: any = await ecRecover(web3, account, msg, result);
+              if (valid.result) {
+                return resolve({ sig: result });
+              }
+            }
+
+            const walletValid: any = await contractWalletValidate(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (walletValid.result) {
+              return resolve({ sig: result });
+            }
+
+            const walletValid2: any = await contractWalletValidate2(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (walletValid2.result) {
+              return resolve({ sig: result });
+            }
+
+            if (accountId) {
+              const fcValid = await fcWalletValid(
+                web3,
+                account,
+                msg,
+                result,
+                accountId,
+                chainId
+              );
+              if (fcValid.result) {
+                return resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+              }
+            }
+
+            const myKeyValid: any = await mykeyWalletValid(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (myKeyValid.result) {
+              return resolve({ sig: result });
+            } else {
+              resolve({ error: "myKeyValid sig at last!" });
+            }
+          } else {
+            return resolve({
+              error: "personalSign err before Validate:" + err,
+            });
+          }
+        }
+      );
+    } catch (reason) {
+      resolve({ error: reason });
+    }
+  });
+}
+```
