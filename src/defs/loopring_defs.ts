@@ -716,6 +716,7 @@ export interface GetOffchainFeeAmtRequest {
 export interface GetNFTOffchainFeeAmtRequest {
   accountId: number;
   requestType: OffchainNFTFeeReqType;
+  deployInWithdraw?: boolean;
   tokenAddress?: string;
   amount?: string;
 }
@@ -2186,6 +2187,12 @@ export interface GetUserNFTBalancesRequest {
   nonZero?: boolean;
 }
 
+export enum DEPLOYMENT_STATUS {
+  NOT_DEPLOYED = "NOT_DEPLOYED",
+  DEPLOY_FAILED = "DEPLOY_FAILED",
+  DEPLOYING = "DEPLOYING",
+  DEPLOYED = "DEPLOYED",
+}
 export interface UserNFTBalanceInfo {
   accountId: number;
   tokenId: number;
@@ -2198,6 +2205,8 @@ export interface UserNFTBalanceInfo {
     withdraw: string;
     deposit: string;
   };
+  deploymentStatus: DEPLOYMENT_STATUS;
+  isCounterFactualNFT: boolean;
 }
 
 export interface GetUserVIPInfoRequest {

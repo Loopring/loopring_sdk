@@ -798,7 +798,6 @@ export class UserAPI extends BaseAPI {
   /*
    * Query current NFT fee amount
    */
-  //TODO：UT
   public async getNFTOffchainFeeAmt<R>(
     request: loopring_defs.GetNFTOffchainFeeAmtRequest,
     apiKey: string
