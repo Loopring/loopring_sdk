@@ -25,7 +25,7 @@ For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
 
 > ❗ when add `SigSuffix` `02|03`
 >- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
->- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
+>- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix03`;
 
 ## Code: validate signature 
 [github: src/api/base_api.ts#personalSign](https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549)         
