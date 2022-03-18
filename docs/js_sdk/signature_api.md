@@ -23,7 +23,7 @@ For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
 ### Loopring Smart wallet:  
   - For Smart wallet we send `eth_signTypedData` by walletConnect & validate ABI.Contracts.ContractWallet.encodeInputs `isValidSignature(bytes32,bytes)` 
 
-> ❗ when add `SigSuffix` `02|03`
+> ❗ when add `SigSuffix` `02|03` ( follow EIP712 + `02`, personal_sign + `03`) 
 >- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
 >- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix03`;
 

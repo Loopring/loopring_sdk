@@ -12,6 +12,7 @@
 
   - [Overview](./js_sdk/INTRO.md#install)
   - [Unit Test](./js_sdk/unit_test.md)
+  - [Signature & Validate ](./js_sdk/signatur_api.md)
   - [AmmPool](./js_sdk/ammpool_api.md)
   - [NFT(Contract)](./js_sdk/nft_api.md)
   - [Contract](./js_sdk/contract_api.md)
