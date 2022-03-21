@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####  v1.9.6
+     1) add is Mobile in personalSign
+####  v1.9.4
+     1) remove Authereum & walletLink
+     2) DEPLOYMENT_STATUS
 ####  v1.8.13
      1）Update web3_defs.ts  CREATION_CODE
      2）submitDeployNFT transfer.maxFee tokenId: transfer.token.tokenId,

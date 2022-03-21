@@ -554,12 +554,12 @@ export async function personalSign(
   walletType: ConnectorNames,
   chainId: ChainId,
   accountId?: number,
-  counterFactualInfo?: CounterFactualInfo
+  counterFactualInfo?: CounterFactualInfo,
+  isMobile?: boolean
 ) {
   if (!account) {
     return { error: "personalSign got no account" };
   }
-
   return new Promise((resolve) => {
     try {
       web3.eth.personal.sign(
@@ -588,42 +588,33 @@ export async function personalSign(
                 return;
               }
             }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const address: string[] = await window?.ethereum?.request({
-              method: "eth_requestAccounts",
-            });
-            // Valid: 2. webview signature Valid | EOA signature Valid by ecRecover
+
+            // Valid: 2. webview directory signature Valid
             if (
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
-              walletType === ConnectorNames.MetaMask &&
-              address?.find(
-                (item) => item.toLowerCase() === account.toLowerCase()
-              )
+              isMobile &&
+              // Mobile directory connect will sign ConnectorNames as MetaMask only
+              walletType === ConnectorNames.MetaMask
             ) {
-              return resolve({ sig: result });
-            } else {
-              const valid: any = await ecRecover(web3, account, msg, result);
-              if (valid.result) {
+              const address: string[] = await window.ethereum?.request({
+                method: "eth_requestAccounts",
+              });
+              if (
+                address?.find(
+                  (item) => item.toLowerCase() === account.toLowerCase()
+                )
+              ) {
                 return resolve({ sig: result });
               }
             }
 
-            // // Valid: 3. contractWallet signature Valid `isValidSignature(bytes,bytes)`
-            // const walletValid: any = await contractWalletValidate(
-            //   web3,
-            //   account,
-            //   msg,
-            //   result
-            // );
-            //
-            // if (walletValid.result) {
-            //   return resolve({ sig: result });
-            // }
+            // Valid: 3. EOA signature Valid by ecRecover
+            const valid: any = await ecRecover(web3, account, msg, result);
+            if (valid.result) {
+              return resolve({ sig: result });
+            }
 
-            // Valid: 3. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(
               web3,
               account,
@@ -635,7 +626,7 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
-            // Valid: 4. counter Factual signature Valid when no counterFactualInfo
+            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
             if (accountId) {
               const fcValid = await fcWalletValid(
                 web3,
@@ -653,7 +644,7 @@ export async function personalSign(
               }
             }
 
-            // Valid: 5. myKeyValid Valid again
+            // Valid: 6. myKeyValid Valid again
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,

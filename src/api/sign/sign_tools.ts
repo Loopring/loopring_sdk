@@ -35,7 +35,7 @@ import {
 import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
-import { CounterFactualInfo } from "../../defs";
+import { CounterFactualInfo, IsMobile } from "../../defs";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -58,6 +58,7 @@ export interface KeyPairParams {
   chainId: ChainId;
   accountId?: number;
   counterFactualInfo?: CounterFactualInfo;
+  isMobile?: boolean;
 }
 
 export async function generateKeyPair({
@@ -68,22 +69,18 @@ export async function generateKeyPair({
   chainId,
   accountId,
   counterFactualInfo,
+  isMobile,
 }: KeyPairParams) {
   const result: any = await personalSign(
     web3,
     address,
     "",
     keySeed,
-    // ? keySeed
-    // : KEY_MESSAGE.replace("${exchangeAddress}", exchangeAddress).replace(
-    //     "${nonce}",
-    //     keyNonce.toString()
-    //   ),
-    //keyMessage + exchangeAddress + " with key nonce: " + keyNonce,
     walletType,
     chainId,
     accountId,
-    counterFactualInfo
+    counterFactualInfo,
+    isMobile === undefined ? IsMobile.any() : isMobile
   );
 
   if (!result.error) {
@@ -333,7 +330,8 @@ export async function getEcDSASig(
         walletType,
         chainId,
         counterFactualInfo ? counterFactualInfo.accountId : undefined,
-        counterFactualInfo
+        counterFactualInfo,
+        IsMobile.any()
       );
 
       if (signature?.sig) {
