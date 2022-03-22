@@ -1,5 +1,4 @@
 import { sleep } from "../utils";
-import { DelegateAPI } from "../api";
 import { ChainId, DEFAULT_TIMEOUT } from "../defs";
 import { BaseAPI } from "../api/base_api";
 

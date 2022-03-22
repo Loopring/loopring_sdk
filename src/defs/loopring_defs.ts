@@ -31,6 +31,7 @@ import {
 import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
+import { NFTType } from "../api";
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
   ? (Without<T, U> & U) | (Without<U, T> & T)
@@ -2185,6 +2186,7 @@ export interface GetUserNFTBalancesRequest {
   offset?: number;
   limit?: number;
   nonZero?: boolean;
+  metadata?: boolean;
 }
 
 export enum DEPLOYMENT_STATUS {
@@ -2204,6 +2206,36 @@ export interface UserNFTBalanceInfo {
   pending: {
     withdraw: string;
     deposit: string;
+  };
+  metadata?: {
+    uri: string;
+    base: {
+      name: string;
+      decimals: number;
+      description: string;
+      image: string;
+      properties: string;
+      localization: string;
+    };
+    imageSize: {
+      "32-32"?: string;
+      "120-120"?: string;
+      "375-375"?: string;
+      original?: string;
+    };
+    extra: {
+      imageData: string;
+      externalUrl: string;
+      attributes: string;
+      backgroundColor: string;
+      animationUrl: string;
+      youtubeUrl: string;
+      minter: string;
+    };
+    nftType: NFTType;
+    network: 0;
+    tokenAddress: string;
+    tokenId: string;
   };
   deploymentStatus: DEPLOYMENT_STATUS;
   isCounterFactualNFT: boolean;

@@ -27,8 +27,6 @@ let whitelistedUserApi: WhitelistedUserAPI;
 
 let exchange: ExchangeAPI;
 
-// let address = '0xff7d59d9316eba168837e3ef924bcdfd64b237d8'
-
 const eddkeyWhitelisted =
   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
 
@@ -123,8 +121,8 @@ describe("UserAPI test", function () {
           exchange: exchangeInfo.exchangeAddress,
           payerAddr: loopring_exported_account.address,
           payerId: accInfo.accountId,
-          payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
-          payeeId: 10392,
+          payeeAddr: loopring_exported_account.address2,
+          payeeId: loopring_exported_account.accountId2,
           storageId: storageId.offchainId,
           token: {
             tokenId: 1,
@@ -198,8 +196,8 @@ describe("UserAPI test", function () {
           exchange: exchangeInfo.exchangeAddress,
           payerAddr: loopring_exported_account.addressWhitlisted,
           payerId: accInfo.accountId,
-          payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
-          payeeId: 0,
+          payeeAddr: loopring_exported_account.address2,
+          payeeId: loopring_exported_account.accountId2,
           storageId: storageId.offchainId,
           token: {
             tokenId: 1,

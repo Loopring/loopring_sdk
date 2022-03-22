@@ -13,7 +13,6 @@ import {
 import { VALID_UNTIL, DEFAULT_TIMEOUT } from "../defs/loopring_constants";
 
 import * as sign_tools from "../api/sign/sign_tools";
-import { getTokenInfoBySymbol } from "../utils";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -27,16 +26,7 @@ let whitelistedUserApi: WhitelistedUserAPI;
 
 let exchange: ExchangeAPI;
 
-// let address = '0xff7d59d9316eba168837e3ef924bcdfd64b237d8'
-
-// const privateKey = "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf"
-
-///-----------------
-
 const addressWhitlisted = "0x35405E1349658BcA12810d0f879Bf6c5d89B512C";
-
-const privateKey2 =
-  "ada29a473e2b777403e7d2dc3876c5be03ca6b60d97e37e9bd335b1ce05a2680";
 
 const eddkeyWhitelisted =
   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
@@ -170,8 +160,8 @@ describe("Transfer test", function () {
           exchange: loopring_exported_account.exchangeAddr,
           payerAddr: accInfo.owner,
           payerId: accInfo.accountId,
-          payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
-          payeeId: 10392,
+          payeeAddr: loopring_exported_account.address2,
+          payeeId: loopring_exported_account.accountId2,
           storageId: storageId.offchainId,
           token: {
             tokenId: 1,
@@ -245,7 +235,7 @@ describe("Transfer test", function () {
           exchange: loopring_exported_account.exchangeAddr, //exchangeInfo.exchangeAddress,
           payerAddr: addressWhitlisted,
           payerId: accInfo.accountId,
-          payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
+          payeeAddr: loopring_exported_account.address2,
           payeeId: 0,
           storageId: storageId.offchainId,
           token: {
