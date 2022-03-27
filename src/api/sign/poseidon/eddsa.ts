@@ -68,13 +68,13 @@ export class SignatureScheme {
   static to_bytes(arg: BigNumber) {
     let outputLength = 32
 
-    console.log(`input ${arg.toString()}`)
+    // console.log(`input ${arg.toString()}`)
 
     let bitIntDataItems = bnToBuf(arg.toString());
-    console.log(`bigIntData ${bitIntDataItems}`)
+    // console.log(`bigIntData ${bitIntDataItems}`)
 
     let more = outputLength - bitIntDataItems.length
-    console.log('more', more)
+    // console.log('more', more)
     if (more > 0) {
       for (var i = 0; i < more; i++) {
         bitIntDataItems = [0].concat(bitIntDataItems)
@@ -84,7 +84,7 @@ export class SignatureScheme {
     }
 
     bitIntDataItems = bitIntDataItems.reverse()
-    console.log(`bigIntData return ${bitIntDataItems}`)
+    // console.log(`bigIntData return ${bitIntDataItems}`)
     return bitIntDataItems
   }
 
@@ -115,7 +115,7 @@ export class SignatureScheme {
     let byteArray1 = this.to_bytes(arg)
 
     let sum = byteArray0.concat(byteArray1)
-    console.log("sum", sum)
+    // console.log("sum", sum)
 
     // let byteArrayHexStr = bytesToHexString(sum)
     // console.log("byteArrayHexStr", byteArrayHexStr)
@@ -124,7 +124,7 @@ export class SignatureScheme {
 
     // let digest1 = createHash('sha512').update .digest("SHA-512", new Uint8Array(sum).buffer)
     let sha512StrItems: any
-    console.log('digest1', digest1);
+    // console.log('digest1', digest1);
     for (var i = 0; i < digest1.length; i++) {  
       let itemInt = digest1[i]
       let st = itemInt.toString(16)
@@ -134,11 +134,11 @@ export class SignatureScheme {
       sha512StrItems = [st].concat(sha512StrItems)
     }
     let sha512MessageHexStr = sha512StrItems.join("")
-    console.log(`sha512MessageHexStr ${sha512MessageHexStr}`)
+    // console.log(`sha512MessageHexStr ${sha512MessageHexStr}`)
     let sha512MessageHexStrBigInt = BigNumber.from("0x"+sha512MessageHexStr)
-    console.log(`sha512MessageHexStrBigInt ${sha512MessageHexStrBigInt}`)
+    // console.log(`sha512MessageHexStrBigInt ${sha512MessageHexStrBigInt}`)
     let hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L)
-    console.log(`hashed ${hashed.toString()}`)
+    // console.log(`hashed ${hashed.toString()}`)
     return hashed
   }
 
@@ -147,56 +147,56 @@ export class SignatureScheme {
   }
 
   static sign(msg: BigNumber, key: FQ, B: Point) {
-    console.log("B ", B.x.n.toString(), B.y.n.toString())
+    // console.log("B ", B.x.n.toString(), B.y.n.toString())
 
     let copyKey = new FQ(key.n, key.m)
     let A = B.mul(copyKey.n)
 
-    console.log("A.x ", A.x.n.toString(), A.x.m.toString())
-    console.log("A.y ", B.y.n.toString(), A.y.m.toString())
+    // console.log("A.x ", A.x.n.toString(), A.x.m.toString())
+    // console.log("A.y ", B.y.n.toString(), A.y.m.toString())
 
     let M = this.prehash_message(msg)
-    console.log("M ", M.toString())
+    // console.log("M ", M.toString())
 
     let r = this.hash_secret_python(key, M)
-    console.log("r ", r.toString())
+    // console.log("r ", r.toString())
 
     let copy_r = BigNumber.from(r.toString())
 
     let R = B.mul(copy_r)
 
-    console.log("R.x ", R.x.n.toString(), R.x.m.toString())
-    console.log("R.y ", R.y.n.toString(), R.y.m.toString())
+    // console.log("R.x ", R.x.n.toString(), R.x.m.toString())
+    // console.log("R.y ", R.y.n.toString(), R.y.m.toString())
 
     let t = this.hash_public(R, A, M)
-    console.log("hello world")
-    console.log("t ", t.toString())
+    // console.log("hello world")
+    // console.log("t ", t.toString())
 
     let t_c = t
     let key_n_t = key.n.mul(t_c)
     let left = r.add(key_n_t)
     let S = left.mod(jubjub.JUBJUB_E)
 
-    console.log("S ", S.toString())
+    // console.log("S ", S.toString())
 
     let signatureResult = new Signature(R, new FQ(S))
-    console.log("signatureResult", signatureResult.toStr())
+    // console.log("signatureResult", signatureResult.toStr())
 
     let signedMessage = new SignedMessage(A, signatureResult, msg)
-    console.log("signedMessage", signedMessage.toStr())
+    // console.log("signedMessage", signedMessage.toStr())
 
     return signedMessage
   }
 
   static as_scalar(point: Point) {
-    console.log(`as_scalar ${point.x.n.toString()}`)
+    // console.log(`as_scalar ${point.x.n.toString()}`)
     return [point.x.n, point.y.n]
   }
 
   static hash_public(R: Point, A: Point, M: BigNumber) {
     let inputMsg: any
     inputMsg = (this.as_scalar(R).concat(this.as_scalar(A))).concat([M])
-    console.log(`inputMsg ${inputMsg}`)
+    // console.log(`inputMsg ${inputMsg}`)
     let params = new PoseidonParams(field.SNARK_SCALAR_FIELD, 6, 6, 52, "poseidon", BigNumber.from(5), null, null, 128)
     let result = permunation.poseidon(inputMsg, params)
     return result

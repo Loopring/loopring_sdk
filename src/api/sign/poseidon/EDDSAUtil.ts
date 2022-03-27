@@ -9,17 +9,17 @@ export class EDDSAUtil {
     let strKey = BigNumber.from(PrivateKey)
     let msg = BigNumber.from(hash)
 
-    console.log("strKey", strKey.toString())
-    console.log("msg", msg.toString())
+    // console.log("strKey", strKey.toString())
+    // console.log("msg", msg.toString())
     let copyKey = new FQ(strKey)
     let B = SignatureScheme.B()
     let signed = SignatureScheme.sign(msg, copyKey, B)
-    console.log("signed", signed.toStr())
+    // console.log("signed", signed.toStr())
     let x = EDDSAUtil.formatted(signed.sig.R.x.n.toHexString().slice(2))
     let y = EDDSAUtil.formatted(signed.sig.R.y.n.toHexString().slice(2))
     let s = EDDSAUtil.formatted(signed.sig.s.n.toHexString().slice(2))
     let result = `0x${x}${y}${s}`
-    console.log("result", result)
+    // console.log("result", result)
     return {
       "Rx": signed.sig.R.x.n.toString(),
       "Ry": signed.sig.R.y.n.toString(),
@@ -41,7 +41,7 @@ export class EDDSAUtil {
   }
 
   static generateKeyPair(seed: any) {
-    console.log("seed", seed)
+    // console.log("seed", seed)
     let bigInt = BigNumber.from(0)
     for (var i = 0; i < seed.length; i++) {
       let item = seed[i]
@@ -49,15 +49,15 @@ export class EDDSAUtil {
       let tmp = BigNumber.from("256").pow(i)
       bigInt = bigInt.add(itemBigInt.mul(tmp))
     }
-    console.log("sum", bigInt.toString())
+    // console.log("sum", bigInt.toString())
 
     let secretKey = bigInt.mod(jubjub.JUBJUB_L)
-    console.log("secretKey", secretKey.toString())
+    // console.log("secretKey", secretKey.toString())
 
     let copySecretKey = BigNumber.from(secretKey.toString())
     let B = SignatureScheme.B()
     let publicKey = B.mul(copySecretKey)
-    console.log("publicKey", publicKey.x.n.toString(), publicKey.y.n.toString())
+    // console.log("publicKey", publicKey.x.n.toString(), publicKey.y.n.toString())
 
     let keyPair = {
       "publicKeyX": publicKey.x.n.toString(),

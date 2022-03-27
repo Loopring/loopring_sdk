@@ -64,13 +64,13 @@ export class permunation {
 
     var enc = new util.TextEncoder();    
     var message = enc.encode(arg)
-    console.log(`message ${message}`)
+    // console.log(`message ${message}`)
 
     let buf = Buffer.alloc(outputLength)
-    console.log(`hashOfSize32Bytes ${buf.toString()}`)    
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
     sodium.crypto_generichash(buf, message)
     let items = buf.toJSON().data
-    console.log(`items ${items}`)
+    // console.log(`items ${items}`)
 
     let sum = BigNumber.from("0")
     var i = 0
@@ -79,7 +79,7 @@ export class permunation {
       let tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
       sum = sum.add(tmp)
     }
-    console.log(`sum ${sum}`)
+    // console.log(`sum ${sum}`)
     return sum
   }
 
@@ -87,13 +87,13 @@ export class permunation {
     let outputLength = 32
 
     let message = new Uint8Array(SignatureScheme.to_bytes(arg))
-    console.log(`message ${message}`)
+    // console.log(`message ${message}`)
 
     let buf = Buffer.alloc(outputLength)
-    console.log(`hashOfSize32Bytes ${buf.toString()}`)    
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
     sodium.crypto_generichash(buf, message)
     let items = buf.toJSON().data
-    console.log(`items ${items}`)
+    // console.log(`items ${items}`)
 
     let sum = BigNumber.from("0")
     var i = 0
@@ -102,7 +102,7 @@ export class permunation {
       let tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
       sum = sum.add(tmp)
     }
-    console.log(`sum ${sum}`)
+    // console.log(`sum ${sum}`)
     return sum
   }
 
@@ -222,13 +222,13 @@ export class permunation {
     let state: any
     state = []
     state = state.concat(inputs)
-    console.log(`state ${state}`)
+    // console.log(`state ${state}`)
     for (var i = 0; i < params.t - inputs.length; i++) {
       state.push(BigNumber.from(0))
     }
 
-    console.log(`state ${state}`)
-    console.log(`params.constants_C.length ${params.constants_C.length}`)
+    // console.log(`state ${state}`)
+    // console.log(`params.constants_C.length ${params.constants_C.length}`)
 
     for (var i = 0; i < params.constants_C.length; i++) {
       let C_i = params.constants_C[i]
@@ -248,7 +248,7 @@ export class permunation {
     //    break
       }
     }
-    console.log(`hash is ${state[0]}`)
+    // console.log(`hash is ${state[0]}`)
     return state[0]
   }
 
