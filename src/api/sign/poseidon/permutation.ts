@@ -243,10 +243,6 @@ export class permunation {
 
       state = this.poseidon_mix(state, params.constants_M, params.p)
       // console.log(`after poseidon_mix ${state}`)
-
-      if (i == 1) {
-    //    break
-      }
     }
     // console.log(`hash is ${state[0]}`)
     return state[0]

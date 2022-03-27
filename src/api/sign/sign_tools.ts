@@ -8,7 +8,7 @@ import BN from "bn.js";
 
 import * as Poseidon from "./poseidon";
 
-import EdDSA from "./eddsa";
+// import EdDSA from "./eddsa";
 
 import BigInteger from "bignumber.js";
 import { BigNumber } from "ethers";
