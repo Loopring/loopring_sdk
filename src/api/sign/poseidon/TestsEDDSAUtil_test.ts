@@ -3,6 +3,21 @@ import { EDDSAUtil } from "./EDDSAUtil";
 import { bnToBuf, SignatureScheme } from "./eddsa";
 import { assert } from "console";
 
+function testEddsaPack_1() {
+  console.log("testEddsaPack")
+
+  // Input
+  let publicKeyX = "0x10440b6de1fc92536e20501e7513b5ca78d4c8c876450d97cfc2a4e24a4c67c7"
+  let publicKeyY = "0x10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
+
+  // Output
+  let eddsaPackOutput = "10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
+
+  let packed = EDDSAUtil.pack(publicKeyX, publicKeyY)  
+  assert(packed === eddsaPackOutput)
+  console.log("testEddsaPack passed")
+}
+
 function testEddsaSign() {
   console.log("testEddsaSign")
   let strKey = "1965533437444427599736796973543479035828634172708055838572430750620147597402"
@@ -38,8 +53,9 @@ function test_generateKeyPair() {
 
 function main() {
   console.log("\n\TestsEDDSAUtil_test\n")
+  testEddsaPack_1()
   // test_generateKeyPair()
-  testEddsaSign()
+  // testEddsaSign()
 }
 
 main();

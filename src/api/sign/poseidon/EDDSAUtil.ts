@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { SignatureScheme } from "./eddsa";
 import { FQ } from "./field";
 import { jubjub } from "./jubjub";
+import { babyJub } from "./babyJub";
 
 export class EDDSAUtil {
   
@@ -66,6 +67,13 @@ export class EDDSAUtil {
     }
 
     return keyPair
+  }
+
+  static pack(publicKeyX: string, publicKeyY: string) {
+    let P0 = BigNumber.from(publicKeyX)
+    let P1 = BigNumber.from(publicKeyY)
+    let newPack = babyJub.packPoint(P0, P1)
+    return newPack
   }
 
 }

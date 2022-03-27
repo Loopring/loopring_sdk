@@ -235,7 +235,7 @@ export function bufToBn(buf: any) {
   return BigInt('0x' + hex.join(''));
 }
 
-function bytesToHexString(bytes: any) {
+export function bytesToHexString(bytes: any) {
   var strItems: any;
   strItems = [];
   for (var i = 0; i < bytes.length; i++) {
