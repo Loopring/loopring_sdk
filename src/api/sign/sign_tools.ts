@@ -380,14 +380,16 @@ export async function getEcDSASig(
 }
 
 export function convertPublicKey2(pk: PublicKey) {
-  return new BN(EdDSA.pack(pk.x, pk.y), 16);
+  // return new BN(EdDSA.pack(pk.x, pk.y), 16);
+  return new BN(EDDSAUtil.pack(pk.x, pk.y), 16);
 }
 
 export function convertPublicKey(pk: PublicKey) {
   const publicKeyX = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.x)));
   const publicKeyY = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.y)));
 
-  return new BN(EdDSA.pack(publicKeyX, publicKeyY), 16);
+  // return new BN(EdDSA.pack(publicKeyX, publicKeyY), 16);
+  return new BN(EDDSAUtil.pack(publicKeyX, publicKeyY), 16);
 }
 
 export function getUpdateAccountEcdsaTypedData(
