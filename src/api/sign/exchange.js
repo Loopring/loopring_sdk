@@ -11,6 +11,8 @@ import EdDSA from "./eddsa";
 import config from "../config";
 import sha256 from "crypto-js/sha256";
 
+import { EDDSAUtil } from "./poseidon/EDDSAUtil";
+
 const assert = require("assert");
 
 export function generateKeyPair(seed) {
@@ -26,6 +28,8 @@ export function verify(publicKeyX, publicKeyY, seed) {
 }
 
 export function signGetApiKey(request, keyPair) {
+
+  console.log("signGetApiKey ..... ")
   if (request.signature !== undefined) {
     return;
   }
@@ -36,7 +40,7 @@ export function signGetApiKey(request, keyPair) {
   const message = `${method}&${uri}&${params}`;
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
   request.signature =
     fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
     fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
@@ -111,7 +115,7 @@ export function signAccountUpdate(data, keyPair) {
 
   const hasher = Poseidon.createHash(9, 6, 53);
   const hash = hasher(inputs).toString(10);
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   data.signature =
     fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -227,6 +231,9 @@ export function getTransferEcdsaSig(data) {
 }
 
 export function signTransfer(transfer, keyPair) {
+
+  console.log("signTransfer ..... ")
+
   const inputs = [
     new BN(ethUtil.toBuffer(transfer.exchange)).toString(),
     transfer.payerId,
@@ -244,7 +251,7 @@ export function signTransfer(transfer, keyPair) {
 
   const hasher = Poseidon.createHash(13, 6, 53);
   const hash = hasher(inputs).toString(10);
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   return (
     fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -279,7 +286,7 @@ export function signOffChainWithdraw(withdraw, keyPair) {
 
   const hasher = Poseidon.createHash(10, 6, 53);
   const hash = hasher(inputs).toString(10);
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   return (
     fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -407,7 +414,7 @@ export function signSetReferrer(request, keyPair) {
   const message = `${method}&${uri}&${params}`;
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  return EdDSA.sign(keyPair.secretKey, hash);
+  return EDDSAUtil.sign(keyPair.secretKey, hash);
 }
 
 export function signUpdateDistributeHash(request, keyPair) {
@@ -426,7 +433,7 @@ export function signUpdateDistributeHash(request, keyPair) {
   const message = `${method}&${uri}&${params}`;
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  return EdDSA.sign(keyPair.secretKey, hash);
+  return EDDSAUtil.sign(keyPair.secretKey, hash);
 }
 
 export function createAccountAndDeposit({
@@ -625,7 +632,7 @@ export function signWithdrawal(_withdrawal, keyPair, exchangeId, tokens) {
 
   // Create signature
   withdrawal.hash = hash;
-  withdrawal.signature = EdDSA.sign(keyPair.secretKey, hash);
+  withdrawal.signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   /**
   // Verify signature
@@ -662,7 +669,7 @@ export function signOrder(_order, keyPair, tokens) {
   order.hash = hasher(inputs).toString(10);
 
   // Create signature
-  const signature = EdDSA.sign(keyPair.secretKey, order.hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, order.hash);
   // order.signature = signature;
   // order.signatureRx = signature.Rx;
   // order.signatureRy = signature.Ry;
@@ -789,7 +796,7 @@ export function signCancel(_cancel, keyPair) {
   const hash = hasher(inputs).toString(10);
 
   // Create signature
-  cancel.signature = EdDSA.sign(keyPair.secretKey, hash);
+  cancel.signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   /**
      *
@@ -847,7 +854,7 @@ export function signFlexCancel(request, keyPair) {
 
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  request.signature = EdDSA.sign(keyPair.secretKey, hash);
+  request.signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   /**
      *
@@ -872,7 +879,7 @@ export function batchCancelOrdersByHash(accountId, orderHashes, keyPair) {
 
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   return {
     accountId,
@@ -901,7 +908,7 @@ export function batchCancelOrdersByClientOrderIds(
 
   const hash = fm.addHexPrefix(sha256(message).toString());
   // Create signature
-  const signature = EdDSA.sign(keyPair.secretKey, hash);
+  const signature = EDDSAUtil.sign(keyPair.secretKey, hash);
 
   return {
     accountId,
