@@ -39,9 +39,9 @@ export class Point {
   }
 
   static generate() {
-    let xBigInt = BigNumber.from("16540640123574156134436876038791482806971768689494387082833631921987005038935")
-    let yBigInt = BigNumber.from("20819045374670962167435360035096875258406992893633759881276124905556507972311")
-    let point = new Point(new FQ(xBigInt), new FQ(yBigInt))
+    const xBigInt = BigNumber.from("16540640123574156134436876038791482806971768689494387082833631921987005038935")
+    const yBigInt = BigNumber.from("20819045374670962167435360035096875258406992893633759881276124905556507972311")
+    const point = new Point(new FQ(xBigInt), new FQ(yBigInt))
     return point
   }
 
@@ -50,7 +50,7 @@ export class Point {
     let a = Point.infinity()
     let i = 0
     while (!scaler.eq(0)) {
-      let bitwiseAnd = scaler.and(BigNumber.from("1"))
+      const bitwiseAnd = scaler.and(BigNumber.from("1"))
       if (!bitwiseAnd.eq(0)) {
         a = a.add(p)
       }
@@ -66,23 +66,23 @@ export class Point {
     if (this.x.n.eq(BigNumber.from("0")) && this.y.n.eq(BigNumber.from("0"))) {
       return other
     }
-    let u1 = this.x
-    let v1 = this.y
-    let u2 = other.x
-    let v2 = other.y
+    const u1 = this.x
+    const v1 = this.y
+    const u2 = other.x
+    const v2 = other.y
 
-    let u3_tmp0 = (u1.mul(v2.n)).add(v1.mul(u2.n).n)
-    let u3_tmp1 = u1.mul(u2.n).mul(v1.n).mul(v2.n).mul(jubjub.JUBJUB_D)
+    const u3_tmp0 = (u1.mul(v2.n)).add(v1.mul(u2.n).n)
+    const u3_tmp1 = u1.mul(u2.n).mul(v1.n).mul(v2.n).mul(jubjub.JUBJUB_D)
 
-    let u3_tmp2 = FQ.one().add(u3_tmp1.n)
-    let u3 = u3_tmp0.div(u3_tmp2.n)
+    const u3_tmp2 = FQ.one().add(u3_tmp1.n)
+    const u3 = u3_tmp0.div(u3_tmp2.n)
 
-    let v3_tmp0 = v1.mul(v2.n)
-    let v3_tmp1 = u1.mul(u2.n).mul(jubjub.JUBJUB_A)
-    let v3_tmp3 = v3_tmp0.sub(v3_tmp1.n)
+    const v3_tmp0 = v1.mul(v2.n)
+    const v3_tmp1 = u1.mul(u2.n).mul(jubjub.JUBJUB_A)
+    const v3_tmp3 = v3_tmp0.sub(v3_tmp1.n)
   
-    let v3_tmp5 = FQ.one().sub(u3_tmp1.n)
-    let v3 = v3_tmp3.div(v3_tmp5.n)
+    const v3_tmp5 = FQ.one().sub(u3_tmp1.n)
+    const v3 = v3_tmp3.div(v3_tmp5.n)
 
     return new Point(u3, v3)
   }

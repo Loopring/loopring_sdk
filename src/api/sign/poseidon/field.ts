@@ -27,19 +27,19 @@ export class FQ {
   //
 
   add(other: BigNumber) {
-    let on = other
-    let n = (this.n.add(on)).mod(this.m)
+    const on = other
+    const n = (this.n.add(on)).mod(this.m)
     return new FQ(n, this.m)
   }
 
   mul(other: BigNumber) {
-    let on = other
-    let n = this.n.mul(on).mod(this.m)
+    const on = other
+    const n = this.n.mul(on).mod(this.m)
     return new FQ(n, this.m)
   }
 
   sub(other: BigNumber) {
-    let on = other
+    const on = other
     let new_n: BigNumber;
     if (this.n.gte(on)) {
       new_n = (this.n.sub(on)).mod(this.m)
@@ -50,11 +50,11 @@ export class FQ {
   }
 
   div(other: BigNumber) {
-    let on_c = other
-    let m_c = this.m
-    let two_c = BigNumber.from("2")
-    let on_power_c = modulo(on_c, m_c.sub(two_c), m_c)
-    let n_on_power_remainder = this.n.mul(on_power_c).mod(this.m)
+    const on_c = other
+    const m_c = this.m
+    const two_c = BigNumber.from("2")
+    const on_power_c = modulo(on_c, m_c.sub(two_c), m_c)
+    const n_on_power_remainder = this.n.mul(on_power_c).mod(this.m)
 
     return new FQ(n_on_power_remainder, this.m)
   }
@@ -74,7 +74,7 @@ export function modulo(n: BigNumber, p: BigNumber, m: BigNumber) {
   const p_ = BigInt(p.toString())
   const m_ = BigInt(m.toString())
 
-  let result = bigintModArith.modPow(n_, p_, m_)
+  const result = bigintModArith.modPow(n_, p_, m_)
   // console.log(n_.toString(), p_.toString(), m_.toString(), result.toString())
   return BigNumber.from(result.toString())
 }

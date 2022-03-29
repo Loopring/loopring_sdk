@@ -7,22 +7,22 @@ function testEddsaPack_1() {
   console.log("testEddsaPack")
 
   // Input
-  let publicKeyX = "0x10440b6de1fc92536e20501e7513b5ca78d4c8c876450d97cfc2a4e24a4c67c7"
-  let publicKeyY = "0x10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
+  const publicKeyX = "0x10440b6de1fc92536e20501e7513b5ca78d4c8c876450d97cfc2a4e24a4c67c7"
+  const publicKeyY = "0x10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
 
   // Output
-  let eddsaPackOutput = "10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
+  const eddsaPackOutput = "10dfbb7cd80bde2eeedbf9e0fad12819ca20be36b96a7f28c37c6a7550ed366c"
 
-  let packed = EDDSAUtil.pack(publicKeyX, publicKeyY)  
+  const packed = EDDSAUtil.pack(publicKeyX, publicKeyY)  
   assert(packed === eddsaPackOutput)
   console.log("testEddsaPack passed")
 }
 
 function testEddsaSign() {
   console.log("testEddsaSign")
-  let strKey = "1965533437444427599736796973543479035828634172708055838572430750620147597402"
-  let msg = "20823375595941673465102915960468301465677704522962441935281926279865178787657"
-  let result = EDDSAUtil.sign(strKey, msg)
+  const strKey = "1965533437444427599736796973543479035828634172708055838572430750620147597402"
+  const msg = "20823375595941673465102915960468301465677704522962441935281926279865178787657"
+  const result = EDDSAUtil.sign(strKey, msg)
   // assert(result == "0x04ad08469a4a8622a661a793615ebddfa6ea2b72c8f1b02e33288ea2bd71cede0ed7f67939097ab95d3c9d8647e198f4ef523bf6cfb8da0ead89a57e27eff0d12ea6ac32cc118b1bc0aeb8f1be37f317f399197f9e41c8a90ecfe9e296be42e5")
   console.log(result.Rx)
   console.log(result.Ry)
@@ -37,13 +37,13 @@ function testEddsaSign() {
 
 function test_generateKeyPair() {
   console.log("generateKeyPair")
-  let seedHex = "0x" + "7f16a4c491d3494c3bc8ef097e7c123a9da6fa8167631efd5f82b89e803b0682"
-  let seed = BigNumber.from(seedHex)
+  const seedHex = "0x" + "7f16a4c491d3494c3bc8ef097e7c123a9da6fa8167631efd5f82b89e803b0682"
+  const seed = BigNumber.from(seedHex)
   console.log(`seed ${seed.toString()}`)
-  let bitIntDataItems = bnToBuf(seed.toString());
+  const bitIntDataItems = bnToBuf(seed.toString());
   console.log(`bigIntData ${bitIntDataItems}`)
   
-  let keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
+  const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
 
   assert(keyPair.publicKeyX === "18584920749226215196041463810216086509508234553287520526360090588893385486657")
   assert(keyPair.publicKeyY === "4521439321743413283487130903749053907482128013050103604539374548984130428531")

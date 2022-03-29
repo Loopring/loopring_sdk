@@ -6,19 +6,19 @@ import { field } from "./field";
 export class babyJub {
   
   static packPoint(P0: BigNumber, P1: BigNumber) {
-    let packed = SignatureScheme.to_bytes(P1).reverse()
+    const packed = SignatureScheme.to_bytes(P1).reverse()
     // console.log("packed", packed)
     if (babyJub.lt(P0, BigNumber.from("0"))) {
       packed[0] = packed[0] | 0x80
     }
-    let hexStr = bytesToHexString(packed)
+    const hexStr = bytesToHexString(packed)
     // console.log("hexStr", hexStr)
     return hexStr
   }
 
   static lt(a: BigNumber, b: BigNumber) {
-    let half = field.SNARK_SCALAR_FIELD.div(BigNumber.from("2"))
-    let p = field.SNARK_SCALAR_FIELD
+    const half = field.SNARK_SCALAR_FIELD.div(BigNumber.from("2"))
+    const p = field.SNARK_SCALAR_FIELD
     let aa: BigNumber
     let bb: BigNumber
     if (a.gt(half)) {
@@ -32,8 +32,8 @@ export class babyJub {
   }
 
   static gt(a: BigNumber, b: BigNumber) {
-    let half = field.SNARK_SCALAR_FIELD.div(BigNumber.from("2"))
-    let p = field.SNARK_SCALAR_FIELD
+    const half = field.SNARK_SCALAR_FIELD.div(BigNumber.from("2"))
+    const p = field.SNARK_SCALAR_FIELD
     let aa: BigNumber
     let bb: BigNumber
     if (a.gt(half)) {

@@ -66,17 +66,17 @@ export class SignedMessage {
 export class SignatureScheme {
 
   static to_bytes(arg: BigNumber) {
-    let outputLength = 32
+    const outputLength = 32
 
     // console.log(`input ${arg.toString()}`)
 
     let bitIntDataItems = bnToBuf(arg.toString());
     // console.log(`bigIntData ${bitIntDataItems}`)
 
-    let more = outputLength - bitIntDataItems.length
+    const more = outputLength - bitIntDataItems.length
     // console.log('more', more)
     if (more > 0) {
-      for (var i = 0; i < more; i++) {
+      for (let i = 0; i < more; i++) {
         bitIntDataItems = [0].concat(bitIntDataItems)
       }
     } else {
@@ -111,33 +111,33 @@ export class SignatureScheme {
       can replace `r` with `r mod L` before computing `rB`.)
   */
   static hash_secret_python(k: FQ, arg: BigNumber) {
-    let byteArray0 = this.to_bytes(k.n)
-    let byteArray1 = this.to_bytes(arg)
+    const byteArray0 = this.to_bytes(k.n)
+    const byteArray1 = this.to_bytes(arg)
 
-    let sum = byteArray0.concat(byteArray1)
+    const sum = byteArray0.concat(byteArray1)
     // console.log("sum", sum)
 
     // let byteArrayHexStr = bytesToHexString(sum)
     // console.log("byteArrayHexStr", byteArrayHexStr)
 
-    let digest1 = sha512.array(new Uint8Array(sum).buffer)
+    const digest1 = sha512.array(new Uint8Array(sum).buffer)
 
     // let digest1 = createHash('sha512').update .digest("SHA-512", new Uint8Array(sum).buffer)
     let sha512StrItems: any
     // console.log('digest1', digest1);
-    for (var i = 0; i < digest1.length; i++) {  
-      let itemInt = digest1[i]
+    for (let i = 0; i < digest1.length; i++) {  
+      const itemInt = digest1[i]
       let st = itemInt.toString(16)
       if (st.length == 1) {
         st = '0' + st
       }
       sha512StrItems = [st].concat(sha512StrItems)
     }
-    let sha512MessageHexStr = sha512StrItems.join("")
+    const sha512MessageHexStr = sha512StrItems.join("")
     // console.log(`sha512MessageHexStr ${sha512MessageHexStr}`)
-    let sha512MessageHexStrBigInt = BigNumber.from("0x"+sha512MessageHexStr)
+    const sha512MessageHexStrBigInt = BigNumber.from("0x"+sha512MessageHexStr)
     // console.log(`sha512MessageHexStrBigInt ${sha512MessageHexStrBigInt}`)
-    let hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L)
+    const hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L)
     // console.log(`hashed ${hashed.toString()}`)
     return hashed
   }
@@ -149,40 +149,40 @@ export class SignatureScheme {
   static sign(msg: BigNumber, key: FQ, B: Point) {
     // console.log("B ", B.x.n.toString(), B.y.n.toString())
 
-    let copyKey = new FQ(key.n, key.m)
-    let A = B.mul(copyKey.n)
+    const copyKey = new FQ(key.n, key.m)
+    const A = B.mul(copyKey.n)
 
     // console.log("A.x ", A.x.n.toString(), A.x.m.toString())
     // console.log("A.y ", B.y.n.toString(), A.y.m.toString())
 
-    let M = this.prehash_message(msg)
+    const M = this.prehash_message(msg)
     // console.log("M ", M.toString())
 
-    let r = this.hash_secret_python(key, M)
+    const r = this.hash_secret_python(key, M)
     // console.log("r ", r.toString())
 
-    let copy_r = BigNumber.from(r.toString())
+    const copy_r = BigNumber.from(r.toString())
 
-    let R = B.mul(copy_r)
+    const R = B.mul(copy_r)
 
     // console.log("R.x ", R.x.n.toString(), R.x.m.toString())
     // console.log("R.y ", R.y.n.toString(), R.y.m.toString())
 
-    let t = this.hash_public(R, A, M)
+    const t = this.hash_public(R, A, M)
     // console.log("hello world")
     // console.log("t ", t.toString())
 
-    let t_c = t
-    let key_n_t = key.n.mul(t_c)
-    let left = r.add(key_n_t)
-    let S = left.mod(jubjub.JUBJUB_E)
+    const t_c = t
+    const key_n_t = key.n.mul(t_c)
+    const left = r.add(key_n_t)
+    const S = left.mod(jubjub.JUBJUB_E)
 
     // console.log("S ", S.toString())
 
-    let signatureResult = new Signature(R, new FQ(S))
+    const signatureResult = new Signature(R, new FQ(S))
     // console.log("signatureResult", signatureResult.toStr())
 
-    let signedMessage = new SignedMessage(A, signatureResult, msg)
+    const signedMessage = new SignedMessage(A, signatureResult, msg)
     // console.log("signedMessage", signedMessage.toStr())
 
     return signedMessage
@@ -197,22 +197,22 @@ export class SignatureScheme {
     let inputMsg: any
     inputMsg = (this.as_scalar(R).concat(this.as_scalar(A))).concat([M])
     // console.log(`inputMsg ${inputMsg}`)
-    let params = new PoseidonParams(field.SNARK_SCALAR_FIELD, 6, 6, 52, "poseidon", BigNumber.from(5), null, null, 128)
-    let result = permunation.poseidon(inputMsg, params)
+    const params = new PoseidonParams(field.SNARK_SCALAR_FIELD, 6, 6, 52, "poseidon", BigNumber.from(5), null, null, 128)
+    const result = permunation.poseidon(inputMsg, params)
     return result
   }
 }
 
 
 export function bnToBuf(bn: string) {
-  var hex = BigInt(bn).toString(16)
+  let hex = BigInt(bn).toString(16)
   if (hex.length % 2) {
     hex = '0' + hex
   }
-  var len = hex.length / 2;
-  var u8 = new Uint8Array(len);
-  var i = 0;
-  var j = 0;
+  const len = hex.length / 2;
+  const u8 = new Uint8Array(len);
+  let i = 0;
+  let j = 0;
   while (i < len) {
     u8[i] = parseInt(hex.slice(j, j + 2), 16)
     i += 1;
@@ -222,12 +222,12 @@ export function bnToBuf(bn: string) {
 }
 
 export function bufToBn(buf: any) {
-  var hex: any;
+  let hex: any;
   hex = [];
-  var u8 = Uint8Array.from(buf);
+  const u8 = Uint8Array.from(buf);
 
   u8.forEach(function (i) {
-    var h = i.toString(16);
+    let h = i.toString(16);
     if (h.length % 2) { h = '0' + h; }
     hex.push(h);
   });
@@ -236,10 +236,10 @@ export function bufToBn(buf: any) {
 }
 
 export function bytesToHexString(bytes: any) {
-  var strItems: any;
+  let strItems: any;
   strItems = [];
-  for (var i = 0; i < bytes.length; i++) {
-    let item = bytes[i]
+  for (let i = 0; i < bytes.length; i++) {
+    const item = bytes[i]
     let st = item.toString(16)
     if (st.length == 1) {
       st = '0' + st
@@ -247,6 +247,6 @@ export function bytesToHexString(bytes: any) {
     // st = st.toUpperCase()
     strItems.push(st)
   }
-  let strItemsJoined = strItems.join("")
+  const strItemsJoined = strItems.join("")
   return strItemsJoined
 }

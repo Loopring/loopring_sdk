@@ -17,22 +17,22 @@ import { bnToBuf, SignatureScheme } from "./eddsa";
 import { modulo } from './field';
 
 // util is for TextEncoder
-var util = require('util');
+const util = require('util');
 
-var sodium = require('sodium-native')
+const sodium = require('sodium-native')
 
 export class PoseidonParams {
   public p: BigNumber;
   public t: number;
   public nRoundsF: number;
   public nRoundsP: number;
-  public seed: String;
+  public seed: string;
   public e: BigNumber;
   public constants_C: [BigNumber]
   public constants_M: [[BigNumber]]
   public security_target: number
 
-  constructor(p: BigNumber, t: number, nRoundsF: number, nRoundsP: number, seed: String, e: BigNumber, constants_C: [BigNumber] | null, constants_M: [[BigNumber]] | null, security_target: number) {
+  constructor(p: BigNumber, t: number, nRoundsF: number, nRoundsP: number, seed: string, e: BigNumber, constants_C: [BigNumber] | null, constants_M: [[BigNumber]] | null, security_target: number) {
     this.p = p
     this.t = t
     this.nRoundsF = nRoundsF
@@ -60,23 +60,23 @@ export class PoseidonParams {
 export class permunation {
 
   static H(arg: string) {
-    let outputLength = 32
+    const outputLength = 32
 
-    var enc = new util.TextEncoder();    
-    var message = enc.encode(arg)
+    const enc = new util.TextEncoder();    
+    const message = enc.encode(arg)
     // console.log(`message ${message}`)
 
-    let buf = Buffer.alloc(outputLength)
+    const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
     sodium.crypto_generichash(buf, message)
-    let items = buf.toJSON().data
+    const items = buf.toJSON().data
     // console.log(`items ${items}`)
 
     let sum = BigNumber.from("0")
     var i = 0
     for (var i = 0; i < items.length; i++) {
-      let itemBigInt = BigNumber.from(items[i])
-      let tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
+      const itemBigInt = BigNumber.from(items[i])
+      const tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
       sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
@@ -84,22 +84,22 @@ export class permunation {
   }
 
   static H_Bigint(arg: BigNumber) {
-    let outputLength = 32
+    const outputLength = 32
 
-    let message = new Uint8Array(SignatureScheme.to_bytes(arg))
+    const message = new Uint8Array(SignatureScheme.to_bytes(arg))
     // console.log(`message ${message}`)
 
-    let buf = Buffer.alloc(outputLength)
+    const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
     sodium.crypto_generichash(buf, message)
-    let items = buf.toJSON().data
+    const items = buf.toJSON().data
     // console.log(`items ${items}`)
 
     let sum = BigNumber.from("0")
     var i = 0
     for (var i = 0; i < items.length; i++) {
-      let itemBigInt = BigNumber.from(items[i])
-      let tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
+      const itemBigInt = BigNumber.from(items[i])
+      const tmp = itemBigInt.mul((BigNumber.from(256).pow(i)))
       sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
@@ -111,31 +111,31 @@ export class permunation {
     let c: any
     c = []
     let seedBigInt = this.H(seed)
-    let result = seedBigInt.mod(p)
+    const result = seedBigInt.mod(p)
     c.push(result)
-    for (var i = 0; i < n-1; i++) {
+    for (let i = 0; i < n-1; i++) {
       seedBigInt = this.H_Bigint(seedBigInt)
-      let result = seedBigInt.mod(p)
+      const result = seedBigInt.mod(p)
       c.push(result)
     }
     return c
   }
 
   static poseidon_matrix(p: BigNumber, seed: string, t: number) {
-    let c = this.poseidon_constants(p, seed, t*2)
+    const c = this.poseidon_constants(p, seed, t*2)
     let matrix: any
     matrix = []
-    for (var i = 0; i < t; i++) {
+    for (let i = 0; i < t; i++) {
       let row: any
       row = []
-      for (var j = 0; j < t; j++) {
-        let c_i = c[i]
-        let c_t_j = c[t+j]
-        let p_c = p
-        let c_t_j_p = c_t_j.mod(p_c)
-        let left = c_i.sub(c_t_j_p)
-        let p_2 = p_c.sub(2)
-        let item_c = modulo(left, p_2, p_c)
+      for (let j = 0; j < t; j++) {
+        const c_i = c[i]
+        const c_t_j = c[t+j]
+        const p_c = p
+        const c_t_j_p = c_t_j.mod(p_c)
+        const left = c_i.sub(c_t_j_p)
+        const p_2 = p_c.sub(2)
+        const item_c = modulo(left, p_2, p_c)
         row.push(item_c)
       }
       matrix.push(row)
@@ -152,21 +152,21 @@ export class permunation {
     - the middle R_P rounds have a partial S-Box layer (i.e., 1 S-Box layer),
     - the last R_f rounds have a full S-Box layer
     */
-    let half_F = params.nRoundsF / 2
+    const half_F = params.nRoundsF / 2
 
     if (i < half_F || i >= (half_F + params.nRoundsP)) {
-      for (var j = 0; j < state.length; j++) {
-        let element_c = state[j]
-        let e_c = params.e
-        let p_c = params.p
-        let item = modulo(element_c, e_c, p_c)
+      for (let j = 0; j < state.length; j++) {
+        const element_c = state[j]
+        const e_c = params.e
+        const p_c = params.p
+        const item = modulo(element_c, e_c, p_c)
         state[j] = item
       }
     } else {
-      let element_c = state[0]
-      let e_c = params.e
-      let p_c = params.p
-      let item = modulo(element_c, e_c, p_c)
+      const element_c = state[0]
+      const e_c = params.e
+      const p_c = params.p
+      const item = modulo(element_c, e_c, p_c)
       state[0] = item
     }
     return state
@@ -179,10 +179,10 @@ export class permunation {
     */
     let newState: any
     newState = []
-    for (var i = 0; i < M.length; i++) {
+    for (let i = 0; i < M.length; i++) {
       let sum = BigNumber.from(0)
-      for (var j = 0; j < state.length; j++) {
-        let element = state[j]
+      for (let j = 0; j < state.length; j++) {
+        const element = state[j]
         sum = sum.add((M[i][j].mul(element)))
       }
       newState.push(sum.mod(p))
@@ -231,10 +231,10 @@ export class permunation {
     // console.log(`params.constants_C.length ${params.constants_C.length}`)
 
     for (var i = 0; i < params.constants_C.length; i++) {
-      let C_i = params.constants_C[i]
+      const C_i = params.constants_C[i]
 
-      for (var index = 0; index < state.length; index++) {
-        let element = state[index]
+      for (let index = 0; index < state.length; index++) {
+        const element = state[index]
         state[index] = element.add(C_i)
       }
 
