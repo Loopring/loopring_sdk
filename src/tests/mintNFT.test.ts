@@ -5,6 +5,7 @@ import { dumpError400 } from "../utils/network_tools";
 
 import {
   GetNextStorageIdRequest,
+  GetNFTOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   NFTMintRequestV3,
 } from "../defs/loopring_defs";
@@ -13,9 +14,10 @@ import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
 
 import * as sign_tools from "../api/sign/sign_tools";
 import Web3 from "web3";
-import { loopring_exported_account } from "./utils";
+import { loopring_exported_account, TOKEN_INFO } from "./utils";
 import { BaseAPI } from "../api/base_api";
 import { myLog } from "../utils/log_tools";
+import { OffchainNFTFeeReqType } from "../defs";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -100,8 +102,23 @@ describe("Mint test", function () {
         myLog("nftTokenAddress", nftTokenAddress);
 
         const storageId = await userApi.getNextStorageId(request2, apiKey);
-        // let hash: any = new BN(nftId,'hex')
-        // hash = toHex(hash);//new BigInteger(sha256(nftId.toString()).toString(), 16)
+
+        // step 5 get fee
+        const requestFee: GetNFTOffchainFeeAmtRequest = {
+          accountId: accInfo.accountId,
+          tokenAddress: loopring_exported_account.nftTokenAddress,
+          requestType: OffchainNFTFeeReqType.NFT_MINT,
+        };
+
+        const responseFee = await userApi.getNFTOffchainFeeAmt(
+          requestFee,
+          apiKey
+        );
+
+        const {
+          raw_data: { fees },
+        } = await userApi.getNFTOffchainFeeAmt(requestFee, apiKey);
+        console.log(fees);
 
         const request3: NFTMintRequestV3 = {
           exchange: exchangeInfo.exchangeAddress,
@@ -116,8 +133,12 @@ describe("Mint test", function () {
           validUntil: VALID_UNTIL,
           storageId: storageId.offchainId ?? 9,
           maxFee: {
-            tokenId: 1,
-            amount: "9400000000000000000",
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[
+                responseFee.fees[1]?.token?.toString() ?? "LRC"
+              ].tokenId,
+            amount: responseFee.fees[1]?.fee ?? "3260000000000000",
           },
           royaltyPercentage: 5,
           counterFactualNftInfo,

@@ -6,6 +6,8 @@ import { dumpError400 } from "../utils/network_tools";
 import {
   GetAccountRequest,
   GetNextStorageIdRequest,
+  GetNFTOffchainFeeAmtRequest,
+  GetOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   OriginTransferRequestV3,
 } from "../defs/loopring_defs";
@@ -17,8 +19,9 @@ import * as sign_tools from "../api/sign/sign_tools";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 import Web3 from "web3";
-import { loopring_exported_account } from "./utils";
+import { loopring_exported_account, TOKEN_INFO } from "./utils";
 import { BaseAPI } from "../api/base_api";
+import { OffchainFeeReqType, OffchainNFTFeeReqType } from "../defs";
 
 let userApi: UserAPI;
 
@@ -155,7 +158,15 @@ describe("Transfer test", function () {
         };
         const storageId = await userApi.getNextStorageId(request2, apiKey);
 
-        // step 5 transfer
+        // step 5 get fee
+        const requestFee: GetOffchainFeeAmtRequest = {
+          accountId: accInfo.accountId,
+          requestType: OffchainFeeReqType.TRANSFER,
+        };
+
+        const responseFee = await userApi.getOffchainFeeAmt(requestFee, apiKey);
+
+        // step 6 transfer
         const request3: OriginTransferRequestV3 = {
           exchange: loopring_exported_account.exchangeAddr,
           payerAddr: accInfo.owner,
@@ -168,8 +179,12 @@ describe("Transfer test", function () {
             volume: "100000000000000000000",
           },
           maxFee: {
-            tokenId: 1,
-            volume: "9400000000000000000",
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[
+                responseFee.fees[1]?.token?.toString() ?? "LRC"
+              ].tokenId,
+            volume: responseFee.fees[1]?.fee ?? "9400000000000000000",
           },
           validUntil: VALID_UNTIL,
         };

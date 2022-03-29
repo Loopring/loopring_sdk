@@ -474,7 +474,6 @@ export class ExchangeAPI extends BaseAPI {
       tokenIdArrStr: tokenIdArr.join(SEP),
       tokenAddressArr,
       tokenAddressArrStr: tokenAddressArr.join(SEP),
-
       raw_data,
     };
   }

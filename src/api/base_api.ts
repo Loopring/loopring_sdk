@@ -614,7 +614,19 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
-            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            // // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            // const walletValid: any = await contractWalletValidate(
+            //   web3,
+            //   account,
+            //   msg,
+            //   result
+            // );
+            //
+            // if (walletValid.result) {
+            //   return resolve({ sig: result });
+            // }
+
+            // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(
               web3,
               account,
@@ -626,7 +638,7 @@ export async function personalSign(
               return resolve({ sig: result });
             }
 
-            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
+            // Valid: 6. counter Factual signature Valid when no counterFactualInfo
             if (accountId) {
               const fcValid = await fcWalletValid(
                 web3,
@@ -644,7 +656,7 @@ export async function personalSign(
               }
             }
 
-            // Valid: 6. myKeyValid Valid again
+            // Valid: 7. myKeyValid Valid again
             const myKeyValid: any = await mykeyWalletValid(
               web3,
               account,

@@ -714,13 +714,26 @@ export interface GetOffchainFeeAmtRequest {
   amount?: string;
 }
 
-export interface GetNFTOffchainFeeAmtRequest {
+/**
+ * @methodOf OffchainNFTFeeReqType.NFT_MINT
+ * @requires  tokenAddress
+ *
+ * @methodOf {} OffchainNFTFeeReqType.NFT_WITHDRAWAL
+ * @param deployInWithdraw
+ */
+export type GetNFTOffchainFeeAmtRequest = {
   accountId: number;
-  requestType: OffchainNFTFeeReqType;
-  deployInWithdraw?: boolean;
-  tokenAddress?: string;
   amount?: string;
-}
+} & XOR<
+  {
+    requestType: Omit<OffchainNFTFeeReqType, 9 | 10>;
+  },
+  | {
+      requestType: 9;
+      tokenAddress: string;
+    }
+  | { requestType: 10; deployInWithdraw?: boolean }
+>;
 
 export interface OrderInfo {
   minAmount: string;
@@ -1094,6 +1107,7 @@ export interface GetUserTxsRequest {
 export interface GetUserNFTTxsRequest {
   accountId: number;
   // tokenSymbol?: string;
+  metadata?: boolean;
   start?: number;
   end?: number;
   offset?: number;
@@ -2195,7 +2209,13 @@ export enum DEPLOYMENT_STATUS {
   DEPLOYING = "DEPLOYING",
   DEPLOYED = "DEPLOYED",
 }
-export interface UserNFTBalanceInfo {
+export enum NFT_IMAGE_SIZES {
+  small = "240-240",
+  large = "332-332",
+  original = "original",
+}
+
+export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> {
   accountId: number;
   tokenId: number;
   nftData?: string;
@@ -2217,12 +2237,7 @@ export interface UserNFTBalanceInfo {
       properties: string;
       localization: string;
     };
-    imageSize: {
-      "32-32"?: string;
-      "120-120"?: string;
-      "375-375"?: string;
-      original?: string;
-    };
+    imageSize: { [P in NFT_IMAGE_SIZES]?: string };
     extra: {
       imageData: string;
       externalUrl: string;
@@ -2453,10 +2468,7 @@ export interface UserNFTTxsHistory {
   fastStatus: string;
   recipient: string;
   minterInfo: { accountId: number; minter: string; originalMinter: string };
-  // blockIdInfo: {
-  //   blockId: number;
-  //   indexInBlock: number;
-  // };
+  nftStatusInfo: {};
   withdrawalInfo: {
     distributeHash: string;
     fastStatus: boolean;
