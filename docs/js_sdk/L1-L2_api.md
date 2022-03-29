@@ -1,164 +1,311 @@
-# Loopring SDK signature Guid
+# Deposit from Ethereum L1 to Loopring, First Step for Start L2
 
-Loopring SDK support EOA (EOA hardware wallet) & Loopring Smart wallet Signature
+- [Step1: getUser Layer1 ETH balance](#step1️⃣-getuser-layer1-eth-balance)
+    - [ETH](#1-let-start-from-eth)
+    - [ERC20](#2-erc20-token-such-as-lrc)
+    - [NFT](#3-nft)
+- [Step2: Allow and Approve Loopring to get transaction those Token access](#step2️⃣-allow-and-approve-loopring-to-get-transaction-those-token-access)
+    - [ETH](#1-eth-skip-this-step)
+    - [ERC20](#2-erc20-token-such-as-lrc-1)
+    - [NFT](#3-nft-1)
+- [Step3: Deposit](#step3️⃣-deposit)
+    - [ETH](#1-eth-same-as-erc20-only-can-not-deposit-all-for-gas-cost)
+    - [ERC20](#2-erc20-token-such-as-lrc-2)
+    - [NFT](#3-nft-2)
+- [Additional & Reference](#additional--reference)
+    - [Approve Simple Signature Demo](#approve-simple-signature-demo)
+    - [Deposit Signature  Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
 
-- For Browser extension, Dapp, Hardware wallet we only support for EOA
-- For Loopring Smart wallet (App), Provider gateway only can be walletConnect
+>**All Deposit Method, User should have enough `ETH` pay for the >Ethereum Gas (Loopring have no charge, no fee for Deposit).**
 
-## Follow is the provider gateway we inject & test:
-  - MetaMask  (Ledger, Trezor)
-  - WalletConnect (Authereum, Loopring Smart wallet )
-  - Coinbase 
+Before start read this Doc, make sure you understand how to create an We3 with an Ethereum provider
 
-## For signature:
-For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
 
-### EOA:
-  - For Browser extension ([More information: signing-data](https://docs.metamask.io/guide/signing-data.html#a-brief-history))
-    + common EOA we use the `v4` signature and `web3.eth.personal.ecRecover` validate signature
-    + when `v4` signature is failed for any step, we will try `personal_sign` and `web3.eth.personal.ecRecover` validate signature
-  - For Dapp 
-    + when loopring Dex is inside Dapp WebView & connect by `window.ethereum`, we remove the `web3.eth.personal.ecRecover` validate 
+Let's start step by step how to Deposit from Ethereum L1 to Loopring ( Demo as [Loopring JS SDK](https://loopring.github.io/loopring_sdk) ):
 
-### Loopring Smart wallet:  
-  - For Smart wallet we send `eth_signTypedData` by walletConnect & validate ABI.Contracts.ContractWallet.encodeInputs `isValidSignature(bytes32,bytes)` 
+     Connect Wallet processing...
 
-> ❗ when add `SigSuffix` `02|03` ( follow EIP712 + `02`, personal_sign + `03`) 
->- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
->- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix03`;
+When you connect with Wallet (EOA or Loopring Wallet), you will know your `accAddress = ${Account_Address}` and have a  `web3` instance
+User has Three chooses Deposit `ETH`; `ERC20 Token (Such as LRC )`; `NFT (ERC721 & ERC1155)`;
 
-## Code: validate signature 
-[github: src/api/base_api.ts#personalSign](https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549)         
+
+***
+### Step1️⃣: getUser Layer1 ETH balance
+
+#### 1. Let start from ETH
+```ts
+const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({owner: accAddress});
 ```
- export async function personalSign(
-  web3: any,
-  account: string | undefined,
-  pwd: string,
-  msg: string,
-  walletType: ConnectorNames,
-  chainId: ChainId,
-  accountId?: number,
-  counterFactualInfo?: CounterFactualInfo,
-  isMobile?: boolean
-) {
-  if (!account) {
-    return { error: "personalSign got no account" };
-  }
+SDK: [getEthBalances](https://github.com/Loopring/loopring_sdk/blob/master/src/api/exchange_api.ts#L514)
+API: [/api/v3/eth/balances](https://uat2.loopring.io/api/v3/eth/balances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8)
 
-  return new Promise((resolve) => {
-    try {
-      web3.eth.personal.sign(
-        msg,
-        account,
-        pwd,
-        async function (err: any, result: any) {
-          if (!err) {
-            // Valid:1. counter Factual signature Valid
-            if (counterFactualInfo && accountId) {
-              myLog("fcWalletValid counterFactualInfo accountId:");
-              const fcValid = await fcWalletValid(
-                web3,
-                account,
-                msg,
-                result,
-                accountId,
-                chainId,
-                counterFactualInfo
-              );
-              if (fcValid.result) {
-                resolve({
-                  sig: result,
-                  counterFactualInfo: fcValid.counterFactualInfo,
-                });
-                return;
-              }
-            }
+Choose deposit amount from UI
+>tips: user should keep some ETH pay for Ethereum Gas
 
-            // Valid: 2. webview directory signature Valid
-            if (
-              (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
-              isMobile &&
-              // Mobile directory connect will sign ConnectorNames as MetaMask only
-              walletType === ConnectorNames.MetaMask
-            ) {
-              const address: string[] = await window.ethereum?.request({
-                method: "eth_requestAccounts",
-              });
-              if (
-                address?.find(
-                  (item) => item.toLowerCase() === account.toLowerCase()
-                )
-              ) {
-                return resolve({ sig: result });
-              }
-            }
 
-            // Valid: 3. EOA signature Valid by ecRecover
-            const valid: any = await ecRecover(web3, account, msg, result);
-            if (valid.result) {
-              return resolve({ sig: result });
-            }
+#### 2. ERC20 Token (Such as LRC)
 
-            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
-            const walletValid2: any = await contractWalletValidate32(
-              web3,
-              account,
-              msg,
-              result
-            );
+```ts
+const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({owner: accAddress});
+//tokenArr is Loopring supprot ERC20 TokenId Array.jion(',')
+const { tokenBalances } = await LoopringAPI.exchangeAPI.getTokenBalances({owner: accAddress, token: tokenArr.join()})
+```
+API: [/api/v3/eth/tokenBalances](https://uat2.loopring.io/api/v3/eth/tokenBalances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8&token=0xfc28028d9b1f6966fe74710653232972f50673be%2C0x0000000000000000000000000000000000000000%2C0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a%2C0xcd2c81b322a5b530b5fa3432e57da6803b0317f7%2C0x47525e6a5def04c9a56706e93f54cc70c2e8f165)
+> {tokenArr} = getMixMarkets()    
+> SDK:[getMixMarkets](https://github.com/Loopring/loopring_sdk/blob/master/src/api/exchange_api.ts#L409)
+> API:[/api/v3/mix/markets](https://api.loopring.network/api/v3/mix/markets) Market pair reduce to Unique Token Name ['ETH','LRC','USDT',...]
 
-            if (walletValid2.result) {
-              return resolve({ sig: result });
-            }
+#### 3. NFT
+- Prepare Token Address `nftTokenAddress`
+- NFT ID `nftId`
+- Know NFT Type `ERC721` or `ERC1155`
 
-            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
-            if (accountId) {
-              const fcValid = await fcWalletValid(
-                web3,
-                account,
-                msg,
-                result,
-                accountId,
-                chainId
-              );
-              if (fcValid.result) {
-                return resolve({
-                  sig: result,
-                  counterFactualInfo: fcValid.counterFactualInfo,
-                });
-              }
-            }
+```ts
+const response = await nft.getNFTBalance({
+  web3,
+  account: accAddress,
+  tokenAddress: nftTokenAddress,
+  nftId: nftId,
+  nftType: NFTType.ERC1155,
+});
+```  
+SDK: [getNFTBalance](https://github.com/Loopring/loopring_sdk/blob/master/src/api/nft_api.ts#L100)
 
-            // Valid: 6. myKeyValid Valid again
-            const myKeyValid: any = await mykeyWalletValid(
-              web3,
-              account,
-              msg,
-              result
-            );
+***
 
-            if (myKeyValid.result) {
-              return resolve({ sig: result });
-            }
+### Step2️⃣: Allow and Approve Loopring to get transaction those Token access
 
-            // Valid: Error cannot pass personalSign Valid
-            // eslint-disable-next-line no-console
-            console.log(
-              "web3.eth.personal.sign Valid, valid 5 ways, all failed!"
-            );
-            return resolve({
-              error: "web3.eth.personal.sign Valid, valid 5 ways, all failed!",
-            });
-          } else {
-            return resolve({
-              error: "personalSign err before Validate:" + err,
-            });
-          }
-        }
-      );
-    } catch (reason) {
-      resolve({ error: reason });
-    }
+#### 1. ETH Skip this step
+#### 2. ERC20 Token (Such as LRC )
+    - check Allowances
+    - getNonce web3.eth.getTransactionCount
+    - contract.approveMax
+
+```ts
+import {getTradeArg} from "./ws_defs";
+
+const {tokenAllowances} = await exchangeAPI.getAllowances({
+  owner: accAddress,
+  token: "LRC",
+})
+if (tokenAllowances["LRC"] === undefined || tokenAllowances["LRC"] < getTradeArgValue){
+  const nonce = await web3.eth.getTransactionCount(accAddress);
+  const response = await contract.approveMax(
+    web3,
+    accAddress,
+    tokenAddress, // LRC address  {tokenIdMap} = getTokens();  tokenIdMap['LRC']
+    depositAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
+    gasPrice,
+    gasLimit,
+    ChainId.GOERLI,
+    nonce,
+    true
+  );
+}
+
+
+```
+SDK:[getAllowances](https://github.com/Loopring/loopring_sdk/blob/master/src/api/exchange_api.ts#L583)
+API:[/api/v3/eth/allowances](https://uat2.loopring.io/api/v3/eth/allowances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8&token=0xfc28028d9b1f6966fe74710653232972f50673be)    
+SDK:[getExchangeInfo](https://github.com/Loopring/loopring_sdk/blob/master/src/api/exchange_api.ts#L624)
+API:[/api/v3/exchange/info](https://uat2.loopring.io/api/v3/exchange/info)   
+SDK:[getTokens](https://github.com/Loopring/loopring_sdk/blob/master/src/api/exchange_api.ts#L416)
+API:[/apiv3/exchange/tokens](https://uat2.loopring.io/api/v3/exchange/tokens)   
+SDK:[approveMax](https://github.com/Loopring/loopring_sdk/blob/master/src/api/contract_api.ts#L271)
+
+[Approve Signature Demo](#approve-simple-signature-demo)
+
+#### 3. NFT
+- check nft isApprovedForAll
+- getNonce web3.eth.getTransactionCount
+- contract.approveNFT (ALL) by nftTokenAddress
+ ```ts
+const isApproved = await nft.isApprovedForAll({
+  web3,
+  from: accAddress,
+  exchangeAddress: exchangeAddr, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
+  nftType: NFTType.ERC1155,
+  tokenAddress: nftTokenAddress,
+});
+if(!isApproved){
+  const nonce = await web3.eth.getTransactionCount(accAddress);
+  const response = await nft.approveNFT({
+    web3,
+    from: accAddress,
+    depositAddress,
+    tokenAddress: nftTokenAddress,
+    tokenId: nftId,
+    nftType: NFTType.ERC1155,
+    gasPrice,
+    gasLimit,
+    chainId: ChainId.GOERLI,
+    nonce,
+    approved: true,
+    sendByMetaMask: true,
   });
 }
+
+ ```
+SDK:[isApprovedForAll](https://github.com/Loopring/loopring_sdk/blob/master/src/api/nft_api.ts#L312)    
+SDK:[approveNFT](https://github.com/Loopring/loopring_sdk/blob/master/src/api/nft_api.ts#L235)
+
+[Approve Signature Demo](#approve-simple-signature-demo)
+
+***
+### Step3️⃣: Deposit
+#### 1. ETH  (Same as ERC20, only can not deposit all for Gas cost)
+#### 2. ERC20 Token (Such as LRC )
+```ts
+const nonce = await web3.eth.getTransactionCount(accAddress);
+const response = await contract.deposit(
+  web3,
+  accAddress,
+  exchangeAddr, // {exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
+  tokenInfo,
+  10, // tradeValue
+  0, // fee 0
+  gasPrice,
+  gasLimit,
+  ChainId.GOERLI,
+  nonce,
+  true
+);
 ```
+SDK:[deposit](https://github.com/Loopring/loopring_sdk/blob/master/src/api/contract.ts#L300)
+
+[Deposit Signature Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
+
+#### 3. NFT
+```ts
+const nonce = await web3.eth.getTransactionCount(accAddress);
+const response = await nft.depositNFT({
+  web3,
+  from:accAddress,
+  exchangeAddress::exchangeAddr, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
+  nftType: NFTType.ERC1155,
+  tokenAddress: nftTokenAddress,
+  amount: 1,
+  gasPrice,
+  gasLimit,
+  chainId: ChainId.GOERLI,
+  nonce,
+  sendByMetaMask:true}
+);
+```
+SDK:[depositNFT](https://github.com/Loopring/loopring_sdk/blob/master/src/api/nft_api.ts#L354)
+
+[Deposit Signature Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
+
+
+***
+### Additional & Reference
+
+#### Approve Simple Signature Demo
+For more detail about genERC{XXX}Data please read [Contract ABI Specification](//https://docs.soliditylang.org/en/develop/abi-spec.html#)
+```ts 
+/* ERC20 Approve Data structure */
+const data = genERC20Data(ERC20Method.Approve, {
+  _spender: depositAddress,
+  _value:"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+});
+/* NFT setApprovalForAll Data structure */
+// if (nftType === NFTType.ERC1155) {
+//    data = this._genERC1155Data(NFTMethod.setApprovalForAll, {
+//       operator: depositAddress,
+//       approved,
+//    });
+// } else if (nftType === NFTType.ERC721) {
+//    //TODO list not support now
+//    data = this._genERC721Data(NFTMethod.setApprovalForAll, {
+//       operator: depositAddress,
+//       approved,
+//    });
+// }
+const gasPrice = fm.fromGWEI(gasPrice).toNumber();
+web3.eth.sendTransaction({
+  from:accAddress,
+  to: depositAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress    
+  value:"0",
+  data,
+  chainId,
+  nonce,
+  gasPrice,
+  gasLimit,
+}).then((_error,transactionHash: string) =>{
+  if (!err) {
+    resolve({ result: transactionHash });
+  } else {
+    resolve({ error: { message: err.message } });
+  }
+});
+```
+
+### Deposit Signature Demo (fee is pay by ETH only current fee is 0)
+- tokenSymbol is ETH, sendTransaction value should be `amount + fee`
+- Other tokenSymbol as LRC sendTransaction value is `fee`
+- `fee` is pay by ETH only  (current fee is  0)
+```ts
+  const tokenAddress = "0x?????????";
+  const tokenSymbol = "LRC";
+  const fee = 0;
+  /* tokenSymbol is ETH, sendTransaction value should be `amount + fee` (current fee is 0)
+   * other tokenSymbol as LRC addresss valueC is fee (current fee is 0)
+   */
+  const value = tokenSymbol === "ETH"? amount + fee : fee;
+  const data = genExchangeData(ERC20Method.Deposit, {
+    tokenAddress,
+    amount,
+    from,
+    to: from,
+    extraData: "",
+  });
+  /* NFT deposit Data structure */
+  // const data = genExchangeData(NFTMethod.depositNFT, {
+  //   from,
+  //   to: from,
+  //   nftType,
+  //   tokenAddress,
+  //   nftId,
+  //   amount,
+  //   extraData: extraData ? extraData : "",
+  // });
+  web3.eth.sendTransaction({
+    from:accAddress,
+    to:exchangeAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
+    value,
+    data,
+    chainId,
+    nonce,
+    gasPrice,
+    gasLimit,
+  }).then((_error,transactionHash: string) =>{
+    if (!err) {
+      resolve({ result: transactionHash });
+    } else {
+      resolve({ error: { message: err.message } });
+     }
+  });
+
+return await sendRawTx(
+  web3,
+  from,
+  exchangeAddress,
+  valueC.toFixed(),
+  data,
+  chainId,
+  nonce,
+  gasPrice,
+  gasLimit,
+  sendByMetaMask
+);
+
+```
+
+
+last but not least, waiting and check your layer 2 account Balance... start Layer2
+
+#### Reference
+
+- @Loopring-web/web3-provider Package & [DEMO](https://github.com/Loopring/web3-provider)
+- Loopring allow you directory dev with our [APIs](https://docs.loopring.io/en/)
+- For your Web-app & Dapp welcome use our [JS SDK](https://loopring.github.io/loopring_sdk)

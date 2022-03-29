@@ -5,7 +5,7 @@
 Make sure you are using the original npm registry.
 
 ```shell
-    npm config set registry http://registry.npmjs.org
+npm config set registry http://registry.npmjs.org
 ```
 
 ## Install
@@ -39,32 +39,59 @@ const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI);
 
 #### 1. Initialize the api
 
-```javascript
-const api: UserAPI = new UserApi(ChainId.GORLI);
+```ts
+const userApi: UserAPI = new UserApi(ChainId.GORLI);
 const exchangeApi: UserAPI = new UserApi(ChainId.GORLI);
 ```
 
-#### 2. Get storageId for transfer
+#### 4. Get accInfo & nonce with getAccountApi
+```ts
+// step 1. get account info & nonce
+const { accInfo } = await exchange.getAccount({
+  owner: loopring_exported_account.address,
+});
+const nonce = accInfo.nonce
+```
 
-```javascript
+#### 2. Get apiKey & eddsaKey
+```ts
+const eddsakey = await sign_tools.generateKeyPair({
+  web3,
+  address: accInfo.owner,
+  keySeed: BaseAPI.KEY_MESSAGE.replace(
+    "${exchangeAddress}",
+    loopring_exported_account.exchangeAddr
+  ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+  walletType: ConnectorNames.Unknown,
+  chainId: ChainId.GOERLI,
+});
+
+const { apiKey } = await userApi.getUserApiKey({
+  accountId: accInfo.accountId,
+}, eddsakey.sk);
+```
+
+#### 3. Get storageId for transfer
+```ts
 const request: GetNextStorageIdRequest = {
   accountId: acc.accountId,
   sellTokenId: 1,
 };
-const storageId = await api.getNextStorageId(request, acc.apiKey);
+const storageId = await api.getNextStorageId(request, apiKey);
 ```
 
-#### 3. Get nonce with getAccountApi
 
-```javascript
-const { nonce } = await exchangeApi.getAccount({
-  owner: acc.address,
-});
+#### 4. get TransferFee
+```ts
+const responseFee = await userApi.getOffchainFeeAmt({
+  accountId: accInfo.accountId,
+    requestType: OffchainFeeReqType.TRANSFER,
+}, apiKey);
 ```
 
-#### 4. Submit internal transfer
+#### 5. Submit internal transfer
 
-```javascript
+```ts
 const request: OriginTransferRequestV3 = {
   exchange: acc.exchangeAddr,
   payerAddr: acc.address,
@@ -77,8 +104,14 @@ const request: OriginTransferRequestV3 = {
     volume: "100000000000000000000",
   },
   maxFee: {
-    tokenId: "1",
-    volume: "9400000000000000000",
+    maxFee: {
+      tokenId:
+      // @ts-ignore
+      TOKEN_INFO.tokenMap[
+      responseFee.fees[1]?.token?.toString() ?? "LRC"
+        ].tokenId,
+      volume: responseFee.fees[1]?.fee ?? "9400000000000000000",
+    },
   },
   validUntil: VALID_UNTIL,
 };
@@ -88,13 +121,11 @@ const response = await api.submitInternalTransfer(
   web3,
   ChainId.GORLI,
   ConnectorNames.Injected,
-  acc.eddsaKey,
-  acc.apiKey,
+  eddsaKey,
+  apiKey,
   true
 );
 ```
-
-
 
 ## Error code 
 
