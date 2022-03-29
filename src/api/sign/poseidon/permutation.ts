@@ -13,13 +13,14 @@
  */
 
 import { BigNumber } from "ethers";
-import { bnToBuf, SignatureScheme } from "./eddsa";
+import { SignatureScheme } from "./eddsa";
 import { modulo } from './field';
 
 // util is for TextEncoder
-const util = require('util');
+import util from 'util';
 
-const sodium = require('sodium-native')
+// @ts-ignore
+import { crypto_generichash } from 'sodium-javascript';
 
 export class PoseidonParams {
   public p: BigNumber;
@@ -68,7 +69,7 @@ export class permunation {
 
     const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
-    sodium.crypto_generichash(buf, message)
+    crypto_generichash(buf, message)
     const items = buf.toJSON().data
     // console.log(`items ${items}`)
 
@@ -91,7 +92,7 @@ export class permunation {
 
     const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
-    sodium.crypto_generichash(buf, message)
+    crypto_generichash(buf, message)
     const items = buf.toJSON().data
     // console.log(`items ${items}`)
 

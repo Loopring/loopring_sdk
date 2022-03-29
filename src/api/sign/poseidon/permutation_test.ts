@@ -42,27 +42,27 @@ function test_PoseidonParams() {
 }
 
 function test_H_1() {
-  // console.log("test_H_1")
+  console.log("test_H_1")
   const arg = "poseidon_constants"
   const hash = permunation.H(arg)
   assert(hash.eq(BigNumber.from("80062126029273061892314832722231078464247515902761170557848714403923749862373")))
-  // console.log("test_H_1 passed")
+  console.log("test_H_1 passed")
 }
 
 function test_H_2() {
-  // console.log("test_H_2")
+  console.log("test_H_2")
   const arg = "poseidon_matrix_0000"
   const hash = permunation.H(arg)
   assert(hash.eq(BigNumber.from("14132513739920849383792069751007754351800355055139761101807090020635929082500")))
-  // console.log("test_H_2 passed")
+  console.log("test_H_2 passed")
 }
 
 function test_H_3() {
-  // console.log("test_H_3")
+  console.log("test_H_3")
   const arg = BigNumber.from("14132513739920849383792069751007754351800355055139761101807090020635929082500")
   const hash = permunation.H_Bigint(arg)
   assert(hash.eq(BigNumber.from("2944673226682481007627110343206629017840128596422012786319796010373889882365")))
-  // console.log("test_H_3 passed")
+  console.log("test_H_3 passed")
 }
 
 function test_poseidon_constants() {
@@ -78,8 +78,9 @@ function test_poseidon_constants() {
   assert(constants_C[64].eq(BigNumber.from("10635360132728137321700090133109897687122647659471659996419791842933639708516")))
   // console.log("test_poseidon_constants passed")
 }
+
 function test_poseidon_matrix() {
-  // console.log("test_poseidon_matrix")
+  console.log("test_poseidon_matrix")
   const p = field.SNARK_SCALAR_FIELD
   const seed = "poseidon_matrix_0000"
   const t = 9
@@ -89,11 +90,11 @@ function test_poseidon_matrix() {
   assert(constants_M[0][2].eq(BigNumber.from("3636162562566338420490575570584278737093584021456168183289112789616069756675")))
   assert(constants_M[1][3].eq(BigNumber.from("8642889650254799419576843603477253661899356105675006557919250564400804756641")))
   assert(constants_M[8][8].eq(BigNumber.from("11398590172899810645820530606484864595574598270604175688862890426075002823331")))
-  // console.log("test_poseidon_matrix passed")
+  console.log("test_poseidon_matrix passed")
 }
 
 function test_poseidon_1() {
-  // console.log("test_poseidon_1")
+  console.log("test_poseidon_1")
   const p = BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")
   const MAX_INPUT = 8
   const poseidonParams = new PoseidonParams(p, MAX_INPUT+1, 6, 53, "poseidon", BigNumber.from(5), null, null, 128)
@@ -102,11 +103,11 @@ function test_poseidon_1() {
   intputs.push(BigNumber.from(1))
   const state0 = permunation.poseidon(intputs, poseidonParams)
   assert(state0.eq(BigNumber.from("20640057815290657586474256351705900781103272844170318852926520138679251832017")))
-  // console.log("test_poseidon_1 passed")
+  console.log("test_poseidon_1 passed")
 }
 
 function test_poseidon_2() {
-  // console.log("test_poseidon_2")
+  console.log("test_poseidon_2")
   const p = BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")
   const MAX_INPUT = 8
   const poseidonParams = new PoseidonParams(p, MAX_INPUT+1, 6, 53, "poseidon", BigNumber.from(5), null, null, 128)
@@ -116,11 +117,11 @@ function test_poseidon_2() {
   intputs.push(BigNumber.from(2))
   const state0 = permunation.poseidon(intputs, poseidonParams)
   assert(state0.eq(BigNumber.from("9251914430137119038619835991672259215400712688203929648293348181354900386736")))
-  // console.log("test_poseidon_2 passed")
+  console.log("test_poseidon_2 passed")
 }
 
 function test_poseidon_3() {
-  // console.log("test_poseidon_3")
+  console.log("test_poseidon_3")
   const p = BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")
   const MAX_INPUT = 8
   const poseidonParams = new PoseidonParams(p, MAX_INPUT+1, 6, 53, "poseidon", BigNumber.from(5), null, null, 128)
@@ -136,20 +137,20 @@ function test_poseidon_3() {
   intputs.push(BigNumber.from(8))
   const state0 = permunation.poseidon(intputs, poseidonParams)
   assert(state0.eq(BigNumber.from("1792233229836714442925799757877868602259716425270865187624398529027734741166")))
-  // console.log("test_poseidon_3 passed")
+  console.log("test_poseidon_3 passed")
 }
 
 function main() {
   // console.log("\n\npermutation_test\n")
   // test_PoseidonParams()
-  // test_H_1()
-  // test_H_2()
-  // test_H_3()
+  test_H_1()
+  test_H_2()
+  test_H_3()
   // test_poseidon_constants()
-  // test_poseidon_matrix()
-  // test_poseidon_1()
-  // test_poseidon_2()
-  // test_poseidon_3()
+  test_poseidon_matrix()
+  test_poseidon_1()
+  test_poseidon_2()
+  test_poseidon_3()
 }
 
 main();
