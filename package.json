@@ -1,10 +1,10 @@
 {
-  "name": "@loopring-web/loopring-sdk",
-  "version": "1.9.7-alpha",
+  "name": "@loopring-web/loopring-sdk-g",
+  "version": "2.0.0-alpha",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
-  "license": "GPL-3.0",
+  "license": "SEE LICENSE FILE",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/loopring-sdk.esm.js",
