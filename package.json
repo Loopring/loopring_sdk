@@ -4,7 +4,7 @@
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
-  "license": "SEE LICENSE FILE",
+  "license": "SEE LICENSE IN LICENSE",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/loopring-sdk.esm.js",
