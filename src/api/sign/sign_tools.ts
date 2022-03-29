@@ -11,6 +11,8 @@ import { BigNumber } from "ethers";
 
 import { bnToBuf } from "./poseidon/eddsa";
 import { EDDSAUtil } from "./poseidon/EDDSAUtil";
+import { field } from "./poseidon/field";
+import { permunation, PoseidonParams } from "./poseidon/permutation";
 
 import * as fm from "../../utils/formatter";
 import { toBig, toHex } from "../../utils/formatter";
@@ -84,15 +86,15 @@ export async function generateKeyPair({
   );
 
   if (!result.error) {
-    myLog("sig:", result.sig);
-    let seedBuff = ethUtil.sha256(fm.toBuffer(result.sig))
-    myLog(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
-    let seed = BigNumber.from("0x" + seedBuff.toString('hex'))
-    myLog(`seed ${seed.toString()}`)
-    let bitIntDataItems = bnToBuf(seed.toString());
-    myLog(`bigIntData ${bitIntDataItems}`)
-    let keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
-    myLog("keyPair", keyPair)
+    // myLog("sig:", result.sig);
+    const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig))
+    // myLog(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
+    const seed = BigNumber.from("0x" + seedBuff.toString('hex'))
+    // myLog(`seed ${seed.toString()}`)
+    const bitIntDataItems = bnToBuf(seed.toString());
+    // myLog(`bigIntData ${bitIntDataItems}`)
+    const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
+    // myLog("keyPair", keyPair)
 
     const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)));
     const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)));
@@ -135,7 +137,7 @@ const makeRequestParamStr = (request: Map<string, any>) => {
 
 //submitOrderV3
 const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
-  let signature = EDDSAUtil.sign(PrivateKey, hash);
+  const signature = EDDSAUtil.sign(PrivateKey, hash);
 
   let signatureRx_Hex = fm.clearHexPrefix(
     fm.toHex(fm.toBN(signature.Rx))
@@ -161,7 +163,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
     signatureS_Hex = padding.join("").toString() + signatureS_Hex;
   }
 
-  let result = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
+  const result = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
   console.log("signature result", result)
   return result
 };
@@ -206,12 +208,16 @@ export const getEdDSASigWithPoseidon = (
   inputs: any,
   PrivateKey: string | undefined
 ) => {
-  /*
-  const hasher = Poseidon.createHash(inputs.length + 1, 6, 53);
-  const hash = hasher(inputs).toString(10);
-
+  const p = field.SNARK_SCALAR_FIELD
+  const poseidonParams = new PoseidonParams(p, inputs.length+1, 6, 53, "poseidon", BigNumber.from(5), null, null, 128)
+  let bigIntInputs: any
+  bigIntInputs = []
+  for(let i = 0; i < inputs.length; i++) {
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
+  }
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
   return genSigWithPadding(PrivateKey, hash);
-  */
 };
 
 /**
@@ -687,8 +693,9 @@ export function get_EddsaSig_NFT_Withdraw(
 }
 
 export function getNftData(request: NFTMintRequestV3) {
-  /*
-  const hasher = Poseidon.createHash(7, 6, 52);
+  const p = field.SNARK_SCALAR_FIELD
+  const poseidonParams = new PoseidonParams(p, 7, 6, 52, "poseidon", BigNumber.from(5), null, null, 128)
+
   const nftIdHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
   const nftIdLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
   const inputs = [
@@ -699,9 +706,16 @@ export function getNftData(request: NFTMintRequestV3) {
     nftIdHi,
     request.royaltyPercentage,
   ];
-  // myLog("get hasher *16 hash:", hasher(inputs).toString(16));
-  return hasher(inputs).toString(10);
-  */
+
+  let bigIntInputs: any
+  bigIntInputs = []
+  for(let i = 0; i < inputs.length; i++) {
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
+  }
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
+  // myLog("get hasher *16 hash:", hash);
+  return hash;
 }
 
 export function getNFTMintTypedData(
