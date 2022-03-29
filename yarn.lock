@@ -2460,6 +2460,11 @@
   resolved "https://registry.npm.taobao.org/@ungap/promise-all-settled/download/@ungap/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha1-qlgEJxHW4ydd033Fl+XTHowpCkQ=
 
+"@zxing/text-encoding@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@zxing/text-encoding/-/text-encoding-0.9.0.tgz#fb50ffabc6c7c66a0c96b4c03e3d9be74864b70b"
+  integrity sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==
+
 a-sync-waterfall@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/a-sync-waterfall/download/a-sync-waterfall-1.0.1.tgz#75b6b6aa72598b497a125e7a2770f14f4c8a1fa7"
@@ -12527,7 +12532,7 @@ util-extend@^1.0.1:
   resolved "https://registry.npm.taobao.org/util-extend/download/util-extend-1.0.3.tgz#a7c216d267545169637b3b6edc6ca9119e2ff93f"
   integrity sha1-p8IW0mdUUWljeztu3GypEZ4v+T8=
 
-util@^0.12.0:
+util@^0.12.0, util@^0.12.3:
   version "0.12.4"
   resolved "https://registry.nlark.com/util/download/util-0.12.4.tgz?cache=0&sync_timestamp=1622213068909&other_urls=https%3A%2F%2Fregistry.nlark.com%2Futil%2Fdownload%2Futil-0.12.4.tgz#66121a31420df8f01ca0c464be15dfa1d1850253"
   integrity sha1-ZhIaMUIN+PAcoMRkvhXfodGFAlM=
@@ -12655,6 +12660,15 @@ wcwidth@^1.0.1:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+web-encoding@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/web-encoding/-/web-encoding-1.1.5.tgz#fc810cf7667364a6335c939913f5051d3e0c4864"
+  integrity sha512-HYLeVCdJ0+lBYV2FvNZmv3HJ2Nt0QYXqZojk3d9FJOLkwnuhzM9tmamh8d7HPM8QqjKH8DeHkFTx+CFlWpZZDA==
+  dependencies:
+    util "^0.12.3"
+  optionalDependencies:
+    "@zxing/text-encoding" "0.9.0"
 
 web-resource-inliner@^4.3.3:
   version "4.3.4"

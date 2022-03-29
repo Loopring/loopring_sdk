@@ -30,6 +30,7 @@
     "js-sha3": "^0.8.0",
     "js-sha512": "^0.8.0",
     "sodium-javascript": "^0.8.0",
+    "web-encoding": "^1.1.5",
     "web3": "^1.5.1"
   },
   "build": {

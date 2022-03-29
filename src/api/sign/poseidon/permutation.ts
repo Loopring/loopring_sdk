@@ -16,8 +16,7 @@ import { BigNumber } from "ethers";
 import { SignatureScheme } from "./eddsa";
 import { modulo } from './field';
 
-// util is for TextEncoder
-import util from 'util';
+import { TextEncoder } from "web-encoding";
 
 // @ts-ignore
 import { crypto_generichash } from 'sodium-javascript';
@@ -63,7 +62,7 @@ export class permunation {
   static H(arg: string) {
     const outputLength = 32
 
-    const enc = new util.TextEncoder();    
+    const enc = new TextEncoder();    
     const message = enc.encode(arg)
     // console.log(`message ${message}`)
 
