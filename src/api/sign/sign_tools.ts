@@ -6,10 +6,6 @@ import * as ethUtil from "ethereumjs-util";
 
 import BN from "bn.js";
 
-import * as Poseidon from "./poseidon";
-
-// import EdDSA from "./eddsa";
-
 import BigInteger from "bignumber.js";
 import { BigNumber } from "ethers";
 
@@ -139,13 +135,7 @@ const makeRequestParamStr = (request: Map<string, any>) => {
 
 //submitOrderV3
 const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
-  console.log("genSigWithPadding ....")
-
-  // const signature = EdDSA.sign(PrivateKey, hash);
-
   let signature = EDDSAUtil.sign(PrivateKey, hash);
-
-  console.log("genSigWithPadding .... signature", signature)
 
   let signatureRx_Hex = fm.clearHexPrefix(
     fm.toHex(fm.toBN(signature.Rx))
@@ -172,7 +162,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
   }
 
   let result = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
-  console.log("genSigWithPadding .... signature result", result)
+  console.log("signature result", result)
   return result
 };
 
@@ -216,10 +206,12 @@ export const getEdDSASigWithPoseidon = (
   inputs: any,
   PrivateKey: string | undefined
 ) => {
+  /*
   const hasher = Poseidon.createHash(inputs.length + 1, 6, 53);
   const hash = hasher(inputs).toString(10);
 
   return genSigWithPadding(PrivateKey, hash);
+  */
 };
 
 /**
@@ -695,6 +687,7 @@ export function get_EddsaSig_NFT_Withdraw(
 }
 
 export function getNftData(request: NFTMintRequestV3) {
+  /*
   const hasher = Poseidon.createHash(7, 6, 52);
   const nftIdHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
   const nftIdLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
@@ -708,6 +701,7 @@ export function getNftData(request: NFTMintRequestV3) {
   ];
   // myLog("get hasher *16 hash:", hasher(inputs).toString(16));
   return hasher(inputs).toString(10);
+  */
 }
 
 export function getNFTMintTypedData(
