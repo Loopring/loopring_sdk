@@ -243,6 +243,18 @@ describe("Account test", function () {
   );
 
   it(
+    "getEthNonce",
+    async () => {
+      const req: GetEthNonceRequest = {
+        owner: acc.address,
+      };
+      const response = await LoopringAPI.exchangeAPI.getEthNonce(req);
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
     "Layer1_ETH_Balance",
     async () => {
       const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({
@@ -310,6 +322,22 @@ describe("Account test", function () {
       //   token: [TOKEN_INFO.tokenMap.LRC.address],
       // });
       console.log(`Layer2 ERC20 Balance: ${userBalances}`);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "getCounterFactualInfo",
+    async () => {
+      const request: GetCounterFactualInfoRequest = {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF, // TODO
+      };
+      const response = await LoopringAPI.exchangeAPI.getCounterFactualInfo(
+        request
+      );
+      console.log(response);
     },
     DEFAULT_TIMEOUT
   );
@@ -384,34 +412,6 @@ describe("Account test", function () {
         owner: "Ox",
       };
       const response = await LoopringAPI.exchangeAPI.getAccount(request);
-      console.log(response);
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
-    "getCounterFactualInfo",
-    async () => {
-      const request: GetCounterFactualInfoRequest = {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF, // TODO
-      };
-      const response = await LoopringAPI.exchangeAPI.getCounterFactualInfo(
-        request
-      );
-      console.log(response);
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
-    "getEthNonce",
-    async () => {
-      const req: GetEthNonceRequest = {
-        owner: acc.address,
-      };
-      const response = await LoopringAPI.exchangeAPI.getEthNonce(req);
       console.log(response);
     },
     DEFAULT_TIMEOUT
