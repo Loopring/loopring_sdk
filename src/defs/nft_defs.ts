@@ -4,12 +4,12 @@ import { NFTType } from "../api";
 
 /**
  *  @interface DepositNFTParam
- *  @description an NFT to the specified account.
+ *  @description an NFTAction to the specified account.
  *  @property web3
  *  @property DepositParam
  *  @property from The address that deposits the funds to the exchange
  *  @property to The account owner's address receiving the funds
- *  @property nftType The type of NFT contract address (ERC721/ERC1155/...)
+ *  @property nftType The type of NFTAction contract address (ERC721/ERC1155/...)
  *  @property tokenAddress The address of the token
  *  @property nftId The token type 'id`.
  *  @property amount The amount of tokens to deposit.
@@ -42,7 +42,7 @@ export interface DepositNFTParam {
  * @property from The address that deposits the funds to the exchange
  * @property exchangeAddress loopring exchange address
  * @property nftType  NFTType
- * @property tokenAddress  The address of NFT token
+ * @property tokenAddress  The address of NFTAction token
  */
 export interface IsApproveParam {
   web3: Web3;
@@ -60,7 +60,7 @@ export interface IsApproveParam {
  * @property loopringAddress loopring exchange Address
  * @property tokenId: the tokenId
  * @property chainId
- * @property nftType The type of NFT contract address (ERC721/ERC1155/...)
+ * @property nftType The type of NFTAction contract address (ERC721/ERC1155/...)
  * @property nonce
  * @property gasPrice
  * @property gasLimit

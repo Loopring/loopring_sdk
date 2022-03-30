@@ -641,7 +641,7 @@ export async function signOffchainWithdrawWithDataStructureForContract(
   return result;
 }
 
-//NFT Withdraw
+//NFTAction Withdraw
 export function get_EddsaSig_NFT_Withdraw(
   request: NFTWithdrawRequestV3,
   eddsaKey: string
@@ -868,7 +868,7 @@ export async function signNFTWithdrawWithDataStructureForContract(
   return result;
 }
 
-//NFT Mint
+//NFTAction Mint
 export function get_EddsaSig_NFT_Mint(
   request: NFTMintRequestV3,
   eddsaKey: string
@@ -891,7 +891,7 @@ export function get_Is_Nft_Token(tokenId: number) {
   return tokenId >= MIN_NFT_TOKENID;
 }
 
-// NFT Order
+// NFTAction Order
 export function get_EddsaSig_NFT_Order(
   request: NFTOrderRequestV3,
   eddsaKey: string

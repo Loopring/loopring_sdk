@@ -1,68 +1,43 @@
-import { ChainId, ConnectorNames, NFTFactory } from "../defs/web3_defs";
-import { ExchangeAPI, NFTAPI, UserAPI, WhitelistedUserAPI } from "../api";
+import { ChainId, ConnectorNames } from "../../defs/web3_defs";
 
-import { dumpError400 } from "../utils/network_tools";
+import { dumpError400 } from "../../utils/network_tools";
 
+import { NFTOrderRequestV3, NFTTradeRequestV3 } from "../../defs/loopring_defs";
+
+import { VALID_UNTIL } from "../../defs/loopring_constants";
+
+import * as sign_tools from "../../api/sign/sign_tools";
 import {
-  GetNextStorageIdRequest,
-  GetUserApiKeyRequest,
-  NFTOrderRequestV3,
-  NFTTradeRequestV3,
-} from "../defs/loopring_defs";
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+  web3,
+  web3_2,
+} from "../data";
+import { BaseAPI } from "../../api/base_api";
+import { myLog } from "../../utils/log_tools";
 
-import { DEFAULT_TIMEOUT, VALID_UNTIL } from "../defs/loopring_constants";
-
-import * as sign_tools from "../api/sign/sign_tools";
-import Web3 from "web3";
-import { loopring_exported_account } from "./utils";
-import { BaseAPI } from "../api/base_api";
-import { myLog } from "../utils/log_tools";
-
-const PrivateKeyProvider = require("truffle-privatekey-provider");
-
-let userApi: UserAPI;
-let nftAPI: NFTAPI;
-let provider: any;
-let provider2: any;
-let exchange: ExchangeAPI;
-// Need fill test data before test
-const nftTokenId = 2;
-
-// prepare: account need minted some NFT before test
-describe("NFT Trade Test", function () {
+// prepare: account need minted some NFTAction before test
+describe("NFTAction Trade Test", function () {
   beforeEach(async () => {
-    userApi = new UserAPI({ chainId: ChainId.GOERLI });
-    exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
-    nftAPI = new NFTAPI({ chainId: ChainId.GOERLI });
-    provider = new PrivateKeyProvider(
-      loopring_exported_account.privateKey,
-      "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-    );
-    provider2 = new PrivateKeyProvider(
-      loopring_exported_account.privateKey2,
-      "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-    );
+    LoopringAPI.InitApi(ChainId.GOERLI);
   });
 
   it(
-    "NFTTrade",
+    "NFTAction",
     async () => {
       try {
-        // step 0. init web3
-        const web3 = new Web3(provider);
-        const web3_2 = new Web3(provider2);
-
         // step 1. get account info
-        const { accInfo } = await exchange.getAccount({
-          owner: loopring_exported_account.address,
+        const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
         });
 
         if (!accInfo) {
           return;
         }
 
-        const { accInfo: accInfo2 } = await exchange.getAccount({
-          owner: loopring_exported_account.address2,
+        const { accInfo: accInfo2 } = await LoopringAPI.exchangeAPI.getAccount({
+          owner: LOOPRING_EXPORTED_ACCOUNT.address2,
         });
 
         if (!accInfo2) {
@@ -70,7 +45,8 @@ describe("NFT Trade Test", function () {
         }
         console.log("accInfo2:", accInfo2);
 
-        const { exchangeInfo } = await exchange.getExchangeInfo();
+        const { exchangeInfo } =
+          await LoopringAPI.exchangeAPI.getExchangeInfo();
 
         const eddsakey_1 = await sign_tools.generateKeyPair({
           web3,
@@ -103,7 +79,7 @@ describe("NFT Trade Test", function () {
 
         // step 3 get apikey
 
-        const { apiKey: apiKey1 } = await userApi.getUserApiKey(
+        const { apiKey: apiKey1 } = await LoopringAPI.userAPI.getUserApiKey(
           {
             accountId: accInfo.accountId,
           },
@@ -111,13 +87,14 @@ describe("NFT Trade Test", function () {
         );
         console.log("apiKey1:", apiKey1);
 
-        const { userNFTBalances } = await userApi.getUserNFTBalances(
-          { accountId: accInfo.accountId, limit: 20 },
-          apiKey1
-        );
-        console.log("NFT-INFO", userNFTBalances[0]);
+        const { userNFTBalances } =
+          await LoopringAPI.userAPI.getUserNFTBalances(
+            { accountId: accInfo.accountId, limit: 20 },
+            apiKey1
+          );
+        console.log("NFTAction-INFO", userNFTBalances[0]);
 
-        const { apiKey: apiKey2 } = await userApi.getUserApiKey(
+        const { apiKey: apiKey2 } = await LoopringAPI.userAPI.getUserApiKey(
           {
             accountId: accInfo2.accountId,
           },
@@ -127,7 +104,7 @@ describe("NFT Trade Test", function () {
 
         // step 4 get storageId
 
-        const storageId = await userApi.getNextStorageId(
+        const storageId = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: accInfo.accountId,
             sellTokenId: 1,
@@ -135,7 +112,7 @@ describe("NFT Trade Test", function () {
           apiKey1
         );
 
-        const storageId2 = await userApi.getNextStorageId(
+        const storageId2 = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: accInfo2.accountId,
             sellTokenId: 1,
@@ -166,14 +143,15 @@ describe("NFT Trade Test", function () {
           eddsakey_1.sk
         );
 
-        const nftValidateMakerOrder = await userApi.submitNFTValidateOrder({
-          request: makerOrder,
-          web3,
-          chainId: ChainId.GOERLI,
-          walletType: ConnectorNames.Unknown,
-          eddsaKey: eddsakey_1.sk,
-          apiKey: apiKey1,
-        });
+        const nftValidateMakerOrder =
+          await LoopringAPI.userAPI.submitNFTValidateOrder({
+            request: makerOrder,
+            web3,
+            chainId: ChainId.GOERLI,
+            walletType: ConnectorNames.Unknown,
+            eddsaKey: eddsakey_1.sk,
+            apiKey: apiKey1,
+          });
         myLog("submitNFTValidateOrder MakerOrder", nftValidateMakerOrder);
 
         const takerOrder: NFTOrderRequestV3 = {
@@ -200,14 +178,15 @@ describe("NFT Trade Test", function () {
           eddsakey_2.sk
         );
 
-        const nftValidateTakerOrder = await userApi.submitNFTValidateOrder({
-          request: takerOrder,
-          web3,
-          chainId: ChainId.GOERLI,
-          walletType: ConnectorNames.Unknown,
-          eddsaKey: eddsakey_2.sk,
-          apiKey: apiKey2,
-        });
+        const nftValidateTakerOrder =
+          await LoopringAPI.userAPI.submitNFTValidateOrder({
+            request: takerOrder,
+            web3,
+            chainId: ChainId.GOERLI,
+            walletType: ConnectorNames.Unknown,
+            eddsaKey: eddsakey_2.sk,
+            apiKey: apiKey2,
+          });
         myLog("submitNFTValidateOrder takerOrder", nftValidateTakerOrder);
 
         const tradeRequest: NFTTradeRequestV3 = {
@@ -217,7 +196,7 @@ describe("NFT Trade Test", function () {
           takerFeeBips: 80,
         };
 
-        const response = await userApi.submitNFTTrade({
+        const response = await LoopringAPI.userAPI.submitNFTTrade({
           request: tradeRequest,
           web3,
           chainId: ChainId.GOERLI,
@@ -231,6 +210,6 @@ describe("NFT Trade Test", function () {
         dumpError400(reason);
       }
     },
-    DEFAULT_TIMEOUT + DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT * 2
   );
 });

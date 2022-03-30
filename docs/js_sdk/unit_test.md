@@ -25,7 +25,7 @@ adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf
 Test Account Basic Info (for Goerli)
 
 ```javascript
-const loopring_exported_account = {
+const LOOPRING_EXPORTED_ACCOUNT = {
   name: "DEV Account 1",
   exchangeName: "LoopringDEX: V2",
   privateKey:

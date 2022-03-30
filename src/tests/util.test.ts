@@ -1,17 +1,18 @@
 import { sleep } from "../utils";
-import { ChainId, DEFAULT_TIMEOUT } from "../defs";
+import { ChainId } from "../defs";
 import { BaseAPI } from "../api/base_api";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "./data";
 
 let api: BaseAPI;
 
 describe("utils test", function () {
   beforeEach(async () => {
-    api = new BaseAPI({ chainId: ChainId.GOERLI });
+    LoopringAPI.InitApi(ChainId.GOERLI);
   });
   it(
     "getAvailableBroker",
     async () => {
-      const result = await api.getAvailableBroker();
+      const result = await LoopringAPI.exchangeAPI.getAvailableBroker();
       console.log(result);
     },
     DEFAULT_TIMEOUT

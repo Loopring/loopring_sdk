@@ -1,4 +1,4 @@
-import { DEFAULT_TIMEOUT, LoopringErrorCode } from "../defs";
+import { LoopringErrorCode } from "../defs";
 // import fetch from "node-fetch";
 import {
   addHexPrefix,
@@ -25,7 +25,7 @@ import {
 
 import * as fm from "../utils/formatter";
 import { BigNumber } from "bignumber.js";
-import { loopring_exported_account } from "./utils";
+import { LOOPRING_EXPORTED_ACCOUNT } from "./data";
 
 const NUMBER = 40244024;
 const BUFFER = Buffer.from("40244024", "utf8");
@@ -159,7 +159,7 @@ describe("formatter test", function () {
   });
 
   it("test toHex", async () => {
-    expect(toHex(loopring_exported_account.nftId)).toBe(
+    expect(toHex(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(
       "0x0000000000000000000000000000000000000000000000000000000000000099"
     );
   });
@@ -168,7 +168,7 @@ describe("formatter test", function () {
     expect(toNumber("69")).toBe(69);
     expect(toNumber(420)).toBe(420);
     expect(toNumber("12345.6789")).toBe(12345.6789);
-    expect(toNumber(loopring_exported_account.nftId)).toBe(153);
+    expect(toNumber(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(153);
   });
 
   // Missing test input data for Uint8Array
@@ -176,16 +176,16 @@ describe("formatter test", function () {
     expect(toNumber("69")).toBe(69);
     expect(toNumber(420)).toBe(420);
     expect(toNumber("12345.6789")).toBe(12345.6789);
-    expect(toNumber(loopring_exported_account.nftId)).toBe(153);
+    expect(toNumber(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(153);
     expect(toNumber(BIG_NUMBER)).toBe(123.4567);
   });
 
   it("test padLeftEven", async () => {
-    expect(padLeftEven(loopring_exported_account.address)).toBe(
-      loopring_exported_account.address
+    expect(padLeftEven(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.address
     );
-    expect(padLeftEven(loopring_exported_account.testNotOx.slice(0, -1))).toBe(
-      "0" + loopring_exported_account.testNotOx.slice(0, -1)
+    expect(padLeftEven(LOOPRING_EXPORTED_ACCOUNT.testNotOx.slice(0, -1))).toBe(
+      "0" + LOOPRING_EXPORTED_ACCOUNT.testNotOx.slice(0, -1)
     );
   });
 
@@ -225,38 +225,38 @@ describe("formatter test", function () {
 
   it("test formatKey", async () => {
     expect(formatKey("0x" + BUFFER)).toBe(NUMBER.toString());
-    expect(formatKey(loopring_exported_account.address)).toBe(
-      loopring_exported_account.testNotOx
+    expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.testNotOx
     );
-    expect(formatKey(loopring_exported_account.testNotOx)).toBe(
-      loopring_exported_account.testNotOx
+    expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.testNotOx)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.testNotOx
     );
   });
 
   // Missing test input data for Uint8Array
   it("test formatAddress", async () => {
     expect(
-      formatAddress(loopring_exported_account.testNotOx).toLowerCase()
-    ).toBe(loopring_exported_account.address);
-    expect(formatAddress(loopring_exported_account.address).toLowerCase()).toBe(
-      loopring_exported_account.address
+      formatAddress(LOOPRING_EXPORTED_ACCOUNT.testNotOx).toLowerCase()
+    ).toBe(LOOPRING_EXPORTED_ACCOUNT.address);
+    expect(formatAddress(LOOPRING_EXPORTED_ACCOUNT.address).toLowerCase()).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.address
     );
     expect(formatAddress("0x" + BUFFER)).toBe("0x" + BUFFER);
   });
 
   it("test addHexPrefix", async () => {
-    expect(addHexPrefix(loopring_exported_account.address)).toBe(
-      loopring_exported_account.address
+    expect(addHexPrefix(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.address
     );
-    expect(addHexPrefix(loopring_exported_account.testNotOx)).toBe(
-      loopring_exported_account.address
+    expect(addHexPrefix(LOOPRING_EXPORTED_ACCOUNT.testNotOx)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.address
     );
     expect(() => addHexPrefix(420)).toThrowError("Unsupported type");
   });
 
   it("test clearHexPrefix", async () => {
-    expect(clearHexPrefix(loopring_exported_account.address)).toBe(
-      loopring_exported_account.testNotOx
+    expect(clearHexPrefix(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
+      LOOPRING_EXPORTED_ACCOUNT.testNotOx
     );
     expect(() => clearHexPrefix(420)).toThrowError("Unsupported type");
   });

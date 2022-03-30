@@ -1,53 +1,41 @@
-import { ChainId, ConnectorNames } from "../defs/web3_defs";
-import { UserAPI, ExchangeAPI, WhitelistedUserAPI } from "../api";
-
-import { dumpError400 } from "../utils/network_tools";
-
+import { ChainId, ConnectorNames } from "../../defs/web3_defs";
+import { dumpError400 } from "../../utils/network_tools";
 import {
   GetAccountRequest,
   GetNextStorageIdRequest,
-  GetNFTOffchainFeeAmtRequest,
   GetOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   OriginTransferRequestV3,
-} from "../defs/loopring_defs";
+} from "../../defs/loopring_defs";
 
-import { VALID_UNTIL, DEFAULT_TIMEOUT } from "../defs/loopring_constants";
+import { VALID_UNTIL } from "../../defs/loopring_constants";
 
-import * as sign_tools from "../api/sign/sign_tools";
+import * as sign_tools from "../../api/sign/sign_tools";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 import Web3 from "web3";
-import { loopring_exported_account, TOKEN_INFO } from "./utils";
-import { BaseAPI } from "../api/base_api";
-import { OffchainFeeReqType, OffchainNFTFeeReqType } from "../defs";
-
-let userApi: UserAPI;
-
-let whitelistedUserApi: WhitelistedUserAPI;
-
-let exchange: ExchangeAPI;
-
-const addressWhitlisted = "0x35405E1349658BcA12810d0f879Bf6c5d89B512C";
-
-const eddkeyWhitelisted =
-  "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
+import {
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+  TOKEN_INFO,
+} from "../data";
+import { BaseAPI } from "../../api/base_api";
+import { OffchainFeeReqType } from "../../defs";
 
 describe("Transfer test", function () {
   beforeEach(async () => {
-    userApi = new UserAPI({ chainId: ChainId.GOERLI });
-    exchange = new ExchangeAPI({ chainId: ChainId.GOERLI });
-    whitelistedUserApi = new WhitelistedUserAPI({ chainId: ChainId.GOERLI });
+    LoopringAPI.InitApi(ChainId.GOERLI);
   });
 
   it(
     "getAccountWhitelisted",
     async () => {
       const request: GetAccountRequest = {
-        owner: addressWhitlisted,
+        owner: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
       };
-      const response = await exchange.getAccount(request);
+      const response = await LoopringAPI.exchangeAPI.getAccount(request);
       console.log(response);
     },
     DEFAULT_TIMEOUT
@@ -59,22 +47,22 @@ describe("Transfer test", function () {
       try {
         // step 0. init web3
         const provider = new PrivateKeyProvider(
-          loopring_exported_account.privateKey,
+          LOOPRING_EXPORTED_ACCOUNT.privateKey,
           "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
         );
         const web3 = new Web3(provider);
 
-        const { accInfo } = await exchange.getAccount({
-          owner: loopring_exported_account.address,
+        const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
         });
 
         if (!accInfo) {
           return;
         }
         /*
-         * @replace loopring_exported_account.exchangeAddr  exchangeInfo.exchangeAddress
+         * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddr  exchangeInfo.exchangeAddress
          */
-        // const { exchangeInfo } = await exchange.getExchangeInfo();
+        // const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
 
         console.log("accInfo:", accInfo);
 
@@ -83,7 +71,7 @@ describe("Transfer test", function () {
           address: accInfo.owner,
           keySeed: BaseAPI.KEY_MESSAGE.replace(
             "${exchangeAddress}",
-            loopring_exported_account.exchangeAddr
+            LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
           ).replace("${nonce}", (accInfo.nonce - 1).toString()),
           walletType: ConnectorNames.MetaMask,
           chainId: ChainId.GOERLI,
@@ -95,7 +83,10 @@ describe("Transfer test", function () {
           accountId: accInfo.accountId,
         };
 
-        const response = await userApi.getUserApiKey(request, eddsakey.sk);
+        const response = await LoopringAPI.userAPI.getUserApiKey(
+          request,
+          eddsakey.sk
+        );
         console.log(response);
       } catch (reason) {
         dumpError400(reason);
@@ -110,14 +101,14 @@ describe("Transfer test", function () {
       try {
         // step 0. init web3
         const provider = new PrivateKeyProvider(
-          loopring_exported_account.privateKey,
+          LOOPRING_EXPORTED_ACCOUNT.privateKey,
           "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
         );
         const web3 = new Web3(provider);
 
         // step 1. get account info
-        const { accInfo } = await exchange.getAccount({
-          owner: loopring_exported_account.address,
+        const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
         });
 
         if (!accInfo) {
@@ -125,9 +116,9 @@ describe("Transfer test", function () {
         }
 
         /*
-         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddr =  exchangeInfo.exchangeAddress
          */
-        // const { exchangeInfo } = await exchange.getExchangeInfo();
+        // const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
 
         console.log("accInfo:", accInfo);
 
@@ -136,7 +127,7 @@ describe("Transfer test", function () {
           address: accInfo.owner,
           keySeed: BaseAPI.KEY_MESSAGE.replace(
             "${exchangeAddress}",
-            loopring_exported_account.exchangeAddr
+            LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
           ).replace("${nonce}", (accInfo.nonce - 1).toString()),
           walletType: ConnectorNames.Unknown,
           chainId: ChainId.GOERLI,
@@ -149,14 +140,20 @@ describe("Transfer test", function () {
           accountId: accInfo.accountId,
         };
 
-        const { apiKey } = await userApi.getUserApiKey(request, eddsakey.sk);
+        const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+          request,
+          eddsakey.sk
+        );
 
         // step 4 get storageId
         const request2: GetNextStorageIdRequest = {
           accountId: accInfo.accountId,
           sellTokenId: 1,
         };
-        const storageId = await userApi.getNextStorageId(request2, apiKey);
+        const storageId = await LoopringAPI.userAPI.getNextStorageId(
+          request2,
+          apiKey
+        );
 
         // step 5 get fee
         const requestFee: GetOffchainFeeAmtRequest = {
@@ -164,15 +161,18 @@ describe("Transfer test", function () {
           requestType: OffchainFeeReqType.TRANSFER,
         };
 
-        const responseFee = await userApi.getOffchainFeeAmt(requestFee, apiKey);
+        const responseFee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+          requestFee,
+          apiKey
+        );
 
         // step 6 transfer
         const request3: OriginTransferRequestV3 = {
-          exchange: loopring_exported_account.exchangeAddr,
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
           payerAddr: accInfo.owner,
           payerId: accInfo.accountId,
-          payeeAddr: loopring_exported_account.address2,
-          payeeId: loopring_exported_account.accountId2,
+          payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
+          payeeId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
           storageId: storageId.offchainId,
           token: {
             tokenId: 1,
@@ -189,7 +189,7 @@ describe("Transfer test", function () {
           validUntil: VALID_UNTIL,
         };
 
-        const response = await userApi.submitInternalTransfer({
+        const response = await LoopringAPI.userAPI.submitInternalTransfer({
           request: request3,
           web3,
           chainId: ChainId.GOERLI,
@@ -211,8 +211,8 @@ describe("Transfer test", function () {
     async () => {
       try {
         // step 1. get account info
-        const { accInfo } = await exchange.getAccount({
-          owner: addressWhitlisted,
+        const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+          owner: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
         });
 
         if (!accInfo) {
@@ -222,18 +222,18 @@ describe("Transfer test", function () {
         console.log("accInfo:", accInfo);
 
         /*
-         * @replace loopring_exported_account.exchangeAddr =  exchangeInfo.exchangeAddress
+         * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddr =  exchangeInfo.exchangeAddress
          */
-        // const { exchangeInfo } = await exchange.getExchangeInfo();
+        // const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
 
         // step 2 get apikey
         const request: GetUserApiKeyRequest = {
           accountId: accInfo.accountId,
         };
 
-        const { apiKey } = await userApi.getUserApiKey(
+        const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
           request,
-          eddkeyWhitelisted
+          LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey
         );
 
         console.log("apiKey:", apiKey);
@@ -243,14 +243,17 @@ describe("Transfer test", function () {
           accountId: accInfo.accountId,
           sellTokenId: 1,
         };
-        const storageId = await userApi.getNextStorageId(request2, apiKey);
+        const storageId = await LoopringAPI.userAPI.getNextStorageId(
+          request2,
+          apiKey
+        );
 
         // step 4 transfer
         const request3: OriginTransferRequestV3 = {
-          exchange: loopring_exported_account.exchangeAddr, //exchangeInfo.exchangeAddress,
-          payerAddr: addressWhitlisted,
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr, //exchangeInfo.exchangeAddress,
+          payerAddr: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
           payerId: accInfo.accountId,
-          payeeAddr: loopring_exported_account.address2,
+          payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
           payeeId: 0,
           storageId: storageId.offchainId,
           token: {
@@ -266,11 +269,12 @@ describe("Transfer test", function () {
 
         console.log("request3:", request3);
 
-        const response = await whitelistedUserApi.submitInternalTransfer(
-          request3,
-          eddkeyWhitelisted,
-          apiKey
-        );
+        const response =
+          await LoopringAPI.WhitelistedUserAPI.submitInternalTransfer(
+            request3,
+            LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey,
+            apiKey
+          );
 
         console.log(response);
       } catch (reason) {

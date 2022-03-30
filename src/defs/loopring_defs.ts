@@ -383,9 +383,9 @@ export interface TokenVolumeNFT {
    */
   amount: string;
   /**
-   * The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID
+   * The Loopring's NFTAction token data identifier which is a hash string of NFTAction token address and NFT_ID
    * @type {string}
-   * @memberof The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID
+   * @memberof The Loopring's NFTAction token data identifier which is a hash string of NFTAction token address and NFT_ID
    */
   nftData: NftData;
 }
@@ -660,14 +660,16 @@ export interface GetEthBalancesRequest {
   owner: string;
 }
 
+export type TokenAddress = string;
+
 export interface GetTokenBalancesRequest {
   owner: string;
-  token: string;
+  token: TokenAddress[];
 }
 
 export interface GetAllowancesRequest {
   owner: string;
-  token: string; // tokenAddress
+  token: TokenAddress[]; // tokenAddress
 }
 
 export interface GetDepthRequest {
@@ -706,13 +708,32 @@ export interface GetUserApiKeyRequest {
 export interface UpdateUserApiKeyRequest {
   accountId: number;
 }
-
-export interface GetOffchainFeeAmtRequest {
+// ORDER=0,
+// OFFCHAIN_WITHDRAWAL=1,
+// UPDATE_ACCOUNT=2,
+// TRANSFER=3,
+// FAST_OFFCHAIN_WITHDRAWAL=4,
+// OPEN_ACCOUNT=5,
+// AMM_EXIT=6,
+// DEPOSIT=7,
+// AMM_JOIN=8,
+export type GetOffchainFeeAmtRequest = {
   accountId: number;
-  requestType: OffchainFeeReqType;
-  tokenSymbol?: string;
   amount?: string;
-}
+} & XOR<
+  {
+    requestType: Omit<OffchainFeeReqType, 1 | 4 | 6 | 8 | 0>;
+  },
+  {
+    requestType:
+      | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
+      | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
+      | OffchainFeeReqType.AMM_JOIN
+      | OffchainFeeReqType.AMM_EXIT
+      | OffchainFeeReqType.ORDER;
+    tokenSymbol: string;
+  }
+>;
 
 /**
  * @methodOf OffchainNFTFeeReqType.NFT_MINT
@@ -1444,7 +1465,7 @@ export interface OriginTransferRequestV3 {
 }
 
 /**
- * Submit Deploy NFT params
+ * Submit Deploy NFTAction params
  * @export
  * @interface OriginDeployNFTRequestV3
  */
@@ -1464,7 +1485,7 @@ export interface OriginDeployNFTRequestV3 {
    */
   nftData: string;
   /**
-   * NFT address
+   * NFTAction address
    * @type {string}
    * @memberof OriginDeployNFTRequestV3
    */
@@ -1682,13 +1703,13 @@ export interface NFTMintRequestV3 {
    */
   minterAddress: string;
   /**
-   * The account receive the minted NFT token, now should be minter himself.
+   * The account receive the minted NFTAction token, now should be minter himself.
    * @type {number}
    * @memberof OriginNFTMintRequestV3
    */
   toAccountId: number;
   /**
-   * The account receive the minted NFT token, now should be minter himself.
+   * The account receive the minted NFTAction token, now should be minter himself.
    * @type {string}
    * @memberof OriginNFTMintRequestV3
    */
@@ -2190,7 +2211,7 @@ export interface GetAccountServicesRequest {
   wallet?: string;
 }
 
-// NFT
+// NFTAction
 
 export interface GetUserNFTBalancesRequest {
   accountId: number;

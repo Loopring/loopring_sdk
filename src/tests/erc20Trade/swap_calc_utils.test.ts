@@ -6,18 +6,15 @@ import {
   ChainId,
   AmmPoolInfoV3,
   AmmPoolSnapshot,
-} from "../defs";
+} from "../../defs";
 
-import { AmmpoolAPI, ExchangeAPI } from "../api";
+import { AmmpoolAPI, ExchangeAPI } from "../../api";
 
-import { dumpError400 } from "../utils/network_tools";
+import { dumpError400 } from "../../utils/network_tools";
 
-import { getOutputAmount } from "../utils/swap_calc_utils";
-import { getExistedMarket } from "../utils";
-
-const chainId = ChainId.GOERLI;
-
-const TIMEOUT = 60000;
+import { getOutputAmount } from "../../utils/swap_calc_utils";
+import { getExistedMarket } from "../../utils";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "../data";
 
 const feeBips = "20";
 
@@ -32,8 +29,6 @@ let marketArr: string[];
 
 let isAtoB: boolean;
 
-const AMM_LRC_ETH_poolAddress = "0x18920d6e6fb7ebe057a4dd9260d6d95845c95036";
-
 let tokenMap: LoopringMap<TokenInfo>;
 
 let marketMap: LoopringMap<MarketInfo>;
@@ -46,14 +41,15 @@ let ammPoolSnapshot: AmmPoolSnapshot;
 
 let input: string;
 
-const init = async (chainId: ChainId = ChainId.MAINNET) => {
+const init = async (chainId: ChainId = ChainId.GOERLI) => {
   try {
-    exchangeApi = new ExchangeAPI({ chainId });
-    ammApi = new AmmpoolAPI({ chainId });
+    // exchangeApi = new ExchangeAPI({ chainId });
+    // ammApi = new AmmpoolAPI({ chainId });
+    LoopringAPI.InitApi(chainId);
 
-    tokenMap = (await exchangeApi.getTokens()).tokenSymbolMap;
+    tokenMap = (await LoopringAPI.exchangeAPI.getTokens()).tokenSymbolMap;
 
-    const marketAll = await exchangeApi.getMixMarkets();
+    const marketAll = await LoopringAPI.exchangeAPI.getMixMarkets();
 
     marketMap = marketAll.markets;
 
@@ -63,7 +59,8 @@ const init = async (chainId: ChainId = ChainId.MAINNET) => {
 
     const market = amm as string;
 
-    depth = (await exchangeApi.getMixDepth({ market: marketTmp })).depth;
+    depth = (await LoopringAPI.exchangeAPI.getMixDepth({ market: marketTmp }))
+      .depth;
 
     // console.log(market, marketTmp, 'depth2:', depth2)
 
@@ -151,25 +148,22 @@ const checkResult = (
 };
 
 describe("swap_calc_utils", function () {
-  beforeEach(async () => {
-    return;
-  }, TIMEOUT);
+  // beforeEach(async () => {
+  // }, DEFAULT_TIMEOUT);
 
   it(
     "USDT_DAI_a2b_100",
     async () => {
       try {
-        await initAll("100", "USDT", "DAI", true, ChainId.MAINNET);
-
+        await initAll("100", "USDT", "DAI", true, ChainId.GOERLI);
         console.log("ammPoolSnapshot:", ammPoolSnapshot);
         console.log("depth:", depth);
-
         checkResult("4", _slipBips, "0");
       } catch (reason) {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -186,7 +180,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -203,7 +197,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -217,7 +211,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -231,7 +225,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -245,7 +239,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -259,7 +253,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -273,7 +267,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -287,7 +281,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -301,7 +295,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -315,7 +309,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -329,7 +323,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -343,7 +337,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -357,7 +351,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   // --------------------------------------------------
@@ -373,7 +367,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -387,7 +381,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -401,7 +395,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -415,7 +409,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -429,7 +423,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -443,7 +437,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -457,7 +451,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   //-------
@@ -473,7 +467,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -487,7 +481,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -501,7 +495,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -515,7 +509,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   //-------
@@ -531,7 +525,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -545,7 +539,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -559,7 +553,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -573,7 +567,7 @@ describe("swap_calc_utils", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 });
 

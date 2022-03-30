@@ -5,42 +5,72 @@ import {
   GetOffchainFeeAmtRequest,
   OffchainFeeReqType,
   TokenVolumeV3,
-} from "../defs";
+  ConnectorNames,
+  GetUserApiKeyRequest,
+} from "../../defs";
 
-import { AmmpoolAPI, UserAPI, ExchangeAPI } from "../api";
+import { AmmpoolAPI, UserAPI, ExchangeAPI } from "../../api";
 
-import { dumpError400 } from "../utils/network_tools";
+import { dumpError400 } from "../../utils/network_tools";
 
 import {
   makeExitAmmPoolRequest,
   makeExitAmmPoolRequest2,
   makeJoinAmmPoolRequest,
-} from "../utils/swap_calc_utils";
+} from "../../utils/swap_calc_utils";
 
-import * as sdk from "..";
+import * as sdk from "../../index";
 
-import { loopring_exported_account as acc } from "./utils";
+import {
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LOOPRING_EXPORTED_ACCOUNT as acc,
+  LoopringAPI,
+  TOKEN_INFO,
+  web3,
+} from "../data";
+import * as sign_tools from "../../api/sign/sign_tools";
+import { BaseAPI } from "../../api/base_api";
 
-const TIMEOUT = 30000;
-
-const testAddress = "0xd4bd7c71b6d4a09217ccc713f740d6ed8f4ea0cd";
-
-const poolAddress = "0xfEB069407df0e1e4B365C10992F1bc16c078E34b";
-
+let apiKey: string;
+let eddsaKey: string;
 describe("amm_calc", function () {
   beforeEach(async () => {
-    return;
-  }, TIMEOUT);
+    LoopringAPI.InitApi(ChainId.GOERLI);
+    const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+      owner: LOOPRING_EXPORTED_ACCOUNT.address,
+    });
+
+    const _eddsaKey = await sign_tools.generateKeyPair({
+      web3,
+      address: accInfo.owner,
+      keySeed: BaseAPI.KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
+      ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+      walletType: ConnectorNames.MetaMask,
+      chainId: ChainId.GOERLI,
+    });
+    eddsaKey = _eddsaKey.sk;
+
+    const request: GetUserApiKeyRequest = {
+      accountId: accInfo.accountId,
+    };
+
+    apiKey = (await LoopringAPI.userAPI.getUserApiKey(request, eddsaKey))
+      .apiKey;
+  }, DEFAULT_TIMEOUT);
 
   it(
     "amm_calc_test",
     async () => {
-      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
       try {
         const request: GetAmmPoolSnapshotRequest = {
-          poolAddress,
+          poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
         };
-        const response = await api.getAmmPoolSnapshot<any>(request);
+        const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>(
+          request
+        );
         console.log(response.raw_data.pooled);
 
         const covertVal = sdk.toBig("1e+20").toFixed(0, 0);
@@ -62,21 +92,20 @@ describe("amm_calc", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
     "make_join_request",
     async () => {
-      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
-      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
-      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
       try {
         const request: GetAmmPoolSnapshotRequest = {
-          poolAddress,
+          poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
         };
 
-        const response = await api.getAmmPoolSnapshot<any>(request);
+        const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>(
+          request
+        );
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
@@ -85,11 +114,15 @@ describe("amm_calc", function () {
           tokenSymbol: "ETH",
         };
 
-        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
+        const { fees } = await LoopringAPI.userAPI.getOffchainFeeAmt(
+          request2,
+          apiKey
+        );
 
         console.log("---fees:", fees);
 
-        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
+        const { tokenSymbolMap, tokenIdIndex } =
+          await LoopringAPI.exchangeAPI.getTokens();
 
         const { request: res } = makeJoinAmmPoolRequest(
           "100",
@@ -109,23 +142,20 @@ describe("amm_calc", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
     "make_exit_request",
     async () => {
-      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
-      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
-      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
       try {
-        const { ammpools } = await api.getAmmPoolConf();
-
         const request: GetAmmPoolSnapshotRequest = {
-          poolAddress,
+          poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
         };
 
-        const response = await api.getAmmPoolSnapshot<any>(request);
+        const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>(
+          request
+        );
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
@@ -134,11 +164,15 @@ describe("amm_calc", function () {
           tokenSymbol: "ETH",
         };
 
-        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
+        const { fees } = await LoopringAPI.userAPI.getOffchainFeeAmt(
+          request2,
+          apiKey
+        );
 
         console.log("---fees:", fees);
 
-        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
+        const { tokenSymbolMap, tokenIdIndex } =
+          await LoopringAPI.exchangeAPI.getTokens();
 
         const { request: res } = makeExitAmmPoolRequest2(
           "100",
@@ -156,23 +190,20 @@ describe("amm_calc", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
     "make_new_exit_request",
     async () => {
-      const api = new AmmpoolAPI({ chainId: ChainId.GOERLI });
-      const userApi = new UserAPI({ chainId: ChainId.GOERLI });
-      const exchangeApi = new ExchangeAPI({ chainId: ChainId.GOERLI });
       try {
-        const { ammpools } = await api.getAmmPoolConf();
-
         const request: GetAmmPoolSnapshotRequest = {
-          poolAddress,
+          poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
         };
 
-        const response = await api.getAmmPoolSnapshot<any>(request);
+        const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>(
+          request
+        );
         console.log(response.raw_data.pooled);
 
         const request2: GetOffchainFeeAmtRequest = {
@@ -181,11 +212,15 @@ describe("amm_calc", function () {
           tokenSymbol: "ETH",
         };
 
-        const { fees } = await userApi.getOffchainFeeAmt(request2, acc.apiKey);
+        const { fees } = await LoopringAPI.userAPI.getOffchainFeeAmt(
+          request2,
+          apiKey
+        );
 
         console.log("---fees:", fees);
 
-        const { tokenSymbolMap, tokenIdIndex } = await exchangeApi.getTokens();
+        const { tokenSymbolMap, tokenIdIndex } =
+          await LoopringAPI.exchangeAPI.getTokens();
 
         const { request: res } = makeExitAmmPoolRequest(
           "100",
@@ -205,7 +240,7 @@ describe("amm_calc", function () {
         dumpError400(reason);
       }
     },
-    TIMEOUT
+    DEFAULT_TIMEOUT
   );
 });
 

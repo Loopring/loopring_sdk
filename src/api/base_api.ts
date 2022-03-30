@@ -12,7 +12,6 @@ import {
   TX_HASH_API,
 } from "../defs";
 import { Request } from "./request";
-import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
 import {
   ecrecover,
   fromRpcSig,
@@ -30,7 +29,7 @@ import ABI from "./ethereum/contracts";
 import { LOOPRING_URLs } from "../defs/url_defs";
 
 export const KEY_MESSAGE =
-  "Sign this message to access Loopring Exchange: " +
+  "Sign this message to access Loopring exchange: " +
   "${exchangeAddress}" +
   " with key nonce: " +
   "${nonce}";
@@ -84,7 +83,7 @@ export class BaseAPI {
   }
   private timeout: number;
 
-  public constructor(param: InitParam, timeout: number = DEFAULT_TIMEOUT) {
+  public constructor(param: InitParam, timeout: number = 3000) {
     if (param.baseUrl) {
       this.baseUrl = param.baseUrl;
     } else if (param.chainId !== undefined) {
@@ -515,7 +514,7 @@ const getBaseUrlByChainId = (id: ChainId) => {
 
 /**
  * @default chainId 1
- * @default keySeed `Sign this message to access Loopring Exchange: ${exchangeAddress} with key nonce: ${nonce}`
+ * @default keySeed `Sign this message to access Loopring exchange: ${exchangeAddress} with key nonce: ${nonce}`
  */
 export interface InitParam {
   chainId?: ChainId;

@@ -3,19 +3,19 @@ import {
   GetTokenPricesRequest,
   GetUserAssetsRequest,
   Currency,
-} from "../defs";
+} from "../../defs";
 
-import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
+import { dumpError400 } from "../../utils";
 
-import { dumpError400 } from "../utils/network_tools";
-
-import { WalletAPI, ExchangeAPI } from "../api";
-
-let api: WalletAPI;
+import {
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+} from "../data";
 
 describe("WalletApi", function () {
   beforeEach(async () => {
-    api = new WalletAPI({ chainId: ChainId.GOERLI });
+    LoopringAPI.InitApi(ChainId.GOERLI);
   });
 
   it(
@@ -23,30 +23,12 @@ describe("WalletApi", function () {
     async () => {
       try {
         const request: GetUserAssetsRequest = {
-          wallet: "0xeF041462825bFdF79b2f1f02A70b2753cB5b1516",
+          wallet: LOOPRING_EXPORTED_ACCOUNT.addressContractWallet,
           offset: 10,
           limit: 10,
         };
 
-        const response = await api.getUserAssets(request);
-        console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
-      }
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
-    "getUserAssets_TESTNET",
-    async () => {
-      try {
-        api = new WalletAPI({ chainId: ChainId.GOERLI });
-        const request: GetUserAssetsRequest = {
-          wallet: "",
-        };
-
-        const response = await api.getUserAssets(request);
+        const response = await LoopringAPI.walletAPI.getUserAssets(request);
         console.log(response);
       } catch (reason) {
         dumpError400(reason);
@@ -63,7 +45,7 @@ describe("WalletApi", function () {
           token: "0xdac17f958d2ee523a2206206994597c13d831ec7",
         };
 
-        const response = await api.getTokenPrices(request);
+        const response = await LoopringAPI.walletAPI.getTokenPrices(request);
         console.log(response);
         console.log(response.raw_data.data);
       } catch (reason) {
@@ -77,7 +59,7 @@ describe("WalletApi", function () {
     "getLatestTokenPrices1",
     async () => {
       try {
-        const response = await api.getLatestTokenPrices();
+        const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
         console.log(response);
       } catch (reason) {
         dumpError400(reason);
@@ -89,19 +71,15 @@ describe("WalletApi", function () {
   it(
     "getUniPrice",
     async () => {
-      const chainId = ChainId.MAINNET;
-      const api = new ExchangeAPI({ chainId });
-      const walletApi = new WalletAPI({ chainId });
-
-      const tokens = await api.getTokens();
-      const response = await walletApi.getLatestTokenPrices();
+      const tokens = await LoopringAPI.exchangeAPI.getTokens();
+      const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
 
       if (tokens && response) {
         const addr = tokens.tokenSymbolMap["UNI"].address;
         console.log(response.tokenPrices[addr]);
       }
 
-      const response2 = await walletApi.getLatestTokenPrices({
+      const response2 = await LoopringAPI.walletAPI.getLatestTokenPrices({
         currency: Currency.cny,
       });
 
@@ -117,7 +95,7 @@ describe("WalletApi", function () {
     "getLatestTokenPrices_cny",
     async () => {
       try {
-        const response = await api.getLatestTokenPrices({
+        const response = await LoopringAPI.walletAPI.getLatestTokenPrices({
           currency: Currency.cny,
         });
         console.log(response);
@@ -129,10 +107,10 @@ describe("WalletApi", function () {
   );
 
   it(
-    "getLatestTokenPrices_2",
+    "getLatestTokenPrices_Identify_Token",
     async () => {
       try {
-        const response = await api.getLatestTokenPrices({
+        const response = await LoopringAPI.walletAPI.getLatestTokenPrices({
           tokens:
             "0x7b854d37e502771b1647f5917efcf065ce1c0677,0x6ff8a397f7a04b41c58c00ab8e70aca7cbc0adba",
         });
@@ -147,8 +125,8 @@ describe("WalletApi", function () {
     "getWalletType",
     async () => {
       try {
-        const response = await api.getWalletType({
-          wallet:'0x3f87bc7b8f06322f19dfdc51adf2acc73a92200b'
+        const response = await LoopringAPI.walletAPI.getWalletType({
+          wallet: "0x3f87bc7b8f06322f19dfdc51adf2acc73a92200b",
         });
         console.log(response);
       } catch (reason) {
@@ -157,5 +135,4 @@ describe("WalletApi", function () {
     },
     DEFAULT_TIMEOUT
   );
-
 });

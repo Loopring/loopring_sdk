@@ -136,7 +136,7 @@ export class NFTAPI extends BaseAPI {
           count: result.toString(),
         };
       }
-    } catch (e) {
+    } catch (e: any) {
       return {
         ...e,
         code: LoopringErrorCode.CONTRACTNFT_BALANCE,
@@ -209,7 +209,7 @@ export class NFTAPI extends BaseAPI {
       result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
       return await fetch(result).then((response) => response.json());
-    } catch (error) {
+    } catch (error: any) {
       return {
         code: LoopringErrorCode.CONTRACTNFT_URI,
         message: ConnectorError.CONTRACTNFT_URI,
@@ -226,7 +226,7 @@ export class NFTAPI extends BaseAPI {
    * @param loopringAddress loopring exchange Address
    * @param tokenId: the tokenId
    * @param chainId
-   * @param nftType The type of NFT contract address (ERC721/ERC1155/...)
+   * @param nftType The type of NFTAction contract address (ERC721/ERC1155/...)
    * @param nonce
    * @param gasPrice
    * @param gasLimit
@@ -273,7 +273,7 @@ export class NFTAPI extends BaseAPI {
         gasLimit,
         sendByMetaMask
       );
-    } catch (error) {
+    } catch (error: any) {
       return {
         ...error,
         code: LoopringErrorCode.CONTRACTNFT_SET_APPROVE,
@@ -308,7 +308,7 @@ export class NFTAPI extends BaseAPI {
    * @param from The address that deposits the funds to the exchange
    * @param exchangeAddress loopring exchange address
    * @param nftType  NFTType
-   * @param tokenAddress  The address of NFT token
+   * @param tokenAddress  The address of NFTAction token
    */
   public async isApprovedForAll({
     web3,
@@ -326,7 +326,7 @@ export class NFTAPI extends BaseAPI {
         nftType
       );
       return result;
-    } catch (error) {
+    } catch (error: any) {
       return {
         ...error,
         code: LoopringErrorCode.CONTRACTNFT_IS_APPROVE,
@@ -336,12 +336,12 @@ export class NFTAPI extends BaseAPI {
   }
 
   /**
-   * @DepositParam  an NFT to the specified account.
+   * @DepositParam  an NFTAction to the specified account.
    * @param web3
    * @param from The address that deposits the funds to the exchange
    * @param to The account owner's address receiving the funds
-   * @param nftType The type of NFT contract address (ERC721/ERC1155/...)
-   * @param tokenAddress The address of NFT token
+   * @param nftType The type of NFTAction contract address (ERC721/ERC1155/...)
+   * @param tokenAddress The address of NFTAction token
    * @param nftId The token type 'id`.
    * @param amount The amount of tokens to deposit.
    * @param nonce: number,
@@ -439,8 +439,8 @@ export class NFTAPI extends BaseAPI {
       return {
         tokenAddress: ethUtil.toChecksumAddress("0x" + addr),
       };
-    } catch (e) {
-      return e;
+    } catch (error: any) {
+      return error;
     }
   }
 }

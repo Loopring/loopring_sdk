@@ -48,15 +48,15 @@ export enum Currency {
 }
 
 export enum OffchainFeeReqType {
-  ORDER,
-  OFFCHAIN_WITHDRAWAL,
-  UPDATE_ACCOUNT,
-  TRANSFER,
-  FAST_OFFCHAIN_WITHDRAWAL,
-  OPEN_ACCOUNT,
-  AMM_EXIT,
-  DEPOSIT,
-  AMM_JOIN,
+  ORDER = 0,
+  OFFCHAIN_WITHDRAWAL = 1,
+  UPDATE_ACCOUNT = 2,
+  TRANSFER = 3,
+  FAST_OFFCHAIN_WITHDRAWAL = 4,
+  OPEN_ACCOUNT = 5,
+  AMM_EXIT = 6,
+  DEPOSIT = 7,
+  AMM_JOIN = 8,
 }
 export enum OffchainNFTFeeReqType {
   NFT_MINT = 9,

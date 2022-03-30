@@ -36,6 +36,7 @@ import {
   GetAccountServicesRequest,
   VipFeeRateInfoMap,
   AccountInfo,
+  TokenAddress,
 } from "../defs";
 
 import BigNumber from "bignumber.js";
@@ -478,34 +479,34 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  private splitTokens(token: string, tokens: LoopringMap<TokenInfo>) {
-    let tokenArray: any = [];
-    const tokenAddrArr: string[] = [];
-
-    if (tokens) {
-      if (token) {
-        tokenArray = token.split(SEP);
-      }
-
-      if (
-        tokenArray.length <= 0 ||
-        (tokenArray.length === 1 && tokenArray[0] === "")
-      ) {
-        tokenArray = Reflect.ownKeys(tokens);
-      }
-
-      tokenArray.forEach((item: string) => {
-        tokenAddrArr.push(tokens[item].address);
-      });
-
-      token = tokenAddrArr.join(SEP);
-    }
-
-    return {
-      tokenArray,
-      token,
-    };
-  }
+  // private splitTokens(token: string, tokens: LoopringMap<TokenInfo>) {
+  //   let tokenArray: any = [];
+  //   const tokenAddrArr: string[] = [];
+  //
+  //   if (tokens) {
+  //     if (token) {
+  //       tokenArray = token.split(SEP);
+  //     }
+  //
+  //     if (
+  //       tokenArray.length <= 0 ||
+  //       (tokenArray.length === 1 && tokenArray[0] === "")
+  //     ) {
+  //       tokenArray = Reflect.ownKeys(tokens);
+  //     }
+  //
+  //     tokenArray.forEach((item: string) => {
+  //       tokenAddrArr.push(tokens[item].address);
+  //     });
+  //
+  //     token = tokenAddrArr.join(SEP);
+  //   }
+  //
+  //   return {
+  //     tokenArray,
+  //     token,
+  //   };
+  // }
 
   /*
    * Returns the balances of all supported tokens, including Ether.
@@ -538,19 +539,12 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the balances of all supported tokens, including Ether.
    */
-  public async getTokenBalances<R>(
-    request: GetTokenBalancesRequest,
-    tokens: LoopringMap<TokenInfo>
-  ): Promise<{
+  public async getTokenBalances<R>(request: GetTokenBalancesRequest): Promise<{
     tokenBalances: LoopringMap<string>;
     raw_data: R;
   }> {
-    const { tokenArray, token } = this.splitTokens(request.token, tokens);
-
-    request.token = token;
-
     const reqParams: ReqParams = {
-      queryParams: request,
+      queryParams: { ...request, token: request.token.join(SEP) },
       url: LOOPRING_URLs.GET_TOKEN_BALANCES,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -562,11 +556,12 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const tokenBalances: LoopringMap<string> = {};
+    const tokenBalances: { [key: TokenAddress]: string } = {};
 
     if (raw_data?.amount instanceof Array) {
-      raw_data.amount.forEach((_: any, index: number) => {
-        tokenBalances[tokenArray[index]] = raw_data.amount[index];
+      raw_data.amount.forEach((value: any, index: number) => {
+        // tokenBalances[tokenArray[index]] = raw_data.amount[index];
+        tokenBalances[request.token[index]] = value;
       });
     }
 
@@ -580,18 +575,17 @@ export class ExchangeAPI extends BaseAPI {
    * Returns the allowances of all supported tokens
    */
   public async getAllowances<R>(
-    request: GetAllowancesRequest,
-    tokens: any
+    request: GetAllowancesRequest
+    // tokens: any
   ): Promise<{
     raw_data: R;
-    tokenAllowances: LoopringMap<string>;
+    tokenAllowances: { [key: TokenAddress]: string };
   }> {
-    const { tokenArray, token } = this.splitTokens(request.token, tokens);
-
-    request.token = token;
-
     const reqParams: ReqParams = {
-      queryParams: request,
+      queryParams: {
+        ...request,
+        token: request.token.join(SEP),
+      },
       url: LOOPRING_URLs.GET_ALLOWANCES,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -603,11 +597,11 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const tokenAllowances: LoopringMap<string> = {};
+    const tokenAllowances: { [key: TokenAddress]: string } = {};
 
     if (raw_data?.allowances instanceof Array) {
-      raw_data.allowances.forEach((_: any, index: number) => {
-        tokenAllowances[tokenArray[index]] = raw_data.allowances[index];
+      raw_data.allowances.forEach((value: any, index: number) => {
+        tokenAllowances[request.token[index]] = value;
       });
     }
 

@@ -796,7 +796,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Query current NFT fee amount
+   * Query current NFTAction fee amount
    */
   public async getNFTOffchainFeeAmt<R>(
     request: loopring_defs.GetNFTOffchainFeeAmtRequest,
@@ -869,7 +869,7 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
 
-    // metamask not import hw wallet.
+    // metamask not import hw appWallet.
     if (walletType === ConnectorNames.MetaMask) {
       try {
         if (isHWAddr) {
@@ -885,7 +885,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -995,7 +995,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1056,7 +1056,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT Deploy request
+   * Submit NFTAction Deploy request
    */
   public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
@@ -1115,7 +1115,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1184,7 +1184,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT Transfer request
+   * Submit NFTAction Transfer request
    */
   public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
@@ -1235,7 +1235,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1295,7 +1295,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT Withdraw request
+   * Submit NFTAction Withdraw request
    */
   public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
@@ -1330,7 +1330,7 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
 
-    // metamask not import hw wallet.
+    // metamask not import hw appWallet.
     if (walletType === ConnectorNames.MetaMask) {
       try {
         if (isHWAddr) {
@@ -1347,7 +1347,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1406,7 +1406,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT 55544555555555555555555545555 request
+   * Submit NFTAction 55544555555555555555555545555 request
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
@@ -1451,7 +1451,7 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
 
-    // metamask not import hw wallet.
+    // metamask not import hw appWallet.
     if (walletType === ConnectorNames.MetaMask) {
       try {
         if (isHWAddr) {
@@ -1468,7 +1468,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1504,7 +1504,7 @@ export class UserAPI extends BaseAPI {
         } else {
           await sigHW();
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1533,7 +1533,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFT Validate Order request
+   * Submit NFTAction Validate Order request
    */
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
@@ -1552,14 +1552,14 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
     };
-    // myLog("NFT Validate Order request", request);
+    // myLog("NFTAction Validate Order request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
   }
 
   /*
-   * Submit NFT Trade request
+   * Submit NFTAction Trade request
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTradeRequestV3WithPatch
@@ -1587,14 +1587,14 @@ export class UserAPI extends BaseAPI {
         PrivateKey: eddsaKey,
       },
     };
-    // myLog("NFT Trade request", request);
+    // myLog("NFTAction Trade request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     return this.returnTxHash(raw_data);
   }
 
   /*
-   * Returns User NFT deposit records.
+   * Returns User NFTAction deposit records.
    */
   public async getUserNFTDepositHistory<R>(
     request: loopring_defs.GetUserNFTDepositHistoryRequest,
@@ -1627,7 +1627,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Get User NFT Withdrawal History.
+   * Get User NFTAction Withdrawal History.
    */
   public async getUserNFTWithdrawalHistory<R>(
     request: loopring_defs.GetUserNFTWithdrawalHistoryRequest,
@@ -1660,7 +1660,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Get user NFT transfer list.
+   * Get user NFTAction transfer list.
    */
   public async getUserNFTTransferHistory<R>(
     request: loopring_defs.GetUserNFTTransferHistoryRequest,
@@ -1693,7 +1693,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /**
-   * Get user NFT Mint list.
+   * Get user NFTAction Mint list.
    * @param request
    * @param apiKey
    */
@@ -1726,7 +1726,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Get user All NFT Transaction list.
+   * Get user All NFTAction Transaction list.
    *
    */
   public async getUserNFTTransactionHistory<R>(
@@ -1800,7 +1800,7 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         };
@@ -1885,7 +1885,7 @@ export class UserAPI extends BaseAPI {
     };
   }
 
-  // Get users NFT balance, besides amount, it also includes tokenId and nftData
+  // Get users NFTAction balance, besides amount, it also includes tokenId and nftData
 
   public async getUserNFTBalances<R>(
     request: loopring_defs.GetUserNFTBalancesRequest,

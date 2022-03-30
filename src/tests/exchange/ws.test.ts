@@ -1,20 +1,18 @@
-import * as sdk from "..";
+import * as sdk from "../../index";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "../data";
+import { ChainId } from "../../index";
 
-let api: sdk.WsAPI;
-let apiMain: sdk.WsAPI;
 describe("WsAPI test", function () {
   beforeEach(() => {
-    api = new sdk.WsAPI({ chainId: sdk.ChainId.GOERLI });
-    apiMain = new sdk.WsAPI({ chainId: sdk.ChainId.MAINNET });
+    LoopringAPI.InitApi(ChainId.GOERLI);
   });
-
   it(
     "getWsKey",
     async () => {
-      const response = await apiMain.getWsKey();
+      const response = await LoopringAPI.wsAPI.getWsKey();
       console.log(response);
     },
-    sdk.DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT
   );
 
   it(
@@ -31,6 +29,6 @@ describe("WsAPI test", function () {
       });
       console.log(arg2);
     },
-    sdk.DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT
   );
 });

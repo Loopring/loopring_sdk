@@ -244,7 +244,7 @@ export class WalletAPI extends BaseAPI {
       );
       ecdsaSignature = result?.sig + SigSuffix.Suffix03;
     };
-    // metamask not import hw wallet.
+    // metamask not import hw appWallet.
     if (walletType === ConnectorNames.MetaMask) {
       try {
         if (isHWAddr) {
@@ -259,7 +259,7 @@ export class WalletAPI extends BaseAPI {
           );
           ecdsaSignature = result?.sig + SigSuffix.Suffix03;
         }
-      } catch (err) {
+      } catch (err: any) {
         return {
           ...this.genErr(err),
         } as any;
@@ -513,7 +513,7 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  // /api/wallet/v3/operationLogs?from=0x189a3c44a39c5ab22712543c0f62a9833bbe8df9&fromTime=0&to=&offset=0&network=ETHEREUM&statues=&hebaoTxType=&limit=20
+  // /api/appWallet/v3/operationLogs?from=0x189a3c44a39c5ab22712543c0f62a9833bbe8df9&fromTime=0&to=&offset=0&network=ETHEREUM&statues=&hebaoTxType=&limit=20
 
   /**
    * getProtectors
