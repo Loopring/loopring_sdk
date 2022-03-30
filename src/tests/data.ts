@@ -325,7 +325,6 @@ export class LoopringAPI {
     LoopringAPI.wsAPI = new WsAPI({ chainId });
     LoopringAPI.WhitelistedUserAPI = new WhitelistedUserAPI({ chainId });
     LoopringAPI.nftAPI = new NFTAPI({ chainId });
-    LoopringAPI.delegate = new DelegateAPI({ chainId });
     LoopringAPI.__chainId__ = chainId;
     LoopringAPI.contractAPI = ContractAPI;
   };

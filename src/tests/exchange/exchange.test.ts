@@ -24,12 +24,12 @@ describe("ExchangeAPI test", function () {
   beforeEach(() => {
     LoopringAPI.InitApi(ChainId.GOERLI);
   });
-  it("getCode", async () => {
-    const response = await LoopringAPI.delegate.getCode(
-      LOOPRING_EXPORTED_ACCOUNT.address
-    );
-    console.log(response);
-  });
+  // it("getCode", async () => {
+  //   const response = await LoopringAPI.delegate.getCode(
+  //     LOOPRING_EXPORTED_ACCOUNT.address
+  //   );
+  //   console.log(response);
+  // });
   it(
     "getProtocolPortrait",
     async () => {
