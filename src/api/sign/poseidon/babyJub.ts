@@ -9,6 +9,7 @@ export class babyJub {
     const packed = SignatureScheme.to_bytes(P1).reverse()
     // console.log("packed", packed)
     if (babyJub.lt(P0, BigNumber.from("0"))) {
+      // console.log("Update .... lt ")
       packed[0] = packed[0] | 0x80
     }
     const hexStr = bytesToHexString(packed)
@@ -23,11 +24,15 @@ export class babyJub {
     let bb: BigNumber
     if (a.gt(half)) {
       aa = a.sub(p)
-      bb = b.sub(p)
     } else {
       aa = a
+    }
+    if (b.gt(half)) {
+      bb = b.sub(p)
+    } else {
       bb = b
     }
+    // console.log("lt", a.toString(), b.toString(), aa.toString(), bb.toString());
     return aa.lt(bb)
   }
 
@@ -38,11 +43,15 @@ export class babyJub {
     let bb: BigNumber
     if (a.gt(half)) {
       aa = a.sub(p)
-      bb = b.sub(p)
     } else {
       aa = a
+    }
+    if (b.gt(half)) {
+      bb = b.sub(p)
+    } else {
       bb = b
     }
+    // console.log("gt", a.toString(), b.toString(), aa.toString(), bb.toString());
     return aa.gt(bb)
   }
 

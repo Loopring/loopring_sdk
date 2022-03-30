@@ -18,6 +18,36 @@ function testEddsaPack_1() {
   console.log("testEddsaPack passed")
 }
 
+function testEddsaPack_2() {
+  console.log("testEddsaPack")
+
+  // Input
+  const publicKeyX = "0x191f8455196d7c9116065b69a745edbe3f5b6193125f48d818e16101b0ebd13f"
+  const publicKeyY = "0x0729569e74800ba4344767d608ec54f12b14cc4404a8726b5f73ebf8b58f9a09"
+
+  // Output
+  const eddsaPackOutput = "8729569e74800ba4344767d608ec54f12b14cc4404a8726b5f73ebf8b58f9a09"
+
+  const packed = EDDSAUtil.pack(publicKeyX, publicKeyY)  
+  assert(packed === eddsaPackOutput)
+  console.log("testEddsaPack passed")
+}
+
+function testEddsaPack_3() {
+  console.log("testEddsaPack")
+
+  // Input
+  const publicKeyX = "0x1ae187c43a6b534be1ac60b335d5cc8c12a9d479339e5ce4134315e20c2940c4"
+  const publicKeyY = "0x16fb785193a8657feb41b7944afde61fe05ea519621fa0f19d872a8fbba83463"
+
+  // Output
+  const eddsaPackOutput = "96fb785193a8657feb41b7944afde61fe05ea519621fa0f19d872a8fbba83463"
+
+  const packed = EDDSAUtil.pack(publicKeyX, publicKeyY)  
+  assert(packed === eddsaPackOutput)
+  console.log("testEddsaPack passed")
+}
+
 function testEddsaSign() {
   console.log("testEddsaSign")
   const strKey = "1965533437444427599736796973543479035828634172708055838572430750620147597402"
@@ -54,6 +84,8 @@ function test_generateKeyPair() {
 function main() {
   console.log("\n\TestsEDDSAUtil_test\n")
   testEddsaPack_1()
+  testEddsaPack_2()
+  testEddsaPack_3()
   // test_generateKeyPair()
   // testEddsaSign()
 }
