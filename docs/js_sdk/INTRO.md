@@ -20,7 +20,7 @@ yarn add @loopring-web/loopring-sdk
 > Make sure you are using the original npm registry.  
 > `npm config set registry http://registry.npmjs.org`
 
-## 1. Initialize the APIs
+## 1. Initialize APIs
 
 ```ts
 import * as sdk from "@loopring-web/loopring-sdk";

@@ -29,7 +29,7 @@ import ABI from "./ethereum/contracts";
 import { LOOPRING_URLs } from "../defs/url_defs";
 
 export const KEY_MESSAGE =
-  "Sign this message to access Loopring exchange: " +
+  "Sign this message to access Loopring Exchange: " +
   "${exchangeAddress}" +
   " with key nonce: " +
   "${nonce}";

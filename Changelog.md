@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
-####  v1.10.0
+####  v1.10.1
      1) getAllowances formatter update
      2) getTokenBalances formatter update
      3) unit test update
