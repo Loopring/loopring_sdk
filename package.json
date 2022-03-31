@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "1.9.9",
+  "version": "1.10.0",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
