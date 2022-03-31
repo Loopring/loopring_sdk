@@ -47,7 +47,7 @@ Choose deposit amount from UI
 
 ```ts
 const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({owner: accAddress});
-//tokenArr is Loopring supprot ERC20 TokenId Array.jion(',')
+//tokenArr is Loopring supprot erc20Trade TokenId Array.jion(',')
 const { tokenBalances } = await LoopringAPI.exchangeAPI.getTokenBalances({owner: accAddress, token: tokenArr.join()})
 ```
 API: [/api/v3/eth/tokenBalances](https://uat2.loopring.io/api/v3/eth/tokenBalances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8&token=0xfc28028d9b1f6966fe74710653232972f50673be%2C0x0000000000000000000000000000000000000000%2C0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a%2C0xcd2c81b322a5b530b5fa3432e57da6803b0317f7%2C0x47525e6a5def04c9a56706e93f54cc70c2e8f165)
@@ -203,12 +203,12 @@ SDK:[depositNFT](https://github.com/Loopring/loopring_sdk/blob/master/src/api/nf
 #### Approve Simple Signature Demo
 For more detail about genERC{XXX}Data please read [Contract ABI Specification](//https://docs.soliditylang.org/en/develop/abi-spec.html#)
 ```ts 
-/* ERC20 Approve Data structure */
+/* erc20Trade Approve Data structure */
 const data = genERC20Data(ERC20Method.Approve, {
   _spender: depositAddress,
   _value:"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 });
-/* NFT setApprovalForAll Data structure */
+/* NFTAction setApprovalForAll Data structure */
 // if (nftType === NFTType.ERC1155) {
 //    data = this._genERC1155Data(NFTMethod.setApprovalForAll, {
 //       operator: depositAddress,
@@ -259,7 +259,7 @@ web3.eth.sendTransaction({
     to: from,
     extraData: "",
   });
-  /* NFT deposit Data structure */
+  /* NFTAction deposit Data structure */
   // const data = genExchangeData(NFTMethod.depositNFT, {
   //   from,
   //   to: from,

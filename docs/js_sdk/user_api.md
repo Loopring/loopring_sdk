@@ -84,7 +84,7 @@ if Customer keySeed is set up `getAccount`, will return the string `.keySeed`.
 
 ```ts
     const { accInfo } = await exchange.getAccount({
-    owner: loopring_exported_account.address,
+    owner: LOOPRING_EXPORTED_ACCOUNT.address,
     });
     console.log(accInfo.keySeed)
 ```
@@ -93,7 +93,7 @@ if Customer keySeed is set up `getAccount`, will return the string `.keySeed`.
 generateKeyPair when signature accInfo.keySeed
 ```ts
   const { accInfo } = await exchange.getAccount({
-    owner: loopring_exported_account.address,
+    owner: LOOPRING_EXPORTED_ACCOUNT.address,
   });
   const nonce = accInfo.nonce;
   const eddsaKey = await sign_tools.generateKeyPair({
@@ -104,7 +104,7 @@ generateKeyPair when signature accInfo.keySeed
      * Api will return an empty keySeed, 
      * please keep them signature follow the loopring message
      * please keep using loopring KEY_MESSAGE  
-     * "Sign this message to access Loopring Exchange: " + "${exchangeAddress}" + " with key nonce: " + "${nonce}";
+     * "Sign this message to access Loopring exchange: " + "${exchangeAddress}" + " with key nonce: " + "${nonce}";
      */
     keySeed: account.keySeed && account.keySeed !== ""
       ? account.keySeed
