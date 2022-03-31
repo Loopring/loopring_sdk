@@ -24,149 +24,108 @@ yarn add @loopring-web/loopring-sdk
 
 ## Getting Started
 
-### 1. Initialize the APIs
+### Initialize the APIs
 
-```ts
-export enum ChainId {
-  MAINNET = 1,
-  GOERLI = 5,
-}
-export class LoopringAPI {
-  public static userAPI: UserAPI;
-  public static exchangeAPI: ExchangeAPI;
-  public static ammpoolAPI: AmmpoolAPI;
-  public static walletAPI: WalletAPI;
-  public static wsAPI: WsAPI;
-  public static nftAPI: NFTAPI;
-  public static delegate: DelegateAPI;
-  public static globalAPI: GlobalAPI;
-  public static WhitelistedUserAPI: WhitelistedUserAPI;
-  public static contractAPI: typeof ContractAPI;
-  public static __chainId__: ChainId;
-  public static InitApi = (chainId: ChainId) => {
-    LoopringAPI.userAPI = new UserAPI({ chainId });
-    LoopringAPI.exchangeAPI = new ExchangeAPI({ chainId });
-    LoopringAPI.globalAPI = new GlobalAPI({ chainId });
-    LoopringAPI.ammpoolAPI = new AmmpoolAPI({ chainId });
-    LoopringAPI.walletAPI = new WalletAPI({ chainId });
-    LoopringAPI.wsAPI = new WsAPI({ chainId });
-    LoopringAPI.WhitelistedUserAPI = new WhitelistedUserAPI({ chainId });
-    LoopringAPI.nftAPI = new NFTAPI({ chainId });
-    LoopringAPI.__chainId__ = chainId; // 
-    LoopringAPI.contractAPI = ContractAPI;
-  };
-}
-LoopringAPI.InitApi(ChainId.GOERLI); // LoopringAPI.InitApi(ChainId.  MAINNET = 1,
-)
+```javascript
+const userApi: UserAPI = new UserApi(ChainId.GORLI);
+const exchangeApi: ExchangeAPI = new ExchangeAPI(ChainId.GORLI);
+const exchangeApi: AmmpoolAPI = new AmmpoolAPI(ChainId.GORLI);
+const wsAPI: WsAPI = new WsAPI(ChainId.GORLI);
+const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI);
+const walletAPI: WalletAPI = new WalletAPI(ChainId.GORLI);
 ```
-- contractAPI -- Ethereum method
-- exchangeAPI -- Loopring Exchange Info
-- wsAPI -- Websocket
-- nftAPI -- NFT metadata & contract Info
-- walletAPI -- Wallet Info & Layer1 Info
-- userAPI & globalAPI -- layer2 asset(ERC20 & NFT) Info 
-- ammpoolAPI -- user layer2 Amm Info
 
-### Simple Demo for Transfer 
+### Example (Transfer Process)
 
-[Test MockData](src/tests/data.ts)
+#### 1. Initialize the api
 
----
-#### Step1: getAccount -- Layer2 Account info
 ```ts
-const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
-  owner: LOOPRING_EXPORTED_ACCOUNT.address,
+const userApi: UserAPI = new UserApi(ChainId.GORLI);
+const exchangeApi: UserAPI = new UserApi(ChainId.GORLI);
+```
+
+#### 4. Get accInfo & nonce with getAccountApi
+```ts
+// step 1. get account info & nonce
+const { accInfo } = await exchange.getAccount({
+  owner: loopring_exported_account.address,
 });
+const nonce = accInfo.nonce
 ```
-[account.test.ts](./src/tests/account/account.test.ts)
 
----
-#### Step2: getUserBalance
+#### 2. Get apiKey & eddsaKey
 ```ts
-const { userBalances } = await LoopringAPI.userAPI.getUserBalances(
-  { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId, tokens: "" },
-  apiKey  // Please see the reference get-apikey
-);
-console.log(`Layer2 ERC20 Balance: ${userBalances}`);
-```
-[account.test.ts](./src/tests/account/account.test.ts)
+const eddsakey = await sign_tools.generateKeyPair({
+  web3,
+  address: accInfo.owner,
+  keySeed: BaseAPI.KEY_MESSAGE.replace(
+    "${exchangeAddress}",
+    loopring_exported_account.exchangeAddr
+  ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+  walletType: ConnectorNames.Unknown,
+  chainId: ChainId.GOERLI,
+});
 
-Reference: [apiKey](#get-apikey)
-
----
-#### Step2: getStorageId
-```ts
-const request2: GetNextStorageIdRequest = {
+const { apiKey } = await userApi.getUserApiKey({
   accountId: accInfo.accountId,
+}, eddsakey.sk);
+```
+
+#### 3. Get storageId for transfer
+```ts
+const request: GetNextStorageIdRequest = {
+  accountId: acc.accountId,
   sellTokenId: 1,
 };
-
-const storageId = await LoopringAPI.userAPI.getNextStorageId(
-  request2,
-  apiKey
-);
+const storageId = await api.getNextStorageId(request, apiKey);
 ```
-[transferNFT.test.ts](src/tests/transfer/transferNFT.test.ts)
 
----
-#### Step3: getFee
+
+#### 4. get TransferFee
 ```ts
-const requestFee: GetNFTOffchainFeeAmtRequest = {
+const responseFee = await userApi.getOffchainFeeAmt({
   accountId: accInfo.accountId,
-  // tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-  requestType: OffchainNFTFeeReqType.NFT_TRANSFER,
-  amount: "0",
-};
-const responseFee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
-  requestFee,
-  apiKey
-);
+    requestType: OffchainFeeReqType.TRANSFER,
+}, apiKey);
 ```
-[transferNFT.test.ts](src/tests/transfer/transferNFT.test.ts)
 
----
-#### Step4: submitTransfer
+#### 5. Submit internal transfer
+
 ```ts
-const request3: OriginNFTTransferRequestV3 = {
-  exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
-  fromAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-  fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
-  toAccountId: 0, // toAccountId is not required, input 0 as default
-  toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
+const request: OriginTransferRequestV3 = {
+  exchange: acc.exchangeAddr,
+  payerAddr: acc.address,
+  payerId: acc.accountId,
+  payeeAddr: "0xb6AdaC3e924B4985Ad74646FEa3610f14cDFB79c",
+  payeeId: 10392,
+  storageId: storageId.offchainId,
   token: {
-    tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-    nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-    amount: "1",
+    tokenId: "1",
+    volume: "100000000000000000000",
   },
   maxFee: {
-    tokenId:
+    maxFee: {
+      tokenId:
       // @ts-ignore
-      TOKEN_INFO.tokenMap[responseFee.fees[1]?.token?.toString() ?? "LRC"]
-        .tokenId,
-    amount: responseFee.fees[1]?.fee ?? "9400000000000000000",
+      TOKEN_INFO.tokenMap[
+      responseFee.fees[1]?.token?.toString() ?? "LRC"
+        ].tokenId,
+      volume: responseFee.fees[1]?.fee ?? "9400000000000000000",
+    },
   },
-  storageId: storageId.offchainId,
-  validUntil: 1667396982,
-  // memo: '',
+  validUntil: VALID_UNTIL,
 };
 
-const response = await LoopringAPI.userAPI.submitNFTInTransfer({
-  request: request3,
+const response = await api.submitInternalTransfer(
+  request,
   web3,
-  chainId: ChainId.GOERLI,
-  walletType: ConnectorNames.Unknown,
-  eddsaKey: eddsaKey.sk,
+  ChainId.GORLI,
+  ConnectorNames.Injected,
+  eddsaKey,
   apiKey,
-});
-console.log("response:", response);
-
+  true
+);
 ```
-
-
-
-
-
-
 
 ## Error code 
 
@@ -197,38 +156,3 @@ console.log("response:", response);
 > -  other dex/v3: `api will return a resultInfo object only when catch error`
 >
 More detail please read code error_codes.ts
-
-### Reference
-#### get apiKey
-```ts
- const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
-    owner: LOOPRING_EXPORTED_ACCOUNT.address,
-  });
-
-  const eddsakey = await sign_tools.generateKeyPair({
-    web3,
-    address: accInfo.owner,
-    keySeed:
-      accInfo.keySeed && accInfo.keySeed !== ""
-        ? accInfo.keySeed
-        : BaseAPI.KEY_MESSAGE.replace(
-            "${exchangeAddress}",
-            LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
-          ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-    walletType: ConnectorNames.MetaMask,
-    chainId: ChainId.GOERLI,
-  });
-
-  console.log("eddsakey:", eddsakey.sk);
-
-  // step 3 get apikey
-  const request: GetUserApiKeyRequest = {
-    accountId: accInfo.accountId,
-  };
-
-  let { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
-    request,
-    eddsakey.sk
-  );
-
-```

@@ -14,11 +14,11 @@ NFT View step:
 ### approveNFT
 
 ```typescript
-const nonce = await contract.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+const nonce = await contract.getNonce(web3, loopring_exported_account.address);
 const response = await nft.approveNFT({
   web3,
-  from: LOOPRING_EXPORTED_ACCOUNT.address,
-  depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+  from: loopring_exported_account.address,
+  depositAddress: loopring_exported_account.depositAddr,
   tokenAddress: nftTokenAddress,
   tokenId: nftId,
   nftType: NFTType.ERC1155,
@@ -33,7 +33,7 @@ const response = await nft.approveNFT({
 ### getContractNFTMeta
 
 ```typescript
-const nonce = await contract.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+const nonce = await contract.getNonce(web3, loopring_exported_account.address);
 
 const response = await nft.getContractNFTMeta({
   web3: web3,
@@ -58,11 +58,11 @@ const response = await nft.getInfoForNFTTokens({
 ### deposit (ERC1155)
 
 ```typescript
-const nonce = await contract.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+const nonce = await contract.getNonce(web3, loopring_exported_account.address);
 const response = await nft.depositNFT({
   web3,
-  from: LOOPRING_EXPORTED_ACCOUNT.address,
-  exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
+  from: loopring_exported_account.address,
+  exchangeAddress: loopring_exported_account.exchangeAddr,
   nftType: NFTType.ERC1155,
   tokenAddress: nftTokenAddress,
   nftID: nftId,
@@ -80,8 +80,8 @@ const response = await nft.depositNFT({
 ```typescript
 const response = await nft.isApprovedForAll({
   web3,
-  from: LOOPRING_EXPORTED_ACCOUNT.address,
-  exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
+  from: loopring_exported_account.address,
+  exchangeAddress: loopring_exported_account.exchangeAddr,
   nftType: NFTType.ERC1155,
   tokenAddress: nftTokenAddress,
 });
