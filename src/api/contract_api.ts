@@ -54,8 +54,8 @@ export async function sign(web3: Web3, account: string, hash: string) {
           resolve({ error: { message: errorMsg } });
         }
       });
-    } catch (reason) {
-      resolve({ error: { message: reason } });
+    } catch (err) {
+      resolve({ error: { message: err as any } });
     }
   });
 }
@@ -80,8 +80,8 @@ export async function sendTransaction(web3: any, tx: any) {
           }
         }
       );
-    } catch (reason) {
-      resolve({ error: reason });
+    } catch (err) {
+      resolve({ error: err as any });
     }
   });
 
@@ -133,8 +133,8 @@ export async function signEthereumTx(
     } else {
       error = response["error"]["message"];
     }
-  } catch (reason) {
-    error = reason;
+  } catch (err) {
+    error = err;
   }
 
   return { error };

@@ -61,7 +61,7 @@ export function fromWEI(
     const precisionToFixed = precision ? precision : tokenInfo.precision;
     const value = fm.toBig(valueInWEI).div("1e" + tokenInfo.decimals);
     return fm.toFixed(value, precisionToFixed, ceil);
-  } catch (error) {
+  } catch (err) {
     return undefined;
   }
   return "0";

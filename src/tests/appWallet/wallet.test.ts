@@ -30,8 +30,8 @@ describe("WalletApi", function () {
 
         const response = await LoopringAPI.walletAPI.getUserAssets(request);
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err);
       }
     },
     DEFAULT_TIMEOUT
@@ -48,8 +48,8 @@ describe("WalletApi", function () {
         const response = await LoopringAPI.walletAPI.getTokenPrices(request);
         console.log(response);
         console.log(response.raw_data.data);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err);
       }
     },
     DEFAULT_TIMEOUT
@@ -61,8 +61,8 @@ describe("WalletApi", function () {
       try {
         const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err);
       }
     },
     DEFAULT_TIMEOUT
@@ -99,8 +99,8 @@ describe("WalletApi", function () {
           currency: Currency.cny,
         });
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err);
       }
     },
     DEFAULT_TIMEOUT
@@ -115,8 +115,8 @@ describe("WalletApi", function () {
             "0x7b854d37e502771b1647f5917efcf065ce1c0677,0x6ff8a397f7a04b41c58c00ab8e70aca7cbc0adba",
         });
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err);
       }
     },
     DEFAULT_TIMEOUT
@@ -129,8 +129,8 @@ describe("WalletApi", function () {
           wallet: "0x3f87bc7b8f06322f19dfdc51adf2acc73a92200b",
         });
         console.log(response);
-      } catch (reason) {
-        console.log(reason);
+      } catch (err) {
+        console.log(err);
       }
     },
     DEFAULT_TIMEOUT

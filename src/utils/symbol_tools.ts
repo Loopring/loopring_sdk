@@ -51,7 +51,7 @@ export const getTokenInfoBySymbol = (
   }
   try {
     return tokenSymbolMap[symbol];
-  } catch (reason) {
+  } catch (err) {
     return undefined;
   }
   return undefined;
@@ -66,7 +66,7 @@ export const getTokenInfoById = (
   }
   try {
     return tokenIdMap[id];
-  } catch (reason) {
+  } catch (err) {
     return undefined;
   }
   return undefined;

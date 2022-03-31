@@ -136,9 +136,9 @@ export class NFTAPI extends BaseAPI {
           count: result.toString(),
         };
       }
-    } catch (e: any) {
+    } catch (err) {
       return {
-        ...e,
+        ...(err as any),
         code: LoopringErrorCode.CONTRACTNFT_BALANCE,
         message: ConnectorError.CONTRACTNFT_BALANCE,
       };
@@ -178,7 +178,7 @@ export class NFTAPI extends BaseAPI {
         ...result,
         raw_data,
       };
-    } catch (error) {
+    } catch (err) {
       return undefined;
     }
   }
@@ -209,11 +209,11 @@ export class NFTAPI extends BaseAPI {
       result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
       return await fetch(result).then((response) => response.json());
-    } catch (error: any) {
+    } catch (err) {
       return {
         code: LoopringErrorCode.CONTRACTNFT_URI,
         message: ConnectorError.CONTRACTNFT_URI,
-        ...error,
+        ...(err as any),
       };
     }
   }
@@ -273,9 +273,9 @@ export class NFTAPI extends BaseAPI {
         gasLimit,
         sendByMetaMask
       );
-    } catch (error: any) {
+    } catch (err) {
       return {
-        ...error,
+        ...(err as any),
         code: LoopringErrorCode.CONTRACTNFT_SET_APPROVE,
         message: ConnectorError.CONTRACTNFT_SET_APPROVE,
       };
@@ -326,9 +326,9 @@ export class NFTAPI extends BaseAPI {
         nftType
       );
       return result;
-    } catch (error: any) {
+    } catch (err) {
       return {
-        ...error,
+        ...(err as any),
         code: LoopringErrorCode.CONTRACTNFT_IS_APPROVE,
         message: ConnectorError.CONTRACTNFT_IS_APPROVE,
       };
@@ -439,8 +439,8 @@ export class NFTAPI extends BaseAPI {
       return {
         tokenAddress: ethUtil.toChecksumAddress("0x" + addr),
       };
-    } catch (error: any) {
-      return error;
+    } catch (err) {
+      return err as any;
     }
   }
 }

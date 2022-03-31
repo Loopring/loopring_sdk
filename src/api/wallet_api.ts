@@ -259,9 +259,9 @@ export class WalletAPI extends BaseAPI {
           );
           ecdsaSignature = result?.sig + SigSuffix.Suffix03;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         } as any;
       }
     } else {

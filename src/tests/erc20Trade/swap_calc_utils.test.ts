@@ -73,8 +73,8 @@ const init = async (chainId: ChainId = ChainId.GOERLI) => {
         await ammApi.getAmmPoolSnapshot({ poolAddress: ammPoolInfo.address })
       ).ammPoolSnapshot as AmmPoolSnapshot;
     }
-  } catch (reason) {
-    dumpError400(reason);
+  } catch (err) {
+    dumpError400(err as any);
   }
 };
 
@@ -159,8 +159,8 @@ describe("swap_calc_utils", function () {
         console.log("ammPoolSnapshot:", ammPoolSnapshot);
         console.log("depth:", depth);
         checkResult("4", _slipBips, "0");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -176,8 +176,8 @@ describe("swap_calc_utils", function () {
         console.log("depth:", depth);
 
         checkResult("4", _slipBips, "0");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -193,8 +193,8 @@ describe("swap_calc_utils", function () {
         console.log("depth:", depth);
 
         checkResult("10");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -207,8 +207,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "ETH", "USDT", true);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -221,8 +221,8 @@ describe("swap_calc_utils", function () {
         await initAll("100", "DAI", "USDT", true);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -235,8 +235,8 @@ describe("swap_calc_utils", function () {
         await initAll("100000", "DAI", "USDT", true);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -249,8 +249,8 @@ describe("swap_calc_utils", function () {
         await initAll("1000000", "DAI", "USDT", true);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -263,8 +263,8 @@ describe("swap_calc_utils", function () {
         await initAll("50", "DAI", "USDT", false);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -277,8 +277,8 @@ describe("swap_calc_utils", function () {
         await initAll("1000000", "LRC", "ETH");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -291,8 +291,8 @@ describe("swap_calc_utils", function () {
         await initAll("1000", "LRC", "ETH", true, ChainId.MAINNET);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -305,8 +305,8 @@ describe("swap_calc_utils", function () {
         await initAll("100", "LRC", "ETH", true, ChainId.MAINNET);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -319,8 +319,8 @@ describe("swap_calc_utils", function () {
         await initAll("100", "LRC", "ETH", false);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -333,8 +333,8 @@ describe("swap_calc_utils", function () {
         await initAll("1000", "ETH", "LRC");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -347,8 +347,8 @@ describe("swap_calc_utils", function () {
         await initAll("5000000", "ETH", "LRC", false);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -363,8 +363,8 @@ describe("swap_calc_utils", function () {
         await initAll("200", "LRC", "ETH");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -377,8 +377,8 @@ describe("swap_calc_utils", function () {
         await initAll("15000", "LRC", "ETH");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -391,8 +391,8 @@ describe("swap_calc_utils", function () {
         await initAll("3", "LRC", "ETH");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -405,8 +405,8 @@ describe("swap_calc_utils", function () {
         await initAll("0.1", "ETH", "LRC");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -419,8 +419,8 @@ describe("swap_calc_utils", function () {
         await initAll("5", "ETH", "LRC");
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -433,8 +433,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "LRC", "ETH", false);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -447,8 +447,8 @@ describe("swap_calc_utils", function () {
         await initAll("10000", "ETH", "LRC", false);
 
         checkResult();
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -463,8 +463,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "ETH", "USDT", true, ChainId.GOERLI);
 
         checkResult("0", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -477,8 +477,8 @@ describe("swap_calc_utils", function () {
         await initAll("2800", "ETH", "USDT", false, ChainId.GOERLI);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -491,8 +491,8 @@ describe("swap_calc_utils", function () {
         await initAll("2866", "USDT", "ETH", true, ChainId.GOERLI);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -505,8 +505,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "USDT", "ETH", false, ChainId.GOERLI);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -521,8 +521,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "ETH", "USDT", true, ChainId.MAINNET);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -535,8 +535,8 @@ describe("swap_calc_utils", function () {
         await initAll("3500", "ETH", "USDT", false, ChainId.MAINNET);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -549,8 +549,8 @@ describe("swap_calc_utils", function () {
         await initAll("3500", "USDT", "ETH", true, ChainId.MAINNET);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -563,8 +563,8 @@ describe("swap_calc_utils", function () {
         await initAll("1", "USDT", "ETH", false, ChainId.MAINNET);
 
         checkResult("10", "50", "20");
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT

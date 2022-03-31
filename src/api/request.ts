@@ -3,11 +3,8 @@ import { ReqParams, ReqOptions } from "../defs/loopring_defs";
 
 import { SIG_FLAG } from "../defs/loopring_enums";
 
-import { DEFAULT_TIMEOUT } from "../defs/loopring_constants";
-
 import { getEdDSASig, getEdDSASigWithPoseidon } from "./sign/sign_tools";
 import { sortObject } from "../utils/obj_tools";
-import { myLog } from "../utils/log_tools";
 
 /**
  *
@@ -63,7 +60,7 @@ export class Request {
     return this._axios;
   }
 
-  constructor(baseUrl: string, timeout: number = DEFAULT_TIMEOUT) {
+  constructor(baseUrl: string, timeout: number = 3000) {
     this.baseOptions = {
       baseURL: baseUrl,
       timeout: timeout,

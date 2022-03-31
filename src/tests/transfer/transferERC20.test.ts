@@ -88,8 +88,8 @@ describe("Transfer test", function () {
           eddsakey.sk
         );
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -199,8 +199,8 @@ describe("Transfer test", function () {
         });
 
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -277,8 +277,8 @@ describe("Transfer test", function () {
           );
 
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT

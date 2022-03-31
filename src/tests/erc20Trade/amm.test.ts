@@ -326,8 +326,8 @@ describe("AmmpoolAPI test", function () {
         console.log(response);
         console.log(response.transactions[0].lpToken);
         console.log(response.transactions[0].poolTokens);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -346,8 +346,8 @@ describe("AmmpoolAPI test", function () {
         );
         console.log(response);
         console.log(response.raw_data.transactions[0]);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -433,8 +433,8 @@ describe("AmmpoolAPI test", function () {
           apiKey
         );
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -500,8 +500,8 @@ describe("AmmpoolAPI test", function () {
   //         apiKey
   //       );
   //       console.log(response);
-  //     } catch (reason) {
-  //       dumpError400(reason);
+  //     } catch (err:unknown) {
+  //       dumpError400(err as any);
   //     }
   //   },
   //   DEFAULT_TIMEOUT
@@ -565,8 +565,8 @@ describe("AmmpoolAPI test", function () {
           apiKey
         );
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT

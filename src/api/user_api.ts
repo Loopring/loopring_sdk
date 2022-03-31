@@ -885,9 +885,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -995,9 +995,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -1115,9 +1115,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -1235,9 +1235,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -1347,9 +1347,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -1468,9 +1468,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {
@@ -1504,9 +1504,9 @@ export class UserAPI extends BaseAPI {
         } else {
           await sigHW();
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     }
@@ -1800,9 +1800,9 @@ export class UserAPI extends BaseAPI {
           );
           ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
         }
-      } catch (err: any) {
+      } catch (err) {
         return {
-          ...this.genErr(err),
+          ...this.genErr(err as any),
         };
       }
     } else {

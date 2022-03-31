@@ -268,8 +268,8 @@ describe("ExchangeAPI test", function () {
       try {
         const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT

@@ -88,8 +88,8 @@ describe("amm_calc", function () {
         console.log("covertVal:", covertVal);
         console.log("output:", output);
         console.log("ratio:", output.ratio.toString());
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -138,8 +138,8 @@ describe("amm_calc", function () {
         );
 
         console.log("res:", res);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -186,8 +186,8 @@ describe("amm_calc", function () {
         );
 
         console.log("res:", res);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT
@@ -236,8 +236,8 @@ describe("amm_calc", function () {
 
         console.log("res:", res);
         console.log("res:", res.exitTokens);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT

@@ -261,7 +261,7 @@ export async function signEip712WalletConnect(
 
     return response;
   } catch (err) {
-    return { error: err };
+    return { error: err as any };
   }
 }
 

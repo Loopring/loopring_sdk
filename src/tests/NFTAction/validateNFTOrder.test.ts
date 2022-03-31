@@ -142,8 +142,8 @@ describe("NFTAction Validate Order Test", function () {
           apiKey: apiKey,
         });
         console.log(response2);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT * 2

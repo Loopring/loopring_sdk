@@ -174,8 +174,8 @@ export async function ecRecover(
           }
         }
       );
-    } catch (reason) {
-      resolve({ error: "ecRecover 2:" + reason });
+    } catch (err) {
+      resolve({ error: ("ecRecover 2:" + err) as any });
     }
   });
 }
@@ -682,8 +682,8 @@ export async function personalSign(
           }
         }
       );
-    } catch (reason) {
-      resolve({ error: reason });
+    } catch (err) {
+      resolve({ error: err as any });
     }
   });
 }

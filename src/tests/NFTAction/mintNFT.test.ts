@@ -142,8 +142,8 @@ describe("Mint test", function () {
         });
 
         console.log(response);
-      } catch (reason) {
-        dumpError400(reason);
+      } catch (err) {
+        dumpError400(err as any);
       }
     },
     DEFAULT_TIMEOUT * 2

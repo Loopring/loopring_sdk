@@ -29,14 +29,13 @@ function getTokenBySymbol(symbol, tokens) {
   );
 }
 
-
 function fromWEI(symbol, valueInWEI, tokens, { precision, ceil } = {}) {
   try {
     const token = getTokenBySymbol(symbol, tokens);
     const precisionToFixed = precision ? precision : token.precision;
     const value = toBig(valueInWEI).div("1e" + token.decimals);
     return toFixed(value, precisionToFixed, ceil);
-  } catch (error) {
+  } catch (err) {
     return undefined;
   }
 }
