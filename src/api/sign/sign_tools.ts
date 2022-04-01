@@ -30,6 +30,8 @@ import {
   UpdateAccountRequestV3,
   NFTOrderRequestV3,
   NFTTokenAmountInfo,
+  NFTTradeRequestV3,
+  SubmitOrderRequestV3
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
@@ -517,6 +519,26 @@ export function get_EddsaSig_OffChainWithdraw(
   ];
 
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
+}
+
+export function getOrderHash(
+  request: SubmitOrderRequestV3
+) {
+  const hasher = Poseidon.createHash(12, 6, 53);
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.storageId,
+    request.accountId,
+    request.sellToken.tokenId,
+    request.buyToken.tokenId,
+    request.sellToken.volume,
+    request.buyToken.volume,
+    request.validUntil,
+    request.maxFeeBips,
+    request.fillAmountBOrS ? 1 : 0,
+    new BN(ethUtil.toBuffer(request.taker)).toString()
+  ];
+  return hasher(inputs).toString(16);
 }
 
 export function getWithdrawTypedData(
@@ -1146,6 +1168,21 @@ export function get_EddsaSig_NFT_Transfer(
     request.storageId,
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
+}
+
+export function getNftTradeHash(
+  request: NFTTradeRequestV3
+) {
+  const hasher = Poseidon.createHash(7, 6, 52);
+  const inputs = [
+    request.taker.accountId,
+    request.taker.sellToken.tokenId,
+    request.taker.storageId,
+    request.maker.accountId,
+    request.maker.sellToken.tokenId,
+    request.maker.storageId
+  ];
+  return hasher(inputs).toString(16);
 }
 
 export function getNFTTransferTypedData(
