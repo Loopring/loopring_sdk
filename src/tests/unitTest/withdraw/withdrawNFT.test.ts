@@ -7,10 +7,15 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
-describe("Mint test", function () {
+
+describe("Withdraw NFTAction test", function () {
   it(
-    "submitNFTMint",
+    "submitNFTWithdraw",
     async () => {
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+       */
       // step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -38,59 +43,51 @@ describe("Mint test", function () {
         },
         apiKey
       );
-      const counterFactualNftInfo = {
-        nftOwner: accInfo.owner,
-        nftFactory: sdk.NFTFactory[sdk.ChainId.GOERLI],
-        nftBaseUri: "",
-      };
+      console.log("storageId:", storageId);
 
       // step 5. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
-          tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-          requestType: sdk.OffchainNFTFeeReqType.NFT_MINT,
+          requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
+          deployInWithdraw: false,
         },
         apiKey
       );
+      console.log("fee:", fee);
 
-      const nftTokenAddress =
-        LoopringAPI.nftAPI.computeNFTAddress(counterFactualNftInfo)
-          .tokenAddress || "";
-      console.log("nftTokenAddress", nftTokenAddress);
-
-      const response = await LoopringAPI.userAPI.submitNFTMint({
+      // step 6 withdraw
+      const response = await LoopringAPI.userAPI.submitNFTWithdraw({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
-          minterId: accInfo.accountId,
-          minterAddress: accInfo.owner,
-          toAccountId: accInfo.accountId,
-          toAddress: accInfo.owner,
-          nftType: 0,
-          tokenAddress: nftTokenAddress,
-          nftId: LOOPRING_EXPORTED_ACCOUNT.nftId, //nftId.toString(16),
-          amount: "1",
-          validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-          storageId: storageId.offchainId ?? 9,
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          counterFactualInfo: undefined,
+          hashApproved: "",
           maxFee: {
             tokenId:
               // @ts-ignore
               TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
                 .tokenId,
-            amount: fee.fees[1]?.fee ?? "3260000000000000",
+            amount: fee.fees[1]?.fee ?? "9400000000000000000",
           },
-          royaltyPercentage: 5,
-          counterFactualNftInfo,
-          forceToMint: true,
+          minGas: 0,
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
+          to: LOOPRING_EXPORTED_ACCOUNT.address,
+          storageId: 0,
+          token: {
+            tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+            nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
+            amount: "1",
+          },
+          validUntil: 0,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
-        walletType: sdk.ConnectorNames.Unknown,
+        walletType: sdk.ConnectorNames.MetaMask,
         eddsaKey: eddsaKey.sk,
-        apiKey: apiKey,
+        apiKey,
       });
-
-      console.log(response);
+      console.log("response:", response);
     },
     DEFAULT_TIMEOUT * 3
   );

@@ -292,7 +292,7 @@ export const TOKEN_INFO = {
 };
 
 export const LOOPRING_EXPORTED_ACCOUNT = {
-  address: "0x727E0Fa09389156Fc803EaF9C7017338EfD76E7F",
+  address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
   privateKey:
     "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
   accountId: 12454,
@@ -316,12 +316,12 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   nftTokenId: "32768",
   nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
   nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
-  testNotOx: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
+  testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
   tradeETHValue: 0.0001,
   gasPrice: 19, // for test
   gasLimit: 200000, // for test
-  validUntil: Date.now(),
+  validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
 };
 export const DEFAULT_TIMEOUT = 30000;
 
@@ -333,6 +333,10 @@ const provider2 = new PrivateKeyProvider(
   LOOPRING_EXPORTED_ACCOUNT.privateKey2,
   "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
 );
+// const providerWhiteList = new PrivateKeyProvider(
+//   LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey,
+//   "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+// );
 export const web3 = new Web3(provider);
 export const web3_2 = new Web3(provider2);
 
@@ -344,7 +348,7 @@ export const LoopringAPI = {
   ammpoolAPI: new AmmpoolAPI({ chainId }),
   walletAPI: new WalletAPI({ chainId }),
   wsAPI: new WsAPI({ chainId }),
-  WhitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
+  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
   nftAPI: new NFTAPI({ chainId }),
   delegate: new DelegateAPI({ chainId }),
   __chainId__: chainId,
@@ -381,9 +385,12 @@ export const testTypedData: EIP712TypedData = {
   },
 };
 
-export async function signatureKeyPairMock(accInfo: sdk.AccountInfo) {
+export async function signatureKeyPairMock(
+  accInfo: sdk.AccountInfo,
+  _web3: Web3 = web3
+) {
   const eddsaKey = await sdk.generateKeyPair({
-    web3,
+    web3: _web3,
     address: accInfo.owner,
     keySeed:
       accInfo.keySeed ??

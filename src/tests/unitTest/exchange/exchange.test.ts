@@ -17,14 +17,6 @@ describe("ExchangeAPI test", function () {
     DEFAULT_TIMEOUT
   );
   it(
-    "getAvailableBroker",
-    async () => {
-      const result = await LoopringAPI.exchangeAPI.getAvailableBroker();
-      console.log(result);
-    },
-    DEFAULT_TIMEOUT
-  );
-  it(
     "getWithdrawalAgents",
     async () => {
       const response = await LoopringAPI.exchangeAPI.getWithdrawalAgents({
@@ -200,15 +192,6 @@ describe("ExchangeAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
-
-  it(
-    "getAllTickers",
-    async () => {
-      const response = await LoopringAPI.exchangeAPI.getAllTickers();
-      console.log(response);
-    },
-    DEFAULT_TIMEOUT
-  );
   it(
     "getMixMarkets",
     async () => {
@@ -258,6 +241,46 @@ describe("ExchangeAPI test", function () {
     async () => {
       const response: any = await LoopringAPI.exchangeAPI.getAllMixTickers();
       console.log(response?.tickMap);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "getAllTickers",
+    async () => {
+      const response = await LoopringAPI.exchangeAPI.getAllTickers();
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "getMarketTrades_err",
+    async () => {
+      const req: sdk.GetMarketTradesRequest = {
+        market: "LRC-ETH_Not_Existed",
+      };
+      const response = await LoopringAPI.exchangeAPI.getMarketTrades<any>(req);
+      console.log(response);
+      console.log(response.raw_data.trades);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "getAllMixTickers0",
+    async () => {
+      const response: any = await LoopringAPI.exchangeAPI.getAllMixTickers();
+      console.log(response?.tickMap);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "getAllMixTickers1",
+    async () => {
+      const response: any = await LoopringAPI.exchangeAPI.getAllMixTickers(
+        "AMM-LRC-ETH"
+      );
+      console.log(response.tickMap);
     },
     DEFAULT_TIMEOUT
   );

@@ -1,4 +1,4 @@
-import { LoopringErrorCode } from "../defs";
+import { IsMobile, LoopringErrorCode } from "../defs";
 // import fetch from "node-fetch";
 import {
   addHexPrefix,
@@ -13,6 +13,7 @@ import {
   numberWithCommas,
   padLeftEven,
   PublicKey,
+  sleep,
   toBig,
   toBN,
   toBuffer,
@@ -25,7 +26,7 @@ import {
 
 import * as fm from "../utils/formatter";
 import { BigNumber } from "bignumber.js";
-import { LOOPRING_EXPORTED_ACCOUNT } from "./MockData";
+import { LOOPRING_EXPORTED_ACCOUNT, web3 } from "./MockData";
 
 const NUMBER = 40244024;
 const BUFFER = Buffer.from("40244024", "utf8");
@@ -168,15 +169,9 @@ describe("formatter test", function () {
     expect(toNumber("69")).toBe(69);
     expect(toNumber(420)).toBe(420);
     expect(toNumber("12345.6789")).toBe(12345.6789);
-    expect(toNumber(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(153);
-  });
-
-  // Missing test input data for Uint8Array
-  it("test toNumber", async () => {
-    expect(toNumber("69")).toBe(69);
-    expect(toNumber(420)).toBe(420);
-    expect(toNumber("12345.6789")).toBe(12345.6789);
-    expect(toNumber(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(153);
+    expect(web3.utils.hexToNumberString(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(
+      "72734975696905790806441216757602251046556131108796431318619325611208980067558"
+    );
     expect(toNumber(BIG_NUMBER)).toBe(123.4567);
   });
 
@@ -295,6 +290,48 @@ describe("formatter test", function () {
     expect(numberWithCommas("1,000,000")).toBe("1,000,000");
     expect(numberWithCommas("10.000.000")).toBe("-");
     expect(numberWithCommas(null)).toBe(null);
+  });
+  it("sleep_test", async () => {
+    console.log(new Date().getTime());
+    await sleep(5000);
+    console.log(new Date().getTime());
+  });
+
+  it("stringify_test", async () => {
+    const demo: any = {
+      a: 5,
+      c: { d: 5, e: "k" },
+      b: "ss",
+    };
+
+    console.log(JSON.stringify(demo));
+
+    const keys = Object.keys(demo).sort();
+
+    console.log(keys);
+    console.log(JSON.stringify(demo, keys));
+
+    const demo2: any = {};
+
+    keys.forEach((item, index) => {
+      demo2[item] = demo[item];
+    });
+
+    console.log(demo2);
+
+    console.log(JSON.stringify(demo2));
+
+    const ordered = Object.keys(demo)
+      .sort()
+      .reduce((obj: any, key) => {
+        obj[key] = demo[key];
+        return obj;
+      }, {});
+
+    console.log(JSON.stringify(ordered));
+  });
+  it("isMobile", () => {
+    console.log("isMobile", IsMobile.any());
   });
 });
 
