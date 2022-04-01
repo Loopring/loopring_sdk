@@ -21,7 +21,7 @@ import {
   pubToAddress,
   toRpcSig,
 } from "ethereumjs-util";
-import { addHexPrefix, toBuffer, toHex, toNumber } from "../utils";
+import { addHexPrefix, toBuffer, toHex } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
@@ -306,9 +306,7 @@ const getBaseUrlByChainId = (id: ChainId) => {
       baseUrl = "https://api.loopring.network";
       break;
     default:
-      baseUrl =
-        "http://a57a89531743142efb8d1424d05737fe-1745902319.us-east-2.elb.amazonaws.com/";
-      // baseUrl = "https://uat2.loopring.io";
+      baseUrl = "https://uat2.loopring.io";
       break;
   }
 
