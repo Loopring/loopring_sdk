@@ -3,13 +3,10 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   web3,
-  CUSTOMER_KEY_SEED,
   signatureKeyPairMock,
 } from "../../data";
 import * as sdk from "../../../index";
 
-describe("AccountTest", function () {
-  beforeEach(() => {
-
-  });
+describe("historyRecordTest", function () {
+  beforeEach(() => {});
 });

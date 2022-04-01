@@ -1,129 +1,94 @@
-import { ChainId, ConnectorNames } from "../../../defs/web3_defs";
-import { get_EddsaSig_NFT_Withdraw } from "../../../api";
-
-import {
-  GetNextStorageIdRequest,
-  GetNFTOffchainFeeAmtRequest,
-  GetUserApiKeyRequest,
-  NFTWithdrawRequestV3,
-} from "../../../defs/loopring_defs";
-
-const PrivateKeyProvider = require("truffle-privatekey-provider");
-
-import Web3 from "web3";
 import {
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
+  web3,
   TOKEN_INFO,
+  signatureKeyPairMock,
 } from "../../data";
-import * as sign_tools from "../../../api/sign/sign_tools";
-import { OffchainNFTFeeReqType } from "../../../defs";
-import { BaseAPI } from "../../../api/base_api";
+import * as sdk from "../../../index";
 
 describe("Withdraw NFTAction test", function () {
-  beforeEach(async () => {
-    LoopringAPI.InitApi(ChainId.GOERLI);
-  });
-
   it(
     "submitNFTWithdraw",
     async () => {
-      const provider = new PrivateKeyProvider(
-        LOOPRING_EXPORTED_ACCOUNT.privateKey,
-        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-      );
-      const web3 = new Web3(provider);
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+       */
+      // step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
-      if (!accInfo) {
-        return;
-      }
-      /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
-       */
-      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+      console.log("accInfo:", accInfo);
 
-      const eddsaKey = await sign_tools.generateKeyPair({
-        web3,
-        address: accInfo.owner,
-        keySeed: BaseAPI.KEY_MESSAGE.replace(
-          "${exchangeAddress}",
-          LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-        // exchangeAddress: exchangeInfo.exchangeAddress,
-        // keyNonce: accInfo.nonce,
-        walletType: ConnectorNames.MetaMask,
-        chainId: ChainId.GOERLI,
-      });
-      console.log("eddsakey:", eddsaKey.sk);
-      const request: GetUserApiKeyRequest = {
-        accountId: accInfo.accountId,
-      };
+      // step 2. eddsaKey
+      const eddsaKey = await signatureKeyPairMock(accInfo);
+      console.log("eddsaKey:", eddsaKey.sk);
 
-      let { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
-        request,
+      // step 3. apiKey
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
         eddsaKey.sk
       );
-      console.log("apiKey", apiKey);
+      console.log("apiKey:", apiKey);
 
-      const request2: GetNextStorageIdRequest = {
-        accountId: accInfo.accountId,
-        sellTokenId: 1,
-      };
-
+      // step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
-        request2,
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: 1,
+        },
         apiKey
       );
-      console.log("storageId", storageId);
-      const requestFee: GetNFTOffchainFeeAmtRequest = {
-        accountId: accInfo.accountId,
-        tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-        requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL,
-        amount: "0",
-      };
-      const responseFee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
-        requestFee,
+      console.log("storageId:", storageId);
+
+      // step 5. fee
+      const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+        {
+          accountId: accInfo.accountId,
+          requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
+          deployInWithdraw: false,
+        },
         apiKey
       );
+      console.log("fee:", fee);
 
-      console.log("requestFee", responseFee);
-
-      const request3: NFTWithdrawRequestV3 = {
-        minGas: 0,
-        exchange: exchangeInfo.exchangeAddress,
-        accountId: accInfo.accountId,
-        to: accInfo.owner,
-        owner: accInfo.owner,
-        token: {
-          tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-          nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-          amount: "1",
-        },
-        extraData: "",
-        maxFee: {
-          tokenId:
-            // @ts-ignore
-            TOKEN_INFO.tokenMap[responseFee.fees[1]?.token?.toString() ?? "LRC"]
-              .tokenId,
-          amount: responseFee.fees[1]?.fee ?? "9400000000000000000",
-        },
-        storageId: storageId?.offchainId ?? 9,
-        validUntil: 1667396982,
-      };
-
+      // step 6 withdraw
       const response = await LoopringAPI.userAPI.submitNFTWithdraw({
-        request: request3,
+        request: {
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          counterFactualInfo: undefined,
+          hashApproved: "",
+          maxFee: {
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
+                .tokenId,
+            amount: fee.fees[1]?.fee ?? "9400000000000000000",
+          },
+          minGas: 0,
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
+          to: LOOPRING_EXPORTED_ACCOUNT.address,
+          storageId: 0,
+          token: {
+            tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+            nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
+            amount: "1",
+          },
+          validUntil: 0,
+        },
         web3,
-        chainId: ChainId.GOERLI,
-        walletType: ConnectorNames.Trezor,
+        chainId: sdk.ChainId.GOERLI,
+        walletType: sdk.ConnectorNames.MetaMask,
         eddsaKey: eddsaKey.sk,
         apiKey,
       });
       console.log("response:", response);
     },
-    DEFAULT_TIMEOUT + 2000
+    DEFAULT_TIMEOUT * 3
   );
 });

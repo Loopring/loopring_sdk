@@ -46,6 +46,7 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo) {
+      console.log(raw_data);
       return {
         ...raw_data?.resultInfo,
       };

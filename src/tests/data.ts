@@ -9,11 +9,10 @@ import {
   GlobalAPI,
   WhitelistedUserAPI,
 } from "../api";
-import { ChainId } from "../defs";
 import Web3 from "web3";
-import * as ContractAPI from "../api/contract_api";
 import * as sdk from "../index";
-
+import * as ContractAPI from "../api/contract_api";
+import { EIP712TypedData } from "eth-sig-util";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 export const TOKEN_INFO = {
@@ -317,8 +316,8 @@ export class LoopringAPIClass {
   public static globalAPI: GlobalAPI;
   public static WhitelistedUserAPI: WhitelistedUserAPI;
   public static contractAPI: typeof ContractAPI;
-  public static __chainId__: ChainId;
-  public static InitApi = (chainId: ChainId) => {
+  public static __chainId__: sdk.ChainId;
+  public static InitApi = (chainId: sdk.ChainId) => {
     LoopringAPI.userAPI = new UserAPI({ chainId });
     LoopringAPI.exchangeAPI = new ExchangeAPI({ chainId });
     LoopringAPI.globalAPI = new GlobalAPI({ chainId });
@@ -333,7 +332,7 @@ export class LoopringAPIClass {
   };
 }
 
-const chainId = ChainId.GOERLI;
+const chainId = sdk.ChainId.GOERLI;
 export const LoopringAPI = {
   userAPI: new UserAPI({ chainId }),
   exchangeAPI: new ExchangeAPI({ chainId }),
@@ -348,17 +347,48 @@ export const LoopringAPI = {
   contractAPI: ContractAPI,
 };
 
+export const testTypedData: EIP712TypedData = {
+  types: {
+    EIP712Domain: [
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" },
+    ],
+    TestTypedData: [
+      { name: "from", type: "address" },
+      { name: "to", type: "address" },
+      { name: "tokenID", type: "uint16" },
+    ],
+  },
+  primaryType: "TestTypedData",
+  domain: {
+    name: "Loopring Protocol",
+    version: "3.6.0",
+    chainId: sdk.ChainId.GOERLI,
+    verifyingContract: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+  },
+  message: {
+    from: LOOPRING_EXPORTED_ACCOUNT.address,
+    to: LOOPRING_EXPORTED_ACCOUNT.address2,
+    tokenID: TOKEN_INFO.tokenMap.LRC.tokenId,
+  },
+};
+
 export async function signatureKeyPairMock(accInfo: sdk.AccountInfo) {
-  console.log("accInfo:", accInfo);
-  const eddsakey = await sdk.generateKeyPair({
+  const eddsaKey = await sdk.generateKeyPair({
     web3,
     address: accInfo.owner,
-    keySeed: sdk.GlobalAPI.KEY_MESSAGE.replace(
-      "${exchangeAddress}",
-      LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-    ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-    walletType: sdk.ConnectorNames.Unknown,
+    keySeed:
+      accInfo.keySeed ??
+      sdk.GlobalAPI.KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
+      ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+    walletType: sdk.ConnectorNames.MetaMask,
     chainId: sdk.ChainId.GOERLI,
   });
-  return eddsakey;
+  return eddsaKey;
 }
+
+export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";

@@ -13,9 +13,6 @@ import * as sdk from "../../../index";
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
 describe("AccountDemo", function () {
-  beforeEach(() => {
-    LoopringAPI.InitApi(sdk.ChainId.GOERLI);
-  });
   it(
     "getAccount",
     async () => {
@@ -57,19 +54,17 @@ describe("AccountDemo", function () {
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
-      const eddsakey = await sdk.generateKeyPair({
-        web3,
-        address: accInfo.owner,
-        keySeed: sdk.GlobalAPI.KEY_MESSAGE.replace(
-          "${exchangeAddress}",
-          LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-        walletType: sdk.ConnectorNames.Unknown,
-        chainId: sdk.ChainId.GOERLI,
-      });
-      console.log("eddsakey:", eddsakey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo);
+      // step 3 get apikey
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
+        eddsaKey.sk
+      );
+      console.log("apiKey:", apiKey);
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT * 10
   );
 
   it(

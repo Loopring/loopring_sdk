@@ -160,7 +160,7 @@ describe("formatter test", function () {
 
   it("test toHex", async () => {
     expect(toHex(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(
-      "0x0000000000000000000000000000000000000000000000000000000000000099"
+      "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6"
     );
   });
 

@@ -4,7 +4,6 @@ import {
   signatureKeyPairMock,
   TOKEN_INFO,
   LoopringAPI,
-  web3,
 } from "../../data";
 import * as sdk from "../../../index";
 
@@ -13,8 +12,6 @@ import * as sdk from "../../../index";
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
 describe("FeeDemo", function () {
-  beforeEach(() => {});
-
   it(
     "fee:updateAccount",
     async () => {
@@ -207,7 +204,6 @@ describe("FeeDemo", function () {
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.AMM_EXIT,
-          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
         },
         apiKey
       );
@@ -240,7 +236,6 @@ describe("FeeDemo", function () {
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.AMM_JOIN,
-          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
         },
         apiKey
       );

@@ -36,8 +36,6 @@ import {
   UserMiningInfo,
 } from "../defs";
 
-import { VALID_UNTIL } from "../defs";
-
 import { AmmPoolActivityStatus, ReqMethod, SIG_FLAG, SortOrder } from "../defs";
 
 import { LOOPRING_URLs } from "../defs";
@@ -652,7 +650,7 @@ export class AmmpoolAPI extends BaseAPI {
     raw_data: R;
     joinAmmPoolResult: JoinAmmPoolResult;
   }> {
-    if (!request?.validUntil) request.validUntil = VALID_UNTIL;
+    if (!request?.validUntil) request.validUntil = Date.now();
 
     const reqParams: ReqParams = {
       bodyParams: request,
@@ -688,7 +686,7 @@ export class AmmpoolAPI extends BaseAPI {
     raw_data: R;
     exitAmmPoolResult: ExitAmmPoolResult;
   }> {
-    if (!request?.validUntil) request.validUntil = VALID_UNTIL;
+    if (!request?.validUntil) request.validUntil = Date.now();
 
     const reqParams: ReqParams = {
       bodyParams: request,

@@ -9,9 +9,6 @@ import {
 import * as sdk from "../../../index";
 
 describe("Transfer test", function () {
-  beforeEach(async () => {
-    LoopringAPI.InitApi(sdk.ChainId.GOERLI);
-  });
   it(
     "submitInternalTransfer",
     async () => {
@@ -56,7 +53,7 @@ describe("Transfer test", function () {
         },
         apiKey
       );
-      console.log("storageId:", storageId);
+      console.log("fee:", fee);
 
       // step 6 transfer
       const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
@@ -68,8 +65,8 @@ describe("Transfer test", function () {
           payeeId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
           storageId: storageId.offchainId,
           token: {
-            tokenId: 1,
-            volume: "100000000000000000000",
+            tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
+            volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
           },
           maxFee: {
             tokenId:

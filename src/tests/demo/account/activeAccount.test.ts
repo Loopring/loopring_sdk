@@ -1,10 +1,10 @@
 import {
-  CUSTOMER_KEY_SEED,
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   TOKEN_INFO,
   web3,
+  CUSTOMER_KEY_SEED,
 } from "../../data";
 import * as sdk from "../../../index";
 
@@ -13,9 +13,6 @@ import * as sdk from "../../../index";
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
 describe("ActiveAccountDemo", function () {
-  beforeEach(() => {
-    LoopringAPI.InitApi(sdk.ChainId.GOERLI);
-  });
   it(
     "updateAccount",
     async () => {

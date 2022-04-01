@@ -222,7 +222,7 @@ export class NFTAPI extends BaseAPI {
    * @param from  The address that deposits the funds to the exchange
    * @param to  The address deposits to
    * @param loopringAddress loopring exchange Address
-   * @param tokenId: the tokenId
+   * @param nftId: the nftId
    * @param chainId
    * @param nftType The type of NFTAction contract address (ERC721/ERC1155/...)
    * @param nonce
@@ -235,7 +235,7 @@ export class NFTAPI extends BaseAPI {
     from,
     depositAddress,
     tokenAddress,
-    tokenId,
+    nftId,
     nftType = NFTType.ERC1155,
     gasPrice,
     gasLimit,

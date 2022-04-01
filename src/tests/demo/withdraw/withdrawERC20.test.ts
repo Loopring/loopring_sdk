@@ -1,196 +1,176 @@
-import { ChainId, ConnectorNames } from "../../../defs/web3_defs";
-import { get_EddsaSig_OffChainWithdraw } from "../../../api";
-
-import {
-  GetNextStorageIdRequest,
-  GetOffchainFeeAmtRequest,
-  GetUserApiKeyRequest,
-  OffChainWithdrawalRequestV3,
-} from "../../../defs/loopring_defs";
-
-const PrivateKeyProvider = require("truffle-privatekey-provider");
-
-import Web3 from "web3";
 import {
   DEFAULT_TIMEOUT,
-  LOOPRING_EXPORTED_ACCOUNT as acc,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
-  TOKEN_INFO,
   web3,
+  TOKEN_INFO,
+  signatureKeyPairMock,
 } from "../../data";
-import * as sign_tools from "../../../api/sign/sign_tools";
-import { OffchainFeeReqType } from "../../../defs";
-import { BaseAPI } from "../../../api/base_api";
+import * as sdk from "../../../index";
 
 describe("Withdraw NFTAction test", function () {
-  beforeEach(async () => {
-    LoopringAPI.InitApi(ChainId.GOERLI);
-  });
-
-  it(
-    "get_EddsaSig_Withdraw",
-    async () => {
-      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      if (!accInfo) {
-        return;
-      }
-      /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
-       */
-      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
-
-      const request: OffChainWithdrawalRequestV3 = {
-        exchange: exchangeInfo.exchangeAddress,
-        accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        counterFactualInfo: undefined,
-        fastWithdrawalMode: false,
-        hashApproved: "",
-        maxFee: {
-          tokenId: 1,
-          volume: "100000000000000000000",
-        },
-        minGas: 0,
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-        to: LOOPRING_EXPORTED_ACCOUNT.address,
-        storageId: 0,
-        token: {
-          tokenId: 1,
-          volume: "100000000000000000000",
-        },
-        validUntil: 0,
-      };
-
-      const result = get_EddsaSig_OffChainWithdraw(request, "");
-      console.log(`resultHash:`, result);
-    },
-    DEFAULT_TIMEOUT
-  );
-
   it(
     "submitNFTWithdraw",
     async () => {
-      const provider = new PrivateKeyProvider(
-        LOOPRING_EXPORTED_ACCOUNT.privateKey,
-        "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-      );
-      const web3 = new Web3(provider);
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+       */
+      // step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
-      if (!accInfo) {
-        return;
-      }
-      /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
-       */
-      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+      console.log("accInfo:", accInfo);
 
-      const eddsaKey = await sign_tools.generateKeyPair({
-        web3,
-        address: accInfo.owner,
-        keySeed: BaseAPI.KEY_MESSAGE.replace(
-          "${exchangeAddress}",
-          LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-        ).replace("${nonce}", (accInfo.nonce - 1).toString()),
-        // exchangeAddress: exchangeInfo.exchangeAddress,
-        // keyNonce: accInfo.nonce,
-        walletType: ConnectorNames.MetaMask,
-        chainId: ChainId.GOERLI,
-      });
-      console.log("eddsakey:", eddsaKey.sk);
-      const request: GetUserApiKeyRequest = {
-        accountId: accInfo.accountId,
-      };
+      // step 2. eddsaKey
+      const eddsaKey = await signatureKeyPairMock(accInfo);
+      console.log("eddsaKey:", eddsaKey.sk);
 
-      let { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
-        request,
+      // step 3. apiKey
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
         eddsaKey.sk
       );
-      console.log("apiKey", apiKey);
+      console.log("apiKey:", apiKey);
 
-      const request2: GetNextStorageIdRequest = {
-        accountId: accInfo.accountId,
-        sellTokenId: 1,
-      };
-
+      // step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
-        request2,
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: 1,
+        },
         apiKey
       );
-      console.log("storageId", storageId);
-      const requestFee: GetOffchainFeeAmtRequest = {
-        accountId: accInfo.accountId,
-        tokenSymbol: "LRC",
-        // tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-        requestType: OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-        // amount: "0",
-      };
-      const responseFee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
-        requestFee,
+      console.log("storageId:", storageId);
+
+      // step 5. fee
+      const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+        {
+          accountId: accInfo.accountId,
+          requestType: sdk.OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+        },
         apiKey
       );
+      console.log("fee:", fee);
 
-      console.log("requestFee", responseFee);
-
-      const request3: OffChainWithdrawalRequestV3 = {
-        exchange: exchangeInfo.exchangeAddress,
-        accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        counterFactualInfo: undefined,
-        fastWithdrawalMode: false,
-        hashApproved: "",
-        maxFee: {
-          tokenId:
-            // @ts-ignore
-            TOKEN_INFO.tokenMap[responseFee.fees[1]?.token?.toString() ?? "LRC"]
-              .tokenId,
-          volume: responseFee.fees[1]?.fee ?? "9400000000000000000",
-        },
-        minGas: 0,
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-        to: LOOPRING_EXPORTED_ACCOUNT.address,
-        storageId: 0,
-        token: {
-          tokenId: 1,
-          volume: "1011000000000000000000",
-        },
-        validUntil: 0,
-      };
-
+      // step 6 withdraw
       const response = await LoopringAPI.userAPI.submitOffchainWithdraw({
-        request: request3,
+        request: {
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          counterFactualInfo: undefined,
+          fastWithdrawalMode: false,
+          hashApproved: "",
+          maxFee: {
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
+                .tokenId,
+            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+          },
+          minGas: 0,
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
+          to: LOOPRING_EXPORTED_ACCOUNT.address,
+          storageId: 0,
+          token: {
+            tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
+            volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+          },
+          validUntil: 0,
+        },
         web3,
-        chainId: ChainId.GOERLI,
-        walletType: ConnectorNames.Trezor,
+        chainId: sdk.ChainId.GOERLI,
+        walletType: sdk.ConnectorNames.MetaMask,
         eddsaKey: eddsaKey.sk,
         apiKey,
       });
       console.log("response:", response);
     },
-    DEFAULT_TIMEOUT + 2000
+    DEFAULT_TIMEOUT * 3
   );
-  it(
-    "forceWithdrawal",
-    async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(web3, acc.address);
-      const response = await LoopringAPI.contractAPI.forceWithdrawal(
-        web3,
-        acc.address,
-        acc.accountId,
-        acc.exchangeAddress,
-        TOKEN_INFO.tokenMap.ETH,
-        0,
-        LOOPRING_EXPORTED_ACCOUNT.gasPrice,
-        LOOPRING_EXPORTED_ACCOUNT.gasLimit,
-        ChainId.GOERLI,
-        nonce,
-        true
-      );
 
-      console.log(`nonce: ${nonce} deposit_ETH: ${response}`);
+  it(
+    "forceWithdrawa",
+    async () => {
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+       */
+      // step 1. getAccount
+      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+      });
+      console.log("accInfo:", accInfo);
+
+      // step 2. eddsaKey
+      const eddsaKey = await signatureKeyPairMock(accInfo);
+      console.log("eddsaKey:", eddsaKey.sk);
+
+      // step 3. apiKey
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
+        eddsaKey.sk
+      );
+      console.log("apiKey:", apiKey);
+
+      // step 4. storageId
+      const storageId = await LoopringAPI.userAPI.getNextStorageId(
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: 1,
+        },
+        apiKey
+      );
+      console.log("storageId:", storageId);
+
+      // step 5. fee
+      const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+        {
+          accountId: accInfo.accountId,
+          requestType: sdk.OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
+          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
+        },
+        apiKey
+      );
+      console.log("fee:", fee);
+
+      // step 6 withdraw
+      const response = await LoopringAPI.userAPI.submitOffchainWithdraw({
+        request: {
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          counterFactualInfo: undefined,
+          fastWithdrawalMode: true,
+          hashApproved: "",
+          maxFee: {
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
+                .tokenId,
+            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+          },
+          minGas: 0,
+          owner: LOOPRING_EXPORTED_ACCOUNT.address,
+          to: LOOPRING_EXPORTED_ACCOUNT.address,
+          storageId: 0,
+          token: {
+            tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
+            volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+          },
+          validUntil: 0,
+        },
+        web3,
+        chainId: sdk.ChainId.GOERLI,
+        walletType: sdk.ConnectorNames.MetaMask,
+        eddsaKey: eddsaKey.sk,
+        apiKey,
+      });
+      console.log("response:", response);
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT * 3
   );
 });

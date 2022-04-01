@@ -306,10 +306,10 @@ const getBaseUrlByChainId = (id: ChainId) => {
       baseUrl = "https://api.loopring.network";
       break;
     default:
-      // baseUrl = 'http://a57a89531743142efb8d1424d05737fe-1745902319.us-east-2.elb.amazonaws.com/'
-      // baseUrl = "https://uat2.loopring.io";
       baseUrl =
         "http://a57a89531743142efb8d1424d05737fe-1745902319.us-east-2.elb.amazonaws.com/";
+      // baseUrl = "https://uat2.loopring.io";
+      break;
   }
 
   return baseUrl;

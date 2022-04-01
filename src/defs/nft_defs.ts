@@ -55,13 +55,13 @@ export interface IsApproveParam {
 /**
  * approveNFT
  * @property web3
- * @property from  The address that deposits the funds to the exchange
- * @property to  The address  deposits to
- * @property loopringAddress loopring exchange Address
- * @property tokenId: the tokenId
- * @property chainId
- * @property nftType The type of NFTAction contract address (ERC721/ERC1155/...)
- * @property nonce
+ * @property from string address that deposits the funds to the exchange
+ * @property to string address  deposits to
+ * @property loopringAddress string loopring exchange Address
+ * @property nftId  ntId
+ * @property chainId number
+ * @property nftType number The type of NFTAction contract address (ERC721/ERC1155)
+ * @property nonce number
  * @property gasPrice
  * @property gasLimit
  * @property sendByMetaMask
@@ -71,7 +71,7 @@ export interface ApproveParam {
   from: string;
   depositAddress: string;
   tokenAddress: string;
-  tokenId: string;
+  nftId?: string;
   nftType: NFTType;
   gasPrice: number;
   gasLimit: number | undefined;
