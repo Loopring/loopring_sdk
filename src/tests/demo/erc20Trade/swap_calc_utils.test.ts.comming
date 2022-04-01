@@ -1,80 +1,49 @@
 import {
-  LoopringMap,
-  MarketInfo,
-  TokenInfo,
-  DepthData,
-  ChainId,
-  AmmPoolInfoV3,
-  AmmPoolSnapshot,
-} from "../../../defs";
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+  web3,
+  TOKEN_INFO,
+  signatureKeyPairMock,
+} from "../../MockData";
+import * as sdk from "../../../index";
 
-import { AmmpoolAPI, ExchangeAPI } from "../../../api";
+const init = async (
+  chainId: sdk.ChainId = sdk.ChainId.GOERLI,
+  sell: string,
+  buy: string
+) => {
+  // exchangeApi = new ExchangeAPI({ chainId });
+  // ammApi = new AmmpoolAPI({ chainId });
 
-import { dumpError400 } from "../../../utils/network_tools";
+  const tokenMap = (await LoopringAPI.exchangeAPI.getTokens()).tokenSymbolMap;
 
-import { getOutputAmount } from "../../../utils/swap_calc_utils";
-import { getExistedMarket } from "../../../utils";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
+  const marketAll = await LoopringAPI.exchangeAPI.getMixMarkets();
 
-const feeBips = "20";
+  const marketMap = marketAll.markets;
 
-const _slipBips = "50";
+  const marketArr = marketAll.marketArr as string[];
 
-let exchangeApi: ExchangeAPI;
-let ammApi: AmmpoolAPI;
+  const { amm, market: marketTmp } = sdk.getExistedMarket(marketArr, sell, buy);
 
-let sell: string;
-let buy: string;
-let marketArr: string[];
+  const market = amm as string;
 
-let isAtoB: boolean;
+  const depth = (
+    await LoopringAPI.exchangeAPI.getMixDepth({ market: marketTmp })
+  ).depth;
 
-let tokenMap: LoopringMap<TokenInfo>;
+  // console.log(market, marketTmp, 'depth2:', depth2)
 
-let marketMap: LoopringMap<MarketInfo>;
+  const ammpools = (await LoopringAPI.ammpoolAPI.getAmmPoolConf()).ammpools;
 
-let depth: DepthData;
+  const ammPoolInfo = ammpools[market];
 
-let ammpools: LoopringMap<AmmPoolInfoV3>;
-
-let ammPoolSnapshot: AmmPoolSnapshot;
-
-let input: string;
-
-const init = async (chainId: ChainId = ChainId.GOERLI) => {
-  try {
-    // exchangeApi = new ExchangeAPI({ chainId });
-    // ammApi = new AmmpoolAPI({ chainId });
-    LoopringAPI.InitApi(chainId);
-
-    tokenMap = (await LoopringAPI.exchangeAPI.getTokens()).tokenSymbolMap;
-
-    const marketAll = await LoopringAPI.exchangeAPI.getMixMarkets();
-
-    marketMap = marketAll.markets;
-
-    marketArr = marketAll.marketArr as string[];
-
-    const { amm, market: marketTmp } = getExistedMarket(marketArr, sell, buy);
-
-    const market = amm as string;
-
-    depth = (await LoopringAPI.exchangeAPI.getMixDepth({ market: marketTmp }))
-      .depth;
-
-    // console.log(market, marketTmp, 'depth2:', depth2)
-
-    ammpools = (await ammApi.getAmmPoolConf()).ammpools;
-
-    const ammPoolInfo = ammpools[market];
-
-    if (ammPoolInfo) {
-      ammPoolSnapshot = (
-        await ammApi.getAmmPoolSnapshot({ poolAddress: ammPoolInfo.address })
-      ).ammPoolSnapshot as AmmPoolSnapshot;
-    }
-  } catch (err) {
-    dumpError400(err as any);
+  if (ammPoolInfo) {
+    const ammPoolSnapshot = (
+      await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot({
+        poolAddress: ammPoolInfo.address,
+      })
+    ).ammPoolSnapshot as sdk.AmmPoolSnapshot;
   }
 };
 
@@ -83,69 +52,67 @@ const initAll = async (
   _base: string,
   _quote: string,
   _isAtoB = true,
-  chainId = ChainId.MAINNET
+  chainId = sdk.ChainId.MAINNET
 ) => {
-  input = _input;
-  sell = _base;
-  buy = _quote;
+  // input = _input;
+  // isAtoB = _isAtoB;
 
-  isAtoB = _isAtoB;
-
-  await init(chainId);
+  await init(chainId, _base, _quote);
+  // return
 };
-
-const checkResult = (
-  takerRate = "10",
-  slipBips: string = _slipBips,
-  feeBips = "20"
-) => {
-  if (input !== "0" && input !== "0.") {
-    const { amm, market } = getExistedMarket(marketArr, sell, buy);
-
-    const hasMarket = !!marketMap[market as string];
-
-    console.log("marketMap hasMarket:", hasMarket);
-
-    const marketItem = marketMap[market as string];
-
-    console.log("marketMap:", marketItem);
-
-    const hasMarket2 = !!ammpools[amm as string];
-
-    console.log("ammpools hasMarket2:", hasMarket2);
-
-    console.log("ammPoolSnapshot:", ammPoolSnapshot);
-
-    console.log(
-      input,
-      "*",
-      sell,
-      buy,
-      isAtoB,
-      depth.mid_price,
-      ammPoolSnapshot?.pooled,
-      takerRate,
-      slipBips
-    );
-  }
-
-  const output: any = getOutputAmount({
-    input,
-    sell,
-    buy,
-    isAtoB,
-    marketArr,
-    tokenMap,
-    marketMap,
-    depth,
-    feeBips,
-    ammPoolSnapshot,
-    takerRate,
-    slipBips,
-  });
-
-  console.log("sell:", sell, " buy:", buy, " output:", output);
-};
+//
+// const checkResult = (
+//   takerRate = "10",
+//   slipBips: string = _slipBips,
+//   feeBips = "20"
+// ) => {
+//   if (input !== "0" && input !== "0.") {
+//     const { amm, market } = getExistedMarket(marketArr, sell, buy);
+//
+//     const hasMarket = !!marketMap[market as string];
+//
+//     console.log("marketMap hasMarket:", hasMarket);
+//
+//     const marketItem = marketMap[market as string];
+//
+//     console.log("marketMap:", marketItem);
+//
+//     const hasMarket2 = !!ammpools[amm as string];
+//
+//     console.log("ammpools hasMarket2:", hasMarket2);
+//
+//     console.log("ammPoolSnapshot:", ammPoolSnapshot);
+//
+//     console.log(
+//       input,
+//       "*",
+//       sell,
+//       buy,
+//       isAtoB,
+//       depth.mid_price,
+//       ammPoolSnapshot?.pooled,
+//       takerRate,
+//       slipBips
+//     );
+//   }
+//
+//   const output: any = getOutputAmount({
+//     input,
+//     sell,
+//     buy,
+//     isAtoB,
+//     marketArr,
+//     tokenMap,
+//     marketMap,
+//     depth,
+//     feeBips,
+//     ammPoolSnapshot,
+//     takerRate,
+//     slipBips,
+//   });
+//
+//   console.log("sell:", sell, " buy:", buy, " output:", output);
+// };
 
 describe("swap_calc_utils", function () {
   // beforeEach(async () => {
