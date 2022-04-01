@@ -5,18 +5,17 @@
 [![Discord](https://img.shields.io/discord/687207715902193673)](https://discord.com/invite/KkYccYp)
 
 ## 🚀 Quick Start
-
-Using NPM
-
-```bash
+```shell
+# Using npm
 npm i @loopring-web/loopring-sdk --save
 ```
-
-Using Yarn
-
-```bash
+```shell
+# Using yarn
 yarn add @loopring-web/loopring-sdk
 ```
+> Make sure you are using the original npm registry.  
+> `npm config set registry http://registry.npmjs.org`
+
 
 ## 📒 Documentation
 
@@ -48,7 +47,7 @@ Please see our [introduction page](https://loopring.github.io/loopring_sdk/) for
 - [Whitepaper](https://loopring.org/resources/en_whitepaper.pdf)
 - [Design Docs](https://github.com/LoopringSecondary/docs/wiki/Loopring3_Design)
 
-## ❓[Help](https://loopring.io/#/newticket)
+## ❓[Help](https://desk.zoho.com/portal/loopring/en/home)
 
 ## 👉 [What is Loopring?](https://loopring.org/#/)
 

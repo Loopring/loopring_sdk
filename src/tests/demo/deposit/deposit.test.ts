@@ -5,10 +5,10 @@ import {
   LoopringAPI,
   TOKEN_INFO,
   web3,
-} from "../data";
-import { ChainId } from "../../defs";
-import { sleep } from "../../utils";
-import * as contract from "../../api/contract_api";
+} from "../../data";
+import { ChainId } from "../../../defs";
+import { sleep } from "../../../utils";
+import * as contract from "../../../api/contract_api";
 
 describe("contract test", function () {
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("contract test", function () {
         web3,
         acc.address,
         TOKEN_INFO.tokenMap.LRC.address,
-        LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+        LOOPRING_EXPORTED_ACCOUNT.depositAddress,
         LOOPRING_EXPORTED_ACCOUNT.gasPrice,
         LOOPRING_EXPORTED_ACCOUNT.gasLimit,
         ChainId.GOERLI,
@@ -44,7 +44,7 @@ describe("contract test", function () {
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
         TOKEN_INFO.tokenMap.LRC.address,
-        LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+        LOOPRING_EXPORTED_ACCOUNT.depositAddress,
         LOOPRING_EXPORTED_ACCOUNT.gasPrice,
         LOOPRING_EXPORTED_ACCOUNT.gasLimit,
         ChainId.GOERLI,
@@ -66,8 +66,8 @@ describe("contract test", function () {
         token: [TOKEN_INFO.tokenMap.LRC.address],
       });
       if (
-        tokenAllowances[TOKEN_INFO.tokenMap.LRC.address] === undefined ||
-        Number(tokenAllowances[TOKEN_INFO.tokenMap.LRC.address]) <
+        tokenAllowances.has(TOKEN_INFO.tokenMap.LRC.address) &&
+        Number(tokenAllowances.get(TOKEN_INFO.tokenMap.LRC.address)) <
           LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue
       ) {
         const nonce = await web3.eth.getTransactionCount(
@@ -77,7 +77,7 @@ describe("contract test", function () {
           web3,
           LOOPRING_EXPORTED_ACCOUNT.address,
           TOKEN_INFO.tokenMap.LRC.address, // LRC address  {tokenIdMap} = getTokens();  tokenIdMap['LRC']
-          LOOPRING_EXPORTED_ACCOUNT.depositAddr, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
+          LOOPRING_EXPORTED_ACCOUNT.depositAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
           LOOPRING_EXPORTED_ACCOUNT.gasPrice,
           LOOPRING_EXPORTED_ACCOUNT.gasLimit,
           ChainId.GOERLI,
@@ -93,7 +93,7 @@ describe("contract test", function () {
       const response = await LoopringAPI.contractAPI.deposit(
         web3,
         acc.address,
-        acc.exchangeAddr,
+        acc.exchangeAddress,
         TOKEN_INFO.tokenMap.LRC,
         LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue,
         0,
@@ -119,7 +119,7 @@ describe("contract test", function () {
       const response = await LoopringAPI.contractAPI.deposit(
         web3,
         acc.address,
-        acc.exchangeAddr,
+        acc.exchangeAddress,
         TOKEN_INFO.tokenMap.ETH,
         LOOPRING_EXPORTED_ACCOUNT.tradeETHValue,
         0,

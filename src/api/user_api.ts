@@ -1,6 +1,6 @@
 /* eslint-disable camelcase  */
 
-import { BaseAPI, isContract } from "./base_api";
+import { BaseAPI } from "./base_api";
 
 import {
   RESULT_INFO,
@@ -18,6 +18,7 @@ import * as loopring_defs from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
 import { myLog } from "../utils/log_tools";
+import { isContract } from "./contract_api";
 
 export class UserAPI extends BaseAPI {
   /*

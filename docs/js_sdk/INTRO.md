@@ -1,7 +1,11 @@
 # JS SDK Introduction
 - [Quick Start](#-quick-start)   
-- [Initialize the APIs](#1-initialize-the-apis)
+- [Initialize the APIs](#1-initialize-apis)
 - [Simple Demo for Transfer](#2-simple-demo-for-transfer)
+   - [getAccount](#step1-getaccount----layer2-account-info) 
+   - [getUserBalance](#step2-getuserbalance)
+   - [getStorageId](#step3-getstorageid)
+   - [getFee](#step4-getfee)
 - [Error Code](#3-error-code)
 - [Reference](#reference)
    - [mockData](#mockdata)
@@ -49,7 +53,7 @@ export class LoopringAPI {
     LoopringAPI.contractAPI = sdk.ContractAPI;
   };
 }
-LoopringAPI.InitApi(sdk.ChainId.GOERLI); // LoopringAPI.InitApi(ChainId.MAINNET)
+ // LoopringAPI.InitApi(ChainId.MAINNET)
 ```
 - contractAPI -- Ethereum method
 - exchangeAPI -- Loopring Exchange Info
@@ -86,7 +90,7 @@ console.log(`Layer2 ERC20 Balance: ${userBalances}`);
 Reference: [apiKey](#get-apikey)
 
 ---
-#### Step2: getStorageId
+#### Step3: getStorageId
 ```ts
 const request2: GetNextStorageIdRequest = {
   accountId: accInfo.accountId,
@@ -101,7 +105,7 @@ const storageId = await LoopringAPI.userAPI.getNextStorageId(
 [transferNFT.test.ts](https://github.com/Loopring/loopring_sdk/tree/master/src/tests/transfer/transferNFT.test.ts)
 
 ---
-#### Step3: getFee
+#### Step4: getFee
 ```ts
 const requestFee: GetNFTOffchainFeeAmtRequest = {
   accountId: accInfo.accountId,
@@ -117,7 +121,7 @@ const responseFee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
 [transferNFT.test.ts](https://github.com/Loopring/loopring_sdk/tree/master/src/tests/transfer/transferNFT.test.ts)
 
 ---
-#### Step4: submitTransfer
+#### Step5: submitTransfer
 ```ts
 const request3: OriginNFTTransferRequestV3 = {
   exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
@@ -194,28 +198,31 @@ More detail please read code error_codes.ts
 ### mockData
 ```ts
 export const LOOPRING_EXPORTED_ACCOUNT = {
-  address: "0x727E0Fa09389156Fc803EaF9C7017338EfD76E7F", // Primary test address
+  address: "0x727E0Fa09389156Fc803EaF9C7017338EfD76E7F",
   privateKey:
-    "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf", // Primary test address privateKey
-  accountId: 12454,   // Primary test address accountId (from LoopringAPI.exchangeAPI.getAccount)
-  address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079", // secoundary test address
+    "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
+  accountId: 12454,
+  address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079",
   privateKey2:
-    "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263", // secoundary test address privateKey
-  accountId2: 10488,   // secoundary test address accountId
-  addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",  // counter factual test address 
-  accountIdCF: 11632, // counter factual test accountId 
-  addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd", // Loopring wallet test address 
-  depositAddress: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72", // Loopring depositAddress (from LoopringAPI.exchangeAPI.getExchangeInfo)
-  exchangeAddress: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",  // Loopring exchangeAddress (from LoopringAPI.exchangeAPI.getExchangeInfo)
+    "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263",
+  accountId2: 10488,
+  addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",
+  accountIdCF: 11632,
+  addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd",
+  depositAddr: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
+  exchangeAddr: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
   whitelistedAddress: "0x35405E1349658BcA12810d0f879Bf6c5d89B512C",
   whitelistedEddkey:
     "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33",
-  chainId: 5, // GOERLI  chainId 
-  nftTokenAddress: "0x8394cB7e768070217592572582228f62CdDE4FCE", // NFT contract token addrss
-  nftTokenId: "32768", // NFT loopring tokenId (from LoopringAPI.userAPI.getUserNFTBalances & LoopringAPI.nftAPI.getInfoForNFTTokens )
-  nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",  // NFT token id (contract -> uri)
-  nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f", // NFT loopring nftData (from LoopringAPI.userAPI.getUserNFTBalances & LoopringAPI.nftAPI.getInfoForNFTTokens )
-  testNotOx: "ff7d59d9316eba168837e3ef924bcdfd64b237d8",
+  // const eddkeyWhitelisted =
+  //   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
+  //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
+  chainId: 5,
+  nftTokenAddress: "0x8394cB7e768070217592572582228f62CdDE4FCE",
+  nftTokenId: "32768",
+  nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
+  nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
+  testNotOx: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
   tradeETHValue: 0.0001,
   gasPrice: 19, // for test

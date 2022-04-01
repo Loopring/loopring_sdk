@@ -1,0 +1,93 @@
+import {
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+  TOKEN_INFO,
+  signatureKeyPairMock,
+  web3,
+} from "../../data";
+import * as sdk from "../../../index";
+
+describe("Transfer test", function () {
+  beforeEach(async () => {
+    LoopringAPI.InitApi(sdk.ChainId.GOERLI);
+  });
+  it(
+    "submitInternalTransfer",
+    async () => {
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+       */
+      // step 1. get account info
+      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+      });
+      console.log("accInfo:", accInfo);
+
+      // step 2. eddsaKey
+      const eddsaKey = await signatureKeyPairMock(accInfo);
+      console.log("eddsaKey:", eddsaKey.sk);
+
+      // step 3 get apikey
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
+        eddsaKey.sk
+      );
+      console.log("apiKey:", apiKey);
+
+      // step 4 get storageId
+      const storageId = await LoopringAPI.userAPI.getNextStorageId(
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: 1,
+        },
+        apiKey
+      );
+      console.log("storageId:", storageId);
+
+      // step 5 get fee
+      const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+        {
+          accountId: accInfo.accountId,
+          requestType: sdk.OffchainFeeReqType.TRANSFER,
+        },
+        apiKey
+      );
+      console.log("storageId:", storageId);
+
+      // step 6 transfer
+      const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
+        request: {
+          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+          payerAddr: accInfo.owner,
+          payerId: accInfo.accountId,
+          payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
+          payeeId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
+          storageId: storageId.offchainId,
+          token: {
+            tokenId: 1,
+            volume: "100000000000000000000",
+          },
+          maxFee: {
+            tokenId:
+              // @ts-ignore
+              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
+                .tokenId,
+            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+          },
+          validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+        },
+        web3,
+        chainId: sdk.ChainId.GOERLI,
+        walletType: sdk.ConnectorNames.Trezor,
+        eddsaKey: eddsaKey.sk,
+        apiKey: apiKey,
+      });
+      console.log("transferResult:", transferResult);
+    },
+    DEFAULT_TIMEOUT
+  );
+});

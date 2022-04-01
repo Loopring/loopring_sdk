@@ -1,5 +1,3 @@
-export const VALID_UNTIL = 1700000000;
-
 export enum HEBAO_LOCK_STATUS {
   LOCK_FAILED = "LOCK_FAILED",
   CREATED = "CREATED",

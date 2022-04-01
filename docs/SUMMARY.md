@@ -11,6 +11,7 @@
 - [JS SDK](./js_sdk/INTRO.md)
 
   - [Overview](./js_sdk/INTRO.md#install)
+  - [Deposit](./js_sdk/Deposit.md)
   - [Unit Test](./js_sdk/unit_test.md)
   - [Signature & Validate ](./js_sdk/signature_api.md)
   - [AmmPool](./js_sdk/ammpool_api.md)

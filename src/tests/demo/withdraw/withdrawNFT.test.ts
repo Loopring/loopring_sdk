@@ -1,12 +1,12 @@
-import { ChainId, ConnectorNames } from "../../defs/web3_defs";
-import { get_EddsaSig_NFT_Transfer } from "../../api";
+import { ChainId, ConnectorNames } from "../../../defs/web3_defs";
+import { get_EddsaSig_NFT_Withdraw } from "../../../api";
 
 import {
   GetNextStorageIdRequest,
   GetNFTOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
-  OriginNFTTransferRequestV3,
-} from "../../defs/loopring_defs";
+  NFTWithdrawRequestV3,
+} from "../../../defs/loopring_defs";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -16,46 +16,18 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   TOKEN_INFO,
-} from "../data";
-import * as sign_tools from "../../api/sign/sign_tools";
-import { OffchainNFTFeeReqType } from "../../defs";
-import { BaseAPI } from "../../api/base_api";
+} from "../../data";
+import * as sign_tools from "../../../api/sign/sign_tools";
+import { OffchainNFTFeeReqType } from "../../../defs";
+import { BaseAPI } from "../../../api/base_api";
 
-describe("Transfer NFTAction test", function () {
+describe("Withdraw NFTAction test", function () {
   beforeEach(async () => {
     LoopringAPI.InitApi(ChainId.GOERLI);
   });
 
   it(
-    "get_EddsaSig_NFT_Transfer",
-    async () => {
-      const request: OriginNFTTransferRequestV3 = {
-        exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
-        fromAccountId: 10503,
-        fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
-        toAccountId: 10758,
-        toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
-        token: {
-          tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-          nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-          amount: "1",
-        },
-        maxFee: {
-          tokenId: 2,
-          amount: "311000000000000000000",
-        },
-        storageId: 9,
-        validUntil: 1667396982,
-        // memo: '',
-      };
-      const result = get_EddsaSig_NFT_Transfer(request, "");
-      console.log(`resultHash:`, result);
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
-    "submitNFTInTransfer",
+    "submitNFTWithdraw",
     async () => {
       const provider = new PrivateKeyProvider(
         LOOPRING_EXPORTED_ACCOUNT.privateKey,
@@ -68,26 +40,33 @@ describe("Transfer NFTAction test", function () {
       if (!accInfo) {
         return;
       }
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       */
+      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+
       const eddsaKey = await sign_tools.generateKeyPair({
         web3,
         address: accInfo.owner,
         keySeed: BaseAPI.KEY_MESSAGE.replace(
           "${exchangeAddress}",
-          LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
+          LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
         ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+        // exchangeAddress: exchangeInfo.exchangeAddress,
+        // keyNonce: accInfo.nonce,
         walletType: ConnectorNames.MetaMask,
         chainId: ChainId.GOERLI,
       });
-
+      console.log("eddsakey:", eddsaKey.sk);
       const request: GetUserApiKeyRequest = {
         accountId: accInfo.accountId,
       };
 
-      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+      let { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         request,
         eddsaKey.sk
       );
-      console.log(apiKey);
+      console.log("apiKey", apiKey);
 
       const request2: GetNextStorageIdRequest = {
         accountId: accInfo.accountId,
@@ -98,11 +77,11 @@ describe("Transfer NFTAction test", function () {
         request2,
         apiKey
       );
-
+      console.log("storageId", storageId);
       const requestFee: GetNFTOffchainFeeAmtRequest = {
         accountId: accInfo.accountId,
-        // tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-        requestType: OffchainNFTFeeReqType.NFT_TRANSFER,
+        tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
+        requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL,
         amount: "0",
       };
       const responseFee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
@@ -110,17 +89,20 @@ describe("Transfer NFTAction test", function () {
         apiKey
       );
 
-      const request3: OriginNFTTransferRequestV3 = {
-        exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
-        fromAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
-        toAccountId: 0, // toAccountId is not required, input 0 as default
-        toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
+      console.log("requestFee", responseFee);
+
+      const request3: NFTWithdrawRequestV3 = {
+        minGas: 0,
+        exchange: exchangeInfo.exchangeAddress,
+        accountId: accInfo.accountId,
+        to: accInfo.owner,
+        owner: accInfo.owner,
         token: {
           tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
           nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
           amount: "1",
         },
+        extraData: "",
         maxFee: {
           tokenId:
             // @ts-ignore
@@ -128,21 +110,20 @@ describe("Transfer NFTAction test", function () {
               .tokenId,
           amount: responseFee.fees[1]?.fee ?? "9400000000000000000",
         },
-        storageId: storageId.offchainId,
+        storageId: storageId?.offchainId ?? 9,
         validUntil: 1667396982,
-        // memo: '',
       };
 
-      const response = await LoopringAPI.userAPI.submitNFTInTransfer({
+      const response = await LoopringAPI.userAPI.submitNFTWithdraw({
         request: request3,
         web3,
         chainId: ChainId.GOERLI,
-        walletType: ConnectorNames.Unknown,
+        walletType: ConnectorNames.Trezor,
         eddsaKey: eddsaKey.sk,
         apiKey,
       });
       console.log("response:", response);
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT + 2000
   );
 });

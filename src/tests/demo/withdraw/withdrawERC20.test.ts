@@ -1,12 +1,12 @@
-import { ChainId, ConnectorNames } from "../../defs/web3_defs";
-import { get_EddsaSig_OffChainWithdraw } from "../../api";
+import { ChainId, ConnectorNames } from "../../../defs/web3_defs";
+import { get_EddsaSig_OffChainWithdraw } from "../../../api";
 
 import {
   GetNextStorageIdRequest,
   GetOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   OffChainWithdrawalRequestV3,
-} from "../../defs/loopring_defs";
+} from "../../../defs/loopring_defs";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -18,10 +18,10 @@ import {
   LoopringAPI,
   TOKEN_INFO,
   web3,
-} from "../data";
-import * as sign_tools from "../../api/sign/sign_tools";
-import { OffchainFeeReqType } from "../../defs";
-import { BaseAPI } from "../../api/base_api";
+} from "../../data";
+import * as sign_tools from "../../../api/sign/sign_tools";
+import { OffchainFeeReqType } from "../../../defs";
+import { BaseAPI } from "../../../api/base_api";
 
 describe("Withdraw NFTAction test", function () {
   beforeEach(async () => {
@@ -38,7 +38,7 @@ describe("Withdraw NFTAction test", function () {
         return;
       }
       /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddr =  exchangeInfo.exchangeAddress
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
        */
       const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
 
@@ -84,7 +84,7 @@ describe("Withdraw NFTAction test", function () {
         return;
       }
       /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddr =  exchangeInfo.exchangeAddress
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
        */
       const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
 
@@ -93,7 +93,7 @@ describe("Withdraw NFTAction test", function () {
         address: accInfo.owner,
         keySeed: BaseAPI.KEY_MESSAGE.replace(
           "${exchangeAddress}",
-          LOOPRING_EXPORTED_ACCOUNT.exchangeAddr
+          LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
         ).replace("${nonce}", (accInfo.nonce - 1).toString()),
         // exchangeAddress: exchangeInfo.exchangeAddress,
         // keyNonce: accInfo.nonce,
@@ -179,7 +179,7 @@ describe("Withdraw NFTAction test", function () {
         web3,
         acc.address,
         acc.accountId,
-        acc.exchangeAddr,
+        acc.exchangeAddress,
         TOKEN_INFO.tokenMap.ETH,
         0,
         LOOPRING_EXPORTED_ACCOUNT.gasPrice,

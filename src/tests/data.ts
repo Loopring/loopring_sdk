@@ -12,6 +12,7 @@ import {
 import { ChainId } from "../defs";
 import Web3 from "web3";
 import * as ContractAPI from "../api/contract_api";
+import * as sdk from "../index";
 
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 
@@ -264,7 +265,7 @@ export const TOKEN_INFO = {
 export const LOOPRING_EXPORTED_ACCOUNT = {
   address: "0x727E0Fa09389156Fc803EaF9C7017338EfD76E7F",
   privateKey:
-    "adc22517f2de0093429e5365b042da0ec9299353943db0f0cc104743c69104cf",
+    "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
   accountId: 12454,
   address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079",
   privateKey2:
@@ -273,8 +274,8 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",
   accountIdCF: 11632,
   addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd",
-  depositAddr: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
-  exchangeAddr: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
+  depositAddress: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
+  exchangeAddress: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
   whitelistedAddress: "0x35405E1349658BcA12810d0f879Bf6c5d89B512C",
   whitelistedEddkey:
     "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33",
@@ -286,12 +287,14 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   nftTokenId: "32768",
   nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
   nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
-  testNotOx: "ff7d59d9316eba168837e3ef924bcdfd64b237d8",
+  testNotOx: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
   tradeETHValue: 0.0001,
   gasPrice: 19, // for test
   gasLimit: 200000, // for test
+  validUntil: Date.now(),
 };
+export const DEFAULT_TIMEOUT = 30000;
 
 const provider = new PrivateKeyProvider(
   LOOPRING_EXPORTED_ACCOUNT.privateKey,
@@ -303,8 +306,7 @@ const provider2 = new PrivateKeyProvider(
 );
 export const web3 = new Web3(provider);
 export const web3_2 = new Web3(provider2);
-
-export class LoopringAPI {
+export class LoopringAPIClass {
   public static userAPI: UserAPI;
   public static exchangeAPI: ExchangeAPI;
   public static ammpoolAPI: AmmpoolAPI;
@@ -325,10 +327,38 @@ export class LoopringAPI {
     LoopringAPI.wsAPI = new WsAPI({ chainId });
     LoopringAPI.WhitelistedUserAPI = new WhitelistedUserAPI({ chainId });
     LoopringAPI.nftAPI = new NFTAPI({ chainId });
+    LoopringAPI.delegate = new DelegateAPI({ chainId });
     LoopringAPI.__chainId__ = chainId;
     LoopringAPI.contractAPI = ContractAPI;
   };
 }
-export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
 
-export const DEFAULT_TIMEOUT = 30000;
+const chainId = ChainId.GOERLI;
+export const LoopringAPI = {
+  userAPI: new UserAPI({ chainId }),
+  exchangeAPI: new ExchangeAPI({ chainId }),
+  globalAPI: new GlobalAPI({ chainId }),
+  ammpoolAPI: new AmmpoolAPI({ chainId }),
+  walletAPI: new WalletAPI({ chainId }),
+  wsAPI: new WsAPI({ chainId }),
+  WhitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
+  nftAPI: new NFTAPI({ chainId }),
+  delegate: new DelegateAPI({ chainId }),
+  __chainId__: chainId,
+  contractAPI: ContractAPI,
+};
+
+export async function signatureKeyPairMock(accInfo: sdk.AccountInfo) {
+  console.log("accInfo:", accInfo);
+  const eddsakey = await sdk.generateKeyPair({
+    web3,
+    address: accInfo.owner,
+    keySeed: sdk.GlobalAPI.KEY_MESSAGE.replace(
+      "${exchangeAddress}",
+      LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
+    ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+    walletType: sdk.ConnectorNames.Unknown,
+    chainId: sdk.ChainId.GOERLI,
+  });
+  return eddsakey;
+}

@@ -1,5 +1,5 @@
-import { BaseAPI, isContract, personalSign } from "./base_api";
-
+import { BaseAPI, personalSign } from "./base_api";
+import { isContract } from "./contract_api";
 import * as loopring_defs from "../defs/loopring_defs";
 import {
   GetUserTradesRequest,

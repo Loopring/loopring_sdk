@@ -225,7 +225,7 @@ describe("formatter test", function () {
 
   it("test formatKey", async () => {
     expect(formatKey("0x" + BUFFER)).toBe(NUMBER.toString());
-    expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
+    expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.address.toLowerCase())).toBe(
       LOOPRING_EXPORTED_ACCOUNT.testNotOx
     );
     expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.testNotOx)).toBe(

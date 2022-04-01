@@ -75,7 +75,7 @@
   "devDependencies": {
     "@babel/plugin-transform-typescript": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
-    "@babel/preset-typescript": "^7.14.5",
+    "@babel/preset-typescript": "^7.16.7",
     "@microsoft/tsdoc": "^0.13.2",
     "@types/bignumber.js": "^5.0.0",
     "@types/classnames": "^2.2.11",
@@ -85,7 +85,7 @@
     "@types/ethereumjs-abi": "^0.6.3",
     "@types/ethereumjs-tx": "^2.0.0",
     "@types/ethereumjs-util": "5.2.0",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.168",
     "@types/mocha": "^8.2.2",
     "@types/ms": "^0.7.31",

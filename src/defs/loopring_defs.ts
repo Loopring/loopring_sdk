@@ -722,11 +722,16 @@ export type GetOffchainFeeAmtRequest = {
   amount?: string;
 } & XOR<
   {
-    requestType: Omit<OffchainFeeReqType, 1 | 4 | 6 | 8 | 0>;
+    requestType: Omit<
+      OffchainFeeReqType,
+      | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
+      | OffchainFeeReqType.AMM_JOIN
+      | OffchainFeeReqType.AMM_EXIT
+      | OffchainFeeReqType.ORDER
+    >;
   },
   {
     requestType:
-      | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
       | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
       | OffchainFeeReqType.AMM_JOIN
       | OffchainFeeReqType.AMM_EXIT

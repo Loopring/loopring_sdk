@@ -9,11 +9,6 @@ import { LOOPRING_URLs } from "../defs/url_defs";
 import * as loopring_defs from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
-import { DelegateAPI } from "./delegate_api";
-import { GlobalAPI } from "./global_api";
-import { NFTAPI } from "./nft_api";
-import { UserAPI } from "./user_api";
-import { WalletAPI } from "./wallet_api";
 
 export class WhitelistedUserAPI extends BaseAPI {
   /*

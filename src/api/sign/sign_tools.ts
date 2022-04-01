@@ -84,7 +84,6 @@ export async function generateKeyPair({
   );
 
   if (!result.error) {
-    myLog(result.sig);
     const keyPair = EdDSA.generateKeyPair(
       ethUtil.sha256(fm.toBuffer(result.sig))
     );

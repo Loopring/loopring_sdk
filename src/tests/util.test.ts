@@ -3,8 +3,6 @@ import { ChainId } from "../defs";
 import { BaseAPI } from "../api/base_api";
 import { DEFAULT_TIMEOUT, LoopringAPI } from "./data";
 
-let api: BaseAPI;
-
 describe("utils test", function () {
   beforeEach(async () => {
     LoopringAPI.InitApi(ChainId.GOERLI);

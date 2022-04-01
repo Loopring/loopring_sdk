@@ -24,7 +24,6 @@ import {
 import { addHexPrefix, toBuffer, toHex, toNumber } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
-import Transaction from "@ethereumjs/tx";
 import ABI from "./ethereum/contracts";
 import { LOOPRING_URLs } from "../defs/url_defs";
 
@@ -179,80 +178,6 @@ export async function ecRecover(
     }
   });
 }
-//
-// // Authereum account contract hashes the data in the validation function,
-// // so we must send the data plain text.
-// export async function authereumValid(
-//   web3: any,
-//   account: string,
-//   msg: string,
-//   sig: any
-// ) {
-//   return new Promise((resolve) => {
-//     const hash = toBuffer(msg);
-//     const data = ABI.Contracts.ContractWallet.encodeInputs(
-//       "isValidSignature(bytes,bytes)",
-//       {
-//         _data: hash,
-//         _signature: toBuffer(sig),
-//       }
-//     );
-//
-//     web3.eth.call(
-//       {
-//         to: account, // contract addr
-//         data: data,
-//       },
-//       function (err: any, result: any) {
-//         if (!err) {
-//           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
-//             "isValidSignature(bytes,bytes)",
-//             result
-//           );
-//           resolve({
-//             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
-//           });
-//         } else resolve({ error: "authereumValid:" + err });
-//       }
-//     );
-//   });
-// }
-
-// export async function contractWalletValidate(
-//   web3: any,
-//   account: string,
-//   msg: string,
-//   sig: any
-// ) {
-//   return new Promise((resolve) => {
-//     const hash = hashPersonalMessage(toBuffer(msg));
-//     const data = ABI.Contracts.ContractWallet.encodeInputs(
-//       "isValidSignature(bytes,bytes)",
-//       {
-//         _data: hash,
-//         _signature: toBuffer(sig),
-//       }
-//     );
-//
-//     web3.eth.call(
-//       {
-//         to: account, // contract addr
-//         data: data,
-//       },
-//       function (err: any, result: any) {
-//         if (!err) {
-//           const valid = ABI.Contracts.ContractWallet.decodeOutputs(
-//             "isValidSignature(bytes,bytes)",
-//             result
-//           );
-//           resolve({
-//             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
-//           });
-//         } else resolve({ error: err });
-//       }
-//     );
-//   });
-// }
 
 export async function contractWalletValidate32(
   web3: any,
@@ -326,78 +251,6 @@ export async function mykeyWalletValid(
     );
   });
 }
-/**
- * @description sign hash
- * @param web3
- * @param account
- * @param hash
- * @returns {Promise.<*>}
- */
-export async function sign(
-  web3: any,
-  account: string,
-  pwd: string,
-  hash: string
-) {
-  return new Promise((resolve) => {
-    web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
-      if (!err) {
-        const r = result.slice(0, 66);
-        const s = addHexPrefix(result.slice(66, 130));
-        let v = toNumber(addHexPrefix(result.slice(130, 132)));
-        if (v === 0 || v === 1) v = v + 27; // 修复ledger的签名
-        resolve({ result: { r, s, v } });
-      } else {
-        const errorMsg = err.message.substring(0, err.message.indexOf(" at "));
-        resolve({ error: { message: errorMsg } });
-      }
-    });
-  });
-}
-
-/**
- * @description sign EIP217
- * @param web3
- * @param account
- * @param method
- * @param params
- * @returns {Promise.<*>}
- */
-export async function signEip712(
-  web3: any,
-  account: string,
-  method: string,
-  params: any
-) {
-  const response: any = await new Promise((resolve) => {
-    web3.currentProvider.sendAsync(
-      {
-        method,
-        params,
-        account,
-      },
-      function (err: any, result: any) {
-        if (err) {
-          resolve({ error: { message: err.message } });
-          return;
-        }
-
-        if (result.error) {
-          resolve({ error: { message: result.error.message } });
-          return;
-        }
-
-        resolve({ result: result.result });
-      }
-    );
-  });
-
-  if (response["result"]) {
-    return response;
-  } else {
-    throw new Error(response["error"]["message"]);
-  }
-}
 
 export async function ecRecover2(
   account: string,
@@ -445,58 +298,6 @@ export async function ecRecover2(
   );
 }
 
-/**
- * @description Signs ethereum tx
- * @param web3
- * @param account
- * @param rawTx
- * @returns {Promise.<*>}
- */
-export async function signEthereumTx(
-  web3: any,
-  account: string,
-  rawTx: any,
-  chainId: ChainId
-) {
-  const ethTx = Transaction.Transaction.fromSerializedTx(rawTx);
-  const hash = toHex(ethTx.hash());
-  const response: any = await sign(web3, account, "", hash);
-  if (!response["error"]) {
-    const signature = response["result"];
-    signature.v += chainId * 2 + 8;
-    Object.assign(ethTx, signature);
-    return { result: toHex(ethTx.serialize()) };
-  } else {
-    throw new Error(response["error"]["message"]);
-  }
-}
-
-/**
- * @description Sends ethereum tx through MetaMask
- * @param web3
- * @param tx
- * @returns {*}
- */
-export async function sendTransaction(web3: any, tx: any) {
-  delete tx.gasPrice;
-  // delete tx.gas;
-  const response: any = await new Promise((resolve) => {
-    web3.eth.sendTransaction(tx, function (err: any, transactionHash: string) {
-      if (!err) {
-        resolve({ result: transactionHash });
-      } else {
-        resolve({ error: { message: err.message } });
-      }
-    });
-  });
-
-  if (response["result"]) {
-    return response;
-  } else {
-    throw new Error(response["error"]["message"]);
-  }
-}
-
 const getBaseUrlByChainId = (id: ChainId) => {
   let baseUrl = "";
 
@@ -505,8 +306,10 @@ const getBaseUrlByChainId = (id: ChainId) => {
       baseUrl = "https://api.loopring.network";
       break;
     default:
-      // baseUrl = 'https://api.uat.loopring.pro'
-      baseUrl = "https://uat2.loopring.io";
+      // baseUrl = 'http://a57a89531743142efb8d1424d05737fe-1745902319.us-east-2.elb.amazonaws.com/'
+      // baseUrl = "https://uat2.loopring.io";
+      baseUrl =
+        "http://a57a89531743142efb8d1424d05737fe-1745902319.us-east-2.elb.amazonaws.com/";
   }
 
   return baseUrl;
@@ -519,11 +322,6 @@ const getBaseUrlByChainId = (id: ChainId) => {
 export interface InitParam {
   chainId?: ChainId;
   baseUrl?: string;
-}
-
-export async function isContract(web3: any, address: string) {
-  const code = await web3.eth.getCode(address);
-  return code && code.length > 2;
 }
 
 export function formatSig(rpcSig: string) {

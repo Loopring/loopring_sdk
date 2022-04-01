@@ -1,27 +1,27 @@
-import { ChainId, ConnectorNames } from "../../defs/web3_defs";
+import { ChainId, ConnectorNames } from "../../../defs/web3_defs";
 
-import { VALID_UNTIL } from "../../defs/loopring_constants";
+import { VALID_UNTIL } from "../../../defs/loopring_constants";
 
 import {
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   web3,
-} from "../data";
+} from "../../data";
 
-import { ExchangeAPI } from "../../api/exchange_api";
-import { NFTAPI, NFTType } from "../../api/nft_api";
+import { ExchangeAPI } from "../../../api/exchange_api";
+import { NFTAPI, NFTType } from "../../../api/nft_api";
 import Web3 from "web3";
-import * as sign_tools from "../../api/sign/sign_tools";
+import * as sign_tools from "../../../api/sign/sign_tools";
 import {
   GetNextStorageIdRequest,
   GetNFTOffchainFeeAmtRequest,
   GetUserApiKeyRequest,
   OffchainNFTFeeReqType,
   OriginDeployNFTRequestV3,
-} from "../../defs";
-import { dumpError400 } from "../../utils";
-import { BaseAPI } from "../../api/base_api";
+} from "../../../defs";
+import { dumpError400 } from "../../../utils";
+import { BaseAPI } from "../../../api/base_api";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 const { exec } = require("child_process");
 
@@ -43,7 +43,7 @@ describe("nft test", function () {
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
-        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddress,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         tokenId: nftId,
         nftType: NFTType.ERC1155,
@@ -69,7 +69,7 @@ describe("nft test", function () {
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
-        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddress,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         tokenId: nftId,
         nftType: NFTType.ERC1155,
@@ -94,7 +94,7 @@ describe("nft test", function () {
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
-        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddr,
+        depositAddress: LOOPRING_EXPORTED_ACCOUNT.depositAddress,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         tokenId: nftId,
         nftType: NFTType.ERC1155,
@@ -120,7 +120,7 @@ describe("nft test", function () {
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
-        exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
+        exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         nftType: NFTType.ERC1155,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
@@ -147,7 +147,7 @@ describe("nft test", function () {
   //     const response = await LoopringAPI.nftAPI.depositNFT({
   //       web3,
   //       from: LOOPRING_EXPORTED_ACCOUNT.address,
-  //       exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
+  //       exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
   //       nftType: NFTType.ERC721,
   //       tokenAddress: '// TODO:',
   //       nftId:  '// TODO:',
@@ -170,7 +170,7 @@ describe("nft test", function () {
       const response = await LoopringAPI.nftAPI.isApprovedForAll({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
-        exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddr,
+        exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         nftType: NFTType.ERC1155,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
       });

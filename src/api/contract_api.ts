@@ -9,9 +9,7 @@ import * as fm from "../utils/formatter";
 
 import Contracts from "./ethereum/contracts/Contracts";
 
-import Common from "@ethereumjs/common";
-
-import { myLog } from "../utils/log_tools";
+import { addHexPrefix, toHex, toNumber } from "../utils/formatter";
 
 export enum ERC20Method {
   Approve = "approve",
@@ -35,61 +33,27 @@ function checkWeb3(web3: any) {
  * @param hash
  * @returns {Promise.<*>}
  */
-export async function sign(web3: Web3, account: string, hash: string) {
+export async function sign(
+  web3: any,
+  account: string,
+  pwd: string,
+  hash: string
+) {
   checkWeb3(web3);
   return new Promise((resolve) => {
-    try {
-      web3.eth.sign(hash, account, function (err: any, result: any) {
-        if (!err) {
-          const r = result.slice(0, 66);
-          const s = fm.addHexPrefix(result.slice(66, 130));
-          let v = fm.toNumber(fm.addHexPrefix(result.slice(130, 132)));
-          if (v === 0 || v === 1) v = v + 27; // 修复ledger的签名
-          resolve({ result: { r, s, v } });
-        } else {
-          const errorMsg = err.message.substring(
-            0,
-            err.message.indexOf(" at ")
-          );
-          resolve({ error: { message: errorMsg } });
-        }
-      });
-    } catch (err) {
-      resolve({ error: { message: err as any } });
-    }
+    web3.eth.sign(hash, account, pwd, function (err: any, result: any) {
+      if (!err) {
+        const r = result.slice(0, 66);
+        const s = addHexPrefix(result.slice(66, 130));
+        let v = toNumber(addHexPrefix(result.slice(130, 132)));
+        if (v === 0 || v === 1) v = v + 27; // 修复ledger的签名
+        resolve({ result: { r, s, v } });
+      } else {
+        const errorMsg = err.message.substring(0, err.message.indexOf(" at "));
+        resolve({ error: { message: errorMsg } });
+      }
+    });
   });
-}
-
-/**
- * @description Sends ethereum tx through MetaMask
- * @param web3
- * @param tx
- * @returns {*}
- */
-export async function sendTransaction(web3: any, tx: any) {
-  const response: any = await new Promise((resolve) => {
-    try {
-      web3.eth.sendTransaction(
-        tx,
-        function (err: any, transactionHash: string) {
-          if (!err) {
-            resolve({ result: transactionHash });
-          } else {
-            myLog(err);
-            resolve({ error: err });
-          }
-        }
-      );
-    } catch (err) {
-      resolve({ error: err as any });
-    }
-  });
-
-  if (response["result"]) {
-    return response;
-  } else {
-    throw response.error;
-  }
 }
 
 /**
@@ -101,25 +65,15 @@ export async function sendTransaction(web3: any, tx: any) {
  */
 export async function signEthereumTx(
   web3: any,
-  account: any,
+  account: string,
   rawTx: any,
   chainId: ChainId
 ) {
-  const common = new Common({ chain: chainId });
-
-  // console.log('rawTx:', rawTx)
-  const ethTx = Transaction.fromTxData(rawTx, { common });
-
-  // console.log('ethTx:', ethTx)
-
-  const hash = fm.toHex(ethTx.hash());
-
-  let error: any = undefined;
-
+  const ethTx = Transaction.fromSerializedTx(rawTx);
+  const hash = toHex(ethTx.hash());
   try {
-    const response: any = await sign(web3, account, hash);
-
-    if (!response["error"]) {
+    const response: any = await sign(web3, account, "", hash);
+    if (!response.error) {
       const signature = response["result"];
       signature.v += chainId * 2 + 8;
 
@@ -131,13 +85,12 @@ export async function signEthereumTx(
 
       return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx };
     } else {
-      error = response["error"]["message"];
+      return { error: response.error };
+      // throw new Error(response["error"]["message"]);
     }
   } catch (err) {
-    error = err;
+    return { error: err };
   }
-
-  return { error };
 }
 
 export async function getNonce(web3: Web3, addr: string) {
@@ -378,4 +331,33 @@ export async function forceWithdrawal(
   );
 }
 
-export { isContract } from "./base_api";
+/**
+ * @description Sends ethereum tx through MetaMask
+ * @param web3
+ * @param tx
+ * @returns {*}
+ */
+export async function sendTransaction(web3: any, tx: any) {
+  delete tx.gasPrice;
+  // delete tx.gas;
+  const response: any = await new Promise((resolve) => {
+    web3.eth.sendTransaction(tx, function (err: any, transactionHash: string) {
+      if (!err) {
+        resolve({ result: transactionHash });
+      } else {
+        resolve({ error: { message: err.message } });
+      }
+    });
+  });
+
+  if (response["result"]) {
+    return response;
+  } else {
+    throw new Error(response["error"]["message"]);
+  }
+}
+
+export async function isContract(web3: any, address: string) {
+  const code = await web3.eth.getCode(address);
+  return code && code.length > 2;
+}

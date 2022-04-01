@@ -1,11 +1,9 @@
 # Deposit
 
-- [Step1: getUser Layer1 ETH balance](#step1️⃣-getuser-layer1-eth-balance)
-  - [ETH](#1-let-start-from-eth)
-  - [ERC20](#2-erc20-token-such-as-lrc)
+- [Step1: getUserLayer2balance](#step1-getuserlayer2balance)
+  - [ERC20](#1erc20)
   - [NFT](#3-nft)
 - [Step2: Allow and Approve Loopring to get transaction those Token access](#step2️⃣-allow-and-approve-loopring-to-get-transaction-those-token-access)
-  - [ETH](#1-eth-skip-this-step)
   - [ERC20](#2-erc20-token-such-as-lrc-1)
   - [NFT](#3-nft-1)
 - [Step3: Deposit](#step3️⃣-deposit)
@@ -23,16 +21,15 @@ MockData & Initialize APIs [JS SDK Introduction](./INTRO.md)
 
 ***
 
-### Step1️⃣: getUser Layer1 ETH balance
+### Step1️⃣: getUserLayer2balance 
 
-#### 1. Let start from ETH
-
+### 1.ERC20
 ```ts
-const {ethBalance} = await LoopringAPI.exchangeAPI.getEthBalances({owner: LOOPRING_EXPORTED_ACCOUNT.address});
+const {userBalances} = await LoopringAPI.userAPI.getUserBalances({owner: LOOPRING_EXPORTED_ACCOUNT.address, apikey});
 ```
 
-SDK: [getEthBalances](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L514)
-API: [/api/v3/eth/balances](https://uat2.loopring.io/api/v3/eth/balances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8)
+SDK: [getUserBalances](https://github.com/Loopring/loopring_sdk/tree/master/src/api/user_api.ts#L408)
+API: [getUserLayer2balance](https://uat2.loopring.io/api/v3/user/balances?accountId=12454)
 
 #### 2. ERC20 Token (Such as LRC)
 
@@ -69,7 +66,6 @@ const response = await LoopringAPI.nftAPI.getNFTBalance({
 ```  
 
 SDK: [getNFTBalance](https://github.com/Loopring/loopring_sdk/tree/master/src/api/nft_api.ts#L100)
-
 ***
 
 ### Step2️⃣: Allow and Approve Loopring to get transaction those Token access

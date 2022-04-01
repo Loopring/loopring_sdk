@@ -24,8 +24,6 @@ import {
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
 import BN from "bn.js";
-import { DelegateAPI } from "./delegate_api";
-import { GlobalAPI } from "./global_api";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
