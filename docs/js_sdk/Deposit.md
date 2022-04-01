@@ -1,17 +1,16 @@
 # Deposit
 
-- [Step1: getUser Layer1 ETH balance](#step1️⃣-getuser-layer1-eth-balance)
-  - [ETH](#1-let-start-from-eth)
-  - [ERC20](#2-erc20-token-such-as-lrc)
-  - [NFT](#3-nft)
-- [Step2: Allow and Approve Loopring to get transaction those Token access](#step2️⃣-allow-and-approve-loopring-to-get-transaction-those-token-access)
-  - [ETH](#1-eth-skip-this-step)
-  - [ERC20](#2-erc20-token-such-as-lrc-1)
-  - [NFT](#3-nft-1)
-- [Step3: Deposit](#step3️⃣-deposit)
-  - [ETH](#1-eth-same-as-erc20-only-can-not-deposit-all-for-gas-cost)
-  - [ERC20](#2-erc20-token-such-as-lrc-2)
-  - [NFT](#3-nft-2)
+- [ETH](#1-let-start-from-eth)
+  - [step1: get eth balance](#step1-getuser-layer1-eth-balance) 
+  - [step2: deposit](#step2-deposit) 
+- [ERC20](#2-erc20-token-such-as-lrc)
+  - [step1: get eth & token balance](#step1-getuser-layer1-eth--tokenbalances-balance)
+  - [step2: check Approval](#step2-allow-and-approve-loopring-to-get-transaction-those-token-access)
+  - [step3: deposit](#step3-deposit)
+- [NFT](#3-nft)
+  - [step1: get eth & NFT balance](#step1-getuser-layer1-eth--nft-balance)
+  - [step2: check Approval](#step2-allow-and-approve-loopring-to-get-transaction-for-this-nft-tokenaddress)
+  - [step3: deposit](#step3-deposit)
 - [Additional & Reference](#additional--reference)
   - [Approve Simple Signature Demo](#approve-simple-signature-demo)
   - [Deposit Signature  Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
@@ -20,21 +19,47 @@
 
 MockData & Initialize APIs [JS SDK Introduction](./INTRO.md)
 
+SDK: [Deposit & DepositNFT](https://github.com/Loopring/loopring_sdk/tree/master/src/tests/demo/deposit)
 
 ***
 
-### Step1️⃣: getUser Layer1 ETH balance
+## 1. Let start from ETH
 
-#### 1. Let start from ETH
+#### Step1️⃣: getUser Layer1 ETH balance
 
 ```ts
 const {ethBalance} = await LoopringAPI.exchangeAPI.getEthBalances({owner: LOOPRING_EXPORTED_ACCOUNT.address});
 ```
 
-SDK: [getEthBalances](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L514)
-API: [/api/v3/eth/balances](https://uat2.loopring.io/api/v3/eth/balances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8)
+SDK: [Layer1_ETH_Balance](https://github.com/Loopring/loopring_sdk/blob/master/src/tests/demo/account/account.test.ts)
 
-#### 2. ERC20 Token (Such as LRC)
+#### Step2️⃣: Deposit
+
+```ts
+const nonce = await LoopringAPI.contractAPI.getNonce(
+  web3,
+  LOOPRING_EXPORTED_ACCOUNT.address
+);
+const response = await LoopringAPI.contractAPI.deposit(
+  web3,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  LOOPRING_EXPORTED_ACCOUNT.exchangeAddress, // {exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddress
+  TOKEN_INFO.tokenMap.ETH,
+  0.1, // tradeValue
+  0, // fee 0
+  gasPrice,
+  gasLimit,
+  ChainId.GOERLI,
+  nonce,
+  true
+);
+```
+
+***
+
+## 2. ERC20 Token (Such as LRC)
+
+#### Step1️⃣: getUser Layer1 ETH & tokenBalances balance
 
 ```ts
 const {ethBalance} = await LoopringAPI.exchangeAPI.getEthBalances({owner: LOOPRING_EXPORTED_ACCOUNT.address});
@@ -46,50 +71,26 @@ const {tokenBalances} = await LoopringAPI.exchangeAPI.getTokenBalances({
 const tokenBalance = tokenBalances.get(tokenArr[0]);
 ```
 
-SDK: [getTokenBalances](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L543)
-API: [/api/v3/eth/tokenBalances](https://uat2.loopring.io/api/v3/eth/tokenBalances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8&token=0xfc28028d9b1f6966fe74710653232972f50673be%2C0x0000000000000000000000000000000000000000%2C0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a%2C0xcd2c81b322a5b530b5fa3432e57da6803b0317f7%2C0x47525e6a5def04c9a56706e93f54cc70c2e8f165)
+SDK: [Layer1_ERC20_Balance](https://github.com/Loopring/loopring_sdk/blob/master/src/tests/demo/account/account.test.ts)
+[getMixMarkets](https://github.com/Loopring/loopring_sdk/blob/master/src/tests/demo/exchange/exchange.test.ts)
 
-SDK:[getMixMarkets](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L409)
-API:[/api/v3/mix/markets](https://api.loopring.network/api/v3/mix/markets)
-
-#### 3. NFT
-
-- Prepare Token Address `nftTokenAddress`
-- NFT ID `nftId`
-- Know NFT Type `ERC721` or `ERC1155`
-
-```ts
-const response = await LoopringAPI.nftAPI.getNFTBalance({
-  web3,
-  account: LOOPRING_EXPORTED_ACCOUNT.address,
-  tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-  nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
-  nftType: NFTType.ERC1155,
-});
-```  
-
-SDK: [getNFTBalance](https://github.com/Loopring/loopring_sdk/tree/master/src/api/nft_api.ts#L100)
-
-***
-
-### Step2️⃣: Allow and Approve Loopring to get transaction those Token access
-
-#### 1. ETH Skip this step
-
-#### 2. ERC20 Token (Such as LRC )
+#### Step2️⃣: Allow and Approve Loopring to get transaction those Token access
 
     - check Allowances
-    - getNonce web3.eth.getTransactionCount
-    - contract.approveMax
+    - nonce web3.eth.getTransactionCount
+    - LoopringAPI.contractAPI.approveMax
 
 ```ts
 const tokenAddress = TOKEN_INFO.tokenMap.LRC.address;
 const {tokenAllowances} = await LoopringAPI.exchangeAPI.getAllowances({
   owner: LOOPRING_EXPORTED_ACCOUNT.address,
   token: [tokenAddress],
-})
+}
 if (!tokenAllowances.has(tokenAddress) || tokenAllowances.get(tokenAddress) < LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue) {
-  const nonce = await web3.eth.getTransactionCount(LOOPRING_EXPORTED_ACCOUNT.address);
+  const nonce = await LoopringAPI.contractAPI.getNonce(
+    web3,
+    LOOPRING_EXPORTED_ACCOUNT.address
+  );
   const response = await LoopringAPI.contractAPI.approveMax(
     web3,
     LOOPRING_EXPORTED_ACCOUNT.address,
@@ -104,32 +105,72 @@ if (!tokenAllowances.has(tokenAddress) || tokenAllowances.get(tokenAddress) < LO
 }
 ```
 
-SDK:[getAllowances](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L583)
-API:[/api/v3/eth/allowances](https://uat2.loopring.io/api/v3/eth/allowances?owner=0xfF7d59D9316EBA168837E3eF924BCDFd64b237D8&token=0xfc28028d9b1f6966fe74710653232972f50673be)    
-SDK:[getExchangeInfo](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L624)
-API:[/api/v3/exchange/info](https://uat2.loopring.io/api/v3/exchange/info)   
-SDK:[getTokens](https://github.com/Loopring/loopring_sdk/tree/master/src/api/exchange_api.ts#L416)
-API:[/apiv3/exchange/tokens](https://uat2.loopring.io/api/v3/exchange/tokens)   
-SDK:[approveMax](https://github.com/Loopring/loopring_sdk/tree/master/src/api/contract_api.ts#L271)
+SDK: [getAllowances](https://github.com/Loopring/loopring_sdk/blob/master/src/tests/demo/account/account.test.ts)
 
-[Approve Signature Demo](#approve-simple-signature-demo)
+#### Step3️⃣️: Deposit
 
-#### 3. NFT
+```ts
+const nonce = await LoopringAPI.contractAPI.getNonce(
+  web3,
+  LOOPRING_EXPORTED_ACCOUNT.address
+);
+const response = await LoopringAPI.contractAPI.deposit(
+  web3,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  LOOPRING_EXPORTED_ACCOUNT.exchangeAddress, // {exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddress
+  TOKEN_INFO.tokenMap.LRC,
+  10, // tradeValue
+  0, // fee 0
+  gasPrice,
+  gasLimit,
+  ChainId.GOERLI,
+  nonce,
+  true
+);
+```
 
-- check nft isApprovedForAll
-- getNonce web3.eth.getTransactionCount
-- contract.approveNFT (ALL) by nftTokenAddress
+***
+
+## 3. NFT
+
+    - Prepare Token Address `nftTokenAddress`
+    - NFT ID `nftId`
+    - Know NFT Type `ERC721` or `ERC1155`
+
+#### Step1️⃣: getUser Layer1 ETH & NFT balance
+
+```ts
+const {ethBalance} = await LoopringAPI.exchangeAPI.getEthBalances({owner: LOOPRING_EXPORTED_ACCOUNT.address});
+const response = await LoopringAPI.nftAPI.getNFTBalance({
+  web3,
+  account: LOOPRING_EXPORTED_ACCOUNT.address,
+  tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
+  nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
+  nftType: sdk.NFTType.ERC1155,
+});
+```
+
+SDK: [Layer1_getNFTBalance](https://github.com/Loopring/loopring_sdk/blob/master/src/tests/demo/account/account.test.ts)
+
+#### Step2️⃣: Allow and Approve Loopring to get transaction for this NFT TokenAddress
+
+    - check nft isApprovedForAll
+    - nonce web3.eth.getTransactionCount
+    - contract.approveNFT (ALL) by nftTokenAddress
 
  ```ts
 const isApproved = await LoopringAPI.nftAPI.isApprovedForAll({
   web3,
   from: LOOPRING_EXPORTED_ACCOUNT.address,
-  exchangeAddress: exchangeAddr, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
+  exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddress
   nftType: NFTType.ERC1155,
   tokenAddress: nftTokenAddress,
 });
 if (!isApproved) {
-  const nonce = await web3.eth.getTransactionCount(LOOPRING_EXPORTED_ACCOUNT.address);
+  const nonce = await LoopringAPI.contractAPI.getNonce(
+    web3,
+    LOOPRING_EXPORTED_ACCOUNT.address
+  );
   const response = await LoopringAPI.nftAPI.approveNFT({
     web3,
     from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -148,68 +189,33 @@ if (!isApproved) {
 
  ```
 
-SDK:[isApprovedForAll](https://github.com/Loopring/loopring_sdk/tree/master/src/api/nft_api.ts#L312)    
-SDK:[approveNFT](https://github.com/Loopring/loopring_sdk/tree/master/src/api/nft_api.ts#L235)
-
-[Approve Signature Demo](#approve-simple-signature-demo)
-
-***
-
-### Step3️⃣: Deposit
-
-#### 1. ETH  (Same as ERC20, only can not deposit all for Gas cost)
-
-#### 2. ERC20 Token (Such as LRC )
+#### Step3️⃣: Deposit
 
 ```ts
-const nonce = await web3.eth.getTransactionCount(LOOPRING_EXPORTED_ACCOUNT.address);
-const response = await LoopringAPI.contractAPI.deposit(
+const nonce = await LoopringAPI.contractAPI.getNonce(
   web3,
-  LOOPRING_EXPORTED_ACCOUNT.address,
-  LOOPRING_EXPORTED_ACCOUNT.exchangeAddr, // {exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
-  TOKEN_INFO.tokenMap.LRC,
-  10, // tradeValue
-  0, // fee 0
-  gasPrice,
-  gasLimit,
-  ChainId.GOERLI,
-  nonce,
-  true
+  LOOPRING_EXPORTED_ACCOUNT.address
 );
-```
 
-SDK:[deposit](https://github.com/Loopring/loopring_sdk/tree/master/src/api/contract_api.ts#L300)
-
-[Deposit Signature Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
-
-#### 3. NFT
-
-```ts
-const nonce = await web3.eth.getTransactionCount(LOOPRING_EXPORTED_ACCOUNT.address);
 const response = await LoopringAPI.nftAPI.depositNFT({
-    web3,
-    from: LOOPRING_EXPORTED_ACCOUNT.address,
-    exchangeAddress::exchangeAddr, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.exchangeAddr
-    nftType: NFTType.ERC1155,
-    tokenAddress: nftTokenAddress,
-    amount: 1,
-    gasPrice: LOOPRING_EXPORTED_ACCOUNT.gasPrice,
-    gasLimit: LOOPRING_EXPORTED_ACCOUNT.gasLimit,
-    chainId: ChainId.GOERLI,
-    nonce,
-    sendByMetaMask: true
-  }
-);
+  web3,
+  from: LOOPRING_EXPORTED_ACCOUNT.address,
+  exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+  nftType: sdk.NFTType.ERC1155,
+  tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
+  nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
+  amount: 1,
+  gasPrice: LOOPRING_EXPORTED_ACCOUNT.gasPrice,
+  gasLimit: LOOPRING_EXPORTED_ACCOUNT.gasLimit,
+  chainId: sdk.ChainId.GOERLI,
+  nonce,
+  sendByMetaMask: true,
+});
 ```
-
-SDK:[depositNFT](https://github.com/Loopring/loopring_sdk/tree/master/src/api/nft_api.ts#L354)
-
-[Deposit Signature Demo](#deposit-signature-demo-fee-is-pay-by-eth-only-current-fee-is-0)
-
 
 ***
 
-### Additional & Reference
+## Additional & Reference
 
 #### Approve Simple Signature Demo
 
@@ -261,7 +267,7 @@ web3.eth.sendTransaction({
 - `fee` is pay by ETH only  (current fee is 0)
 
 ```ts
-  const tokenAddress = "0x?????????";
+const tokenAddress = "0x?????????";
 const tokenSymbol = "LRC";
 const fee = 0;
 /* tokenSymbol is ETH, sendTransaction value should be `amount + fee` (current fee is 0)
@@ -287,7 +293,7 @@ const data = genExchangeData(ERC20Method.Deposit, {
 // });
 web3.eth.sendTransaction({
   from: LOOPRING_EXPORTED_ACCOUNT.address,
-  to: exchangeAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
+  to: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress, //{exchangeInfo} = getExchangeInfo()  exchangeInfo.depositAddress
   value,
   data,
   chainId,
@@ -305,7 +311,7 @@ web3.eth.sendTransaction({
 return await sendRawTx(
   web3,
   from,
-  exchangeAddress,
+  LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
   valueC.toFixed(),
   data,
   chainId,

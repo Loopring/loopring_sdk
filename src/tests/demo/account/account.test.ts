@@ -49,6 +49,24 @@ describe("AccountDemo", function () {
   });
 
   it(
+    "getAllowances",
+    async () => {
+      const { tokenAllowances } = await LoopringAPI.exchangeAPI.getAllowances({
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+        token: [
+          TOKEN_INFO.tokenMap.LRC.address,
+          TOKEN_INFO.tokenMap.DAI.address,
+        ],
+      });
+      console.log(
+        "getAllowances:",
+        tokenAllowances.get(TOKEN_INFO.tokenMap.LRC.address),
+        tokenAllowances.get(TOKEN_INFO.tokenMap.DAI.address)
+      );
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
     "getUserApiKey",
     async () => {
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
@@ -64,7 +82,7 @@ describe("AccountDemo", function () {
       );
       console.log("apiKey:", apiKey);
     },
-    DEFAULT_TIMEOUT * 10
+    DEFAULT_TIMEOUT
   );
 
   it(
