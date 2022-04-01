@@ -5,7 +5,7 @@ import {
   TOKEN_INFO,
   web3,
   CUSTOMER_KEY_SEED,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 /*

@@ -1,11 +1,8 @@
 import * as sdk from "../../../index";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "../../data";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
 import { ChainId } from "../../../index";
 
 describe("WsAPI test", function () {
-  beforeEach(() => {
-    LoopringAPI.InitApi(ChainId.GOERLI);
-  });
   it(
     "getWsKey",
     async () => {

@@ -4,7 +4,7 @@ import {
   LoopringAPI,
   web3,
   TOKEN_INFO,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 describe("contract test", function () {

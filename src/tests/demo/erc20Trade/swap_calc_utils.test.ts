@@ -14,7 +14,7 @@ import { dumpError400 } from "../../../utils/network_tools";
 
 import { getOutputAmount } from "../../../utils/swap_calc_utils";
 import { getExistedMarket } from "../../../utils";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "../../data";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
 
 const feeBips = "20";
 

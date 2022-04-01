@@ -14,6 +14,36 @@ import * as sdk from "../index";
 import * as ContractAPI from "../api/contract_api";
 import { EIP712TypedData } from "eth-sig-util";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
+/***
+ * LoopringAPIClass
+ */
+// export class LoopringAPIClass {
+//   public static userAPI: UserAPI;
+//   public static exchangeAPI: ExchangeAPI;
+//   public static ammpoolAPI: AmmpoolAPI;
+//   public static walletAPI: WalletAPI;
+//   public static wsAPI: WsAPI;
+//   public static nftAPI: NFTAPI;
+//   public static delegate: DelegateAPI;
+//   public static globalAPI: GlobalAPI;
+//   public static WhitelistedUserAPI: WhitelistedUserAPI;
+//   public static contractAPI: typeof ContractAPI;
+//   public static __chainId__: sdk.ChainId;
+//   public static InitApi = (chainId: sdk.ChainId) => {
+//     LoopringAPI.userAPI = new UserAPI({ chainId });
+//     LoopringAPI.exchangeAPI = new ExchangeAPI({ chainId });
+//     LoopringAPI.globalAPI = new GlobalAPI({ chainId });
+//     LoopringAPI.ammpoolAPI = new AmmpoolAPI({ chainId });
+//     LoopringAPI.walletAPI = new WalletAPI({ chainId });
+//     LoopringAPI.wsAPI = new WsAPI({ chainId });
+//     LoopringAPI.WhitelistedUserAPI = new WhitelistedUserAPI({ chainId });
+//     LoopringAPI.nftAPI = new NFTAPI({ chainId });
+//     LoopringAPI.delegate = new DelegateAPI({ chainId });
+//     LoopringAPI.__chainId__ = chainId;
+//     LoopringAPI.contractAPI = ContractAPI;
+//   };
+// }
+// LoopringAPIClass.InitApi({sdk.ChainId.GOERLI})
 
 export const TOKEN_INFO = {
   addressIndex: {
@@ -305,32 +335,6 @@ const provider2 = new PrivateKeyProvider(
 );
 export const web3 = new Web3(provider);
 export const web3_2 = new Web3(provider2);
-export class LoopringAPIClass {
-  public static userAPI: UserAPI;
-  public static exchangeAPI: ExchangeAPI;
-  public static ammpoolAPI: AmmpoolAPI;
-  public static walletAPI: WalletAPI;
-  public static wsAPI: WsAPI;
-  public static nftAPI: NFTAPI;
-  public static delegate: DelegateAPI;
-  public static globalAPI: GlobalAPI;
-  public static WhitelistedUserAPI: WhitelistedUserAPI;
-  public static contractAPI: typeof ContractAPI;
-  public static __chainId__: sdk.ChainId;
-  public static InitApi = (chainId: sdk.ChainId) => {
-    LoopringAPI.userAPI = new UserAPI({ chainId });
-    LoopringAPI.exchangeAPI = new ExchangeAPI({ chainId });
-    LoopringAPI.globalAPI = new GlobalAPI({ chainId });
-    LoopringAPI.ammpoolAPI = new AmmpoolAPI({ chainId });
-    LoopringAPI.walletAPI = new WalletAPI({ chainId });
-    LoopringAPI.wsAPI = new WsAPI({ chainId });
-    LoopringAPI.WhitelistedUserAPI = new WhitelistedUserAPI({ chainId });
-    LoopringAPI.nftAPI = new NFTAPI({ chainId });
-    LoopringAPI.delegate = new DelegateAPI({ chainId });
-    LoopringAPI.__chainId__ = chainId;
-    LoopringAPI.contractAPI = ContractAPI;
-  };
-}
 
 const chainId = sdk.ChainId.GOERLI;
 export const LoopringAPI = {
@@ -346,6 +350,8 @@ export const LoopringAPI = {
   __chainId__: chainId,
   contractAPI: ContractAPI,
 };
+
+export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
 
 export const testTypedData: EIP712TypedData = {
   types: {
@@ -390,5 +396,3 @@ export async function signatureKeyPairMock(accInfo: sdk.AccountInfo) {
   });
   return eddsaKey;
 }
-
-export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";

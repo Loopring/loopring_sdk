@@ -3,7 +3,7 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   DEFAULT_TIMEOUT,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 describe("WalletApi", function () {

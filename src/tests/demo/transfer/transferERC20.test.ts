@@ -5,7 +5,7 @@ import {
   TOKEN_INFO,
   signatureKeyPairMock,
   web3,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 describe("Transfer test", function () {

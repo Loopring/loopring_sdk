@@ -1,7 +1,7 @@
 import { sleep } from "../utils";
 import { ChainId } from "../defs";
 import { BaseAPI } from "../api/base_api";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "./data";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "./MockData";
 
 describe("utils test", function () {
   it(

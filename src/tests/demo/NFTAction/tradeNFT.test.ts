@@ -5,7 +5,7 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 // prepare: account need minted some NFTAction before test
 describe("NFTAction Trade Test", function () {

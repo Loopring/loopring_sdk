@@ -4,7 +4,7 @@ import {
   signatureKeyPairMock,
   TOKEN_INFO,
   LoopringAPI,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 /*

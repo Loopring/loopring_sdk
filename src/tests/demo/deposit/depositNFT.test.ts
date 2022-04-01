@@ -3,7 +3,7 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   web3,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 describe("nft test", function () {
   it(

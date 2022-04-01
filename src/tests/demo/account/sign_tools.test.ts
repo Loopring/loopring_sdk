@@ -5,7 +5,7 @@ import {
   testTypedData,
   web3,
   signatureKeyPairMock,
-} from "../../data";
+} from "../../MockData";
 import * as sdk from "../../../index";
 
 describe("signature", function () {

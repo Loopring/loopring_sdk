@@ -25,7 +25,7 @@ import {
 
 import * as fm from "../utils/formatter";
 import { BigNumber } from "bignumber.js";
-import { LOOPRING_EXPORTED_ACCOUNT } from "./data";
+import { LOOPRING_EXPORTED_ACCOUNT } from "./MockData";
 
 const NUMBER = 40244024;
 const BUFFER = Buffer.from("40244024", "utf8");
