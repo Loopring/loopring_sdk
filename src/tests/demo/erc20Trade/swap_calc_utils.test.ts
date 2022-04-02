@@ -60,6 +60,45 @@ const initAll = async (
   await init(chainId, _base, _quote);
   // return
 };
+submitOrder;
+cancelOrder;
+getOrderDetails;
+cancelMultiOrdersByHash;
+// cancelMultiOrdersByCreditOrderId
+
+getUserRegTxs;
+getUserPwdResetTxs;
+getUserBalances;
+getUserDepositHistory;
+getUserTransferList;
+getUserOnchainWithdrawalHistory;
+
+getNFTOffchainFeeAmt;
+getOffchainFeeAmt;
+
+// getUserFeeRate
+// getUserOrderFeeRate
+// getMinimumTokenAmt
+
+// submitOffchainWithdraw
+// submitInternalTransfer
+// submitDeployNFT
+// submitNFTInTransfer
+// submitNFTWithdraw
+// submitNFTMint
+// submitNFTValidateOrder
+// submitNFTTrade
+// getUserNFTDepositHistory
+// getUserNFTWithdrawalHistory
+// getUserNFTTransferHistory
+// getUserNFTMintHistory
+
+// updateAccount
+// SetReferrer
+// getUserNFTBalances
+// getUserVIPAssets
+// getUserVIPInfo
+
 //
 // const checkResult = (
 //   takerRate = "10",
