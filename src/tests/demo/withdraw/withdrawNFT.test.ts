@@ -57,7 +57,7 @@ describe("Withdraw NFTAction test", function () {
             LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress.toLowerCase() &&
           item.nftId &&
           web3.utils.hexToNumberString(item.nftId) ===
-            web3.utils.hexToNumberString(LOOPRING_EXPORTED_ACCOUNT.nftTokenId)
+            LOOPRING_EXPORTED_ACCOUNT.nftTokenId
       );
 
       // step 6. fee
