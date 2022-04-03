@@ -77,8 +77,7 @@ describe("amm_calc", function () {
 
       console.log("---fees:", fees);
 
-      const { tokenSymbolMap, tokenIdIndex } =
-        await LoopringAPI.exchangeAPI.getTokens();
+      const { tokensMap, idIndex } = await LoopringAPI.exchangeAPI.getTokens();
 
       const { request: res } = sdk.makeJoinAmmPoolRequest(
         "100",
@@ -87,8 +86,8 @@ describe("amm_calc", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         fees,
         response.ammPoolSnapshot as sdk.AmmPoolSnapshot,
-        tokenSymbolMap,
-        tokenIdIndex,
+        tokensMap,
+        idIndex,
         0,
         0
       );
@@ -134,8 +133,7 @@ describe("amm_calc", function () {
 
       console.log("---fees:", fees);
 
-      const { tokenSymbolMap, tokenIdIndex } =
-        await LoopringAPI.exchangeAPI.getTokens();
+      const { tokensMap, idIndex } = await LoopringAPI.exchangeAPI.getTokens();
 
       const { request: res } = sdk.makeExitAmmPoolRequest2(
         "100",
@@ -143,8 +141,8 @@ describe("amm_calc", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         fees,
         response.ammPoolSnapshot as sdk.AmmPoolSnapshot,
-        tokenSymbolMap,
-        tokenIdIndex,
+        tokensMap,
+        idIndex,
         0
       );
 
@@ -189,8 +187,7 @@ describe("amm_calc", function () {
 
       console.log("---fees:", fees);
 
-      const { tokenSymbolMap, tokenIdIndex } =
-        await LoopringAPI.exchangeAPI.getTokens();
+      const { tokensMap, idIndex } = await LoopringAPI.exchangeAPI.getTokens();
 
       const { request: res } = sdk.makeExitAmmPoolRequest(
         "100",
@@ -199,8 +196,8 @@ describe("amm_calc", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         fees,
         response.ammPoolSnapshot as sdk.AmmPoolSnapshot,
-        tokenSymbolMap,
-        tokenIdIndex,
+        tokensMap,
+        idIndex,
         0
       );
 

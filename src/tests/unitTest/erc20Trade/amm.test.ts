@@ -460,7 +460,7 @@ describe("AmmpoolAPI test", function () {
   //         apiKey
   //       );
   //
-  //       const { tokenSymbolMap, tokenIdIndex } =
+  //       const { tokensMap, idIndex, } =
   //         await LoopringAPI.exchangeAPI.getTokens();
   //
   //       const { request: req3 } = makeExitAmmPoolRequest(
@@ -470,8 +470,7 @@ describe("AmmpoolAPI test", function () {
   //         LOOPRING_EXPORTED_ACCOUNT.address,
   //         fees,
   //         ammPoolSnapshot as AmmPoolSnapshot,
-  //         tokenSymbolMap,
-  //         tokenIdIndex,
+  //         tokensMap, idIndex,
   //         storageId.offchainId
   //       );
   //
