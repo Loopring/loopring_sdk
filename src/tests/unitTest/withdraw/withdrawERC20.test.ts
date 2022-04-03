@@ -51,7 +51,7 @@ describe("Withdraw NFTAction test", function () {
   );
 
   it(
-    "submitNFTWithdraw",
+    "submitWithdraw",
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress

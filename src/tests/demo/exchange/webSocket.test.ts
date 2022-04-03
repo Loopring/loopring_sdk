@@ -1,7 +1,7 @@
 import * as sdk from "../../../index";
 import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
 
-describe("WsAPI test", function () {
+describe("websocket", function () {
   it(
     "getWsKey",
     async () => {

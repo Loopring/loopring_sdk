@@ -9,7 +9,7 @@ import {
 import * as sdk from "../../../index";
 import { DEPLOYMENT_STATUS } from "../../../index";
 
-describe("Withdraw NFTAction test", function () {
+describe("WithdrawNFT", function () {
   it(
     "submitNFTWithdraw",
     async () => {

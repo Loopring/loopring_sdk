@@ -8,9 +8,9 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 
-describe("Withdraw NFTAction test", function () {
+describe("Withdraw", function () {
   it(
-    "submitNFTWithdraw",
+    "submitWithdraw",
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress

@@ -11,7 +11,7 @@ import * as sdk from "../../../index";
  * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress = exchangeInfo.exchangeAddress
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
-describe("FeeDemo", function () {
+describe("Fee", function () {
   it(
     "fee:updateAccount",
     async () => {

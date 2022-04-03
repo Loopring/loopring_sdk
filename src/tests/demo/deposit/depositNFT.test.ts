@@ -5,7 +5,7 @@ import {
   web3,
 } from "../../MockData";
 import * as sdk from "../../../index";
-describe("nft test", function () {
+describe("depositNFT", function () {
   it(
     "deposit NFTAction ERC1155",
     async () => {

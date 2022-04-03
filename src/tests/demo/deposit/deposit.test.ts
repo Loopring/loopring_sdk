@@ -7,7 +7,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 
-describe("contract test", function () {
+describe("deposit", function () {
   it(
     "approveMax_LRC",
     async () => {

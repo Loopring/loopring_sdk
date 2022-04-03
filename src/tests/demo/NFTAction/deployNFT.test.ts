@@ -7,7 +7,7 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
-describe("Mint test", function () {
+describe("deployNFT", function () {
   it(
     "submitDeployNFT",
     async () => {

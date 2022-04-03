@@ -12,7 +12,7 @@ import * as sdk from "../../../index";
  * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
-describe("AccountDemo", function () {
+describe("Account", function () {
   it(
     "getAccount",
     async () => {

@@ -15,7 +15,7 @@ import {
   TokenRelatedInfo,
 } from "../../../index";
 import { concatSig } from "eth-sig-util";
-describe("ExchangeAPI test", function () {
+describe("exchangeAPI", function () {
   it(
     "getExchangeInfo",
     async () => {

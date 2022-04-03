@@ -8,7 +8,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 
-describe("Transfer test", function () {
+describe("Transfer", function () {
   it(
     "submitInternalTransfer",
     async () => {

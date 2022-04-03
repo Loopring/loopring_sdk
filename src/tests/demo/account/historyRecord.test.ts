@@ -6,7 +6,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 let apiKey = "";
-describe("historyRecordTest", function () {
+describe("historyRecord", function () {
   beforeEach(async () => {
     // step 1. getAccount
     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({

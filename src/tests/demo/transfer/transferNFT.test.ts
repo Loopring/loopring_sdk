@@ -8,7 +8,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 
-describe("TransferNFTDemo", function () {
+describe("TransferNFT", function () {
   it(
     "submitNFTInTransfer",
     async () => {
