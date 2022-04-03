@@ -46,6 +46,7 @@
     "start": "yarn link; tsdx watch",
     "test": "tsdx test",
     "test_calc": "tsdx test",
+    "demo": "jest test --testPathPattern=src/tests/demo",
     "lint": "eslint . --fix --quiet --ext .ts",
     "prepublishDev": "NODE_ENV=dev tsdx build",
     "prepublishOnly": "NODE_ENV=production tsdx build",
