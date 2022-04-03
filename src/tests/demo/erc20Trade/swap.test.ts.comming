@@ -1,0 +1,200 @@
+import {
+  DEFAULT_TIMEOUT,
+  LOOPRING_EXPORTED_ACCOUNT,
+  LoopringAPI,
+  web3,
+  TOKEN_INFO,
+  signatureKeyPairMock,
+} from "../../MockData";
+import * as sdk from "../../../index";
+const makeMarketReqInHook = (params) => {
+  const { tokenAmtMap, feeBips } = getTokenAmtMap(params);
+
+  // myLog('makeMarketReqInHook tokenAmtMap:', tokenAmtMap, feeBips)
+
+  if (exchangeInfo) {
+    const fullParams: ReqParams = {
+      ...params,
+      exchangeAddress: exchangeInfo.exchangeAddress,
+      accountId: account.accountId,
+      tokenMap,
+      feeBips: feeBips ? feeBips.toString() : DefaultFeeBips,
+      tokenAmtMap: tokenAmtMap,
+    };
+    return makeMarketReq(fullParams);
+  } else {
+    return {
+      sellUserOrderInfo: undefined,
+      buyUserOrderInfo: undefined,
+      minOrderInfo: undefined,
+      calcTradeParams: undefined,
+      marketRequest: undefined,
+    };
+  }
+};
+
+const onChangeMarketEvent = (
+  tradeData: MarketTradeData<IBData<any>>,
+  formType: TradeBaseType
+) => {
+  // myLog(`onChangeMarketEvent tradeData:`, tradeData, 'formType',formType)
+
+  // setMarketTradeData(tradeData)
+
+  let slippage = sdk
+    .toBig(tradeData.slippage ? tradeData.slippage : "0.5")
+    .times(100)
+    .toString();
+
+  let amountBase = tradeData.base.tradeValue;
+  // let amountQuote =
+  //   lastStepAt === TradeBaseType.quote
+  //     ? tradeData.quote.tradeValue
+  //     : undefined;
+
+  let {
+    marketRequest,
+    calcTradeParams,
+    sellUserOrderInfo,
+    buyUserOrderInfo,
+    minOrderInfo,
+  } = makeMarketReqInHook({
+    isBuy: tradeData.type === "buy",
+    base: tradeData.base.belong,
+    quote: tradeData.quote.belong,
+    amountBase,
+    amountQuote,
+    marketArray,
+    marketMap,
+    depth: pageTradePro.depthForCalc,
+    ammPoolSnapshot: pageTradePro.ammPoolSnapshot,
+    slippage,
+  });
+
+  // myLog('depth:',pageTradePro.depth)
+  const minSymbol =
+    tradeData.type === TradeProType.buy
+      ? tradeData.base.belong
+      : tradeData.quote.belong;
+  const priceImpactObj = getPriceImpactInfo(calcTradeParams);
+  updatePageTradePro({
+    market,
+    sellUserOrderInfo,
+    buyUserOrderInfo,
+    minOrderInfo,
+    request: marketRequest as any,
+    calcTradeParams: calcTradeParams,
+    tradeCalcProData: {
+      ...pageTradePro.tradeCalcProData,
+      fee:
+        calcTradeParams && calcTradeParams.maxFeeBips
+          ? calcTradeParams.maxFeeBips.toString()
+          : undefined,
+      minimumReceived:
+        calcTradeParams && calcTradeParams.amountBOutSlip?.minReceivedVal
+          ? getValuePrecisionThousand(
+              calcTradeParams.amountBOutSlip?.minReceivedVal,
+              tokenMap[minSymbol].precision,
+              tokenMap[minSymbol].precision,
+              tokenMap[minSymbol].precision,
+              true,
+              { floor: true }
+            )
+          : undefined,
+      priceImpact: priceImpactObj ? priceImpactObj.value : undefined,
+      priceImpactColor: priceImpactObj?.priceImpactColor,
+    },
+    lastStepAt,
+  });
+
+  setMarketTradeData((state) => {
+    let baseValue = undefined;
+    let quoteValue = undefined;
+    if (calcTradeParams) {
+      baseValue = calcTradeParams.isReverse
+        ? Number(calcTradeParams.buyAmt)
+        : Number(calcTradeParams.sellAmt);
+      quoteValue = calcTradeParams.isReverse
+        ? Number(calcTradeParams.sellAmt)
+        : Number(calcTradeParams.buyAmt);
+    }
+    return {
+      ...state,
+      ...tradeData,
+      // slippage: tradeData.slippage,
+      base: {
+        ...state.base,
+        tradeValue:
+          baseValue &&
+          Number(baseValue.toFixed(tokenMap[state.base.belong].precision)),
+      },
+      quote: {
+        ...state.quote,
+        tradeValue:
+          quoteValue &&
+          Number(quoteValue.toFixed(tokenMap[state.quote.belong].precision)),
+      },
+    };
+  });
+};
+
+describe("swapOrder", function () {
+  it(
+    "USDT_DAI_AtoB",
+    async () => {
+      try {
+        await initAll("100", "USDT", "DAI", true, ChainId.GOERLI);
+        console.log("ammPoolSnapshot:", ammPoolSnapshot);
+        console.log("depth:", depth);
+        checkResult("4", _slipBips, "0");
+      } catch (err) {
+        dumpError400(err as any);
+      }
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "USDT_DAI_BtoA",
+    async () => {
+      try {
+        await initAll("100", "USDT", "DAI", true, ChainId.GOERLI);
+        console.log("ammPoolSnapshot:", ammPoolSnapshot);
+        console.log("depth:", depth);
+        checkResult("4", _slipBips, "0");
+      } catch (err) {
+        dumpError400(err as any);
+      }
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "ETH_USDT_AtoB",
+    async () => {
+      try {
+        await initAll("1", "ETH", "USDT", true);
+
+        checkResult();
+      } catch (err) {
+        dumpError400(err as any);
+      }
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "ETH_USDT_BtoA",
+    async () => {
+      try {
+        await initAll("1", "ETH", "USDT", true);
+
+        checkResult();
+      } catch (err) {
+        dumpError400(err as any);
+      }
+    },
+    DEFAULT_TIMEOUT
+  );
+});
+
+export default {};
