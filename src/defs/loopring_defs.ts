@@ -721,28 +721,31 @@ export interface UpdateUserApiKeyRequest {
 // AMM_EXIT=6,
 // DEPOSIT=7,
 // AMM_JOIN=8,
-export type GetOffchainFeeAmtRequest = {
-  accountId: number;
-  amount?: string;
-} & XOR<
-  {
-    requestType: Omit<
-      OffchainFeeReqType,
-      | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
-      | OffchainFeeReqType.AMM_JOIN
-      | OffchainFeeReqType.AMM_EXIT
-      | OffchainFeeReqType.ORDER
-    >;
-  },
-  {
-    requestType:
-      | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
-      | OffchainFeeReqType.AMM_JOIN
-      | OffchainFeeReqType.AMM_EXIT
-      | OffchainFeeReqType.ORDER;
-    tokenSymbol: string;
-  }
->;
+export type GetOffchainFeeAmtRequest =
+  | ({
+      accountId: number;
+      amount?: string;
+    } & {
+      requestType: Omit<
+        OffchainFeeReqType,
+        | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
+        | OffchainFeeReqType.AMM_JOIN
+        | OffchainFeeReqType.AMM_EXIT
+        | OffchainFeeReqType.ORDER
+      >;
+    })
+  | {
+      requestType:
+        | OffchainFeeReqType.AMM_JOIN
+        | OffchainFeeReqType.AMM_EXIT
+        | OffchainFeeReqType.ORDER;
+      tokenSymbol: string;
+    }
+  | {
+      requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL;
+      tokenSymbol: string;
+      amount: string;
+    };
 
 /**
  * @methodOf OffchainNFTFeeReqType.NFT_MINT

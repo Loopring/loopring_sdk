@@ -171,6 +171,7 @@ describe("Withdraw NFTAction test", function () {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
           tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         apiKey
       );
