@@ -52,11 +52,8 @@ describe("ActiveAccountDemo", function () {
           accountId: accInfo.accountId,
           publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
           maxFee: {
-            tokenId:
-              // @ts-ignore
-              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
-                .tokenId,
-            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           keySeed,
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
@@ -117,11 +114,8 @@ describe("ActiveAccountDemo", function () {
           accountId: accInfo.accountId,
           publicKey: { x: eddsaKey.formatedPx, y: eddsaKey.formatedPy },
           maxFee: {
-            tokenId:
-              // @ts-ignore
-              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
-                .tokenId,
-            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           keySeed,
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,

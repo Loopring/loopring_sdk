@@ -117,7 +117,7 @@ describe("NFTAction Trade Test", function () {
         allOrNone: false,
         fillAmountBOrS: true,
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-        maxFeeBips: 80,
+        maxFeeBips: 100,
       };
 
       takerOrder.eddsaSignature = sdk.get_EddsaSig_NFT_Order(

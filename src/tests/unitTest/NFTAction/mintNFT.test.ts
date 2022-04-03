@@ -73,11 +73,8 @@ describe("Mint test", function () {
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
           storageId: storageId.offchainId ?? 9,
           maxFee: {
-            tokenId:
-              // @ts-ignore
-              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
-                .tokenId,
-            amount: fee.fees[1]?.fee ?? "3260000000000000",
+            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+            amount: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           royaltyPercentage: 5,
           counterFactualNftInfo,

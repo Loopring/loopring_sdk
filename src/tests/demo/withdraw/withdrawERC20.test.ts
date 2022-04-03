@@ -64,11 +64,8 @@ describe("Withdraw NFTAction test", function () {
           fastWithdrawalMode: false,
           hashApproved: "",
           maxFee: {
-            tokenId:
-              // @ts-ignore
-              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
-                .tokenId,
-            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -147,11 +144,8 @@ describe("Withdraw NFTAction test", function () {
           fastWithdrawalMode: true,
           hashApproved: "",
           maxFee: {
-            tokenId:
-              // @ts-ignore
-              TOKEN_INFO.tokenMap[fee.fees[1]?.token?.toString() ?? "LRC"]
-                .tokenId,
-            volume: fee.fees[1]?.fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
