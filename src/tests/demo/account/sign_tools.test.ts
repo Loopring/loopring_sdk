@@ -17,9 +17,6 @@ describe("signature", function () {
       });
       const result = await signatureKeyPairMock(accInfo);
       console.log(result.sk);
-      // expect(
-      //   "0x2f20e6b4534ef967de2e111e63bf7405a4acb11295f42a35230252a2c1ea7fd"
-      // ).toBe(result.sk);
     },
     DEFAULT_TIMEOUT
   );
