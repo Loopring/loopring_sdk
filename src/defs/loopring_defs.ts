@@ -566,13 +566,17 @@ export interface AmmPoolTx {
   updatedAt: number;
 }
 
+export enum AMMtxTypes {
+  JOIN = 0,
+  EXIT = 1,
+}
 export interface GetUserAmmPoolTxsRequest {
   accountId: number;
   start?: number;
   end?: number;
   limit?: number;
   offset?: number;
-  txTypes?: string; // combine of AmmTxType
+  txTypes?: AMMtxTypes; // combine of AmmTxType
   txStatus?: TxStatus;
   ammPoolAddress?: string;
 }
@@ -956,7 +960,8 @@ export interface GetOrdersRequest {
   start?: number;
   end?: number;
   side?: Side[];
-  status?: string;
+  status?: string[];
+  tradeChannels?: string[];
   limit?: number;
   offset?: number;
   orderTypes?: OrderType;
@@ -1246,6 +1251,12 @@ export interface GetProtectorRequest {
   guardian: string;
   protectAddress?: string;
 }
+
+export enum TradesFillTypes {
+  dex = "dex",
+  amm = "amm",
+}
+
 export interface GetUserTradesRequest {
   accountId: number;
   market?: string;
@@ -1253,7 +1264,7 @@ export interface GetUserTradesRequest {
   offset?: number;
   limit?: number;
   fromId?: number;
-  fillTypes?: string;
+  fillTypes?: TradesFillTypes;
 }
 
 export type UserTrade = MarketTradeInfo;

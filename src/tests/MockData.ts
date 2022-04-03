@@ -45,7 +45,75 @@ const PrivateKeyProvider = require("truffle-privatekey-provider");
 // }
 // LoopringAPIClass.InitApi({sdk.ChainId.GOERLI})
 
-export const TOKEN_INFO = {
+export const LOOPRING_EXPORTED_ACCOUNT = {
+  address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
+  privateKey:
+    "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
+  accountId: 12454,
+  address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079",
+  privateKey2:
+    "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263",
+  accountId2: 10488,
+  addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",
+  accountIdCF: 11632,
+  addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd",
+  depositAddress: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
+  exchangeAddress: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
+  whitelistedAddress: "0x35405E1349658BcA12810d0f879Bf6c5d89B512C",
+  whitelistedEddkey:
+    "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33",
+  // const eddkeyWhitelisted =
+  //   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
+  //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
+  chainId: 5,
+  nftTokenAddress: "0x8394cB7e768070217592572582228f62CdDE4FCE",
+  nftTokenId: "32768",
+  nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
+  nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
+  testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
+  tradeLRCValue: 1000000000000000000,
+  tradeETHValue: 0.0001,
+  gasPrice: 19, // for test
+  gasLimit: 200000, // for test
+  validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
+};
+export const DEFAULT_TIMEOUT = 30000;
+
+const provider = new PrivateKeyProvider(
+  LOOPRING_EXPORTED_ACCOUNT.privateKey,
+  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+);
+const provider2 = new PrivateKeyProvider(
+  LOOPRING_EXPORTED_ACCOUNT.privateKey2,
+  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+);
+// const providerWhiteList = new PrivateKeyProvider(
+//   LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey,
+//   "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
+// );
+export const web3 = new Web3(provider);
+export const web3_2 = new Web3(provider2);
+
+const chainId = sdk.ChainId.GOERLI;
+export const LoopringAPI = {
+  userAPI: new UserAPI({ chainId }),
+  exchangeAPI: new ExchangeAPI({ chainId }),
+  globalAPI: new GlobalAPI({ chainId }),
+  ammpoolAPI: new AmmpoolAPI({ chainId }),
+  walletAPI: new WalletAPI({ chainId }),
+  wsAPI: new WsAPI({ chainId }),
+  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
+  nftAPI: new NFTAPI({ chainId }),
+  delegate: new DelegateAPI({ chainId }),
+  __chainId__: chainId,
+  contractAPI: ContractAPI,
+};
+
+export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
+
+// LoopringAPI.exchangeAPI.getTokens()
+// const {markets:marketMap} LoopringAPI.exchangeAPI?.getMixMarkets()
+export let TOKEN_INFO = {
   addressIndex: {
     "0x0000000000000000000000000000000000000000": "ETH",
     "0xfc28028d9b1f6966fe74710653232972f50673be": "LRC",
@@ -289,74 +357,96 @@ export const TOKEN_INFO = {
     "8": "USDC",
     "9": "LP-USDC-ETH",
   },
+  marketMap: {
+    "LRC-ETH": {
+      baseTokenId: 1,
+      enabled: true,
+      market: "LRC-ETH",
+      orderbookAggLevels: 5,
+      precisionForPrice: 6,
+      quoteTokenId: 0,
+      status: 3,
+      isSwapEnabled: true,
+      createdAt: 1617967800000,
+    },
+    "ETH-USDT": {
+      baseTokenId: 0,
+      enabled: true,
+      market: "ETH-USDT",
+      orderbookAggLevels: 3,
+      precisionForPrice: 3,
+      quoteTokenId: 2,
+      status: 3,
+      isSwapEnabled: true,
+      createdAt: 1617972300000,
+    },
+    "DAI-USDT": {
+      baseTokenId: 6,
+      enabled: true,
+      market: "DAI-USDT",
+      orderbookAggLevels: 2,
+      precisionForPrice: 4,
+      quoteTokenId: 2,
+      status: 3,
+      isSwapEnabled: true,
+      createdAt: 0,
+    },
+    "USDC-ETH": {
+      baseTokenId: 8,
+      enabled: true,
+      market: "USDC-ETH",
+      orderbookAggLevels: 3,
+      precisionForPrice: 3,
+      quoteTokenId: 0,
+      status: 3,
+      isSwapEnabled: true,
+      createdAt: 1636974420000,
+    },
+  },
 };
 
-export const LOOPRING_EXPORTED_ACCOUNT = {
-  address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
-  privateKey:
-    "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
-  accountId: 12454,
-  address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079",
-  privateKey2:
-    "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263",
-  accountId2: 10488,
-  addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",
-  accountIdCF: 11632,
-  addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd",
-  depositAddress: "0xb684B265f650a77afd27Ce0D95252a7329B5bD72",
-  exchangeAddress: "0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e",
-  whitelistedAddress: "0x35405E1349658BcA12810d0f879Bf6c5d89B512C",
-  whitelistedEddkey:
-    "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33",
-  // const eddkeyWhitelisted =
-  //   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
-  //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
-  chainId: 5,
-  nftTokenAddress: "0x8394cB7e768070217592572582228f62CdDE4FCE",
-  nftTokenId: "32768",
-  nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
-  nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
-  testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
-  tradeLRCValue: 1000000000000000000,
-  tradeETHValue: 0.0001,
-  gasPrice: 19, // for test
-  gasLimit: 200000, // for test
-  validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
+// const {} = LoopringAPI.ammpoolAPI?.getAmmPoolConf())
+export let AMM_MAP = {
+  "AMM-LRC-ETH": {
+    name: "LRCETH-Pool",
+    market: "AMM-LRC-ETH",
+    address: "0xfEB069407df0e1e4B365C10992F1bc16c078E34b",
+    version: "1.0.0",
+    tokens: { pooled: [1, 0], lp: 4 },
+    feeBips: 20,
+    precisions: { price: 6, amount: 5 },
+    createdAt: "1617967800000",
+    status: 31,
+  },
+  "AMM-ETH-USDT": {
+    name: "AMM-ETH-USDT",
+    market: "AMM-ETH-USDT",
+    address: "0x049a02FA9bc6bd54a2937E67D174cc69a9194f8e",
+    version: "1.0.0",
+    tokens: { pooled: [0, 2], lp: 7 },
+    feeBips: 20,
+    precisions: { price: 3, amount: 3 },
+    createdAt: "1617972300000",
+    status: 31,
+  },
+  "AMM-USDC-ETH": {
+    name: "AMM-USDC-ETH",
+    market: "AMM-USDC-ETH",
+    address: "0xf37cf4CEd77b985708D591AcC6BfD08586Ab3409",
+    version: "1.0.0",
+    tokens: {
+      pooled: [8, 0],
+      lp: 9,
+    },
+    feeBips: 20,
+    precisions: {
+      price: 3,
+      amount: 4,
+    },
+    createdAt: "1636974420000",
+    status: 0,
+  },
 };
-export const DEFAULT_TIMEOUT = 30000;
-
-const provider = new PrivateKeyProvider(
-  LOOPRING_EXPORTED_ACCOUNT.privateKey,
-  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-);
-const provider2 = new PrivateKeyProvider(
-  LOOPRING_EXPORTED_ACCOUNT.privateKey2,
-  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-);
-// const providerWhiteList = new PrivateKeyProvider(
-//   LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey,
-//   "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-// );
-export const web3 = new Web3(provider);
-export const web3_2 = new Web3(provider2);
-
-const chainId = sdk.ChainId.GOERLI;
-export const LoopringAPI = {
-  userAPI: new UserAPI({ chainId }),
-  exchangeAPI: new ExchangeAPI({ chainId }),
-  globalAPI: new GlobalAPI({ chainId }),
-  ammpoolAPI: new AmmpoolAPI({ chainId }),
-  walletAPI: new WalletAPI({ chainId }),
-  wsAPI: new WsAPI({ chainId }),
-  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
-  nftAPI: new NFTAPI({ chainId }),
-  delegate: new DelegateAPI({ chainId }),
-  __chainId__: chainId,
-  contractAPI: ContractAPI,
-};
-
-export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
-
 export const testTypedData: EIP712TypedData = {
   types: {
     EIP712Domain: [

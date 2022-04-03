@@ -7,6 +7,14 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import {
+  LoopringMap,
+  MarketInfo,
+  TokenAddress,
+  TokenInfo,
+  TokenRelatedInfo,
+} from "../../../index";
+import { concatSig } from "eth-sig-util";
 describe("ExchangeAPI test", function () {
   it(
     "getExchangeInfo",
@@ -17,10 +25,79 @@ describe("ExchangeAPI test", function () {
     DEFAULT_TIMEOUT
   );
   it(
+    "getTokens",
+    async () => {
+      const { tokensMap, coinMap, totalCoinMap, idIndex, addressIndex } =
+        await LoopringAPI.exchangeAPI.getTokens<any>();
+      console.log(
+        "tokenMap:",
+        tokensMap,
+        coinMap,
+        totalCoinMap,
+        idIndex,
+        addressIndex
+      );
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "getMixMarkets",
+    async () => {
+      const { markets, pairs, tokenArr, tokenArrStr, marketArr, marketArrStr } =
+        await LoopringAPI.exchangeAPI.getMixMarkets();
+      console.log("markets:", markets);
+      console.log("pairs:", pairs);
+      console.log("tokenArr:", tokenArr);
+      console.log("tokenArrStr:", tokenArrStr);
+      console.log("marketArr", marketArr);
+      console.log("marketArrStr", marketArrStr);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "getAmmPoolConf",
+    async () => {
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolConf();
+      console.log(response.ammpools);
+      console.log(response.pairs);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
     "getAvailableBroker",
     async () => {
       const result = await LoopringAPI.exchangeAPI.getAvailableBroker();
       console.log(result);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
+    "getTokenPrices",
+    async () => {
+      const response = await LoopringAPI.walletAPI.getTokenPrices({
+        token: TOKEN_INFO.tokenMap.LRC.address,
+      });
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "getLatestTokenPrices",
+    async () => {
+      const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "getLatestTokenPrices_cny",
+    async () => {
+      const response = await LoopringAPI.walletAPI.getLatestTokenPrices({
+        currency: sdk.Currency.cny,
+      });
+      console.log(response);
     },
     DEFAULT_TIMEOUT
   );
@@ -170,16 +247,6 @@ describe("ExchangeAPI test", function () {
   );
 
   it(
-    "getTokens",
-    async () => {
-      const response = await LoopringAPI.exchangeAPI.getTokens<any>();
-      console.log(response);
-      console.log(response.raw_data[0]);
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
     "getDepth",
     async () => {
       const response = await LoopringAPI.exchangeAPI.getDepth({
@@ -209,28 +276,7 @@ describe("ExchangeAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
-  it(
-    "getMixMarkets",
-    async () => {
-      const response = await LoopringAPI.exchangeAPI.getMixMarkets();
-      console.log(response);
-      console.log(response.pairs.LRC.tokenList);
 
-      console.log(
-        "hasMarket LRC-ETH:",
-        sdk.hasMarket(response.marketArr, "LRC-ETH")
-      );
-      console.log(
-        "market 1:",
-        sdk.getExistedMarket(response.marketArr, "LRC", "ETH")
-      );
-      console.log(
-        "market 2:",
-        sdk.getExistedMarket(response.marketArr, "ETH", "LRC")
-      );
-    },
-    DEFAULT_TIMEOUT
-  );
   it(
     "getMixDepth",
     async () => {

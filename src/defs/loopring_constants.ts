@@ -14,3 +14,5 @@ export enum HEBAO_META_TYPE {
   remove_guardian = 35,
   unlock_wallet = 37,
 }
+
+export const SoursURL = "https://static.loopring.io/assets/";

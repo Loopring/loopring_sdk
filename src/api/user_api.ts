@@ -165,7 +165,10 @@ export class UserAPI extends BaseAPI {
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_MULTI_ORDERS,
-      queryParams: request,
+      queryParams: {
+        ...request,
+        status: request.status ? request.status.join(",") : "",
+      },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -547,7 +550,6 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserTxs<R>(
     request: loopring_defs.GetUserTxsRequest,
-
     apiKey: string
   ): Promise<{
     raw_data: R;

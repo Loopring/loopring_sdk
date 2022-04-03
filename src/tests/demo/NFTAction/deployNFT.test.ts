@@ -43,19 +43,23 @@ describe("Mint test", function () {
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
-          tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-          requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
+          requestType: sdk.OffchainNFTFeeReqType.NFT_DEPLOY,
           amount: "0",
         },
         apiKey
       );
       console.log(fee);
+
+      // step 6. broker
+      const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker();
+
       // OriginDeployNFTRequestV3WithPatch
       const transfer = {
         exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         payerAddr: LOOPRING_EXPORTED_ACCOUNT.address,
         payerId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
+        payeeAddr: broker,
+        // payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
         storageId: storageId.offchainId,
         token: {
           tokenId:

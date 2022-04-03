@@ -37,6 +37,7 @@ import {
   VipFeeRateInfoMap,
   AccountInfo,
   TokenAddress,
+  SoursURL,
 } from "../defs";
 
 import BigNumber from "bignumber.js";
@@ -409,7 +410,15 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the configurations of all supported markets (trading pairs)
    */
-  public async getMixMarkets() {
+  public async getMixMarkets<R>(): Promise<{
+    markets: LoopringMap<MarketInfo>;
+    pairs: LoopringMap<TokenRelatedInfo>;
+    tokenArr: string[];
+    tokenArrStr: string;
+    marketArr: string[];
+    marketArrStr: string;
+    raw_data: R;
+  }> {
     return await this.getMarkets(LOOPRING_URLs.GET_MIX_MARKETS);
   }
 
@@ -417,18 +426,23 @@ export class ExchangeAPI extends BaseAPI {
    * Returns the configurations of all supported tokens, including Ether.
    */
   public async getTokens<R>(): Promise<{
-    tokenSymbolMap: LoopringMap<TokenInfo>;
-    tokenIdMap: LoopringMap<TokenInfo>;
-    tokenIdIndex: LoopringMap<string>;
-    tokenAddressMap: LoopringMap<TokenInfo>;
-
-    tokenSymbolArr: string[];
-    tokenSymbolArrStr: string;
-    tokenIdArr: string[];
-    tokenIdArrStr: string;
-    tokenAddressArr: string[];
-    tokenAddressArrStr: string;
-
+    tokensMap: LoopringMap<TokenInfo>;
+    coinMap: LoopringMap<{
+      icon?: string;
+      name: string;
+      simpleName: string;
+      description?: string;
+      company: string;
+    }>;
+    totalCoinMap: LoopringMap<{
+      icon?: string;
+      name: string;
+      simpleName: string;
+      description?: string;
+      company: string;
+    }>;
+    idIndex: LoopringMap<string>;
+    addressIndex: LoopringMap<TokenAddress>;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -443,11 +457,23 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const tokenSymbolMap: LoopringMap<TokenInfo> = {};
-    const tokenIdMap: LoopringMap<TokenInfo> = {};
-    const tokenIdIndex: LoopringMap<string> = {};
-    const tokenAddressMap: LoopringMap<TokenInfo> = {};
-
+    const coinMap: LoopringMap<{
+      icon?: string;
+      name: string;
+      simpleName: string;
+      description?: string;
+      company: string;
+    }> = {};
+    const totalCoinMap: LoopringMap<{
+      icon?: string;
+      name: string;
+      simpleName: string;
+      description?: string;
+      company: string;
+    }> = {};
+    const addressIndex: LoopringMap<TokenAddress> = {};
+    const idIndex: LoopringMap<string> = {};
+    const tokensMap: LoopringMap<TokenInfo> = {};
     if (raw_data instanceof Array) {
       raw_data.forEach((item: TokenInfo) => {
         if (item.symbol.startsWith("LP-")) {
@@ -455,28 +481,29 @@ export class ExchangeAPI extends BaseAPI {
         } else {
           item.isLpToken = false;
         }
-        tokenSymbolMap[item.symbol] = item;
-        tokenIdMap[item.tokenId] = item;
-        tokenIdIndex[item.tokenId] = item.symbol;
-        tokenAddressMap[item.address] = item;
+        tokensMap[item.symbol] = item;
+
+        const coinInfo = {
+          icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
+          name: item.symbol,
+          simpleName: item.symbol,
+          description: item.type,
+          company: "",
+        };
+        if (!item.symbol.startsWith("LP-")) {
+          coinMap[item.symbol] = coinInfo;
+        }
+        totalCoinMap[item.symbol] = coinInfo;
+        addressIndex[item.address.toLowerCase()] = item.symbol;
+        idIndex[item.tokenId] = item.symbol;
       });
     }
-
-    const tokenSymbolArr = Reflect.ownKeys(tokenSymbolMap) as string[];
-    const tokenIdArr = Reflect.ownKeys(tokenIdMap) as string[];
-    const tokenAddressArr = Reflect.ownKeys(tokenAddressMap) as string[];
-
     return {
-      tokenSymbolMap,
-      tokenIdMap,
-      tokenIdIndex,
-      tokenAddressMap,
-      tokenSymbolArr,
-      tokenSymbolArrStr: tokenSymbolArr.join(SEP),
-      tokenIdArr,
-      tokenIdArrStr: tokenIdArr.join(SEP),
-      tokenAddressArr,
-      tokenAddressArrStr: tokenAddressArr.join(SEP),
+      tokensMap,
+      coinMap,
+      totalCoinMap,
+      idIndex,
+      addressIndex,
       raw_data,
     };
   }
@@ -720,7 +747,11 @@ export class ExchangeAPI extends BaseAPI {
     };
   }
 
-  public async getMixTicker<R>(request: GetTickerRequest) {
+  public async getMixTicker<R>(request: GetTickerRequest): Promise<{
+    tickMap: LoopringMap<TickerData>;
+    tickList: TickerData[];
+    raw_data: R;
+  }> {
     return await this.getTicker<R>(request, LOOPRING_URLs.GET_MIX_TICKER);
   }
 

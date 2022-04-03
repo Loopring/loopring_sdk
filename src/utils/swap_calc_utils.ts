@@ -2,7 +2,6 @@ import * as fm from "./formatter";
 
 import {
   ABInfo,
-  AmmPoolInfoV3,
   AmmPoolSnapshot,
   DepthData,
   ExitAmmPoolRequest,
@@ -553,7 +552,28 @@ export function getOutputAmount({
   feeBips: string;
   takerRate: string;
   slipBips: string;
-}) {
+}):
+  | {
+      exceedDepth: boolean;
+      isReverse: boolean;
+      isAtoB: boolean;
+      slipBips: string;
+      takerRate: string;
+      feeBips: string;
+      output: any;
+      sellAmt: string;
+      buyAmt: string;
+      amountS: string;
+      amountBOut: string;
+      amountBOutWithoutFee: string;
+      amountBOutSlip: {
+        minReceived: string;
+        minReceivedVal: string;
+        minimumDecimal: number;
+      };
+      priceImpact: string;
+    }
+  | undefined {
   // console.log('enter getOutputAmount:', input, base, quote, isAtoB, marketArr, tokenMap, marketMap, depth, ammPoolSnapshot, feeBips, takerRate, slipBips)
 
   // console.log(`getOutputAmount market: ${base} / ${quote}`)

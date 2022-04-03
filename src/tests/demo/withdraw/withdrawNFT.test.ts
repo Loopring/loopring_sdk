@@ -7,6 +7,7 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import { DEPLOYMENT_STATUS } from "../../../index";
 
 describe("Withdraw NFTAction test", function () {
   it(
@@ -45,12 +46,27 @@ describe("Withdraw NFTAction test", function () {
       );
       console.log("storageId:", storageId);
 
-      // step 5. fee
+      //step 5. getUserNFTBalances
+      const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
+        { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId },
+        apiKey
+      );
+      const tokenInfo = userNFTBalances.find(
+        (item) =>
+          item.tokenAddress?.toLowerCase() ===
+            LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress.toLowerCase() &&
+          item.nftId &&
+          web3.utils.hexToNumberString(item.nftId) ===
+            web3.utils.hexToNumberString(LOOPRING_EXPORTED_ACCOUNT.nftTokenId)
+      );
+
+      // step 6. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
-          deployInWithdraw: false,
+          deployInWithdraw:
+            tokenInfo?.deploymentStatus === DEPLOYMENT_STATUS.NOT_DEPLOYED, // when token is not deploy the fee is diff
         },
         apiKey
       );

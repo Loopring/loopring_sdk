@@ -1,6 +1,5 @@
 import * as sdk from "../../../index";
 import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
-import { ChainId } from "../../../index";
 
 describe("WsAPI test", function () {
   it(

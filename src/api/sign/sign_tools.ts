@@ -101,6 +101,7 @@ export async function generateKeyPair({
       counterFactualInfo: result.counterFactualInfo,
     };
   } else {
+    console.log("generateKeyPair personalSign error", result.error);
     throw Error(result.error);
   }
 }

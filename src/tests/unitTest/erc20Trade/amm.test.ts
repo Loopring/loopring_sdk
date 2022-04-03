@@ -399,8 +399,7 @@ describe("AmmpoolAPI test", function () {
       );
       console.log("fee:", fee);
 
-      const { tokenSymbolMap, tokenIdIndex } =
-        await LoopringAPI.exchangeAPI.getTokens();
+      const { tokensMap, idIndex } = await LoopringAPI.exchangeAPI.getTokens();
 
       const { request: res3 } = sdk.makeJoinAmmPoolRequest(
         "500",
@@ -409,8 +408,8 @@ describe("AmmpoolAPI test", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         fee.fees,
         ammPoolSnapshot as sdk.AmmPoolSnapshot,
-        tokenSymbolMap,
-        tokenIdIndex,
+        tokensMap,
+        idIndex,
         storageId_1.offchainId,
         storageId.offchainId
       );
@@ -542,8 +541,7 @@ describe("AmmpoolAPI test", function () {
         apiKey
       );
 
-      const { tokenSymbolMap, tokenIdIndex } =
-        await LoopringAPI.exchangeAPI.getTokens();
+      const { tokensMap, idIndex } = await LoopringAPI.exchangeAPI.getTokens();
 
       const { request: req3 } = sdk.makeExitAmmPoolRequest2(
         "10",
@@ -551,8 +549,8 @@ describe("AmmpoolAPI test", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         fees,
         ammPoolSnapshot as sdk.AmmPoolSnapshot,
-        tokenSymbolMap,
-        tokenIdIndex,
+        tokensMap,
+        idIndex,
         storageId.offchainId
       );
       console.log("res3 unPooled:", req3.exitTokens.unPooled);
