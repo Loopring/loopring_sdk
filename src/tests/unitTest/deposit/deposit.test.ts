@@ -8,6 +8,11 @@ import {
 import * as sdk from "../../../index";
 
 describe("contract test", function () {
+  beforeEach(async () => {
+    LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
+      await LoopringAPI.exchangeAPI.getGasPrice()
+    ).gasPrice;
+  }, DEFAULT_TIMEOUT);
   it(
     "approveMax_LRC",
     async () => {

@@ -6,6 +6,11 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 describe("nft test", function () {
+  beforeEach(async () => {
+    LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
+      await LoopringAPI.exchangeAPI.getGasPrice()
+    ).gasPrice;
+  }, DEFAULT_TIMEOUT);
   it(
     "approveNFT",
     async () => {

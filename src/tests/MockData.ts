@@ -61,7 +61,6 @@ export const LoopringAPI = {
   delegate: new DelegateAPI({ chainId }),
   __chainId__: chainId,
 };
-
 export const LOOPRING_EXPORTED_ACCOUNT = {
   address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
   privateKey:
@@ -90,7 +89,7 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
   tradeETHValue: 0.0001,
-  gasPrice: LoopringAPI.exchangeAPI.getGasPrice(), // for test
+  gasPrice: 20, // for test
   gasLimit: 200000, // for test
   validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
 };

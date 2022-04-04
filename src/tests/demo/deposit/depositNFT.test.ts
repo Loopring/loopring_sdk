@@ -6,6 +6,11 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 describe("depositNFT", function () {
+  beforeEach(async () => {
+    LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
+      await LoopringAPI.exchangeAPI.getGasPrice()
+    ).gasPrice;
+  }, DEFAULT_TIMEOUT);
   it(
     "deposit NFTAction ERC1155",
     async () => {
