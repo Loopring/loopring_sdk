@@ -1,5 +1,6 @@
 # Transfer ERC20 
-Definition: Send ERC20 tokens to other account on Loopring L2
+Definition: Send ERC20 tokens to other account on Loopring L2, 
+> trade value should with decimals `sdk.toBig(value).times("1e" + TOKEN_INFO.tokenMap.LRC.decimals)`
 
 ***
 ## Step 1. get account Info

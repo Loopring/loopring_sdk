@@ -59,7 +59,8 @@ const {tokensMap, idIndex, addressIndex} = LoopringAPI.exchangeAPI.getTokens();
 ***
 ## Token Decimal
 ```ts
-let valueC = sdk.toBig(value).times("1e" + token.decimals);
+const uiValue = 100;
+const tradeValue = sdk.toBig(uiValue).times("1e" + TOKEN_INFO.tokenMap.LRC.decimals);
 ```
 
 ***
