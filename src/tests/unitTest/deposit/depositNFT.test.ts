@@ -8,6 +8,7 @@ import {
 import * as sdk from "../../../index";
 describe("depositNFT", function () {
   beforeEach(async () => {
+    jest.setTimeout(DEFAULT_TIMEOUT * 3);
     LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
       await LoopringAPI.exchangeAPI.getGasPrice()
     ).gasPrice;

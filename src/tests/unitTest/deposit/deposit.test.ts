@@ -10,6 +10,7 @@ import { toBig } from "../../../index";
 
 describe("deposit", function () {
   beforeEach(async () => {
+    jest.setTimeout(DEFAULT_TIMEOUT * 3);
     LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
       await LoopringAPI.exchangeAPI.getGasPrice()
     ).gasPrice;

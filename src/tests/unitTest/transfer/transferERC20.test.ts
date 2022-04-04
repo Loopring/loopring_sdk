@@ -20,30 +20,30 @@ describe("Transfer test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
-    "getUserApiKeyWhitelisted",
-    async () => {
-      // step 1. get account info
-      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
-        owner: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
-      });
-      console.log("accInfo:", accInfo);
-
-      // step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
-
-      // step 3 get apikey
-      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
-        {
-          accountId: accInfo.accountId,
-        },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-    },
-    DEFAULT_TIMEOUT
-  );
+  // it(
+  //   "getUserApiKeyWhitelisted",
+  //   async () => {
+  //     // step 1. get account info
+  //     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+  //       owner: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
+  //     });
+  //     console.log("accInfo:", accInfo);
+  //
+  //     // step 2. eddsaKey
+  //     const eddsaKey = await signatureKeyPairMock(accInfo);
+  //     console.log("eddsaKey:", eddsaKey.sk);
+  //
+  //     // step 3 get apikey
+  //     const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+  //       {
+  //         accountId: accInfo.accountId,
+  //       },
+  //       eddsaKey.sk
+  //     );
+  //     console.log("apiKey:", apiKey);
+  //   },
+  //   DEFAULT_TIMEOUT
+  // );
   it(
     "whitelistedAccTransfer",
     async () => {
