@@ -91,6 +91,7 @@ describe("Withdraw NFTAction test", function () {
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
+          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
         },
         apiKey
       );
