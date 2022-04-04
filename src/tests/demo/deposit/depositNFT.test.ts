@@ -2,6 +2,7 @@ import {
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
+  TOKEN_INFO,
   web3,
 } from "../../MockData";
 import * as sdk from "../../../index";
@@ -60,6 +61,9 @@ describe("depositNFT", function () {
       // step 3. nonce
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
 
+      console.log(
+        `deposit: NFT, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
+      );
       // step 4. depositNFT
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
@@ -70,7 +74,7 @@ describe("depositNFT", function () {
         nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
         amount: 1,
         gasPrice: LOOPRING_EXPORTED_ACCOUNT.gasPrice,
-        gasLimit: LOOPRING_EXPORTED_ACCOUNT.gasLimit,
+        gasLimit: LOOPRING_EXPORTED_ACCOUNT.gasLimit + 100000,
         chainId: sdk.ChainId.GOERLI,
         nonce,
         sendByMetaMask: true,

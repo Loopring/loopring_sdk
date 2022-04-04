@@ -86,6 +86,9 @@ describe("deposit", function () {
       }
 
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      console.log(
+        `deposit: ${TOKEN_INFO.tokenMap.LRC.symbol}-${LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue}, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
+      );
       const response = await sdk.deposit(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
@@ -100,7 +103,7 @@ describe("deposit", function () {
         true
       );
 
-      console.log(`nonce: ${nonce} deposit_LRC: `, response);
+      console.log(`deposit: `, response);
     },
     DEFAULT_TIMEOUT * 3
   );
@@ -109,6 +112,9 @@ describe("deposit", function () {
     "deposit_ETH",
     async () => {
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      console.log(
+        `deposit: ${TOKEN_INFO.tokenMap.ETH.symbol}-${LOOPRING_EXPORTED_ACCOUNT.tradeETHValue}, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
+      );
       const response = await sdk.deposit(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
