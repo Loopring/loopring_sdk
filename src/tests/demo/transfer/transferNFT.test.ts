@@ -40,7 +40,7 @@ describe("TransferNFT", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
         apiKey
       );

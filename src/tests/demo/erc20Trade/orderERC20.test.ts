@@ -39,7 +39,7 @@ describe("orderERC20", function () {
         const storageId = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-            sellTokenId: 1,
+            sellTokenId: TOKEN_INFO.tokenMap[sell].tokenId,
           },
           apiKey
         );
@@ -86,8 +86,8 @@ describe("orderERC20", function () {
         // step6: calcTradeParams
         const calcTradeParams = sdk.getOutputAmount({
           input: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
-          sell: TOKEN_INFO.tokenMap.LRC.symbol,
-          buy: TOKEN_INFO.tokenMap.ETH.symbol,
+          sell,
+          buy,
           isAtoB,
           marketArr: ["LRC-ETH", "ETH-USDT", "DAI-USDT", "USDC-ETH"],
           tokenMap: TOKEN_INFO.tokenMap,
@@ -175,7 +175,7 @@ describe("orderERC20", function () {
         const storageId = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-            sellTokenId: 1,
+            sellTokenId: TOKEN_INFO.tokenMap[sell].tokenId,
           },
           apiKey
         );
@@ -228,8 +228,8 @@ describe("orderERC20", function () {
         // step6: calcTradeParams
         const calcTradeParams = sdk.getOutputAmount({
           input: LOOPRING_EXPORTED_ACCOUNT.tradeETHValue.toString(),
-          sell: TOKEN_INFO.tokenMap.LRC.symbol,
-          buy: TOKEN_INFO.tokenMap.ETH.symbol,
+          sell,
+          buy,
           isAtoB,
           marketArr: ["LRC-ETH", "ETH-USDT", "DAI-USDT", "USDC-ETH"],
           tokenMap: TOKEN_INFO.tokenMap,

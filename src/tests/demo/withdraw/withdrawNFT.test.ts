@@ -40,7 +40,7 @@ describe("WithdrawNFT", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
         apiKey
       );
@@ -57,7 +57,7 @@ describe("WithdrawNFT", function () {
             LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress.toLowerCase() &&
           item.nftId &&
           web3.utils.hexToNumberString(item.nftId) ===
-            LOOPRING_EXPORTED_ACCOUNT.nftTokenId
+            LOOPRING_EXPORTED_ACCOUNT.nftTokenId.toString()
       );
 
       // step 6. fee

@@ -5,6 +5,7 @@ import {
   web3,
   signatureKeyPairMock,
   web3_2,
+  TOKEN_INFO,
 } from "../../MockData";
 import * as sdk from "../../../index";
 
@@ -35,7 +36,7 @@ describe("orderNFT", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
         apiKey
       );
@@ -135,14 +136,14 @@ describe("orderNFT", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
         apiKey
       );
       const storageId2 = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo2.accountId,
-          sellTokenId: 1,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
         },
         apiKey2
       );
@@ -166,8 +167,8 @@ describe("orderNFT", function () {
           amount: "1",
         },
         buyToken: {
-          tokenId: 1,
-          amount: "10000000000000",
+          tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         allOrNone: false,
         fillAmountBOrS: false,

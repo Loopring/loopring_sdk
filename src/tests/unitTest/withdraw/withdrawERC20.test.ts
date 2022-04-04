@@ -80,7 +80,7 @@ describe("Withdraw NFTAction test", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
         },
         apiKey
       );
@@ -159,7 +159,7 @@ describe("Withdraw NFTAction test", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: 1,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
         },
         apiKey
       );

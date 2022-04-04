@@ -67,7 +67,7 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
   chainId: 5,
   nftTokenAddress: "0x8394cB7e768070217592572582228f62CdDE4FCE",
-  nftTokenId: "32768",
+  nftTokenId: 32768,
   nftId: "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6",
   nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
   testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",

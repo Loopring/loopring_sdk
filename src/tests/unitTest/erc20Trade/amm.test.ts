@@ -376,14 +376,14 @@ describe("AmmpoolAPI test", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          sellTokenId: 0,
+          sellTokenId: TOKEN_INFO.tokenMap["ETH"].tokenId,
         },
         apiKey
       );
       const storageId_1 = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          sellTokenId: 1,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
         },
         apiKey
       );
@@ -393,7 +393,7 @@ describe("AmmpoolAPI test", function () {
         {
           requestType: sdk.OffchainFeeReqType.AMM_JOIN,
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          tokenSymbol: "ETH",
+          tokenSymbol: TOKEN_INFO.tokenMap["ETH"].symbol,
         },
         apiKey
       );
@@ -535,7 +535,7 @@ describe("AmmpoolAPI test", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          sellTokenId: 4,
+          sellTokenId: TOKEN_INFO.tokenMap["LP-LRC-ETH"].tokenId,
         },
         apiKey
       );
