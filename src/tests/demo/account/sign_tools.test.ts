@@ -23,29 +23,29 @@ describe("signature", function () {
   /**
    * test case is not allow brock by Mock provider
    */
-  it(
-    "getEcDSASig:eth_signTypedData_v4",
-    async () => {
-      // test case is not allow brock by Mock provider
-      const result = await sdk.getEcDSASig(
-        web3,
-        testTypedData,
-        LOOPRING_EXPORTED_ACCOUNT.address,
-        sdk.GetEcDSASigType.HasDataStruct,
-        sdk.ChainId.GOERLI,
-        LOOPRING_EXPORTED_ACCOUNT.accountId,
-        "",
-        sdk.ConnectorNames.Unknown
-      );
-      console.log(
-        "getEcDSASig:eth_signTypedData_v4",
-        result,
-        "ecdsaSig+sdk.SigSuffix.Suffix02",
-        result.ecdsaSig + sdk.SigSuffix.Suffix02
-      );
-    },
-    DEFAULT_TIMEOUT
-  );
+  // it(
+  //   "getEcDSASig:eth_signTypedData_v4",
+  //   async () => {
+  //     // test case is not allow brock by Mock provider
+  //     const result = await sdk.getEcDSASig(
+  //       web3,
+  //       testTypedData,
+  //       LOOPRING_EXPORTED_ACCOUNT.address,
+  //       sdk.GetEcDSASigType.HasDataStruct,
+  //       sdk.ChainId.GOERLI,
+  //       LOOPRING_EXPORTED_ACCOUNT.accountId,
+  //       "",
+  //       sdk.ConnectorNames.Unknown
+  //     );
+  //     console.log(
+  //       "getEcDSASig:eth_signTypedData_v4",
+  //       result,
+  //       "ecdsaSig+sdk.SigSuffix.Suffix02",
+  //       result.ecdsaSig + sdk.SigSuffix.Suffix02
+  //     );
+  //   },
+  //   DEFAULT_TIMEOUT
+  // );
 
   it("getEcDSASig:WithoutDataStruct(personalSign)", async () => {
     const result = await sdk.getEcDSASig(
@@ -68,18 +68,18 @@ describe("signature", function () {
   /**
    * test case is not allow brock by Mock provider
    */
-  it("personalSign Contract", async () => {
-    await sdk.getEcDSASig(
-      web3,
-      testTypedData,
-      LOOPRING_EXPORTED_ACCOUNT.address,
-      sdk.GetEcDSASigType.Contract,
-      sdk.ChainId.GOERLI,
-      LOOPRING_EXPORTED_ACCOUNT.accountId,
-      "",
-      sdk.ConnectorNames.Unknown
-    );
-  });
+  // it("personalSign Contract", async () => {
+  //   await sdk.getEcDSASig(
+  //     web3,
+  //     testTypedData,
+  //     LOOPRING_EXPORTED_ACCOUNT.address,
+  //     sdk.GetEcDSASigType.Contract,
+  //     sdk.ChainId.GOERLI,
+  //     LOOPRING_EXPORTED_ACCOUNT.accountId,
+  //     "",
+  //     sdk.ConnectorNames.Unknown
+  //   );
+  // });
 });
 
 export default {};
