@@ -129,7 +129,7 @@ describe("orderNFT", function () {
         },
         eddsaKey2.sk
       );
-      console.log("apiKey:", apiKey);
+      console.log("apiKey:", apiKey, "apiKey2", apiKey2);
 
       // step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
@@ -146,7 +146,7 @@ describe("orderNFT", function () {
         },
         apiKey2
       );
-      console.log("storageId:", storageId);
+      console.log("storageId:", storageId, "storageId2", storageId2);
 
       const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
         { accountId: accInfo.accountId, limit: 20 },
