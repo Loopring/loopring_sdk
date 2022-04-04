@@ -45,6 +45,23 @@ const PrivateKeyProvider = require("truffle-privatekey-provider");
 // }
 // LoopringAPIClass.InitApi({sdk.ChainId.GOERLI})
 
+export const DEFAULT_TIMEOUT = 30000;
+
+const chainId = sdk.ChainId.GOERLI;
+
+export const LoopringAPI = {
+  userAPI: new UserAPI({ chainId }),
+  exchangeAPI: new ExchangeAPI({ chainId }),
+  globalAPI: new GlobalAPI({ chainId }),
+  ammpoolAPI: new AmmpoolAPI({ chainId }),
+  walletAPI: new WalletAPI({ chainId }),
+  wsAPI: new WsAPI({ chainId }),
+  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
+  nftAPI: new NFTAPI({ chainId }),
+  delegate: new DelegateAPI({ chainId }),
+  __chainId__: chainId,
+};
+
 export const LOOPRING_EXPORTED_ACCOUNT = {
   address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
   privateKey:
@@ -73,11 +90,10 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
   tradeETHValue: 0.0001,
-  gasPrice: 19, // for test
+  gasPrice: LoopringAPI.exchangeAPI.getGasPrice(), // for test
   gasLimit: 200000, // for test
   validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
 };
-export const DEFAULT_TIMEOUT = 30000;
 
 const provider = new PrivateKeyProvider(
   LOOPRING_EXPORTED_ACCOUNT.privateKey,
@@ -93,20 +109,6 @@ const provider2 = new PrivateKeyProvider(
 // );
 export const web3 = new Web3(provider);
 export const web3_2 = new Web3(provider2);
-
-const chainId = sdk.ChainId.GOERLI;
-export const LoopringAPI = {
-  userAPI: new UserAPI({ chainId }),
-  exchangeAPI: new ExchangeAPI({ chainId }),
-  globalAPI: new GlobalAPI({ chainId }),
-  ammpoolAPI: new AmmpoolAPI({ chainId }),
-  walletAPI: new WalletAPI({ chainId }),
-  wsAPI: new WsAPI({ chainId }),
-  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
-  nftAPI: new NFTAPI({ chainId }),
-  delegate: new DelegateAPI({ chainId }),
-  __chainId__: chainId,
-};
 
 export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
 
@@ -446,6 +448,7 @@ export let AMM_MAP = {
     status: 0,
   },
 };
+
 export const testTypedData: EIP712TypedData = {
   types: {
     EIP712Domain: [
