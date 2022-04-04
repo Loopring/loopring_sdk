@@ -229,9 +229,9 @@ describe("orderNFT", function () {
       const response = await LoopringAPI.userAPI.submitNFTTrade({
         request: {
           maker: makerOrder,
-          makerFeeBips: 80,
+          makerFeeBips: 1000,
           taker: takerOrder,
-          takerFeeBips: 80,
+          takerFeeBips: 100,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
