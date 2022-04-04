@@ -3,11 +3,9 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   web3,
-  TOKEN_INFO,
-  signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
-describe("nft test", function () {
+describe("metaNFT", function () {
   it(
     "getContractNFTMeta",
     async () => {
@@ -26,10 +24,7 @@ describe("nft test", function () {
     "getInfoForNFTTokens",
     async () => {
       const response = await LoopringAPI.nftAPI.getInfoForNFTTokens({
-        nftDatas: [
-          "0x1197d20d12bc9f80a4902c04c5a4b88371d32b0c14adce746eeea564850f47a5",
-          "0x10e7f3b7ff37e4ebffabedb9fa19c66c63482b4b642d176068517c505edcd123",
-        ],
+        nftDatas: [LOOPRING_EXPORTED_ACCOUNT.nftData],
       });
       console.log(`getInfoForNFTTokens: response: `, JSON.stringify(response));
     },
