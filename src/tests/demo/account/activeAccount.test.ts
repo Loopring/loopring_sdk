@@ -26,7 +26,7 @@ describe("ActiveAccount", function () {
         accInfo.keySeed && accInfo.keySeed !== ""
           ? accInfo.keySeed
           : sdk.BaseAPI.KEY_MESSAGE.replace(
-              "${exchangeAddressess}",
+              "${exchangeAddress}",
               LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
             ).replace("${nonce}", accInfo.nonce.toString());
       const eddsaKey = await sdk.generateKeyPair({
