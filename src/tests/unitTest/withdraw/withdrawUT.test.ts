@@ -10,7 +10,48 @@ import * as sdk from "../../../index";
 
 describe("Withdraw NFTAction test", function () {
   it(
-    "submitNFTWithdraw",
+    "get_EddsaSig_Withdraw",
+    async () => {
+      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+      });
+      if (!accInfo) {
+        return;
+      }
+      /*
+       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+       */
+      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+
+      const request: sdk.OffChainWithdrawalRequestV3 = {
+        exchange: exchangeInfo.exchangeAddress,
+        accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        counterFactualInfo: undefined,
+        fastWithdrawalMode: false,
+        hashApproved: "",
+        maxFee: {
+          tokenId: 1,
+          volume: "100000000000000000000",
+        },
+        minGas: 0,
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+        to: LOOPRING_EXPORTED_ACCOUNT.address,
+        storageId: 0,
+        token: {
+          tokenId: 1,
+          volume: "100000000000000000000",
+        },
+        validUntil: 0,
+      };
+
+      const result = sdk.get_EddsaSig_OffChainWithdraw(request, "");
+      console.log(`resultHash:`, result);
+    },
+    DEFAULT_TIMEOUT
+  );
+
+  it(
+    "forceWithdraw",
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
@@ -39,42 +80,43 @@ describe("Withdraw NFTAction test", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
         },
         apiKey
       );
       console.log("storageId:", storageId);
 
       // step 5. fee
-      const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+      const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
-          requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
-          deployInWithdraw: false,
+          requestType: sdk.OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
+          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         apiKey
       );
       console.log("fee:", fee);
 
       // step 6 withdraw
-      const response = await LoopringAPI.userAPI.submitNFTWithdraw({
+      const response = await LoopringAPI.userAPI.submitOffchainWithdraw({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
           counterFactualInfo: undefined,
+          fastWithdrawalMode: true,
           hashApproved: "",
           maxFee: {
             tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-            amount: fee.fees["LRC"].fee ?? "9400000000000000000",
+            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
           to: LOOPRING_EXPORTED_ACCOUNT.address,
           storageId: 0,
           token: {
-            tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-            nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-            amount: "1",
+            tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
+            volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
           },
           validUntil: 0,
         },
