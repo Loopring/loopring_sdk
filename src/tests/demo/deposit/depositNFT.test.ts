@@ -33,7 +33,7 @@ describe("depositNFT", function () {
 
       // step 3. approveNFT All
       if (!isApprovedForAll) {
-        const nonce = await LoopringAPI.contractAPI.getNonce(
+        const nonce = await sdk.getNonce(
           web3,
           LOOPRING_EXPORTED_ACCOUNT.address
         );
@@ -53,10 +53,7 @@ describe("depositNFT", function () {
       }
 
       // step 3. nonce
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
 
       // step 4. depositNFT
       const response = await LoopringAPI.nftAPI.depositNFT({
@@ -82,7 +79,7 @@ describe("depositNFT", function () {
   // it(
   //   "deposit NFTAction ERC721",
   //   async () => {
-  //     const nonce = await LoopringAPI.contractAPI.getNonce(
+  //     const nonce = await sdk.getNonce(
   //       web3,
   //       LOOPRING_EXPORTED_ACCOUNT.address
   //     );

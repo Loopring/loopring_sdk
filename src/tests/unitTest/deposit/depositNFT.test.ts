@@ -9,10 +9,7 @@ describe("nft test", function () {
   it(
     "approveNFT",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -35,10 +32,7 @@ describe("nft test", function () {
   it(
     "approveNFT",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -59,10 +53,7 @@ describe("nft test", function () {
   it(
     "notApproveNFT",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
       const response = await LoopringAPI.nftAPI.approveNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -84,10 +75,7 @@ describe("nft test", function () {
   it(
     "deposit NFTAction ERC1155",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -111,7 +99,7 @@ describe("nft test", function () {
   // it(
   //   "deposit NFTAction ERC721",
   //   async () => {
-  //     const nonce = await LoopringAPI.contractAPI.getNonce(
+  //     const nonce = await sdk.getNonce(
   //       web3,
   //       LOOPRING_EXPORTED_ACCOUNT.address
   //     );

@@ -11,11 +11,8 @@ describe("contract test", function () {
   it(
     "approveMax_LRC",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
-      const response = await LoopringAPI.contractAPI.approveMax(
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const response = await sdk.approveMax(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
         TOKEN_INFO.tokenMap.LRC.address,
@@ -35,11 +32,8 @@ describe("contract test", function () {
   it(
     "approveZero_LRC",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
-      const response = await LoopringAPI.contractAPI.approveZero(
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const response = await sdk.approveZero(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
         TOKEN_INFO.tokenMap.LRC.address,
@@ -72,7 +66,7 @@ describe("contract test", function () {
         const nonce = await web3.eth.getTransactionCount(
           LOOPRING_EXPORTED_ACCOUNT.address
         );
-        await LoopringAPI.contractAPI.approveMax(
+        await sdk.approveMax(
           web3,
           LOOPRING_EXPORTED_ACCOUNT.address,
           TOKEN_INFO.tokenMap.LRC.address, // LRC address  {tokenIdMap} = getTokens();  tokenIdMap['LRC']
@@ -85,11 +79,8 @@ describe("contract test", function () {
         );
       }
 
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
-      const response = await LoopringAPI.contractAPI.deposit(
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const response = await sdk.deposit(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
         LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
@@ -111,11 +102,8 @@ describe("contract test", function () {
   it(
     "deposit_ETH",
     async () => {
-      const nonce = await LoopringAPI.contractAPI.getNonce(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address
-      );
-      const response = await LoopringAPI.contractAPI.deposit(
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const response = await sdk.deposit(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
         LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,

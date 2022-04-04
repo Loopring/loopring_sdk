@@ -106,7 +106,6 @@ export const LoopringAPI = {
   nftAPI: new NFTAPI({ chainId }),
   delegate: new DelegateAPI({ chainId }),
   __chainId__: chainId,
-  contractAPI: ContractAPI,
 };
 
 export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
