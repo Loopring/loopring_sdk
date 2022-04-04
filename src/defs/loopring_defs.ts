@@ -728,9 +728,11 @@ export type GetOffchainFeeAmtRequest =
     } & {
       requestType: Omit<
         OffchainFeeReqType,
+        | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
         | OffchainFeeReqType.AMM_JOIN
         | OffchainFeeReqType.AMM_EXIT
         | OffchainFeeReqType.ORDER
+        | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
       >;
     })
   | {
