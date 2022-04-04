@@ -16,17 +16,17 @@ describe("Transfer", function () {
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
        * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
        */
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -35,7 +35,7 @@ describe("Transfer", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4 get storageId
+      // Step 4. get storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
@@ -45,7 +45,7 @@ describe("Transfer", function () {
       );
       console.log("storageId:", storageId);
 
-      // step 5 get fee
+      // Step 5. get fee
       const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
@@ -55,7 +55,7 @@ describe("Transfer", function () {
       );
       console.log("fee:", fee);
 
-      // step 6 transfer
+      // Step 6. transfer
       const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,

@@ -15,6 +15,7 @@ describe("Fee", function () {
   it(
     "fee:updateAccount",
     async () => {
+      // Step 1. get account info
       console.log(LoopringAPI.exchangeAPI.getAccount);
 
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
@@ -22,11 +23,11 @@ describe("Fee", function () {
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -45,22 +46,23 @@ describe("Fee", function () {
       );
       console.log("updateAccount:", response);
     },
-    DEFAULT_TIMEOUT * 10
+    DEFAULT_TIMEOUT
   );
 
   it(
     "fee:transfer",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -83,16 +85,17 @@ describe("Fee", function () {
   it(
     "fee:withdraw",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -115,16 +118,17 @@ describe("Fee", function () {
   it(
     "fee:fastWithdraw",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -148,16 +152,17 @@ describe("Fee", function () {
   it(
     "fee:order",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -182,16 +187,17 @@ describe("Fee", function () {
   it(
     "fee:amm_exit",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -214,16 +220,17 @@ describe("Fee", function () {
   it(
     "fee:amm_join",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -247,16 +254,17 @@ describe("Fee", function () {
   it(
     "fee:NFTTransfer",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -279,16 +287,17 @@ describe("Fee", function () {
   it(
     "fee:NFTWithdrawal",
     async () => {
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,

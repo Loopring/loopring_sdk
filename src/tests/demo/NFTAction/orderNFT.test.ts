@@ -13,17 +13,17 @@ describe("orderNFT", function () {
   it(
     "validateNftOrder",
     async () => {
-      // step 1. getAccount
+      // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3. apiKey
+      // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -32,7 +32,7 @@ describe("orderNFT", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4. storageId
+      // Step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
@@ -102,7 +102,7 @@ describe("orderNFT", function () {
   it(
     "tradeNFT",
     async () => {
-      // step 1. getAccount
+      // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
@@ -111,13 +111,13 @@ describe("orderNFT", function () {
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
       const eddsaKey2 = await signatureKeyPairMock(accInfo2, web3_2);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3. apiKey
+      // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -132,7 +132,7 @@ describe("orderNFT", function () {
       );
       console.log("apiKey:", apiKey, "apiKey2", apiKey2);
 
-      // step 4. storageId
+      // Step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
@@ -155,7 +155,7 @@ describe("orderNFT", function () {
       // );
       // console.log("NFTAction-INFO", userNFTBalances[0]);
 
-      // step 4 get storageId
+      // Step 4. get storageId
 
       const makerOrder: sdk.NFTOrderRequestV3 = {
         exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,

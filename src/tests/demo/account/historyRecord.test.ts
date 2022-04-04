@@ -8,17 +8,17 @@ import * as sdk from "../../../index";
 let apiKey = "";
 describe("historyRecord", function () {
   beforeEach(async () => {
-    // step 1. getAccount
+    // Step 1. getAccount
     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
       owner: LOOPRING_EXPORTED_ACCOUNT.address,
     });
     console.log("accInfo:", accInfo);
 
-    // step 2. eddsaKey
+    // Step 2. eddsaKey
     const eddsaKey = await signatureKeyPairMock(accInfo);
     console.log("eddsaKey:", eddsaKey.sk);
 
-    // step 3. apiKey
+    // Step 3. apiKey
     apiKey = (
       await LoopringAPI.userAPI.getUserApiKey(
         {

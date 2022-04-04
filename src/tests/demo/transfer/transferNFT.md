@@ -1,5 +1,5 @@
-# Transfer ERC20
-Definition: Send ERC20 tokens to other account on Loopring L2
+# Transfer NFT
+Definition: Send NFT to other account on Loopring L2
 
 ***
 ## Step 1. get account Info
@@ -12,23 +12,27 @@ const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
 ```
 
 ***
-## Step 2. eddsaKey
+## Step 2. get eddsaKey
 ```ts
 const eddsaKey = await signatureKeyPairMock(accInfo);
 console.log("eddsaKey:", eddsaKey.sk);
 ```
 
 ***
-## Step 3. apiKey
+## Step 3. get apiKey
 ```ts
 const { apiKey } = await LoopringAPI.userAPI.getUserApiKey({
   accountId: accInfo.accountId}, eddsaKey.sk
 );
 console.log("apiKey:", apiKey);
+const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
+  { accountId: accInfo.accountId, limit: 20 },
+  apiKey
+);
 ```
  
 ***
-##Step 4. storageId
+##Step 4. get storageId
 ```ts  
 const storageId = await LoopringAPI.userAPI.getNextStorageId({
   accountId: accInfo.accountId,
@@ -37,7 +41,7 @@ const storageId = await LoopringAPI.userAPI.getNextStorageId({
 ```
 
 ***
-## Step 5. fee
+## Step 5. get fee
 ```ts
 const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt({
   accountId: accInfo.accountId,

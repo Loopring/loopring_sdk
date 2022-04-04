@@ -73,7 +73,7 @@ describe("Account", function () {
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       const eddsaKey = await signatureKeyPairMock(accInfo);
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -137,17 +137,17 @@ describe("Account", function () {
   it(
     "Layer2_getUserBalances",
     async () => {
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -156,7 +156,7 @@ describe("Account", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4 getUserBalances
+      // Step 4. getUserBalances
       const { userBalances } = await LoopringAPI.userAPI.getUserBalances(
         { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId, tokens: "" },
         apiKey
@@ -170,17 +170,17 @@ describe("Account", function () {
   it(
     "Layer2_getUserNFTBalances",
     async () => {
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -189,7 +189,7 @@ describe("Account", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4 getUserNFTBalances
+      // Step 4. getUserNFTBalances
       const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
         { accountId: accInfo.accountId, limit: 20 },
         apiKey

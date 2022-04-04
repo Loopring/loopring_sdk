@@ -35,7 +35,7 @@ describe("orderERC20", function () {
           )
         ).apiKey;
 
-        // step 2. storageId
+        // Step 2. storageId
         const storageId = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
@@ -171,7 +171,7 @@ describe("orderERC20", function () {
           )
         ).apiKey;
 
-        // step 2. storageId
+        // Step 2. storageId
         const storageId = await LoopringAPI.userAPI.getNextStorageId(
           {
             accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,

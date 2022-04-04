@@ -16,7 +16,7 @@ describe("depositNFT", function () {
   it(
     "deposit NFTAction ERC1155",
     async () => {
-      // step 1. getNFTBalance & getEthBalances
+      // Step 1. getNFTBalance & getEthBalances
       const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
@@ -28,7 +28,7 @@ describe("depositNFT", function () {
         nftType: sdk.NFTType.ERC1155,
       });
 
-      // step 2. isApprovedForAll
+      // Step 2. isApprovedForAll
       const isApprovedForAll = await LoopringAPI.nftAPI.isApprovedForAll({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -38,7 +38,7 @@ describe("depositNFT", function () {
       });
       console.log(`check is approveNFT`, isApprovedForAll);
 
-      // step 3. approveNFT All
+      // Step 3. approveNFT All
       if (!isApprovedForAll) {
         const nonce = await sdk.getNonce(
           web3,
@@ -59,13 +59,13 @@ describe("depositNFT", function () {
         console.log(`nonce: ${nonce} approveNFT: ${approveNFT?.result}`);
       }
 
-      // step 3. nonce
+      // Step 3. nonce
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
 
       console.log(
         `deposit: NFT, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
       );
-      // step 4. depositNFT
+      // Step 4. depositNFT
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,

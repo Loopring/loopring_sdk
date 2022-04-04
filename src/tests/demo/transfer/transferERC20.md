@@ -11,6 +11,7 @@ const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
   owner: LOOPRING_EXPORTED_ACCOUNT.address,
 });
 console.log("accInfo:", accInfo);
+
 ```
 ***
 ## Step 2. get eddsaKey
@@ -27,7 +28,11 @@ const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
   },
   eddsaKey.sk
 );
-console.log("apiKey:", apiKey);   
+console.log("apiKey:", apiKey);
+const { userBalances } = await LoopringAPI.userAPI.getUserBalances(
+  { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId, tokens: "" },
+  apiKey
+);
 ```
 
 ***

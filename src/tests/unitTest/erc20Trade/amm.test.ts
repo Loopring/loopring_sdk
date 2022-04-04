@@ -118,17 +118,17 @@ describe("AmmpoolAPI test", function () {
   it(
     "getAmmPoolGameUserRank",
     async () => {
-      // step 1. getAccount
+      // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3. apiKey
+      // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -137,7 +137,7 @@ describe("AmmpoolAPI test", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4. getAmmPoolGameUserRank
+      // Step 4. getAmmPoolGameUserRank
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolGameUserRank(
         { owner: LOOPRING_EXPORTED_ACCOUNT.address, ammPoolMarket: "LRC-ETH" },
         apiKey
@@ -197,17 +197,17 @@ describe("AmmpoolAPI test", function () {
   it(
     "getLiquidityMining",
     async () => {
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3 get apikey
+      // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -313,17 +313,17 @@ describe("AmmpoolAPI test", function () {
   it(
     "getUserAmmPoolTxs",
     async () => {
-      // step 1. getAccount
+      // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
       console.log("accInfo:", accInfo);
 
-      // step 2. eddsaKey
+      // Step 2. eddsaKey
       const eddsaKey = await signatureKeyPairMock(accInfo);
       console.log("eddsaKey:", eddsaKey.sk);
 
-      // step 3. apiKey
+      // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
@@ -332,7 +332,7 @@ describe("AmmpoolAPI test", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // step 4 getUserAmmPoolTxs
+      // Step 4. getUserAmmPoolTxs
       const response = await LoopringAPI.ammpoolAPI.getUserAmmPoolTxs<any>(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
@@ -355,24 +355,24 @@ describe("AmmpoolAPI test", function () {
   //       await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot({
   //         poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
   //       });
-  //     // step 1. getAccount
+  //     // Step 1. getAccount
   //     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
   //       owner: LOOPRING_EXPORTED_ACCOUNT.address,
   //     });
   //     console.log("accInfo:", accInfo);
   //
-  //     // step 2. eddsaKey
+  //     // Step 2. eddsaKey
   //     const eddsaKey = await signatureKeyPairMock(accInfo);
   //     console.log("eddsaKey:", eddsaKey.sk);
   //
-  //     // step 3. apiKey
+  //     // Step 3. apiKey
   //     const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
   //       {
   //         accountId: accInfo.accountId,
   //       },
   //       eddsaKey.sk
   //     );
-  //     // step 4. storageId
+  //     // Step 4. storageId
   //     const storageId = await LoopringAPI.userAPI.getNextStorageId(
   //       {
   //         accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
@@ -388,7 +388,7 @@ describe("AmmpoolAPI test", function () {
   //       apiKey
   //     );
   //
-  //     // step 5. fee
+  //     // Step 5. fee
   //     const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
   //       {
   //         requestType: sdk.OffchainFeeReqType.AMM_JOIN,
@@ -439,24 +439,24 @@ describe("AmmpoolAPI test", function () {
   //       await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot({
   //         poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
   //       });
-  //     // step 1. getAccount
+  //     // Step 1. getAccount
   //     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
   //       owner: LOOPRING_EXPORTED_ACCOUNT.address,
   //     });
   //     console.log("accInfo:", accInfo);
   //
-  //     // step 2. eddsaKey
+  //     // Step 2. eddsaKey
   //     const eddsaKey = await signatureKeyPairMock(accInfo);
   //     console.log("eddsaKey:", eddsaKey.sk);
   //
-  //     // step 3. apiKey
+  //     // Step 3. apiKey
   //     const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
   //       {
   //         accountId: accInfo.accountId,
   //       },
   //       eddsaKey.sk
   //     );
-  //     // step 4. fees
+  //     // Step 4. fees
   //     const { fees } = await LoopringAPI.userAPI.getOffchainFeeAmt(
   //       {
   //         tokenSymbol: "LP-LRC-ETH",

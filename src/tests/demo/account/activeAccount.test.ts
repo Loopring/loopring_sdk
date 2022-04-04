@@ -16,12 +16,12 @@ describe("ActiveAccount", function () {
   it(
     "updateAccount",
     async () => {
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
 
-      // step 2. use keySeed generateKeyPair
+      // Step 2. use keySeed generateKeyPair
       const keySeed =
         accInfo.keySeed && accInfo.keySeed !== ""
           ? accInfo.keySeed
@@ -38,13 +38,13 @@ describe("ActiveAccount", function () {
       });
       console.log("eddsakey:", eddsaKey.sk);
 
-      // step 3. fee
+      // Step 3. fee
       const fee = await LoopringAPI.globalAPI.getActiveFeeInfo({
         accountId: accInfo.accountId,
       });
       console.log("fee:", fee);
 
-      // step 4. updateAccount (active or rest）
+      // Step 4. updateAccount (active or rest）
       const result = await LoopringAPI.userAPI.updateAccount({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
@@ -81,12 +81,12 @@ describe("ActiveAccount", function () {
   it(
     "customer_keySeed",
     async () => {
-      // step 1. get account info
+      // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       });
 
-      // step 2. use keySeed generateKeyPair
+      // Step 2. use keySeed generateKeyPair
       const keySeed = CUSTOMER_KEY_SEED.replace(
         "${nonce}",
         accInfo.nonce.toString()
@@ -100,13 +100,13 @@ describe("ActiveAccount", function () {
       });
       console.log("eddsakey:", eddsaKey.sk);
 
-      // step 3. fee
+      // Step 3. fee
       const fee = await LoopringAPI.globalAPI.getActiveFeeInfo({
         accountId: accInfo.accountId,
       });
       console.log("fee:", fee);
 
-      // step 4. updateAccount (active or rest）
+      // Step 4. updateAccount (active or rest）
       const result = await LoopringAPI.userAPI.updateAccount({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,

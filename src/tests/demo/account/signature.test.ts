@@ -61,7 +61,7 @@ describe("signature", function () {
     console.log(
       "getEcDSASig:WithoutDataStruct(personalSign)",
       result,
-      "ecdsaSig+sdk.SigSuffix.Suffix02",
+      "ecdsaSig+sdk.SigSuffix.Suffix03",
       result.ecdsaSig + sdk.SigSuffix.Suffix03
     );
   });
