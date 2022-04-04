@@ -16,7 +16,6 @@ describe("TransferNFT", function () {
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
        * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
        */
-
       // step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
