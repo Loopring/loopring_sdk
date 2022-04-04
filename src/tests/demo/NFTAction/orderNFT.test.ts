@@ -149,11 +149,11 @@ describe("orderNFT", function () {
       );
       console.log("storageId:", storageId, "storageId2", storageId2);
 
-      const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
-        { accountId: accInfo.accountId, limit: 20 },
-        apiKey
-      );
-      console.log("NFTAction-INFO", userNFTBalances[0]);
+      // const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
+      //   { accountId: accInfo.accountId, limit: 20 },
+      //   apiKey
+      // );
+      // console.log("NFTAction-INFO", userNFTBalances[0]);
 
       // step 4 get storageId
 
@@ -162,13 +162,13 @@ describe("orderNFT", function () {
         accountId: accInfo.accountId,
         storageId: storageId.orderId,
         sellToken: {
-          tokenId: userNFTBalances[0]?.tokenId,
-          nftData: userNFTBalances[0]?.nftData,
+          tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+          nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
           amount: "1",
         },
         buyToken: {
           tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-          amount: LOOPRING_EXPORTED_ACCOUNT.tradeETHValue.toString(),
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         allOrNone: false,
         fillAmountBOrS: false,
@@ -196,18 +196,18 @@ describe("orderNFT", function () {
         accountId: accInfo2.accountId,
         storageId: storageId2.orderId,
         sellToken: {
-          tokenId: 1,
-          amount: "10000000000000",
+          tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         buyToken: {
-          tokenId: userNFTBalances[0]?.tokenId,
-          nftData: userNFTBalances[0]?.nftData,
+          tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+          nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
           amount: "1",
         },
         allOrNone: false,
         fillAmountBOrS: true,
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-        maxFeeBips: 100,
+        maxFeeBips: 80,
       };
 
       takerOrder.eddsaSignature = sdk.get_EddsaSig_NFT_Order(
