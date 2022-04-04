@@ -9,6 +9,10 @@ import {
 import * as sdk from "../../../index";
 
 describe("Withdraw", function () {
+  beforeEach(async () => {
+    jest.setTimeout(DEFAULT_TIMEOUT * 3);
+  }, DEFAULT_TIMEOUT);
+
   it(
     "submitWithdraw",
     async () => {
@@ -131,6 +135,7 @@ describe("Withdraw", function () {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
           tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
+          amount: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         apiKey
       );
