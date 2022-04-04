@@ -173,7 +173,7 @@ describe("orderNFT", function () {
         allOrNone: false,
         fillAmountBOrS: false,
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-        maxFeeBips: 80,
+        maxFeeBips: 1000,
       };
       makerOrder.eddsaSignature = sdk.get_EddsaSig_NFT_Order(
         makerOrder,
@@ -207,7 +207,7 @@ describe("orderNFT", function () {
         allOrNone: false,
         fillAmountBOrS: true,
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-        maxFeeBips: 80,
+        maxFeeBips: 100,
       };
 
       takerOrder.eddsaSignature = sdk.get_EddsaSig_NFT_Order(
