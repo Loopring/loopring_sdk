@@ -6,6 +6,7 @@ import {
   TOKEN_INFO,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import { toBig } from "../../../index";
 
 describe("deposit", function () {
   beforeEach(async () => {
@@ -32,7 +33,7 @@ describe("deposit", function () {
 
       console.log(`nonce: ${nonce} approveMax: ${JSON.stringify(response)}`);
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT * 2
   );
 
   it(
@@ -53,7 +54,7 @@ describe("deposit", function () {
 
       console.log(`nonce: ${nonce} approveZero: ${response}`);
     },
-    DEFAULT_TIMEOUT
+    DEFAULT_TIMEOUT * 2
   );
 
   it(
@@ -94,7 +95,10 @@ describe("deposit", function () {
         LOOPRING_EXPORTED_ACCOUNT.address,
         LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         TOKEN_INFO.tokenMap.LRC,
-        LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue,
+        sdk
+          .toBig(LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue)
+          .div("1e" + TOKEN_INFO.tokenMap.LRC.decimals)
+          .toNumber(),
         0,
         LOOPRING_EXPORTED_ACCOUNT.gasPrice,
         LOOPRING_EXPORTED_ACCOUNT.gasLimit,
@@ -103,7 +107,7 @@ describe("deposit", function () {
         true
       );
 
-      console.log(`deposit: `, response);
+      console.log(`nonce: ${nonce}  deposit_LRC: `, response);
     },
     DEFAULT_TIMEOUT * 3
   );
@@ -129,7 +133,7 @@ describe("deposit", function () {
         true
       );
 
-      console.log(`nonce: ${nonce} deposit_LRC: `, response);
+      console.log(`nonce: ${nonce} deposit_ETH: `, response);
     },
     DEFAULT_TIMEOUT * 3
   );

@@ -88,7 +88,7 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   nftData: "0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f",
   testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
   tradeLRCValue: 1000000000000000000,
-  tradeETHValue: 0.0001,
+  tradeETHValue: 0.0001, //same as UI
   gasPrice: 20, // for test
   gasLimit: 200000, // for test
   validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
