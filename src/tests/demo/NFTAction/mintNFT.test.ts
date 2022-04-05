@@ -44,7 +44,7 @@ describe("mintNFT", function () {
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId, // same as maxFee tokenId
         },
         apiKey
       );

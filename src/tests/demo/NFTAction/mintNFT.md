@@ -11,7 +11,6 @@ const {accInfo} = await LoopringAPI.exchangeAPI.getAccount({
   owner: LOOPRING_EXPORTED_ACCOUNT.address,
 });
 console.log("accInfo:", accInfo);
-
 ``` 
 
 ***
@@ -51,8 +50,6 @@ console.log("apiKey:", apiKey);
   },
   apiKey
 );
-
-
 ```
 
 ***
@@ -63,7 +60,7 @@ console.log("apiKey:", apiKey);
 const storageId = await LoopringAPI.userAPI.getNextStorageId(
   {
     accountId: accInfo.accountId,
-    sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+    sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId, // same as maxFee tokenId
   },
   apiKey
 );
