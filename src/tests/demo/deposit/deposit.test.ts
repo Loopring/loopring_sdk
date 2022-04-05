@@ -6,7 +6,6 @@ import {
   TOKEN_INFO,
 } from "../../MockData";
 import * as sdk from "../../../index";
-import { toBig } from "../../../index";
 
 describe("deposit", function () {
   beforeEach(async () => {
@@ -16,49 +15,6 @@ describe("deposit", function () {
       await LoopringAPI.exchangeAPI.getGasPrice()
     ).gasPrice;
   }, DEFAULT_TIMEOUT);
-
-  it(
-    "approveMax_LRC",
-    async () => {
-      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
-      const response = await sdk.approveMax(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address,
-        TOKEN_INFO.tokenMap.LRC.address,
-        LOOPRING_EXPORTED_ACCOUNT.depositAddress,
-        LOOPRING_EXPORTED_ACCOUNT.gasPrice,
-        LOOPRING_EXPORTED_ACCOUNT.gasLimit,
-        sdk.ChainId.GOERLI,
-        nonce,
-        true
-      );
-
-      console.log(`nonce: ${nonce} approveMax: ${JSON.stringify(response)}`);
-    },
-    DEFAULT_TIMEOUT * 2
-  );
-
-  it(
-    "approveZero_LRC",
-    async () => {
-      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
-      const response = await sdk.approveZero(
-        web3,
-        LOOPRING_EXPORTED_ACCOUNT.address,
-        TOKEN_INFO.tokenMap.LRC.address,
-        LOOPRING_EXPORTED_ACCOUNT.depositAddress,
-        LOOPRING_EXPORTED_ACCOUNT.gasPrice,
-        LOOPRING_EXPORTED_ACCOUNT.gasLimit,
-        sdk.ChainId.GOERLI,
-        nonce,
-        true
-      );
-
-      console.log(`nonce: ${nonce} approveZero: ${response}`);
-    },
-    DEFAULT_TIMEOUT * 2
-  );
-
   it(
     "deposit_LRC",
     async () => {

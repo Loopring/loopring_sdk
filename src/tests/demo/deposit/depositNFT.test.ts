@@ -59,13 +59,13 @@ describe("depositNFT", function () {
         console.log(`nonce: ${nonce} approveNFT: ${approveNFT?.result}`);
       }
 
-      // Step 3. nonce
+      // Step 4. nonce
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
 
       console.log(
         `deposit: NFT, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
       );
-      // Step 4. depositNFT
+      // Step 5. depositNFT
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
         from: LOOPRING_EXPORTED_ACCOUNT.address,
