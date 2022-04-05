@@ -53,7 +53,7 @@ describe("deployNFT", function () {
       // Step 6. broker
       const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker();
 
-      // OriginDeployNFTRequestV3WithPatch
+      // Step 7. Build transfer & Deploy
       const transfer = {
         exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         payerAddr: LOOPRING_EXPORTED_ACCOUNT.address,

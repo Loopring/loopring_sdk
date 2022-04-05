@@ -155,8 +155,7 @@ describe("orderNFT", function () {
       // );
       // console.log("NFTAction-INFO", userNFTBalances[0]);
 
-      // Step 4. get storageId
-
+      // Step 5. Validate Order
       const makerOrder: sdk.NFTOrderRequestV3 = {
         exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         accountId: accInfo.accountId,
@@ -226,6 +225,7 @@ describe("orderNFT", function () {
         });
       console.log("submitNFTValidateOrder takerOrder", nftValidateTakerOrder);
 
+      // Step 6. NFT Trade
       const response = await LoopringAPI.userAPI.submitNFTTrade({
         request: {
           maker: makerOrder,
