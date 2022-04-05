@@ -30,22 +30,7 @@ describe("mintNFT", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // Step 4. storageId
-      const feeTokenId = 1; // 1 is LRC, mint need use fee tokenId to get storageId
-      const storageId = await LoopringAPI.userAPI.getNextStorageId(
-        {
-          accountId: accInfo.accountId,
-          sellTokenId: feeTokenId,
-        },
-        apiKey
-      );
-      const counterFactualNftInfo = {
-        nftOwner: accInfo.owner,
-        nftFactory: sdk.NFTFactory[sdk.ChainId.GOERLI],
-        nftBaseUri: "",
-      };
-
-      // Step 5. fee
+      // Step 4. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
@@ -55,12 +40,27 @@ describe("mintNFT", function () {
         apiKey
       );
 
+      // Step 5. storageId
+      const storageId = await LoopringAPI.userAPI.getNextStorageId(
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+        },
+        apiKey
+      );
+
+      // Step 6. nftTokenAddress
+      const counterFactualNftInfo = {
+        nftOwner: accInfo.owner,
+        nftFactory: sdk.NFTFactory[sdk.ChainId.GOERLI],
+        nftBaseUri: "",
+      };
       const nftTokenAddress =
         LoopringAPI.nftAPI.computeNFTAddress(counterFactualNftInfo)
           .tokenAddress || "";
       console.log("nftTokenAddress", nftTokenAddress);
 
-      // Step 5. Mint
+      // Step 7. Mint
       const response = await LoopringAPI.userAPI.submitNFTMint({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,

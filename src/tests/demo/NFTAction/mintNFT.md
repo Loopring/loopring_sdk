@@ -1,4 +1,5 @@
 # Mint NFT
+
 Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will convert to nftId, please view MetaNFT.md
 
 ***
@@ -39,27 +40,7 @@ console.log("apiKey:", apiKey);
 
 ***
 
-## Step 4. get storageId
-
-```ts
-const storageId = await LoopringAPI.userAPI.getNextStorageId(
-  {
-    accountId: accInfo.accountId,
-    sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-  },
-  apiKey
-);
-const counterFactualNftInfo = {
-  nftOwner: accInfo.owner,
-  nftFactory: sdk.NFTFactory[sdk.ChainId.GOERLI],
-  nftBaseUri: "",
-};
-
-```
-
-***
-
-## Step 5. get fee
+## Step 4. get fee
 
 ```ts
  const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
@@ -76,13 +57,42 @@ const counterFactualNftInfo = {
 
 ***
 
-## Step 6. Mint
+## Step 5. get storageId
 
 ```ts
+const storageId = await LoopringAPI.userAPI.getNextStorageId(
+  {
+    accountId: accInfo.accountId,
+    sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+  },
+  apiKey
+);
+
+
+```
+
+***
+
+## Step 6. get tokenAddress
+
+```ts
+const counterFactualNftInfo = {
+  nftOwner: accInfo.owner,
+  nftFactory: sdk.NFTFactory[sdk.ChainId.GOERLI],
+  nftBaseUri: "",
+};
 const nftTokenAddress =
   LoopringAPI.nftAPI.computeNFTAddress(counterFactualNftInfo)
     .tokenAddress || "";
 console.log("nftTokenAddress", nftTokenAddress);
+```
+
+***
+
+## Step 7. Mint
+
+```ts
+
 const response = await LoopringAPI.userAPI.submitNFTMint({
   request: {
     exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
