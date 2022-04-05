@@ -59,6 +59,7 @@ describe("mintNFT", function () {
           .tokenAddress || "";
       console.log("nftTokenAddress", nftTokenAddress);
 
+      // Step 5. Mint
       const response = await LoopringAPI.userAPI.submitNFTMint({
         request: {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
@@ -78,7 +79,7 @@ describe("mintNFT", function () {
           },
           royaltyPercentage: 5,
           counterFactualNftInfo,
-          forceToMint: true,
+          forceToMint: true, // suggest use as false, for here is just for run test
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
