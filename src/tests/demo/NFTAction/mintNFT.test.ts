@@ -31,10 +31,11 @@ describe("mintNFT", function () {
       console.log("apiKey:", apiKey);
 
       // Step 4. storageId
+      const feeTokenId = 1; // 1 is LRC, mint need use fee tokenId to get storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+          sellTokenId: feeTokenId,
         },
         apiKey
       );
@@ -77,7 +78,6 @@ describe("mintNFT", function () {
             amount: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           royaltyPercentage: 5,
-          counterFactualNftInfo,
           forceToMint: true,
         },
         web3,
