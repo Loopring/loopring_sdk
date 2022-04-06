@@ -121,6 +121,13 @@ export const getTradeArg = (market: string) => {
   };
 };
 
+export const getMixTradeArg = (market: string) => {
+  return {
+    topic: WsTopicType.mixtrade,
+    market,
+  };
+};
+
 export const getTickerArg = (market: string) => {
   return {
     topic: WsTopicType.ticker,
