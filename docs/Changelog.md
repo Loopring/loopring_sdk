@@ -1,10 +1,14 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####  v1.10.3
+     1) Demo update
+
 ####  v1.10.1
      1) getAllowances formatter update
      2) getTokenBalances formatter update
      3) unit test update
+
 ####  v1.9.6
      1) add is Mobile in personalSign
 ####  v1.9.4
