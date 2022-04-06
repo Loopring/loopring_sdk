@@ -17,10 +17,7 @@ const {accInfo} = await LoopringAPI.exchangeAPI.getAccount({
 ## Step 2. use keySeed or CUSTOMER_KEY_SEED generateKeyPair
 
 ```ts
-const keySeed =
-  accInfo.keySeed && accInfo.keySeed !== ""
-    ? accInfo.keySeed
-    : sdk.BaseAPI.KEY_MESSAGE.replace(
+const keySeed = sdk.BaseAPI.KEY_MESSAGE.replace(
       "${exchangeAddress}",
       LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
     ).replace("${nonce}", accInfo.nonce.toString());

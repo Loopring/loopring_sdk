@@ -22,13 +22,10 @@ describe("ActiveAccount", function () {
       });
 
       // Step 2. use keySeed generateKeyPair
-      const keySeed =
-        accInfo.keySeed && accInfo.keySeed !== ""
-          ? accInfo.keySeed
-          : sdk.BaseAPI.KEY_MESSAGE.replace(
-              "${exchangeAddress}",
-              LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-            ).replace("${nonce}", accInfo.nonce.toString());
+      const keySeed = sdk.BaseAPI.KEY_MESSAGE.replace(
+        "${exchangeAddress}",
+        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
+      ).replace("${nonce}", accInfo.nonce.toString());
       const eddsaKey = await sdk.generateKeyPair({
         web3,
         address: accInfo.owner,
