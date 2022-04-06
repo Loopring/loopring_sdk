@@ -263,7 +263,7 @@ console.log("amm_join:", response);
 
 ***
 
-## Fee: NFTTransfer
+## Fee: NFT Transfer
 
 ```ts
     // Step 1. get account info
@@ -289,6 +289,7 @@ const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
   {
     accountId: accInfo.accountId,
     requestType: sdk.OffchainNFTFeeReqType.NFT_TRANSFER,
+    tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
   },
   apiKey
 );
@@ -297,7 +298,7 @@ console.log("NFTTransfer:", response);
 
 ***
 
-## Fee: NFTWithdrawal
+## Fee: NFT Withdrawal
 
 ```ts
     // Step 1. get account info
@@ -329,16 +330,83 @@ const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
 console.log("NFTWithdrawal:", response);
 ```
 
+## Fee: NFT Mint
+
+```ts
+// Step 1. get account info
+const {accInfo} = await LoopringAPI.exchangeAPI.getAccount({
+  owner: LOOPRING_EXPORTED_ACCOUNT.address,
+});
+console.log("accInfo:", accInfo);
+
+// Step 2. eddsaKey
+const eddsaKey = await signatureKeyPairMock(accInfo);
+console.log("eddsaKey:", eddsaKey.sk);
+
+// Step 3. get apikey
+const {apiKey} = await LoopringAPI.userAPI.getUserApiKey(
+  {
+    accountId: accInfo.accountId,
+  },
+  eddsaKey.sk
+);
+console.log("apiKey:", apiKey);
+const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+  {
+    accountId: accInfo.accountId,
+    requestType: sdk.OffchainNFTFeeReqType.NFT_MINT,
+    tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress
+  },
+  apiKey
+);
+console.log("NFTWithdrawal:", response);
+
+```
+
+## Fee: NFT Deploy
+
+```ts 
+// Step 1. get account info 
+const {accInfo} = await LoopringAPI.exchangeAPI.getAccount(
+  {owner: LOOPRING_EXPORTED_ACCOUNT.address,});
+console.log("accInfo:", accInfo);
+
+// Step 2. eddsaKey
+const eddsaKey = await signatureKeyPairMock(accInfo);
+console.log("eddsaKey:", eddsaKey.sk);
+
+// Step 3. get apikey
+const {apiKey} = await LoopringAPI.userAPI.getUserApiKey(
+  {
+    accountId: accInfo.accountId,
+  },
+  eddsaKey.sk
+);
+console.log("apiKey:", apiKey);
+const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+  {
+    accountId: accInfo.accountId,
+    requestType: sdk.OffchainNFTFeeReqType.NFT_DEPLOY,
+  },
+  apiKey
+);
+console.log("NFTWithdrawal:", response);
+```
+
 ***
+
 ## getActiveFeeInfo without apikey & accountId
+
 ```ts
 const response = await LoopringAPI.globalAPI.getActiveFeeInfo({});
 ```
 
 ***
+
 ## getActiveFeeInfo without apikey with accountId
+
 ```ts
  const response = await
-LoopringAPI.globalAPI.getActiveFeeInfo({ accountId: LOOPRING_EXPORTED_ACCOUNT.accountId });
+  LoopringAPI.globalAPI.getActiveFeeInfo({accountId: LOOPRING_EXPORTED_ACCOUNT.accountId});
 ```
 

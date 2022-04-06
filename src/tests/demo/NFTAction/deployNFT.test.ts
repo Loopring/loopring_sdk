@@ -30,16 +30,7 @@ describe("deployNFT", function () {
       );
       console.log("apiKey:", apiKey);
 
-      // Step 4. storageId
-      const storageId = await LoopringAPI.userAPI.getNextStorageId(
-        {
-          accountId: accInfo.accountId,
-          sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-        },
-        apiKey
-      );
-
-      // Step 5. fee
+      // Step 4. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
@@ -49,6 +40,15 @@ describe("deployNFT", function () {
         apiKey
       );
       console.log(fee);
+
+      // Step 5. storageId
+      const storageId = await LoopringAPI.userAPI.getNextStorageId(
+        {
+          accountId: accInfo.accountId,
+          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId, // same as Step 7. transfer->token->tokenId
+        },
+        apiKey
+      );
 
       // Step 6. broker
       const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker();

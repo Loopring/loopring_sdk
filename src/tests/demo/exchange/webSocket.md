@@ -1,20 +1,17 @@
-import * as sdk from "../../../index";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
+#WebSocket Command
+Definition: Loopring L2 websocket 
 
-/**
- * @define WsTopicType
- *   `account`,
- *   `order`,
- *   `orderbook`,
- *   `mixorder`,
- *   `trade`,
- *   `ticker`,
- *   `candlestick`,
- *   `ammpool`,
- *
- */
-describe("websocket", function () {
-  it(
+### Loopring L2 websocket topic type: 
+WsTopicType
+- `account`
+- `orderbook`
+- `mixorder`
+- `trade`
+- `ticker`
+- `candlestick`
+- `ammpool`
+
+
     "getWsKey",
     async () => {
       const response = await LoopringAPI.wsAPI.getWsKey();

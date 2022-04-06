@@ -76,6 +76,7 @@ const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
   {
     accountId: accInfo.accountId,
     requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
+    tokenAddress:  LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
     deployInWithdraw:
       tokenInfo?.deploymentStatus === DEPLOYMENT_STATUS.NOT_DEPLOYED, // when token is not deploy the fee is diff
   },

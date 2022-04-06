@@ -17,6 +17,7 @@ export enum WsTopicType {
   orderbook = "orderbook",
   mixorder = "mixorder",
   trade = "trade",
+  mixtrade = "mixtrade",
   ticker = "ticker",
   candlestick = "candlestick",
   ammpool = "ammpool",

@@ -767,7 +767,7 @@ export type GetNFTOffchainFeeAmtRequest = {
       requestType: 9;
       tokenAddress: string;
     }
-  | { requestType: 10; deployInWithdraw?: boolean }
+  | { requestType: 10; tokenAddress: string; deployInWithdraw?: boolean }
 >;
 
 export interface OrderInfo {
