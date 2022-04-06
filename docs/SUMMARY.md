@@ -9,9 +9,9 @@
 ### SDKs demo
 
 - [JS SDK](./js_sdk/README.md)
-  - [Overview](./js_sdk/README.md#sdk-initialize)
   - [Exchange](./js_sdk/exchange/exchange.md)
- 
+    - [Web Socket](./js_sdk/exchange/webSocket.md)
+    - [Amm](./js_sdk/exchange/ammpool_api.md)
   - [Account](./js_sdk/README.md#mock-account)
      - [Active Account](./js_sdk/account/activeAccount.md)
      - [Fees](./js_sdk/account/fee.md)
@@ -30,7 +30,7 @@
     - [Deploy](./js_sdk/NFTAction/deployNFT.md)
     - [Trade](./js_sdk/NFTAction/tradeNFT.md)
       - [Validate Order](./js_sdk/NFTAction/validateNFTOrder.md)
-  - [Web Socket](./js_sdk/exchange/webSocket.md) 
+  
   
 ### more detail
 - class
