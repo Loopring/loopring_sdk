@@ -1,4 +1,4 @@
-# Loopring SDK signature Guid
+# Signature
 
 Loopring SDK support EOA (EOA hardware wallet) & Loopring Smart wallet Signature
 
@@ -6,29 +6,124 @@ Loopring SDK support EOA (EOA hardware wallet) & Loopring Smart wallet Signature
 - For Loopring Smart wallet (App), Provider gateway only can be walletConnect
 
 ## Follow is the provider gateway we inject & test:
-  - MetaMask  (Ledger, Trezor)
-  - WalletConnect (Authereum, Loopring Smart wallet )
-  - Coinbase 
+
+- MetaMask  (Ledger, Trezor)
+- WalletConnect (Authereum, Loopring Smart wallet )
+- Coinbase
+- [Coming soon...](https://desk.zoho.com/portal/loopring/en/newticket)
 
 ## For signature:
+
 For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
 
 ### EOA:
-  - For Browser extension ([More information: signing-data](https://docs.metamask.io/guide/signing-data.html#a-brief-history))
-    + common EOA we use the `v4` signature and `web3.eth.personal.ecRecover` validate signature
-    + when `v4` signature is failed for any step, we will try `personal_sign` and `web3.eth.personal.ecRecover` validate signature
-  - For Dapp 
-    + when loopring Dex is inside Dapp WebView & connect by `window.ethereum`, we remove the `web3.eth.personal.ecRecover` validate 
 
-### Loopring Smart wallet:  
-  - For Smart wallet we send `eth_signTypedData` by walletConnect & validate ABI.Contracts.ContractWallet.encodeInputs `isValidSignature(bytes32,bytes)` 
+- For Browser
+  extension ([More information: signing-data](https://docs.metamask.io/guide/signing-data.html#a-brief-history))
+  + common EOA we use the `v4` signature and `web3.eth.personal.ecRecover` validate signature
+  + when `v4` signature is failed for any step, we will try `personal_sign` and `web3.eth.personal.ecRecover` validate
+    signature
+- For Dapp
+  + when loopring Dex is inside Dapp Webview & connect by `window.ethereum`, we remove the `web3.eth.personal.ecRecover`
+    validate
 
-> ❗ when add `SigSuffix` `02|03` ( follow EIP712 + `02`, personal_sign + `03`) 
+### Loopring Smart wallet:
+
+- For Smart wallet we send `eth_signTypedData` by walletConnect & validate
+  ABI.Contracts.ContractWallet.encodeInputs `isValidSignature(bytes32,bytes)`
+
+### Loopring Counterfactual wallet:
+
+- signature is same as Smart wallet
+- But ecRecover is by
+  walletOwner, `const {walletOwner} = await LoopringAPI.exchangeAPI.getCounterFactualInfo({ accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF, });`
+
+> ❗ when add `SigSuffix` `02|03` ( follow EIP712 + `02`, personal_sign + `03`)
 >- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
 >- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix03`;
 
-## Code: validate signature 
-[github: src/api/base_api.ts#personalSign](https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549)         
+***
+
+## generateKeyPair
+
+```ts
+const {accInfo} = await LoopringAPI.exchangeAPI.getAccount({
+  owner: LOOPRING_EXPORTED_ACCOUNT.address,
+});
+const result = await signatureKeyPairMock(accInfo);
+console.log(result.sk);
+```
+
+***
+
+## getEcDSASig: eth_signTypedData_v4
+
+```ts
+// test case is not allow brock by Mock provider
+const result = await sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.HasDataStruct,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  "",
+  sdk.ConnectorNames.Unknown
+);
+console.log("getEcDSASig:eth_signTypedData_v4",
+  result,
+  "ecdsaSig+sdk.SigSuffix.Suffix02",
+  result.ecdsaSig + sdk.SigSuffix.Suffix02
+);
+```
+
+***
+
+## getEcDSASig: personalSign(WithoutDataStruct--Hardware wallet)
+
+```ts
+const result = await sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.WithoutDataStruct,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  "",
+  sdk.ConnectorNames.Unknown
+);
+console.log(
+  "getEcDSASig:WithoutDataStruct(personalSign)",
+  result,
+  "ecdsaSig+sdk.SigSuffix.Suffix03",
+  result.ecdsaSig + sdk.SigSuffix.Suffix03
+);
+```
+***
+## getEcDSASig: personalSign(Contract)
+
+```ts
+// test case is not allow brock by Mock provider
+const result = await sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.Contract,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  "",
+  sdk.ConnectorNames.Unknown
+);
+console.log(
+  "getEcDSASig:personalSign(Contract)",
+  result
+);
+```
+
+## Validate signature
+
+[github: src/api/base_api.ts#personalSign](https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549)
+
 ```
  export async function personalSign(
   web3: any,

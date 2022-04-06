@@ -107,6 +107,7 @@ describe("Fee", function () {
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
+          tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
           requestType: sdk.OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
         },
         apiKey

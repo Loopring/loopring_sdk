@@ -21,7 +21,7 @@ describe("orderERC20", function () {
           isAtoB = true,
           slippage = "50";
 
-        // step1: get apikey & eddsaKey
+        // Step 1. get apikey & eddsaKey
         const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
         });
@@ -44,7 +44,7 @@ describe("orderERC20", function () {
           apiKey
         );
 
-        // step3: get user AmountMap, which decided user minimum order
+        // Step 3. get user AmountMap, which decided user minimum order
         const amountMap = {
           [AMM_MARKET]: (
             await LoopringAPI.userAPI.getMinimumTokenAmt(
@@ -66,7 +66,7 @@ describe("orderERC20", function () {
           ).amountMap,
         };
 
-        // step4:  depth,  ammPoolSnapshot ,tickMap
+        // Step 4.  depth,  ammPoolSnapshot ,tickMap
         const [{ depth }, { ammPoolSnapshot }] = await Promise.all([
           LoopringAPI.exchangeAPI.getMixDepth({
             market: AMM_MAP["AMM-LRC-ETH"].market,
@@ -76,14 +76,14 @@ describe("orderERC20", function () {
           }),
         ]);
 
-        // step5: check MinAmt
+        // Step 5. check MinAmt
         let buyMinAmtInfo = (amountMap[AMM_MARKET] ?? amountMap[MARKET])[buy];
         let takerRate = buyMinAmtInfo
           ? buyMinAmtInfo.userOrderInfo.takerRate
           : 0;
         const minAmountInput = buyMinAmtInfo.userOrderInfo.minAmount;
 
-        // step6: calcTradeParams
+        // Step 6. calcTradeParams
         const calcTradeParams = sdk.getOutputAmount({
           input: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
           sell,
@@ -157,7 +157,7 @@ describe("orderERC20", function () {
           slippage = "50";
         const isAtoB = false;
 
-        // step1: get apikey & eddsaKey
+        // Step 1. get apikey & eddsaKey
         const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
         });
@@ -180,7 +180,7 @@ describe("orderERC20", function () {
           apiKey
         );
 
-        // step3: get user AmountMap, which decided user minimum order
+        // Step 3. get user AmountMap, which decided user minimum order
         const amountMap = {
           [AMM_MARKET]: (
             await LoopringAPI.userAPI.getMinimumTokenAmt(
@@ -202,7 +202,7 @@ describe("orderERC20", function () {
           ).amountMap,
         };
 
-        // step4:  depth,  ammPoolSnapshot ,tickMap
+        // Step 4.  depth,  ammPoolSnapshot ,tickMap
         const [{ depth }, { ammPoolSnapshot }] = await Promise.all([
           LoopringAPI.exchangeAPI.getMixDepth({
             market: AMM_MAP["AMM-LRC-ETH"].market,
@@ -212,7 +212,7 @@ describe("orderERC20", function () {
           }),
         ]);
 
-        // step5: check  MinAmt
+        // Step 5. check  MinAmt
         const amount: sdk.LoopringMap<sdk.TokenAmount> =
           amountMap[AMM_MARKET] ?? amountMap[MARKET];
 
@@ -225,7 +225,7 @@ describe("orderERC20", function () {
 
         const minAmountInput = buyMinAmtInfo.userOrderInfo.minAmount;
 
-        // step6: calcTradeParams
+        // Step 6. calcTradeParams
         const calcTradeParams = sdk.getOutputAmount({
           input: LOOPRING_EXPORTED_ACCOUNT.tradeETHValue.toString(),
           sell,

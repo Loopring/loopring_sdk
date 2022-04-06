@@ -8,26 +8,32 @@
 
 ### SDKs demo
 
-- [JS SDK](./js_sdk/INTRO.md)
-
-  - [Overview](./js_sdk/INTRO.md#install)
-  - [Deposit](./js_sdk/Deposit.md)
-  - [Unit Test](./js_sdk/unit_test.md)
-  - [Signature & Validate ](./js_sdk/signature_api.md)
-  - [AmmPool](./js_sdk/ammpool_api.md)
-  - [NFT(Contract)](./js_sdk/nft_api.md)
-  - [Contract](./js_sdk/contract_api.md)
-  - [Exchange](./js_sdk/exchange_api.md)
-  - [User](./js_sdk/user_api.md)
-  - [Whitelisted User](./js_sdk/whitelisted_user_api.md)
-  - [Wallet](./js_sdk/wallet_api.md)
-  - [WS REST](./js_sdk/ws_api.md)
-  - [Websocket](./js_sdk/websocket_api.md)
-
+- [JS SDK](./js_sdk/README.md)
+  - [Overview](./js_sdk/README.md#sdk-initialize)
+  - [Exchange](./js_sdk/exchange/exchange.md)
+ 
+  - [Account](./js_sdk/README.md#mock-account)
+     - [Active Account](./js_sdk/account/activeAccount.md)
+     - [Fees](./js_sdk/account/fee.md)
+     - [Signature](./js_sdk/account/signature.md)
+     - [Transaction Recorder](./js_sdk/account/historyRecord.md)
+  - [ERC20](./js_sdk/README.md#mock-erc20-token-map)
+    - [Deposit](./js_sdk/deposit/depositERC20.md)
+    - [Transfer](./js_sdk/transfer/transferERC20.md)
+    - [Withdraw](./js_sdk/withdraw/withdrawERC20.md)
+    - [Order](./js_sdk/erc20Trade/orderERC20.md)
+  - [NFT](./js_sdk/README.md#mock-account)
+    - [Deposit](./js_sdk/deposit/depositNFT.md)
+    - [Transfer](./js_sdk/transfer/transferNFT.md)
+    - [Withdraw](./js_sdk/withdraw/withdrawNFT.md)
+    - [Mint](./js_sdk/NFTAction/metaNFT.md)
+    - [Deploy](./js_sdk/NFTAction/deployNFT.md)
+    - [Trade](./js_sdk/NFTAction/tradeNFT.md)
+      - [Validate Order](./js_sdk/NFTAction/validateNFTOrder.md)
+  - [Web Socket](./js_sdk/exchange/webSocket.md) 
+  
 ### more detail
-
 - class
-
   - [AmmpoolAPI](./detail/classes/AmmpoolAPI.md)
   - [ExchangeAPI](./detail/classes/ExchangeAPI.md)
   - [NFTAPI](./detail/classes/NFTAPI.md)
