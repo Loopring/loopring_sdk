@@ -2,11 +2,7 @@ import {
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
-  TOKEN_INFO,
-  signatureKeyPairMock,
-  web3,
 } from "../../MockData";
-import * as sdk from "../../../index";
 
 describe("Transfer UT", function () {
   it(
@@ -19,33 +15,33 @@ describe("Transfer UT", function () {
     },
     DEFAULT_TIMEOUT
   );
-  it(
-    "get_EddsaSig_NFT_Transfer",
-    async () => {
-      const request: sdk.OriginNFTTransferRequestV3 = {
-        exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
-        fromAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
-        toAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
-        toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
-        token: {
-          tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
-          nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-          amount: "1",
-        },
-        maxFee: {
-          tokenId: 2,
-          amount: "311000000000000000000",
-        },
-        storageId: 9,
-        validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-        // memo: '',
-      };
-      const result = sdk.get_EddsaSig_NFT_Transfer(request, "");
-      console.log(`resultHash:`, result);
-    },
-    DEFAULT_TIMEOUT
-  );
+  // it(
+  //   "get_EddsaSig_NFT_Transfer",
+  //   async () => {
+  //     const request: sdk.OriginNFTTransferRequestV3 = {
+  //       exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+  //       fromAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+  //       fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
+  //       toAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
+  //       toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
+  //       token: {
+  //         tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+  //         nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
+  //         amount: "1",
+  //       },
+  //       maxFee: {
+  //         tokenId: 2,
+  //         amount: "311000000000000000000",
+  //       },
+  //       storageId: 9,
+  //       validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+  //       // memo: '',
+  //     };
+  //     const result = sdk.get_EddsaSig_NFT_Transfer(request, "");
+  //     console.log(`resultHash:`, result);
+  //   },
+  //   DEFAULT_TIMEOUT
+  // );
   // it(
   //   "getUserApiKeyWhitelisted",
   //   async () => {

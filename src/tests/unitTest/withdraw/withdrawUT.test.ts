@@ -9,46 +9,46 @@ import {
 import * as sdk from "../../../index";
 
 describe("Withdraw NFTAction test", function () {
-  it(
-    "get_EddsaSig_Withdraw",
-    async () => {
-      const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      if (!accInfo) {
-        return;
-      }
-      /*
-       * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
-       */
-      const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
-
-      const request: sdk.OffChainWithdrawalRequestV3 = {
-        exchange: exchangeInfo.exchangeAddress,
-        accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        counterFactualInfo: undefined,
-        fastWithdrawalMode: false,
-        hashApproved: "",
-        maxFee: {
-          tokenId: 1,
-          volume: "100000000000000000000",
-        },
-        minGas: 0,
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-        to: LOOPRING_EXPORTED_ACCOUNT.address,
-        storageId: 0,
-        token: {
-          tokenId: 1,
-          volume: "100000000000000000000",
-        },
-        validUntil: 0,
-      };
-
-      const result = sdk.get_EddsaSig_OffChainWithdraw(request, "");
-      console.log(`resultHash:`, result);
-    },
-    DEFAULT_TIMEOUT
-  );
+  // it(
+  //   "get_EddsaSig_Withdraw",
+  //   async () => {
+  //     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
+  //       owner: LOOPRING_EXPORTED_ACCOUNT.address,
+  //     });
+  //     if (!accInfo) {
+  //       return;
+  //     }
+  //     /*
+  //      * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
+  //      */
+  //     const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
+  //
+  //     const request: sdk.OffChainWithdrawalRequestV3 = {
+  //       exchange: exchangeInfo.exchangeAddress,
+  //       accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+  //       counterFactualInfo: undefined,
+  //       fastWithdrawalMode: false,
+  //       hashApproved: "",
+  //       maxFee: {
+  //         tokenId: 1,
+  //         volume: "100000000000000000000",
+  //       },
+  //       minGas: 0,
+  //       owner: LOOPRING_EXPORTED_ACCOUNT.address,
+  //       to: LOOPRING_EXPORTED_ACCOUNT.address,
+  //       storageId: 0,
+  //       token: {
+  //         tokenId: 1,
+  //         volume: "100000000000000000000",
+  //       },
+  //       validUntil: 0,
+  //     };
+  //
+  //     const result = sdk.get_EddsaSig_OffChainWithdraw(request, "");
+  //     console.log(`resultHash:`, result);
+  //   },
+  //   DEFAULT_TIMEOUT
+  // );
 
   it(
     "forceWithdraw",

@@ -1,11 +1,4 @@
-import {
-  DEFAULT_TIMEOUT,
-  LOOPRING_EXPORTED_ACCOUNT,
-  LoopringAPI,
-  web3,
-  TOKEN_INFO,
-  signatureKeyPairMock,
-} from "../../MockData";
+import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
 import * as sdk from "../../../index";
 describe("ExchangeAPI test", function () {
   it(
@@ -198,7 +191,6 @@ describe("ExchangeAPI test", function () {
       const response = await LoopringAPI.exchangeAPI.getMixMarkets();
       console.log(response);
       console.log(response.pairs.LRC.tokenList);
-
       console.log(
         "hasMarket LRC-ETH:",
         sdk.hasMarket(response.marketArr, "LRC-ETH")
