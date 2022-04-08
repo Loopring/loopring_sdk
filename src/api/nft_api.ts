@@ -306,7 +306,7 @@ export class NFTAPI extends BaseAPI {
    * @param from The address that deposits the funds to the exchange
    * @param exchangeAddress loopring exchange address
    * @param nftType  NFTType
-   * @param tokenAddress  The address of NFTAction token
+   * @param tokenAddress  The address of NFT token
    */
   public async isApprovedForAll({
     web3,
