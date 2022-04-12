@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "2.0.0-aplha.2-ut",
+  "version": "2.0.0-aplha.3",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
@@ -88,7 +88,6 @@
     "@types/ethereumjs-tx": "^2.0.0",
     "@types/ethereumjs-util": "5.2.0",
     "@types/jest": "^26.0.23",
-    "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.14.168",
     "@types/mocha": "^8.2.2",
     "@types/ms": "^0.7.31",

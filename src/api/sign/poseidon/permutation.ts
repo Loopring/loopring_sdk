@@ -14,12 +14,12 @@
 
 import { BigNumber } from "ethers";
 import { SignatureScheme } from "./eddsa";
-import { modulo } from "./field";
+import { modulo } from './field';
 
 import { TextEncoder } from "web-encoding";
 
 // @ts-ignore
-var blake2b = require("blake2b");
+var blake2b = require('blake2b')
 
 export class PoseidonParams {
   public p: BigNumber;
@@ -28,135 +28,120 @@ export class PoseidonParams {
   public nRoundsP: number;
   public seed: string;
   public e: BigNumber;
-  public constants_C: [BigNumber];
-  public constants_M: [[BigNumber]];
-  public security_target: number;
+  public constants_C: [BigNumber]
+  public constants_M: [[BigNumber]]
+  public security_target: number
 
-  constructor(
-    p: BigNumber,
-    t: number,
-    nRoundsF: number,
-    nRoundsP: number,
-    seed: string,
-    e: BigNumber,
-    constants_C: [BigNumber] | null,
-    constants_M: [[BigNumber]] | null,
-    security_target: number
-  ) {
-    this.p = p;
-    this.t = t;
-    this.nRoundsF = nRoundsF;
-    this.nRoundsP = nRoundsP;
-    this.seed = seed;
-    this.e = e;
+  constructor(p: BigNumber, t: number, nRoundsF: number, nRoundsP: number, seed: string, e: BigNumber, constants_C: [BigNumber] | null, constants_M: [[BigNumber]] | null, security_target: number) {
+    this.p = p
+    this.t = t
+    this.nRoundsF = nRoundsF
+    this.nRoundsP = nRoundsP
+    this.seed = seed
+    this.e = e
 
     if (constants_C == null) {
-      this.constants_C = permunation.poseidon_constants(
-        p,
-        `${seed}_constants`,
-        nRoundsF + nRoundsP
-      );
+      this.constants_C = permunation.poseidon_constants(p, `${seed}_constants`, nRoundsF + nRoundsP)
     } else {
-      this.constants_C = constants_C;
+      this.constants_C = constants_C
     }
 
     if (constants_M == null) {
-      this.constants_M = permunation.poseidon_matrix(
-        p,
-        `${seed}_matrix_0000`,
-        t
-      );
+      this.constants_M = permunation.poseidon_matrix(p, `${seed}_matrix_0000`, t)
     } else {
-      this.constants_M = constants_M;
+      this.constants_M = constants_M
     }
 
-    this.security_target = security_target;
+    this.security_target = security_target
   }
+
 }
 
 export class permunation {
+
   static H(arg: string) {
-    const outputLength = 32;
+    const outputLength = 32
 
-    const enc = new TextEncoder();
-    const message = enc.encode(arg);
+    const enc = new TextEncoder();    
+    const message = enc.encode(arg)
     // console.log(`message ${message}`)
 
-    const buf = Buffer.alloc(outputLength);
-    // console.log(`hashOfSize32Bytes ${buf.toString()}`)
-    // console.log(`message ${message}`)
-    blake2b(buf.length, null).update(message).final(buf);
-    const items = buf.toJSON().data;
+    const buf = Buffer.alloc(outputLength)
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
+    // console.log(`message ${message}`)    
+    blake2b(buf.length, null).update(message).final(buf)
+    const items = buf.toJSON().data
     // console.log(`H items ${items}`)
 
-    let sum = BigNumber.from("0");
-    var i = 0;
+    let sum = BigNumber.from("0")
+    var i = 0
     for (var i = 0; i < items.length; i++) {
-      const itemBigInt = BigNumber.from(items[i]);
-      const tmp = itemBigInt.mul(BigNumber.from("256").pow(BigNumber.from(i)));
-      sum = sum.add(tmp);
+      const itemBigInt = BigNumber.from(items[i])
+      const tmp = itemBigInt.mul((BigNumber.from("256").pow(BigNumber.from(i))))
+      sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
-    return sum;
+    return sum
   }
 
   static H_Bigint(arg: BigNumber) {
-    const outputLength = 32;
+    const outputLength = 32
 
-    const message = new Uint8Array(SignatureScheme.to_bytes(arg));
+    const message = new Uint8Array(SignatureScheme.to_bytes(arg))
     // console.log(`message ${message}`)
 
-    const buf = Buffer.alloc(outputLength);
-    // console.log(`hashOfSize32Bytes ${buf.toString()}`)
-    blake2b(buf.length, null).update(message).final(buf);
-    const items = buf.toJSON().data;
+    const buf = Buffer.alloc(outputLength)
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
+    blake2b(buf.length, null).update(message).final(buf)
+    const items = buf.toJSON().data
     // console.log(`H_Bigint items ${items}`)
 
-    let sum = BigNumber.from("0");
-    var i = 0;
+    let sum = BigNumber.from("0")
+    var i = 0
     for (var i = 0; i < items.length; i++) {
-      const itemBigInt = BigNumber.from(items[i]);
-      const tmp = itemBigInt.mul(BigNumber.from("256").pow(BigNumber.from(i)));
-      sum = sum.add(tmp);
+      const itemBigInt = BigNumber.from(items[i])
+      const tmp = itemBigInt.mul((BigNumber.from("256").pow(BigNumber.from(i))))
+      sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
-    return sum;
+    return sum
   }
 
+
   static poseidon_constants(p: BigNumber, seed: string, n: number) {
-    let c: any;
-    c = [];
-    let seedBigInt = this.H(seed);
-    const result = seedBigInt.mod(p);
-    c.push(result);
-    for (let i = 0; i < n - 1; i++) {
-      seedBigInt = this.H_Bigint(seedBigInt);
-      const result = seedBigInt.mod(p);
-      c.push(result);
+    let c: any
+    c = []
+    let seedBigInt = this.H(seed)
+    const result = seedBigInt.mod(p)
+    c.push(result)
+    for (let i = 0; i < n-1; i++) {
+      seedBigInt = this.H_Bigint(seedBigInt)
+      const result = seedBigInt.mod(p)
+      c.push(result)
     }
-    return c;
+    return c
   }
 
   static poseidon_matrix(p: BigNumber, seed: string, t: number) {
-    const c = this.poseidon_constants(p, seed, t * 2);
-    let matrix: any;
-    matrix = [];
+    const c = this.poseidon_constants(p, seed, t*2)
+    let matrix: any
+    matrix = []
     for (let i = 0; i < t; i++) {
-      let row: any;
-      row = [];
+      let row: any
+      row = []
       for (let j = 0; j < t; j++) {
-        const c_i = c[i];
-        const c_t_j = c[t + j];
-        const p_c = p;
-        const c_t_j_p = c_t_j.mod(p_c);
-        const left = c_i.sub(c_t_j_p);
-        const p_2 = p_c.sub(2);
-        const item_c = modulo(left, p_2, p_c);
-        row.push(item_c);
+        const c_i = c[i]
+        const c_t_j = c[t+j]
+        const p_c = p
+        const c_t_j_p = c_t_j.mod(p_c)
+        const left = c_i.sub(c_t_j_p)
+        const p_2 = p_c.sub(2)
+        const item_c = modulo(left, p_2, p_c)
+        row.push(item_c)
       }
-      matrix.push(row);
+      matrix.push(row)
     }
-    return matrix;
+    return matrix
   }
 
   static poseidon_sbox(state: [BigNumber], i: number, params: PoseidonParams) {
@@ -168,24 +153,24 @@ export class permunation {
     - the middle R_P rounds have a partial S-Box layer (i.e., 1 S-Box layer),
     - the last R_f rounds have a full S-Box layer
     */
-    const half_F = params.nRoundsF / 2;
+    const half_F = params.nRoundsF / 2
 
-    if (i < half_F || i >= half_F + params.nRoundsP) {
+    if (i < half_F || i >= (half_F + params.nRoundsP)) {
       for (let j = 0; j < state.length; j++) {
-        const element_c = state[j];
-        const e_c = params.e;
-        const p_c = params.p;
-        const item = modulo(element_c, e_c, p_c);
-        state[j] = item;
+        const element_c = state[j]
+        const e_c = params.e
+        const p_c = params.p
+        const item = modulo(element_c, e_c, p_c)
+        state[j] = item
       }
     } else {
-      const element_c = state[0];
-      const e_c = params.e;
-      const p_c = params.p;
-      const item = modulo(element_c, e_c, p_c);
-      state[0] = item;
+      const element_c = state[0]
+      const e_c = params.e
+      const p_c = params.p
+      const item = modulo(element_c, e_c, p_c)
+      state[0] = item
     }
-    return state;
+    return state
   }
 
   static poseidon_mix(state: [BigNumber], M: [[BigNumber]], p: BigNumber) {
@@ -193,18 +178,19 @@ export class permunation {
     The mixing layer is a matrix vector product of the state with the mixing matrix
       - https://mathinsight.org/matrix_vector_multiplication
     */
-    let newState: any;
-    newState = [];
+    let newState: any
+    newState = []
     for (let i = 0; i < M.length; i++) {
-      let sum = BigNumber.from(0);
+      let sum = BigNumber.from(0)
       for (let j = 0; j < state.length; j++) {
-        const element = state[j];
-        sum = sum.add(M[i][j].mul(element));
+        const element = state[j]
+        sum = sum.add((M[i][j].mul(element)))
       }
-      newState.push(sum.mod(p));
+      newState.push(sum.mod(p))
     }
-    return newState;
+    return newState
   }
+
 
   // poseidon
   /*
@@ -234,32 +220,33 @@ export class permunation {
     to form a sponge construct.
   */
   static poseidon(inputs: [BigNumber], params: PoseidonParams) {
-    let state: any;
-    state = [];
-    state = state.concat(inputs);
+    let state: any
+    state = []
+    state = state.concat(inputs)
     // console.log(`state ${state}`)
     for (var i = 0; i < params.t - inputs.length; i++) {
-      state.push(BigNumber.from(0));
+      state.push(BigNumber.from(0))
     }
 
     // console.log(`state ${state}`)
     // console.log(`params.constants_C.length ${params.constants_C.length}`)
 
     for (var i = 0; i < params.constants_C.length; i++) {
-      const C_i = params.constants_C[i];
+      const C_i = params.constants_C[i]
 
       for (let index = 0; index < state.length; index++) {
-        const element = state[index];
-        state[index] = element.add(C_i);
+        const element = state[index]
+        state[index] = element.add(C_i)
       }
 
-      state = this.poseidon_sbox(state, i, params);
+      state = this.poseidon_sbox(state, i, params)
       // console.log(`after poseidon_sbox ${state}`)
 
-      state = this.poseidon_mix(state, params.constants_M, params.p);
+      state = this.poseidon_mix(state, params.constants_M, params.p)
       // console.log(`after poseidon_mix ${state}`)
     }
     // console.log(`hash is ${state[0]}`)
-    return state[0];
+    return state[0]
   }
+
 }
