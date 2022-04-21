@@ -1482,7 +1482,19 @@ export interface OriginTransferRequestV3 {
    */
   clientId?: string;
 
+  /**
+   * CounterFactualInfo
+   * @type {CounterFactualInfo}
+   * @memberof OriginTransferRequestV3
+   */
   counterFactualInfo?: CounterFactualInfo;
+
+  /**
+   *
+   * @type {boolean}
+   * @memberof OriginTransferRequestV3
+   */
+  payPayeeUpdateAccount?: boolean;
 }
 
 /**
@@ -1603,7 +1615,20 @@ export interface OriginNFTTransferRequestV3 {
    * @memberof OriginNFTTransferRequestV3
    */
   clientId?: string;
+
+  /**
+   * CounterFactualInfo
+   * @type {CounterFactualInfo}
+   * @memberof OriginNFTTransferRequestV3
+   */
   counterFactualInfo?: CounterFactualInfo;
+
+  /**
+   *
+   * @type {boolean}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  payPayeeUpdateAccount?: boolean;
 }
 
 /**

@@ -74,7 +74,18 @@ describe("TransferNFT", function () {
           },
           storageId: storageId.offchainId,
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-          // memo: '',
+          /*
+           * when it is free, will hele payee active account,
+           * maxFee from:
+           * const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+           *  {
+           *     accountId: accInfo.accountId,
+           *     requestType: sdk.OffchainFeeReqType.NFT_TRANSFER_AND_UPDATE_ACCOUNT,
+           *   },
+           *   apiKey
+           * );
+           */
+          payPayeeUpdateAccount: false,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,

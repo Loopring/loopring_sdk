@@ -78,6 +78,18 @@ const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
       volume: fee.fees["LRC"].fee ?? "9400000000000000000",
     },
     validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+    /* 
+     * when it is free, will hele payee active account,
+     * maxFee from: 
+     * const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+     *  {
+     *     accountId: accInfo.accountId,
+     *     requestType: sdk.OffchainFeeReqType.TRANSFER_AND_UPDATE_ACCOUNT,
+     *   },
+     *   apiKey
+     * );
+     */
+    payPayeeUpdateAccount: false,
   },
   web3,
   chainId: sdk.ChainId.GOERLI,
