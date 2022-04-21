@@ -1490,7 +1490,7 @@ export interface OriginTransferRequestV3 {
   counterFactualInfo?: CounterFactualInfo;
 
   /**
-   *
+   * If true, let the sender transferring to the receiver pay the receiver's account activation fee
    * @type {boolean}
    * @memberof OriginTransferRequestV3
    */
@@ -1624,7 +1624,7 @@ export interface OriginNFTTransferRequestV3 {
   counterFactualInfo?: CounterFactualInfo;
 
   /**
-   *
+   * If true, let the sender transferring to the receiver pay the receiver's account activation fee
    * @type {boolean}
    * @memberof OriginNFTTransferRequestV3
    */
