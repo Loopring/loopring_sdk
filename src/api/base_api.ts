@@ -386,6 +386,7 @@ export async function personalSign(
 
             // Valid: 2. webview directory signature Valid
             if (
+              typeof window !== 'undefined' &&
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
               isMobile &&
               // Mobile directory connect will sign ConnectorNames as MetaMask only
