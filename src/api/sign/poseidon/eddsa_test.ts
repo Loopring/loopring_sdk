@@ -58,23 +58,6 @@ function test_hash_public_1() {
   // console.log("test_hash_public_1 passed")
 }
 
-function test_bn_to_buf_with_fixed_length() {
-  console.log("test_bn_to_buf_with_fixed_length")
-  const seed = BigNumber.from("229397413690357526417798553777251830796653871023274532100357778885771107588")
-  console.log(`seed ${seed.toString()}`)
-  const intDataItemsFixedLength = bnToBufWithFixedLength(seed.toString(), 32);
-  console.log(`bigIntData ${intDataItemsFixedLength}`)
-  assert(JSON.stringify(intDataItemsFixedLength) === JSON.stringify([0, 129, 213, 150, 250, 102, 28, 192, 97, 215, 199, 38, 13, 30, 18, 153, 109, 219, 76, 86, 53, 118, 116, 111, 211, 61, 84, 113, 52, 21, 157, 4]))
-  console.log(`bigIntData length ${intDataItemsFixedLength.length}`)
-
-  const intDataItems = bnToBuf(seed.toString());
-  console.log(`bigIntData ${intDataItems}`)
-  assert(JSON.stringify(intDataItems) === JSON.stringify([129, 213, 150, 250, 102, 28, 192, 97, 215, 199, 38, 13, 30, 18, 153, 109, 219, 76, 86, 53, 118, 116, 111, 211, 61, 84, 113, 52, 21, 157, 4]))
-  console.log(`bigIntData length ${intDataItems.length}`)
-
-  console.log("test_bn_to_buf_with_fixed_length passed")
-}
-
 function main() {
   // console.log("\n\neddsa_test\n")
   test_sign_1()
@@ -82,7 +65,6 @@ function main() {
   test_to_bytes_1()
   test_hash_secret_1()
   test_hash_public_1()
-  test_bn_to_buf_with_fixed_length()
 }
 
 main();
