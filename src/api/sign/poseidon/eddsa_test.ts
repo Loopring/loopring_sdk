@@ -1,6 +1,6 @@
 import { assert } from "console"
 import { BigNumber } from "ethers"
-import { bnToBuf, bnToBufWithFixedLength, SignatureScheme } from "./eddsa"
+import { SignatureScheme } from "./eddsa"
 import { FQ } from "./field"
 import { Point } from "./jubjub"
 
