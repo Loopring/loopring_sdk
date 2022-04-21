@@ -210,6 +210,8 @@ export function bnToBuf(bn: string) {
     hex = '0' + hex
   }
   const len = hex.length / 2;
+  console.log("length", len);
+
   const u8 = new Uint8Array(len);
   let i = 0;
   let j = 0;
@@ -219,6 +221,39 @@ export function bnToBuf(bn: string) {
     j += 2;
   }
   return Array.from(u8);
+}
+
+export function bnToBufWithFixedLength(bn: string, outputLength: number) {
+  let hex = BigInt(bn).toString(16)
+  if (hex.length % 2) {
+    hex = '0' + hex
+  }
+  const len = hex.length / 2;
+
+  console.log("len", len);
+
+  const u8 = new Uint8Array(len);
+  let i = 0;
+  let j = 0;
+  while (i < len) {
+    u8[i] = parseInt(hex.slice(j, j + 2), 16)
+    i += 1;
+    j += 2;
+  }
+
+  let bitIntDataItems = Array.from(u8);
+
+  const more = outputLength - bitIntDataItems.length
+  console.log('diff len', more)
+  if (more > 0) {
+    for (let i = 0; i < more; i++) {
+      bitIntDataItems = [0].concat(bitIntDataItems)
+    }
+  } else {
+    bitIntDataItems = bitIntDataItems.slice(0, outputLength)
+  }
+
+  return bitIntDataItems
 }
 
 export function bufToBn(buf: any) {

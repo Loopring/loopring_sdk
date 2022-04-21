@@ -61,10 +61,10 @@ function test_hash_public_1() {
 function main() {
   // console.log("\n\neddsa_test\n")
   test_sign_1()
-  // test_prehash_message_1()
-  // test_to_bytes_1()
-  // test_hash_secret_1()
-  // test_hash_public_1()
+  test_prehash_message_1()
+  test_to_bytes_1()
+  test_hash_secret_1()
+  test_hash_public_1()
 }
 
 main();

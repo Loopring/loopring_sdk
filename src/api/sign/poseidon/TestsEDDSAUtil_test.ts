@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { EDDSAUtil } from "./EDDSAUtil";
-import { bnToBuf, SignatureScheme } from "./eddsa";
+import { bnToBuf, bnToBufWithFixedLength, SignatureScheme } from "./eddsa";
 import { assert } from "console";
 
 function testEddsaPack_1() {
@@ -70,7 +70,7 @@ function test_generateKeyPair() {
   const seedHex = "0x" + "7f16a4c491d3494c3bc8ef097e7c123a9da6fa8167631efd5f82b89e803b0682"
   const seed = BigNumber.from(seedHex)
   console.log(`seed ${seed.toString()}`)
-  const bitIntDataItems = bnToBuf(seed.toString());
+  const bitIntDataItems = bnToBufWithFixedLength(seed.toString(), 32);
   console.log(`bigIntData ${bitIntDataItems}`)
   
   const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
@@ -83,10 +83,10 @@ function test_generateKeyPair() {
 
 function main() {
   console.log("\n\TestsEDDSAUtil_test\n")
-  testEddsaPack_1()
-  testEddsaPack_2()
-  testEddsaPack_3()
-  // test_generateKeyPair()
+  // testEddsaPack_1()
+  // testEddsaPack_2()
+  // testEddsaPack_3()
+  test_generateKeyPair()
   // testEddsaSign()
 }
 
