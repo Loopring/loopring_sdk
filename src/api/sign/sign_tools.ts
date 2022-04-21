@@ -9,7 +9,7 @@ import BN from "bn.js";
 import BigInteger from "bignumber.js";
 import { BigNumber } from "ethers";
 
-import { bnToBuf } from "./poseidon/eddsa";
+import { bnToBufWithFixedLength } from "./poseidon/eddsa";
 import { EDDSAUtil } from "./poseidon/EDDSAUtil";
 import { field } from "./poseidon/field";
 import { permunation, PoseidonParams } from "./poseidon/permutation";
@@ -93,7 +93,7 @@ export async function generateKeyPair({
     // console.log(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
     const seed = BigNumber.from("0x" + seedBuff.toString("hex"));
     // console.log(`seed ${seed.toString()}`)
-    const bitIntDataItems = bnToBuf(seed.toString());
+    const bitIntDataItems = bnToBufWithFixedLength(seed.toString(), 32);
     // console.log(`bigIntData ${bitIntDataItems}`)
     const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
     // console.log("keyPair", keyPair)
