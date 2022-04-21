@@ -73,6 +73,7 @@ describe("Transfer", function () {
             volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+          payPayeeUpdateAccount: false,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,

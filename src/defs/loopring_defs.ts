@@ -1482,7 +1482,17 @@ export interface OriginTransferRequestV3 {
    */
   clientId?: string;
 
+  /**
+   * Counter factual wallet extra info to verify L1 ecdsa signature.
+   */
   counterFactualInfo?: CounterFactualInfo;
+
+  /**
+   * If true, let the sender transferring to the receiver pay the receiver's account activation fee
+   * @type {boolean}
+   * @memberof OriginTransferRequestV3
+   */
+  payPayeeUpdateAccount?: boolean
 }
 
 /**
