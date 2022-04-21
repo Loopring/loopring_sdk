@@ -73,6 +73,18 @@ describe("Transfer", function () {
             volume: fee.fees["LRC"].fee ?? "9400000000000000000",
           },
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+          /*
+           * when payPayeeUpdateAccount = ture, will help payee active account,
+           * maxFee from should:
+           * const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+           *  {
+           *     accountId: accInfo.accountId,
+           *     requestType: sdk.OffchainFeeReqType.TRANSFER_AND_UPDATE_ACCOUNT,
+           *   },
+           *   apiKey
+           * );
+           */
+          payPayeeUpdateAccount: false,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
