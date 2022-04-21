@@ -78,6 +78,7 @@ const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
       volume: fee.fees["LRC"].fee ?? "9400000000000000000",
     },
     validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+    payPayeeUpdateAccount: false, //help the payee active account it is true
   },
   web3,
   chainId: sdk.ChainId.GOERLI,

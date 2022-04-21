@@ -1482,7 +1482,15 @@ export interface OriginTransferRequestV3 {
    */
   clientId?: string;
 
+  /**
+   * CounterFactualInfo
+   */
   counterFactualInfo?: CounterFactualInfo;
+
+  /**
+   * boolean
+   */
+  payPayeeUpdateAccount?: boolean;
 }
 
 /**

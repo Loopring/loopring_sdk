@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+####  v2.0.4
+     1)  payPayeeUpdateAccount
+
 ####  v2.0.0
      1)  update poseidon
 
