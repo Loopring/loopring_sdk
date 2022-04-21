@@ -75,7 +75,7 @@ describe("TransferNFT", function () {
           storageId: storageId.offchainId,
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
           /*
-           * when it is free, will hele payee active account,
+           * when payPayeeUpdateAccount = ture, will help payee active account,
            * maxFee from:
            * const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
            *  {

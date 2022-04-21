@@ -43,11 +43,43 @@ const storageId = await LoopringAPI.userAPI.getNextStorageId({
 ***
 ## Step 5. get fee
 ```ts
-const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt({
-  accountId: accInfo.accountId,
-  requestType: sdk.OffchainNFTFeeReqType.NFT_TRANSFER,
-  amount: "0",
-}, apiKey);
+const transferResult = await LoopringAPI.userAPI.submitNFTInTransfer({
+  request: {
+    exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+    fromAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+    fromAddress: LOOPRING_EXPORTED_ACCOUNT.address,
+    toAccountId: 0, // toAccountId is not required, input 0 as default
+    toAddress: LOOPRING_EXPORTED_ACCOUNT.address2,
+    token: {
+      tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
+      nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
+      amount: "1",
+    },
+    maxFee: {
+      tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+      amount: fee.fees["LRC"].fee ?? "9400000000000000000",
+    },
+    storageId: storageId.offchainId,
+    validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+    /*
+     * when payPayeeUpdateAccount = ture, will help payee active account,
+     * maxFee from:
+     * const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+     *  {
+     *     accountId: accInfo.accountId,
+     *     requestType: sdk.OffchainFeeReqType.NFT_TRANSFER_AND_UPDATE_ACCOUNT,
+     *   },
+     *   apiKey
+     * );
+     */
+    payPayeeUpdateAccount: false,
+  },
+  web3,
+  chainId: sdk.ChainId.GOERLI,
+  walletType: sdk.ConnectorNames.Unknown,
+  eddsaKey: eddsaKey.sk,
+  apiKey,
+});
 console.log("fee:", fee);
 ```
 
