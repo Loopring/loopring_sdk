@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
-####  v2.0.4 (If you use v2 please move to >= v2.0.4 )
+####  v2.0.5 (If you use v2 please move to >= v2.0.4 )
      1) payPayeeUpdateAccount
      2) fix generateApiKey error 
 
