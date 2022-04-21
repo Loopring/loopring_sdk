@@ -285,7 +285,7 @@ export class NFTAPI extends BaseAPI {
     const cid = new CID(cidV0Str);
     const hashHex = Buffer.from(cid.multihash.slice(2)).toString("hex");
     const hashBN = new BN(hashHex, 16);
-    return "0x" + hashBN.toString("hex");
+    return "0x" + hashBN.toString("hex").padStart(64, "0");
   }
 
   /**

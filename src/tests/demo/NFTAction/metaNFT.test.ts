@@ -42,9 +42,9 @@ describe("metaNFT", function () {
     );
   });
   it("ipfsCid0ToNftID", () => {
-    const ipfs = "QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d";
+    const ipfs = "QmNuqdeWUJ9iEiw5qZfJ2pJ9onqAS45ZffvV8JQSUzp7DQ";
     const nftID =
-      "0x6b04cd991b972198cc63115c8abc3bf4ed73f07353c44271e940841b466a66f8";
+      "0x0880847b7587968f32ba6c741f9d797d9dc64971979922a80c4e590453b8dc2f";
     console.log(
       `ipfsCid0ToNftID: ipfs: `,
       ipfs,
@@ -53,9 +53,9 @@ describe("metaNFT", function () {
     expect(LoopringAPI.nftAPI.ipfsCid0ToNftID(ipfs)).toBe(nftID);
   });
   it("ipfsNftIDToCid", () => {
-    const ipfs = "QmVYQaf5BP3y8Myr9m4z4FCZYx2v8NJmSHGzm2a2gqig9d";
+    const ipfs = "QmNuqdeWUJ9iEiw5qZfJ2pJ9onqAS45ZffvV8JQSUzp7DQ";
     const nftID =
-      "0x6b04cd991b972198cc63115c8abc3bf4ed73f07353c44271e940841b466a66f8";
+      "0x0880847b7587968f32ba6c741f9d797d9dc64971979922a80c4e590453b8dc2f";
 
     console.log(
       `ipfsCid0ToNftID: nftID: `,
