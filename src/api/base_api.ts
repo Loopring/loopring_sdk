@@ -36,7 +36,7 @@ export class BaseAPI {
   static KEY_MESSAGE: string = KEY_MESSAGE;
   protected baseUrl = "";
   protected chainId: ChainId = ChainId.MAINNET;
-  protected genErr(err: Error): RESULT_INFO {
+  public genErr(err: Error): RESULT_INFO {
     if (!err || !err?.message) {
       return {
         ...err,
@@ -44,19 +44,20 @@ export class BaseAPI {
         code: LoopringErrorCode.SKD_UNKNOW,
       };
     }
-    for (const key in ConnectorError) {
-      if (
+    const key = Reflect.ownKeys(ConnectorError).find(
+      (key) =>
         err?.message.search(
           ConnectorError[key as keyof typeof ConnectorError]
         ) !== -1
-      ) {
-        return {
-          ...err,
-          message: key as keyof typeof ConnectorError,
-          code: LoopringErrorCode.SKD_UNKNOW,
-        };
-      }
+    );
+    if (key) {
+      return {
+        ...err,
+        message: key as keyof typeof ConnectorError,
+        code: LoopringErrorCode[key as keyof typeof ConnectorError],
+      };
     }
+
     return {
       ...err,
       code: LoopringErrorCode.SKD_UNKNOW,
