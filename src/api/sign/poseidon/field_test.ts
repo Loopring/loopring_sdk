@@ -1,7 +1,7 @@
 import { assert } from "console";
 import { BigNumber } from "ethers";
 
-import { field, FQ } from "./field";
+import { field, FQ, modulo } from "./field";
 
 function test_constants() {
   // console.log("test_constants")
@@ -116,19 +116,30 @@ function test_FQ_sub() {
   // console.log("test_FQ_sub passed")
 }
 
+function test_modulo() {
+  console.log("test_modulo")
+  const n = BigNumber.from("15511699678189798553051672416861159023986881664249705525317240441617049428951")
+  const p = BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495615")
+  const m = BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")
+  const on_power_c = modulo(n, p, m)
+  console.log("on_power_c", on_power_c.toString())
+  assert(on_power_c.toString() === "5307867014497036273760343161114758635681413365004069877684017182635568142756")
+}
+
 function main() {
   // console.log("\n\nfield_test\n")
-  test_constants()
-  test_half()
-  test_p()
-  test_FQ_1()
-  test_FQ_add_1()
-  test_FQ_mul_1()
-  test_FQ_mul_2()
-  test_FQ_mul_3()
-  test_FQ_mul_4()
-  test_FQ_module()
-  test_FQ_sub()
+  // test_constants()
+  // test_half()
+  // test_p()
+  // test_FQ_1()
+  // test_FQ_add_1()
+  // test_FQ_mul_1()
+  // test_FQ_mul_2()
+  // test_FQ_mul_3()
+  // test_FQ_mul_4()
+  // test_FQ_module()
+  // test_FQ_sub()
+  test_modulo()
 }
 
 main();
