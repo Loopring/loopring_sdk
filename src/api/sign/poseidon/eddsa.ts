@@ -30,62 +30,63 @@ For further information see: https://ed2519.cr.yp.to/eddsa-20150704.pdf
 import { BigNumber } from "ethers";
 import { field, FQ } from "./field";
 import { jubjub, Point } from "./jubjub";
-import { sha512 } from 'js-sha512';
+import { sha512 } from "js-sha512";
 import { permunation, PoseidonParams } from "./permutation";
 
 export class Signature {
-  public R: Point
-  public s: FQ
+  public R: Point;
+  public s: FQ;
 
   constructor(R: Point, s: FQ) {
-    this.R = R
-    this.s = s
+    this.R = R;
+    this.s = s;
   }
 
   toStr() {
-    return `${this.R.x.n} ${this.R.y.n} ${this.s.n}`
+    return `${this.R.x.n} ${this.R.y.n} ${this.s.n}`;
   }
 }
 
 export class SignedMessage {
-  public A: Point
-  public sig: Signature
-  public msg: BigNumber
+  public A: Point;
+  public sig: Signature;
+  public msg: BigNumber;
 
   constructor(A: Point, sig: Signature, msg: BigNumber) {
-    this.A = A
-    this.sig = sig
-    this.msg = msg
+    this.A = A;
+    this.sig = sig;
+    this.msg = msg;
   }
 
   toStr() {
-    return `${this.A.x.n} ${this.A.y.n} ${this.sig.toStr()} ${this.msg.toString()}`
+    return `${this.A.x.n} ${
+      this.A.y.n
+    } ${this.sig.toStr()} ${this.msg.toString()}`;
   }
 }
 
 export class SignatureScheme {
-
   static to_bytes(arg: BigNumber) {
-    const outputLength = 32
+    const outputLength = 32;
 
     // console.log(`input ${arg.toString()}`)
 
     let bitIntDataItems = bnToBuf(arg.toString());
     // console.log(`bigIntData ${bitIntDataItems}`)
 
-    const more = outputLength - bitIntDataItems.length
+    const more = outputLength - bitIntDataItems.length;
     // console.log('more', more)
     if (more > 0) {
       for (let i = 0; i < more; i++) {
-        bitIntDataItems = [0].concat(bitIntDataItems)
+        bitIntDataItems = [0].concat(bitIntDataItems);
       }
     } else {
-      bitIntDataItems = bitIntDataItems.slice(0, outputLength)
+      bitIntDataItems = bitIntDataItems.slice(0, outputLength);
     }
 
-    bitIntDataItems = bitIntDataItems.reverse()
+    bitIntDataItems = bitIntDataItems.reverse();
     // console.log(`bigIntData return ${bitIntDataItems}`)
-    return bitIntDataItems
+    return bitIntDataItems;
   }
 
   /*
@@ -95,7 +96,7 @@ export class SignatureScheme {
   as part of the public parameters.
   */
   static prehash_message(M: BigNumber) {
-    return M
+    return M;
   }
 
   /*
@@ -111,112 +112,123 @@ export class SignatureScheme {
       can replace `r` with `r mod L` before computing `rB`.)
   */
   static hash_secret_python(k: FQ, arg: BigNumber) {
-    const byteArray0 = this.to_bytes(k.n)
-    const byteArray1 = this.to_bytes(arg)
+    const byteArray0 = this.to_bytes(k.n);
+    const byteArray1 = this.to_bytes(arg);
 
-    const sum = byteArray0.concat(byteArray1)
+    const sum = byteArray0.concat(byteArray1);
     // console.log("sum", sum)
 
     // let byteArrayHexStr = bytesToHexString(sum)
     // console.log("byteArrayHexStr", byteArrayHexStr)
 
-    const digest1 = sha512.array(new Uint8Array(sum).buffer)
+    const digest1 = sha512.array(new Uint8Array(sum).buffer);
 
     // let digest1 = createHash('sha512').update .digest("SHA-512", new Uint8Array(sum).buffer)
-    let sha512StrItems: any
+    let sha512StrItems: any;
     // console.log('digest1', digest1);
-    for (let i = 0; i < digest1.length; i++) {  
-      const itemInt = digest1[i]
-      let st = itemInt.toString(16)
+    for (let i = 0; i < digest1.length; i++) {
+      const itemInt = digest1[i];
+      let st = itemInt.toString(16);
       if (st.length == 1) {
-        st = '0' + st
+        st = "0" + st;
       }
-      sha512StrItems = [st].concat(sha512StrItems)
+      sha512StrItems = [st].concat(sha512StrItems);
     }
-    const sha512MessageHexStr = sha512StrItems.join("")
+    const sha512MessageHexStr = sha512StrItems.join("");
     // console.log(`sha512MessageHexStr ${sha512MessageHexStr}`)
-    const sha512MessageHexStrBigInt = BigNumber.from("0x"+sha512MessageHexStr)
+    const sha512MessageHexStrBigInt = BigNumber.from(
+      "0x" + sha512MessageHexStr
+    );
     // console.log(`sha512MessageHexStrBigInt ${sha512MessageHexStrBigInt}`)
-    const hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L)
+    const hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L);
     // console.log(`hashed ${hashed.toString()}`)
-    return hashed
+    return hashed;
   }
 
   static B() {
-    return Point.generate()
+    return Point.generate();
   }
 
   static sign(msg: BigNumber, key: FQ, B: Point) {
     // console.log("B ", B.x.n.toString(), B.y.n.toString())
 
-    const copyKey = new FQ(key.n, key.m)
-    const A = B.mul(copyKey.n)
+    const copyKey = new FQ(key.n, key.m);
+    const A = B.mul(copyKey.n);
 
     // console.log("A.x ", A.x.n.toString(), A.x.m.toString())
     // console.log("A.y ", B.y.n.toString(), A.y.m.toString())
 
-    const M = this.prehash_message(msg)
+    const M = this.prehash_message(msg);
     // console.log("M ", M.toString())
 
-    const r = this.hash_secret_python(key, M)
+    const r = this.hash_secret_python(key, M);
     // console.log("r ", r.toString())
 
-    const copy_r = BigNumber.from(r.toString())
+    const copy_r = BigNumber.from(r.toString());
 
-    const R = B.mul(copy_r)
+    const R = B.mul(copy_r);
 
     // console.log("R.x ", R.x.n.toString(), R.x.m.toString())
     // console.log("R.y ", R.y.n.toString(), R.y.m.toString())
 
-    const t = this.hash_public(R, A, M)
+    const t = this.hash_public(R, A, M);
     // console.log("hello world")
     // console.log("t ", t.toString())
 
-    const t_c = t
-    const key_n_t = key.n.mul(t_c)
-    const left = r.add(key_n_t)
-    const S = left.mod(jubjub.JUBJUB_E)
+    const t_c = t;
+    const key_n_t = key.n.mul(t_c);
+    const left = r.add(key_n_t);
+    const S = left.mod(jubjub.JUBJUB_E);
 
     // console.log("S ", S.toString())
 
-    const signatureResult = new Signature(R, new FQ(S))
+    const signatureResult = new Signature(R, new FQ(S));
     // console.log("signatureResult", signatureResult.toStr())
 
-    const signedMessage = new SignedMessage(A, signatureResult, msg)
+    const signedMessage = new SignedMessage(A, signatureResult, msg);
     // console.log("signedMessage", signedMessage.toStr())
 
-    return signedMessage
+    return signedMessage;
   }
 
   static as_scalar(point: Point) {
     // console.log(`as_scalar ${point.x.n.toString()}`)
-    return [point.x.n, point.y.n]
+    return [point.x.n, point.y.n];
   }
 
   static hash_public(R: Point, A: Point, M: BigNumber) {
-    let inputMsg: any
-    inputMsg = (this.as_scalar(R).concat(this.as_scalar(A))).concat([M])
+    let inputMsg: any;
+    inputMsg = this.as_scalar(R).concat(this.as_scalar(A)).concat([M]);
     // console.log(`inputMsg ${inputMsg}`)
-    const params = new PoseidonParams(field.SNARK_SCALAR_FIELD, 6, 6, 52, "poseidon", BigNumber.from(5), null, null, 128)
-    const result = permunation.poseidon(inputMsg, params)
-    return result
+    const params = new PoseidonParams(
+      field.SNARK_SCALAR_FIELD,
+      6,
+      6,
+      52,
+      "poseidon",
+      BigNumber.from(5),
+      null,
+      null,
+      128
+    );
+    const result = permunation.poseidon(inputMsg, params);
+    return result;
   }
 }
 
-
 export function bnToBuf(bn: string) {
-  let hex = BigInt(bn).toString(16)
+  let hex = BigInt(bn).toString(16);
   if (hex.length % 2) {
-    hex = '0' + hex
+    hex = "0" + hex;
   }
   const len = hex.length / 2;
-  console.log("length", len);
+  // console.log("length", len);
 
   const u8 = new Uint8Array(len);
   let i = 0;
   let j = 0;
   while (i < len) {
-    u8[i] = parseInt(hex.slice(j, j + 2), 16)
+    u8[i] = parseInt(hex.slice(j, j + 2), 16);
     i += 1;
     j += 2;
   }
@@ -224,36 +236,36 @@ export function bnToBuf(bn: string) {
 }
 
 export function bnToBufWithFixedLength(bn: string, outputLength: number) {
-  let hex = BigInt(bn).toString(16)
+  let hex = BigInt(bn).toString(16);
   if (hex.length % 2) {
-    hex = '0' + hex
+    hex = "0" + hex;
   }
   const len = hex.length / 2;
 
-  console.log("len", len);
+  // console.log("len", len);
 
   const u8 = new Uint8Array(len);
   let i = 0;
   let j = 0;
   while (i < len) {
-    u8[i] = parseInt(hex.slice(j, j + 2), 16)
+    u8[i] = parseInt(hex.slice(j, j + 2), 16);
     i += 1;
     j += 2;
   }
 
   let bitIntDataItems = Array.from(u8);
 
-  const more = outputLength - bitIntDataItems.length
-  console.log('diff len', more)
+  const more = outputLength - bitIntDataItems.length;
+  // console.log('diff len', more)
   if (more > 0) {
     for (let i = 0; i < more; i++) {
-      bitIntDataItems = [0].concat(bitIntDataItems)
+      bitIntDataItems = [0].concat(bitIntDataItems);
     }
   } else {
-    bitIntDataItems = bitIntDataItems.slice(0, outputLength)
+    bitIntDataItems = bitIntDataItems.slice(0, outputLength);
   }
 
-  return bitIntDataItems
+  return bitIntDataItems;
 }
 
 export function bufToBn(buf: any) {
@@ -263,25 +275,27 @@ export function bufToBn(buf: any) {
 
   u8.forEach(function (i) {
     let h = i.toString(16);
-    if (h.length % 2) { h = '0' + h; }
+    if (h.length % 2) {
+      h = "0" + h;
+    }
     hex.push(h);
   });
 
-  return BigInt('0x' + hex.join(''));
+  return BigInt("0x" + hex.join(""));
 }
 
 export function bytesToHexString(bytes: any) {
   let strItems: any;
   strItems = [];
   for (let i = 0; i < bytes.length; i++) {
-    const item = bytes[i]
-    let st = item.toString(16)
+    const item = bytes[i];
+    let st = item.toString(16);
     if (st.length == 1) {
-      st = '0' + st
+      st = "0" + st;
     }
     // st = st.toUpperCase()
-    strItems.push(st)
+    strItems.push(st);
   }
-  const strItemsJoined = strItems.join("")
-  return strItemsJoined
+  const strItemsJoined = strItems.join("");
+  return strItemsJoined;
 }
