@@ -5,13 +5,17 @@ import {
   testTypedData,
   web3,
   signatureKeyPairMock,
+  TOKEN_INFO,
 } from "../../MockData";
 import * as sdk from "../../../index";
 import {
+  getNftData,
   NFTOrderRequestV3,
   NFTTradeRequestV3,
+  NFTType,
   SubmitOrderRequestV3,
 } from "../../../index";
+import { myLog } from "../../../utils/log_tools";
 
 describe("signature", function () {
   it(
@@ -177,6 +181,33 @@ describe("signature", function () {
     } catch (err) {
       console.log(err);
     }
+  });
+  it("getNftData", async () => {
+    const cid = "QmNuqdeWUJ9iEiw5qZfJ2pJ9onqAS45ZffvV8JQSUzp7DQ";
+    const nftID = LoopringAPI.nftAPI.ipfsCid0ToNftID(cid);
+    const mintRequest = {
+      exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+      minterId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+      minterAddress: LOOPRING_EXPORTED_ACCOUNT.address,
+      toAccountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+      toAddress: LOOPRING_EXPORTED_ACCOUNT.address,
+      nftType: NFTType.ERC1155,
+      tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
+      nftId: nftID, //nftId.toString(16),
+      amount: "1",
+      validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+      storageId: 9,
+      maxFee: {
+        tokenId: 1,
+        amount: "9400000000000000000",
+      },
+      royaltyPercentage: 5,
+      forceToMint: true, // suggest use as false, for here is just for run test
+    };
+    myLog("cid", cid, "nftID", nftID, "result is:");
+    getNftData({ ...mintRequest, nftId: nftID });
+    myLog("nftID", "0x1", "result is:");
+    getNftData({ ...mintRequest, nftId: "0x1" });
   });
 });
 

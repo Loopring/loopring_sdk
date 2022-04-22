@@ -750,9 +750,17 @@ export function getNftData(request: NFTMintRequestV3) {
     null,
     128
   );
+  const idNo0x = fm.clearHexPrefix(request.nftId);
+  let nftIdLo, nftIdHi;
+  if (idNo0x.length > 32) {
+    nftIdLo = new BN(idNo0x.substr(idNo0x.length - 32, 32), 16).toString(10);
+    nftIdHi = new BN(idNo0x.substr(0, idNo0x.length - 32), 16).toString(10);
+  } else {
+    nftIdLo = new BN(idNo0x.substr(0, idNo0x.length), 16).toString(10);
+    nftIdHi = 0;
+  }
+  myLog("nftIdLo", nftIdLo, "nftIdHi", nftIdHi);
 
-  const nftIdHi = new BN(request.nftId.substr(2, 32), 16).toString(10);
-  const nftIdLo = new BN(request.nftId.substr(2 + 32, 32), 16).toString(10);
   const inputs = [
     request.minterAddress,
     request.nftType,
