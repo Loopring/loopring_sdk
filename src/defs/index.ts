@@ -31,7 +31,7 @@ export const IsMobile = {
   },
 
   any: function () {
-    if (typeof global.navigator === 'undefined' || typeof navigator !== 'undefined') {
+    if (typeof global.navigator === 'undefined' || typeof navigator === 'undefined') {
       console.log("IsMobile any navigator is undefined")
       return false;
     }
