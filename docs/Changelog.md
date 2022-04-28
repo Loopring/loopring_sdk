@@ -1,8 +1,17 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v2.0.7
+     1) Fix isMobile
+
+####  v2.0.6
+     1) mintNFT nftData
+####  v2.0.5 (If you use v2 please move to >= v2.0.4 )
+     1) payPayeeUpdateAccount
+     2) fix generateApiKey error 
+
 ####  v2.0.0
-     1)  update poseidon
+     1) update poseidon
 
 ***
 ####  v1.10.3

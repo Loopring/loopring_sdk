@@ -2281,7 +2281,31 @@ export enum NFT_IMAGE_SIZES {
   large = "332-332",
   original = "original",
 }
-
+export type IPFS_METADATA = {
+  uri: string;
+  base: {
+    name: string;
+    decimals: number;
+    description: string;
+    image: string;
+    properties: string;
+    localization: string;
+  };
+  imageSize: { [P in NFT_IMAGE_SIZES]?: string };
+  extra: {
+    imageData: string;
+    externalUrl: string;
+    attributes: string;
+    backgroundColor: string;
+    animationUrl: string;
+    youtubeUrl: string;
+    minter: string;
+  };
+  nftType: NFTType;
+  network: 0;
+  tokenAddress: string;
+  tokenId: string;
+};
 export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> {
   accountId: number;
   tokenId: number;
@@ -2294,31 +2318,7 @@ export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> {
     withdraw: string;
     deposit: string;
   };
-  metadata?: {
-    uri: string;
-    base: {
-      name: string;
-      decimals: number;
-      description: string;
-      image: string;
-      properties: string;
-      localization: string;
-    };
-    imageSize: { [P in NFT_IMAGE_SIZES]?: string };
-    extra: {
-      imageData: string;
-      externalUrl: string;
-      attributes: string;
-      backgroundColor: string;
-      animationUrl: string;
-      youtubeUrl: string;
-      minter: string;
-    };
-    nftType: NFTType;
-    network: 0;
-    tokenAddress: string;
-    tokenId: string;
-  };
+  metadata?: IPFS_METADATA;
   deploymentStatus: DEPLOYMENT_STATUS;
   isCounterFactualNFT: boolean;
 }
@@ -2541,6 +2541,7 @@ export interface UserNFTTxsHistory {
     fastStatus: boolean;
     recipient: string;
   };
+  metadata?: IPFS_METADATA;
   storageInfo: {
     accountId: number;
     tokenId: number;
