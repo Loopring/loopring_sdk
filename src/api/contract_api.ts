@@ -261,7 +261,8 @@ export async function deposit(
   gasLimit: number,
   chainId: ChainId = ChainId.GOERLI,
   nonce: number,
-  sendByMetaMask = true
+  sendByMetaMask = true,
+  to?: string
 ) {
   let valueC = fm.toBig(value).times("1e" + token.decimals);
 
@@ -271,7 +272,7 @@ export async function deposit(
     tokenAddress: token.address,
     amount,
     from,
-    to: from,
+    to: to ? to : from,
     extraData: "",
   });
 

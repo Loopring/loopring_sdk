@@ -694,9 +694,13 @@ export interface GetCandlestickRequest {
   limit?: number;
 }
 
-export interface GetAccountRequest {
-  owner: string;
-}
+export type GetAccountRequest =
+  | {
+      owner: string;
+    }
+  | {
+      accountId: number;
+    };
 export interface GetCounterFactualInfoRequest {
   accountId: number;
 }

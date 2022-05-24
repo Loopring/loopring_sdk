@@ -1230,6 +1230,7 @@ export class ExchangeAPI extends BaseAPI {
     order: any;
     joinAmm: any;
     dAppTrade: any;
+    legal: any;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {
@@ -1246,10 +1247,12 @@ export class ExchangeAPI extends BaseAPI {
       };
     }
     return {
+      ...raw_data,
       register: raw_data?.register,
       order: raw_data?.order,
       joinAmm: raw_data?.joinAmm,
       dAppTrade: raw_data?.dAppTrade,
+      legal: raw_data?.dAppTrade,
       raw_data,
     };
   }

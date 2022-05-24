@@ -8,7 +8,11 @@ import {
   SIG_FLAG,
 } from "../defs/loopring_enums";
 
-import { ReqParams } from "../defs/loopring_defs";
+import {
+  GameRankInfo,
+  GetAmmPoolGameUserRankRequest,
+  ReqParams,
+} from "../defs/loopring_defs";
 import { ChainId } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 
@@ -96,6 +100,34 @@ export class GlobalAPI extends BaseAPI {
     return {
       userBalances,
       raw_data,
+    };
+  }
+  public async getAmmPoolGameUserRank<R>(
+    request: GetAmmPoolGameUserRankRequest
+  ): Promise<{
+    raw_data: R;
+    userRank: GameRankInfo;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_AMMPOOL_GAME_USER_RANK,
+      queryParams: request,
+      apiKey:
+        this.chainId === ChainId.MAINNET
+          ? GLOBAL_KEY.MAIN.key
+          : GLOBAL_KEY.GOERLI.key,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+    const userRank: GameRankInfo = raw_data.data;
+    return {
+      userRank,
+      raw_data: raw_data.data,
     };
   }
 }
