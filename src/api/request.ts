@@ -5,6 +5,7 @@ import { SIG_FLAG } from "../defs/loopring_enums";
 
 import { getEdDSASig, getEdDSASigWithPoseidon } from "./sign/sign_tools";
 import { sortObject } from "../utils/obj_tools";
+import { myLog } from "../utils/log_tools";
 
 /**
  *
@@ -167,7 +168,7 @@ export class Request {
     };
 
     // myLog(optInOne);
-
+    myLog("headers config", optInOne);
     return await this._axios.request(optInOne);
   }
 

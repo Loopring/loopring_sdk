@@ -8,6 +8,7 @@ import {
   TOKEN_INFO,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import { myLog } from "../../../utils/log_tools";
 let mockData: any = {
   takerOrder: undefined,
   takerOrderEddsaSignature: undefined,
@@ -146,6 +147,12 @@ describe("tradeNFT", function () {
           eddsaKeyC.sk
         )
       ).apiKey;
+      myLog(
+        "mockData.makerOrder",
+        mockData.makerOrder,
+        "mockData.takerOrder",
+        mockData.takerOrder
+      );
       //  NFT Trade
       const response = await LoopringAPI.userAPI.submitNFTTrade({
         request: {
