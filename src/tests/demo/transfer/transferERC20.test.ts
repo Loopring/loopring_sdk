@@ -7,7 +7,6 @@ import {
   web3,
 } from "../../MockData";
 import * as sdk from "../../../index";
-
 describe("Transfer", function () {
   it(
     "submitInternalTransfer",

@@ -121,10 +121,11 @@ describe("tradeNFT", function () {
       makerFeeBips: 1000,
       maxFeeBips: 100,
     };
-  });
+  }, DEFAULT_TIMEOUT * 2);
   it(
     "tradeNFT",
     async () => {
+      jest.useFakeTimers("legacy");
       // private or third account can signature and approve this order
       // Step 1. getAccount
       const accInfoC = (
