@@ -122,60 +122,71 @@ describe("tradeNFT", function () {
       makerFeeBips: 1000,
       maxFeeBips: 100,
     };
-  }, DEFAULT_TIMEOUT * 2);
+  }, DEFAULT_TIMEOUT * 3);
   it(
     "tradeNFT",
     async () => {
       jest.useFakeTimers("legacy");
       // private or third account can signature and approve this order
-      // Step 1. getAccount
-      const accInfoC = (
-        await LoopringAPI.exchangeAPI.getAccount({
-          owner: LOOPRING_EXPORTED_ACCOUNT.address,
-        })
-      ).accInfo;
+      try {
+        myLog(
+          "mockData.makerOrder",
+          mockData.makerOrder,
+          "mockData.takerOrder",
+          mockData.takerOrder
+        );
 
-      // Step 1. eddsaKeyC
-      const eddsaKeyC = await signatureKeyPairMock(accInfoC);
+        // Step 1. getAccount
+        const accInfoC = (
+          await LoopringAPI.exchangeAPI.getAccount({
+            owner: LOOPRING_EXPORTED_ACCOUNT.address,
+          })
+        ).accInfo;
 
-      // Step 3. apiKey
-      const apiKeyC = (
-        await LoopringAPI.userAPI.getUserApiKey(
-          {
-            accountId: accInfoC.accountId,
-          },
-          eddsaKeyC.sk
-        )
-      ).apiKey;
-      myLog(
-        "mockData.makerOrder",
-        mockData.makerOrder,
-        "mockData.takerOrder",
-        mockData.takerOrder
-      );
-      //  NFT Trade
-      const response = await LoopringAPI.userAPI.submitNFTTrade({
-        request: {
-          maker: {
-            ...mockData.makerOrder,
-            eddsaSignature: mockData.makerOrderEddsaSignature,
-          },
-          makerFeeBips: 1000,
-          taker: {
-            ...mockData.takerOrder,
-            eddsaSignature: mockData.takerOrderEddsaSignature,
-          },
-          takerFeeBips: 100,
-        },
-        web3,
-        chainId: sdk.ChainId.GOERLI,
-        walletType: sdk.ConnectorNames.Unknown,
-        apiKey: apiKeyC,
-        eddsaKey: eddsaKeyC.sk,
-      });
+        // Step 1. eddsaKeyC
+        const eddsaKeyC = await signatureKeyPairMock(accInfoC);
 
-      console.log(response);
+        // Step 3. apiKey
+        const apiKeyC = (
+          await LoopringAPI.userAPI.getUserApiKey(
+            {
+              accountId: accInfoC.accountId,
+            },
+            eddsaKeyC.sk
+          )
+        ).apiKey;
+        myLog(
+          "mockData.makerOrder",
+          mockData.makerOrder,
+          "mockData.takerOrder",
+          mockData.takerOrder
+        );
+        //  NFT Trade
+        const response = await LoopringAPI.userAPI.submitNFTTrade({
+          request: {
+            maker: {
+              ...mockData.makerOrder,
+              eddsaSignature: mockData.makerOrderEddsaSignature,
+            },
+            makerFeeBips: 1000,
+            taker: {
+              ...mockData.takerOrder,
+              eddsaSignature: mockData.takerOrderEddsaSignature,
+            },
+            takerFeeBips: 100,
+          },
+          web3,
+          chainId: sdk.ChainId.GOERLI,
+          walletType: sdk.ConnectorNames.Unknown,
+          apiKey: apiKeyC,
+          eddsaKey: eddsaKeyC.sk,
+        });
+
+        console.log(response);
+      } catch (e) {
+        console.log(e);
+      }
     },
-    DEFAULT_TIMEOUT * 2
+    DEFAULT_TIMEOUT
   );
 });
