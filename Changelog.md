@@ -1,6 +1,16 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+
+#### v2.0.12
+     1) ipfs cid to nftId startWith 0
+     2) server-side retturn nftId startWith 0
+
+#### v2.0.11
+    1) add deposit to
+    2) get Account by account id
+    3) add HEBAO_META_TYPE deposit_wallet
+
 #### v2.0.7
      1) Fix isMobile
 

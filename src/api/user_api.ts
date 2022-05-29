@@ -12,6 +12,7 @@ import {
   ConnectorNames,
   SigSuffix,
   NFTFactory,
+  NFTTokenInfo,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -19,6 +20,7 @@ import * as loopring_defs from "../defs/loopring_defs";
 import * as sign_tools from "./sign/sign_tools";
 import { myLog } from "../utils/log_tools";
 import { isContract } from "./contract_api";
+import BN from "bn.js";
 
 export class UserAPI extends BaseAPI {
   /*
@@ -1750,10 +1752,41 @@ export class UserAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
       };
+    }
+
+    if (
+      request.metadata === true &&
+      raw_data.transactions.length
+      // raw_data.transactions.metadata &&
+      // raw_data.transactions.metadata.nftId &&
+      // raw_data.transactions.metadata.nftId.startsWith("0x")
+    ) {
+      raw_data.transactions = raw_data.transactions.reduce(
+        (
+          prev: loopring_defs.UserNFTTxsHistory[],
+          item: loopring_defs.UserNFTTxsHistory
+        ) => {
+          if (
+            item.metadata &&
+            item.metadata.nftId &&
+            item.metadata.nftId.startsWith("0x")
+          ) {
+            const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+            item.metadata.nftId =
+              "0x" + hashBN.toString("hex").padStart(64, "0");
+          }
+
+          return [...prev, item];
+        },
+        []
+      );
+      // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+      // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
     return {
       totalNum: raw_data?.totalNum,
@@ -1913,6 +1946,37 @@ export class UserAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
+    if (raw_data.data.length) {
+      raw_data.data = raw_data.data.reduce(
+        (
+          prev: loopring_defs.UserNFTBalanceInfo[],
+          item: loopring_defs.UserNFTBalanceInfo
+        ) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+            if (
+              request.metadata === true &&
+              item.metadata &&
+              item.metadata.nftId &&
+              item.metadata.nftId.startsWith("0x")
+            ) {
+              // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+              item.metadata.nftId =
+                "0x" + hashBN.toString("hex").padStart(64, "0");
+            }
+          }
+          return [...prev, item];
+        },
+        []
+      );
+      // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+      // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
+    }
+    // if (raw_data.data.nftId && raw_data.data.nftId.startsWith("0x")) {
+    //   const hashBN = new BN(raw_data.data.nftId.replace("0x", ""), 16);
+    //   raw_data.data.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+    // }
     return {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],

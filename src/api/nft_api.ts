@@ -166,7 +166,11 @@ export class NFTAPI extends BaseAPI {
         };
       }
       const result = raw_data.reduce(
-        (prev: { [key: string]: NFTTokenInfo }, item: any) => {
+        (prev: { [key: string]: NFTTokenInfo }, item: NFTTokenInfo) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+          }
           prev[item.nftData] = item;
           return prev;
         },
@@ -285,7 +289,7 @@ export class NFTAPI extends BaseAPI {
     const cid = new CID(cidV0Str);
     const hashHex = Buffer.from(cid.multihash.slice(2)).toString("hex");
     const hashBN = new BN(hashHex, 16);
-    return "0x" + hashBN.toString("hex");
+    return "0x" + hashBN.toString("hex").padStart(64, "0");
   }
 
   /**

@@ -2295,6 +2295,7 @@ export type IPFS_METADATA = {
     properties: string;
     localization: string;
   };
+
   imageSize: { [P in NFT_IMAGE_SIZES]?: string };
   extra: {
     imageData: string;
@@ -2305,6 +2306,7 @@ export type IPFS_METADATA = {
     youtubeUrl: string;
     minter: string;
   };
+  nftId?: string;
   nftType: NFTType;
   network: 0;
   tokenAddress: string;
