@@ -484,7 +484,7 @@ export async function signatureKeyPairMock(
     web3: _web3,
     address: accInfo.owner,
     keySeed:
-      accInfo.keySeed ??
+      accInfo.keySeed ||
       sdk.GlobalAPI.KEY_MESSAGE.replace(
         "${exchangeAddress}",
         LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
