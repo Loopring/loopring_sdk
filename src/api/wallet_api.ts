@@ -245,7 +245,11 @@ export class WalletAPI extends BaseAPI {
       ecdsaSignature = result?.sig + SigSuffix.Suffix03;
     };
     // metamask not import hw appWallet.
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();

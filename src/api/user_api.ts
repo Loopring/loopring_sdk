@@ -876,7 +876,11 @@ export class UserAPI extends BaseAPI {
     };
 
     // metamask not import hw appWallet.
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();
@@ -983,7 +987,11 @@ export class UserAPI extends BaseAPI {
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
       try {
         if (isHWAddr) {
@@ -1103,7 +1111,11 @@ export class UserAPI extends BaseAPI {
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
       try {
         if (isHWAddr) {
@@ -1225,7 +1237,11 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
 
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();
@@ -1337,7 +1353,11 @@ export class UserAPI extends BaseAPI {
     };
 
     // metamask not import hw appWallet.
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();
@@ -1458,7 +1478,11 @@ export class UserAPI extends BaseAPI {
     };
 
     // metamask not import hw appWallet.
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();
@@ -1822,7 +1846,11 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
 
-    if (walletType === ConnectorNames.MetaMask) {
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
       try {
         if (isHWAddr) {
           await sigHW();

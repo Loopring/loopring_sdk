@@ -10,6 +10,8 @@ export enum ConnectorNames {
   MetaMask = "MetaMask",
   Network = "Network",
   WalletConnect = "WalletConnect",
+  Gamestop = "Gamestop",
+  OtherExtension = "OtherExtension",
   Coinbase = "Coinbase",
   Ledger = "Ledger",
   Trezor = "Trezor",

@@ -165,12 +165,14 @@ export async function ecRecover(
         msg,
         sig,
         function (err: any, address: string) {
-          if (!err)
+          if (!err && address) {
             resolve({
               result: address.toLowerCase() === account.toLowerCase(),
             });
-          else {
-            resolve({ error: "ecRecover 1:" + err });
+          } else {
+            resolve({
+              error: "ecRecover 1:" + err + "or no address:" + address,
+            });
           }
         }
       );
@@ -387,7 +389,7 @@ export async function personalSign(
 
             // Valid: 2. webview directory signature Valid
             if (
-              typeof window !== 'undefined' &&
+              typeof window !== "undefined" &&
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
               isMobile &&
               // Mobile directory connect will sign ConnectorNames as MetaMask only
@@ -404,9 +406,10 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
-
+            console.log("ecRecover before", msg, result);
             // Valid: 3. EOA signature Valid by ecRecover
             const valid: any = await ecRecover(web3, account, msg, result);
+            console.log("ecRecover after", valid.result);
             if (valid.result) {
               return resolve({ sig: result });
             }

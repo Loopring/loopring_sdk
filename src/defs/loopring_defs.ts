@@ -785,6 +785,7 @@ export interface TokenAmount {
   discount: number;
   baseOrderInfo: OrderInfo;
   userOrderInfo: OrderInfo;
+  tradeCost: string;
 }
 
 export interface GetMinimumTokenAmtRequest {
