@@ -19,44 +19,37 @@ import {
 } from "../../MockSwapData";
 import * as sdk from "../../../index";
 import BigNumber from "bignumber.js";
+import { LoopringMap } from "../../../defs/loopring_defs";
 let apiKey = "";
 // const { tokenMap } = TOKEN_INFO;
-const ammMap = AMM_MAP;
+// const ammMap = AMM_MAP;
 const calculateSwap = (
   sellSymbol = "LRC",
   buySymbol = "ETH",
   isInputSellToBuy: boolean,
   inputValue: number, // user Input value no decimal,
   _slippage = 0.1,
-  //TODO MOCK value
-  amountMap: any = userAmount,
+  // MOCK value
+  amountMap: { [key: string]: any } = userAmount,
   market: string = deepMock.symbol,
   // close = ticker.tickers[7],
   depth: any = deepMock,
   ammPoolSnapshot: sdk.AmmPoolSnapshot = ammPoolSnapshotMock,
-  tokenMap = TokenMapMockSwap
+  tokenMap: sdk.LoopringMap<sdk.TokenInfo> = TokenMapMockSwap,
+  ammMap: { [key: string]: any } = AMM_MAP
 ) => {
-  // const { ammPoolSnapshot, depth, tradePair, close } = pageTradeLite;
-  // const { amountMap } = store.getState().amountMap;
   let calcFor100USDAmount, calcForMinCost, calcForPriceImpact;
-
-  // @ts-ignore
-
   if (depth && market && tokenMap) {
-    //@ts-ignore
     const sellToken = tokenMap[sellSymbol];
-    //@ts-ignore
     const buyToken = tokenMap[buySymbol];
-
     const isInputSellOutputBuy = isInputSellToBuy;
-
     let input: any = inputValue;
 
     console.log(
       "sellToken: Symbol ",
       sellSymbol,
       "buyToken: Symbol",
-      buyToken,
+      buySymbol,
       "is Input Sell Output Buy:",
       isInputSellOutputBuy,
       "input value",
@@ -73,40 +66,37 @@ const calculateSwap = (
     let tradeCost = undefined;
     let basePrice = undefined;
     let maxFeeBips = MAPFEEBIPS;
+    let minAmt = undefined;
 
-    // @ts-ignore
     if (amountMap && amountMap[market] && ammMap) {
-      // @ts-ignore
       console.log(`amountMap[${market}]:`, amountMap[market]);
 
       const ammMarket = `AMM-${market}`;
 
-      // if AMM exist userAmount from AMM-LRC-ETH(AMM-Market), otherwise from LRC-ETH(Market)
-      // @ts-ignore
-      const amount = ammMap[ammMarket]
-        ? // @ts-ignore
-          amountMap[ammMarket]
-        : // @ts-ignore
-          amountMap[market as string];
-
-      // @ts-ignore
       const amountMarket = amountMap[market]; // userAmount from  LRC-ETH(Market)
 
-      buyMinAmtInfo = amount[buySymbol];
-      sellMinAmtInfo = amount[sellSymbol];
-      // myLog(`buyMinAmtInfo,sellMinAmtInfo: AMM-${market}, ${_tradeData[ 'buy' ].belong}`, buyMinAmtInfo, sellMinAmtInfo)
+      buyMinAmtInfo = amountMarket[buySymbol];
+      sellMinAmtInfo = amountMarket[sellSymbol];
+      console.log(
+        `buyMinAmtInfo: ${market}, ${buySymbol}`,
+        buyMinAmtInfo,
+        `sellMinAmtInfo: ${market}, ${sellSymbol}`,
+        sellMinAmtInfo
+      );
 
-      takerRate = buyMinAmtInfo ? buyMinAmtInfo.userOrderInfo.takerRate : 0;
-      // @ts-ignore
       feeBips = ammMap[ammMarket] ? ammMap[ammMarket].feeBips : 1;
 
       feeTakerRate =
         amountMarket[buySymbol] &&
         amountMarket[buySymbol].userOrderInfo.takerRate;
       tradeCost = amountMarket[buySymbol].tradeCost;
-      // amountMarket[_tradeData["buy"].belong as string];
-      //sdk.toBig(feeBips).plus(sdk.toBig(takerRate)).toString();
 
+      /** @description for charge fee calc, calcFor100USDAmount
+       *  Loopring market consider buyToken value small then  max(buyMinAmtInfo.userOrderInfo.minAmount,buyToken.orderAmounts.dust) is a small order,
+       * the fee will take the Max(tradeCost,userTakeRate)
+       * use the buyMinAmount Input calc the selltoken value,
+       * please read Line:321
+       * **/
       const minAmountInput = BigNumber.max(
         buyMinAmtInfo.userOrderInfo.minAmount,
         buyToken.orderAmounts.dust
@@ -114,8 +104,6 @@ const calculateSwap = (
         .div(sdk.toBig(1).minus(sdk.toBig(slippage).div(10000)))
         .div("1e" + buyToken.decimals)
         .toString();
-
-      /*** for minimum value for ***/
       calcFor100USDAmount = sdk.getOutputAmount({
         input: minAmountInput,
         sell: sellSymbol,
@@ -191,7 +179,7 @@ const calculateSwap = (
         .toString();
 
       console.log(
-        "tradeCost*2:",
+        `tradeCost: ${tradeCost}*2:`,
         sdk.toBig(tradeCost).times(2).toString(),
         "buyToken.orderAmounts.dust",
         buyToken.orderAmounts.dust,
@@ -222,12 +210,15 @@ const calculateSwap = (
       });
 
       //add additionally 10% tolerance for minimum quantity user has to set on sell Token
-      const minAmt = BigNumber.max(
+      /**
+       * @output: minAmt for UI
+       * this value mini-order Sell token amount (show on the UI for available order check)
+       * setSellMinAmt(minAmt.toString());
+       */
+      minAmt = BigNumber.max(
         sellToken.orderAmounts.dust,
         calcForMinCost?.amountS ?? 0
       ).times(1.1);
-      // TODO: this value mini-order Sell token amount (show on the UI for available check)
-      // setSellMinAmt(minAmt.toString());
 
       console.log(
         "UI show mini-order Sell token amount:",
@@ -250,8 +241,6 @@ const calculateSwap = (
           .div("1e" + sellToken.decimals)
           .toString()
       );
-      // myLog('calcFor100USDAmount?.sellAmt:', calcFor100USDAmount?.sellAmt)
-      // myLog(`${realMarket} feeBips:${feeBips} takerRate:${takerRate} totalFee: ${totalFee}`)
     }
     const calcTradeParams = sdk.getOutputAmount({
       input: input.toString(),
@@ -366,36 +355,42 @@ const calculateSwap = (
         totalFeeRaw = sdk.toBig(value);
       }
 
-      // @ts-ignore
+      /**
+       * totalFee
+       */
       totalFee = totalFeeRaw
-        // @ts-ignore
         .div("1e" + tokenMap[minSymbol].decimals)
         .toString();
-      //   getValuePrecisionThousand(
-      //   totalFeeRaw.div("1e" + tokenMap[minSymbol].decimals).toString(),
-      //   tokenMap[minSymbol].precision,
-      //   tokenMap[minSymbol].precision,
-      //   tokenMap[minSymbol].precision,
-      //   false,
-      //   { floor: true }
-      // );
+      /** @output: UI
+       *   getValuePrecisionThousand(
+       *   totalFeeRaw.div("1e" + tokenMap[minSymbol].decimals).toString(),
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   false,
+       *   { floor: true }
+       * );
+       */
+
       tradeCost = sdk
         .toBig(tradeCost)
         // @ts-ignore
         .div("1e" + tokenMap[minSymbol].decimals)
         .toString();
-      // TODO  UI code with precision
-      //   getValuePrecisionThousand(
-      //   sdk
-      //     .toBig(tradeCost)
-      //     .div("1e" + tokenMap[minSymbol].decimals)
-      //     .toString(),
-      //   tokenMap[minSymbol].precision,
-      //   tokenMap[minSymbol].precision,
-      //   tokenMap[minSymbol].precision,
-      //   false,
-      //   { floor: true }
-      // );
+
+      /** @output:  UI code with precision
+       *   getValuePrecisionThousand(
+       *   sdk
+       *     .toBig(tradeCost)
+       *     .div("1e" + tokenMap[minSymbol].decimals)
+       *     .toString(),
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   false,
+       *   { floor: true }
+       * );
+       */
 
       console.log("totalFee view value:", totalFee + " " + minSymbol);
       console.log("tradeCost view value:", tradeCost + " " + minSymbol);
@@ -407,23 +402,24 @@ const calculateSwap = (
       .toString();
     console.log("minimumReceived:", minimumReceived);
 
-    // TODO  UI code with precision
-    //   getValuePrecisionThousand(
-    //   toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? 0)
-    //     .minus(totalFee)
-    //     .toString(),
-    //   tokenMap[minSymbol].precision,
-    //   tokenMap[minSymbol].precision,
-    //   tokenMap[minSymbol].precision,
-    //   false,
-    //   { floor: true }
-    // );
+    /** @output:   UI code with precision
+     *   getValuePrecisionThousand(
+     *   toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? 0)
+     *     .minus(totalFee)
+     *     .toString(),
+     *   tokenMap[minSymbol].precision,
+     *   tokenMap[minSymbol].precision,
+     *   tokenMap[minSymbol].precision,
+     *   false,
+     *   { floor: true }
+     * );
+     */
 
     let priceImpactView: any = calcTradeParams?.priceImpact
       ? parseFloat(calcTradeParams?.priceImpact) * 100
       : undefined;
     console.log("priceImpact view:", priceImpactView + "%");
-    // TODO  UI code with color alert
+    //  @output:   UI code with color alert
     // const priceImpactObj = getPriceImpactInfo(calcTradeParams);
     // const _tradeCalcData: Partial<TradeCalcData<C>> = {
     //   priceImpact: priceImpactObj.value.toString(),
@@ -436,10 +432,6 @@ const calculateSwap = (
     //   tradeCost,
     // };
 
-    // myLog('calcTradeParams?.output:', calcTradeParams?.output, getShowStr(calcTradeParams?.output))
-    // _tradeData[isAtoB ? "buy" : "sell"].tradeValue = getShowStr(
-    //   calcTradeParams?.output
-    // );
     console.log(
       `isInputSellOutputBuy:${isInputSellOutputBuy}`,
       `output ${isInputSellOutputBuy ? "Buy" : "Sell"}`,
@@ -458,6 +450,7 @@ const calculateSwap = (
       tradeCost,
       minimumReceived,
       calcTradeParams,
+      minAmt,
     };
   }
 };
@@ -485,6 +478,20 @@ describe("orderERC20", function () {
   });
   it("Swap_SellLRC_BuyETH_USER_INPUT_LRC_lessThenMiniOrder", async () => {
     const inputValue = 1;
+    const slippage = 0.1;
+    console.log(
+      `output Swap_SellLRC_BuyETH_USER_INPUT_LRC_miniOrder Input value: ${inputValue},slippage: ${slippage} `,
+      calculateSwap(
+        "LRC", //sellSymbol
+        "ETH", //buySymbol
+        true, //isInputSellToBuy
+        inputValue, // user Input value no decimal,
+        slippage //_slippage
+      )
+    );
+  });
+  it("Swap_SellLRC_BuyETH_USER_INPUT_LRC_LargeOrder", async () => {
+    const inputValue = 100000;
     const slippage = 0.1;
     console.log(
       `output Swap_SellLRC_BuyETH_USER_INPUT_LRC_miniOrder Input value: ${inputValue},slippage: ${slippage} `,
@@ -545,7 +552,6 @@ describe("orderERC20", function () {
       )
     );
   });
-
   it(
     "RealOrderLRC-ETH_AtoB",
     async () => {
@@ -626,7 +632,8 @@ describe("orderERC20", function () {
           // close = ticker.tickers[7],
           depth,
           ammPoolSnapshot,
-          TOKEN_INFO.tokenMap
+          TOKEN_INFO.tokenMap,
+          AMM_MAP
         );
 
         console.log(
