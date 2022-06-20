@@ -15,7 +15,6 @@ export const marketMap = {
     createdAt: 1617967800000,
   },
 };
-
 //v3/mix/depth?level=0&limit=50&market=LRC-ETH
 export const deepMock = {
   symbol: "LRC-ETH",
@@ -961,7 +960,7 @@ export const deepMock = {
   asks_amtTotal: "614499535069859046093813",
   asks_volTotal: "211252452137358114343",
 };
-
+//v3/amm/balance?poolAddress=0xfEB069407df0e1e4B365C10992F1bc16c078E34b
 export const ammPoolSnapshot: sdk.AmmPoolSnapshot = {
   poolName: "AMM-LRC-ETH",
   poolAddress: "0x18920d6e6fb7ebe057a4dd9260d6d95845c95036",

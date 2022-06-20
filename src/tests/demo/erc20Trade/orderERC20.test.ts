@@ -19,7 +19,6 @@ import {
 } from "../../MockSwapData";
 import * as sdk from "../../../index";
 import BigNumber from "bignumber.js";
-import { LoopringMap } from "../../../defs/loopring_defs";
 let apiKey = "";
 // const { tokenMap } = TOKEN_INFO;
 // const ammMap = AMM_MAP;
@@ -618,7 +617,7 @@ describe("orderERC20", function () {
             poolAddress: AMM_MAP["AMM-LRC-ETH"].address,
           }),
         ]);
-        // Step 5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips
+        // Step 5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact
         // @ts-ignore
         const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
           sell,
