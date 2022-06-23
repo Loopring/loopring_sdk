@@ -58,6 +58,7 @@ export enum OffchainFeeReqType {
   DEPOSIT = 7,
   AMM_JOIN = 8,
   TRANSFER_AND_UPDATE_ACCOUNT = 15,
+  FORCE_WITHDRAWAL = 23,
 }
 export enum OffchainNFTFeeReqType {
   NFT_MINT = 9,

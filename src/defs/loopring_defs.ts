@@ -1503,11 +1503,54 @@ export interface OriginTransferRequestV3 {
 }
 
 /**
+ * Submit Forces Withdrawals params
+ * @export
+ * @interface OriginForcesWithdrawalsV3
+ */
+export interface OriginForcesWithdrawalsV3 {
+  /**
+   * requesterAddress account address
+   * @type {string}
+   * @memberof OriginForcesWithdrawalsV3
+   */
+  requesterAddress: string;
+  /**
+   * requester withdrawls tokenId
+   * @type {number}
+   * @memberof OriginForcesWithdrawalsV3
+   */
+  tokenId: number;
+  /**
+   * withdrawAddress account address
+   * @type {string}
+   * @memberof OriginForcesWithdrawalsV3
+   */
+  withdrawAddress: string;
+  /**
+   * Transfer Request
+   * @type {OriginTransferRequestV3}
+   * @memberof OriginForcesWithdrawalsV3
+   */
+  transfer: Omit<OriginTransferRequestV3, "payeeId" | "maxFee" | "memo"> & {
+    payeeId?: 0;
+    memo?: string;
+    maxFee?: {
+      volume: "0";
+      tokenId: number | string;
+    };
+  };
+}
+/**
  * Submit Deploy NFTAction params
  * @export
  * @interface OriginDeployNFTRequestV3
  */
 export interface OriginDeployNFTRequestV3 {
+  /**
+   * Transfer
+   * @type {OriginTransferRequestV3}
+   * @memberof OriginDeployNFTRequestV3
+   */
   transfer: Omit<OriginTransferRequestV3, "payeeId" | "maxFee" | "memo"> & {
     payeeId?: 0;
     memo?: string;
@@ -2180,6 +2223,15 @@ export interface OffChainWithdrawalRequestV3WithPatch {
 
 export interface OriginTransferRequestV3WithPatch {
   request: OriginTransferRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+export interface OriginForcesWithdrawalsRequestV3WithPatch {
+  request: OriginForcesWithdrawalsV3;
   web3: Web3;
   chainId: ChainId;
   walletType: ConnectorNames;
