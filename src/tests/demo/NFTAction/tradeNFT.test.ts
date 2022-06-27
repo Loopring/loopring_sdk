@@ -94,7 +94,7 @@ describe("tradeNFT", function () {
     const makerOrderEddsaSignature = sdk.get_EddsaSig_NFT_Order(
       makerOrder,
       eddsaKey.sk
-    );
+    ).result;
 
     const takerOrder: sdk.NFTOrderRequestV3 = {
       exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
@@ -117,7 +117,7 @@ describe("tradeNFT", function () {
     const takerOrderEddsaSignature = sdk.get_EddsaSig_NFT_Order(
       takerOrder,
       eddsaKey2.sk
-    );
+    ).result;
 
     mockData = {
       takerOrder,

@@ -23,7 +23,7 @@ export class WhitelistedUserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
       request,
       eddsaKey
-    );
+    ).result;
 
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.WITHDRAWALS_ACTION,
@@ -55,7 +55,7 @@ export class WhitelistedUserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       request,
       eddsaKey
-    );
+    ).result;
 
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,

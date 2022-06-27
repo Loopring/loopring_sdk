@@ -1,7 +1,7 @@
 # Order ERC20
 
-***
-> ### mini-order
+*** 
+## mini-order
 To support small quantity trading, we introduce an additional concept "tradeCost", which is the minimum gas fee when a trade transaction is uplink to Ethereum. 
 
 Let's take LRC-ETH trading as an example.
@@ -42,7 +42,7 @@ Here we add additonally 10% tolerance.
 This is the threshold to distinguish small quantity trading and normal trading  
 We will get two values (configSellLRC and configSellETH) which are used for previous trading quantity limit (Per USD 100) caculation
 
-**9）Caculate the new maxFeeBips and start trading**
+**9) Caculate the new maxFeeBips and start trading**
 
 Let's take LRC->ETH as the example
 User inputs the amount of LRC to convert, amount = sellLRC
@@ -63,16 +63,21 @@ User inputs the amount of LRC to convert, amount = sellLRC
     End If 
     
 
-> ### price impact update
-> 1. sellTokenMinAmount  =  baseOrderInfo.minAmount from  LoopringAPI.userAPI.getMinimumTokenAmt({accountId,marke}, apiKey);
-> 2. {output} from  sdk.getOutputAmount(input: sellTokenMinAmount, isAtoB: isAtoB,…}).output
-> 3. PriceBase = output / sellTokenMinAmount
-> 4. tradePrice = calcTradeParams.minReceive / userInputSell
-> 5. priceImpact = 1 - tradePrice/PriceBase - 0.005
-> 6. If priceImpact < 0 priceImpact = 0
->    Else priceImpact
+### price impact update
 
-## calculateSwap function
+**1）sellTokenMinAmount  =  baseOrderInfo.minAmount from  LoopringAPI.userAPI.getMinimumTokenAmt({accountId,marke}, apiKey);**
+
+**2）{output} from  sdk.getOutputAmount(input: sellTokenMinAmount, isAtoB: isAtoB,…}).output**
+
+**3）PriceBase = output / sellTokenMinAmount**
+
+**4）tradePrice = calcTradeParams.minReceive / userInputSell**
+
+**5）priceImpact = 1 - tradePrice/PriceBase - 0.005**
+
+**6）If priceImpact < 0 priceImpact = 0  Else priceImpact**
+
+##  
 ```ts
 const calculateSwap = (
   sellSymbol = "LRC",
@@ -524,7 +529,7 @@ apiKey = (
 ).apiKey;
 ```
 
-### Step Step 2 : storageId
+### Step 2. storageId
 
 ```ts
 
@@ -575,43 +580,29 @@ const [{depth}, {ammPoolSnapshot}] = await Promise.all([
 ]);
 ```
 
-### Step 5. check MinAmt
+### Step 5. Check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact & swap output
 
 ```ts
-let buyMinAmtInfo = (amountMap[AMM_MARKET] ?? amountMap[MARKET])[buy];
-let takerRate = buyMinAmtInfo
-  ? buyMinAmtInfo.userOrderInfo.takerRate
-  : 0;
-const minAmountInput = buyMinAmtInfo.userOrderInfo.minAmount;
+const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
+        sell,
+        buy,
+        isAtoB,
+        10, // user Input value no decimal 10 lrc,
+        0.1,
+        //TODO MOCK value
+        amountMap,
+        "LRC-ETH",
+        // close = ticker.tickers[7],
+        depth,
+        ammPoolSnapshot,
+        TOKEN_INFO.tokenMap,
+        AMM_MAP
+      );
 ```
 
-### Step 6. calcTradeParams
+### Step 6. Submit
 
 ```ts
-const calcTradeParams = sdk.getOutputAmount({
-  input: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
-  sell,
-  buy,
-  isAtoB,
-  marketArr: ["LRC-ETH", "ETH-USDT", "DAI-USDT", "USDC-ETH"],
-  tokenMap: TOKEN_INFO.tokenMap,
-  marketMap: TOKEN_INFO.marketMap,
-  depth,
-  ammPoolSnapshot: ammPoolSnapshot,
-  feeBips: AMM_MAP["AMM-LRC-ETH"].feeBips.toString(),
-  takerRate: takerRate ? takerRate.toString() : "0",
-  slipBips: slippage,
-});
-console.log(
-  "Buy",
-  ",LRC:",
-  LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
-  ",minAmountInput LRC:",
-  minAmountInput,
-  ",ETH:",
-  calcTradeParams?.amountBOutSlip?.minReceivedVal
-);
-
 const response: { hash: string } | any =
   await LoopringAPI.userAPI.submitOrder(
     {

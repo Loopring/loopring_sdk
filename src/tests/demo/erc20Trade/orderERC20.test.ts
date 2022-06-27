@@ -608,7 +608,7 @@ describe("orderERC20", function () {
           ).amountMap,
         };
 
-        // Step 4.  depth,  ammPoolSnapshot ,tickMap
+        // Step 4. depth, ammPoolSnapshot, tickMap
         const [{ depth }, { ammPoolSnapshot }] = await Promise.all([
           LoopringAPI.exchangeAPI.getMixDepth({
             market: AMM_MAP["AMM-LRC-ETH"].market,
@@ -617,6 +617,7 @@ describe("orderERC20", function () {
             poolAddress: AMM_MAP["AMM-LRC-ETH"].address,
           }),
         ]);
+
         // Step 5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact
         // @ts-ignore
         const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
@@ -644,6 +645,7 @@ describe("orderERC20", function () {
           maxFeeBips
         );
 
+        // Step 6. submit
         const response: { hash: string } | any =
           await LoopringAPI.userAPI.submitOrder(
             {

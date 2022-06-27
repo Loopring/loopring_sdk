@@ -1,5 +1,8 @@
 import { IsMobile, LoopringErrorCode } from "../defs";
 // import fetch from "node-fetch";
+import { CID } from "multiformats/cid";
+import { base16 } from "multiformats/bases/base16";
+
 import {
   addHexPrefix,
   clearHexPrefix,
@@ -27,7 +30,9 @@ import {
 import * as fm from "../utils/formatter";
 import { BigNumber } from "bignumber.js";
 import { LOOPRING_EXPORTED_ACCOUNT, web3 } from "./MockData";
-
+import BN from "bn.js";
+import { myLog } from "../utils/log_tools";
+import { bytes } from "multiformats";
 const NUMBER = 40244024;
 const BUFFER = Buffer.from("40244024", "utf8");
 const BIG_NUMBER = new BigNumber(123.4567);
@@ -332,6 +337,49 @@ describe("formatter test", function () {
   });
   it("isMobile", () => {
     console.log("isMobile", IsMobile.any());
+  });
+  it("cid", () => {
+    // // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // const _CID = require("cids");
+    // const _1cid = new _CID(
+    //   "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+    // );
+    // const _1hashHex = Buffer.from(_1cid.multihash.slice(2)).toString("hex");
+    // const _1hashBN = new BN(_1hashHex.padStart(64, "0"), 16)
+    //   .toString("hex")
+    //   .padStart(64, "0");
+    //
+    // const _cid = CID.parse(
+    //   "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+    // );
+    // const hashHex = _cid.toString(base16).padStart(64, "0");
+    // console.log(
+    //   "no slice",
+    //   new BN(Buffer.from(_1cid.multihash).toString("hex"), 16)
+    //     .toString("hex")
+    //     .padStart(64, "0"),
+    //   "currentBuffer",
+    //   _1hashBN,
+    //   "hashHex",
+    //   hashHex
+    // );
+    // // const CID = require("cids");
+    // const hashBN = new BN(
+    //   "0x01701220c3c4733ec8affd06cf9e9ff50ffc6bcd2ec85a6170004bb709669c31de94391a"
+    //     // "0xca4f3647b8a11f64ec3dbb64ab756f623044e9e066bb2a79aa4264a3eb265240"
+    //     .replace("0x", ""),
+    //   16
+    // );
+    // const hex = hashBN.toString("hex").padStart(64, "0");
+    // // const buf = Buffer.from("1220" + hex, "hex");
+    // console.log(
+    //   "hashHex",
+    //   hex
+    //   // _hashBN
+    // );
+    // const buf = Buffer.from("1220" + hex, "hex");
+    // const cid = CID.parse("f" + hashBN, base16).toString();
+    // myLog(cid);
   });
 });
 

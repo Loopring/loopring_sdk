@@ -224,7 +224,10 @@ export const getEdDSASigWithPoseidon = (
     bigIntInputs.push(BigNumber.from(input));
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams);
-  return genSigWithPadding(PrivateKey, hash);
+  return {
+    hash,
+    result: genSigWithPadding(PrivateKey, hash),
+  };
 };
 
 /**

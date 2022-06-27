@@ -935,7 +935,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
       request,
       eddsaKey
-    );
+    ).result;
 
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
@@ -1053,7 +1053,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       request,
       eddsaKey
-    );
+    ).result;
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
@@ -1180,13 +1180,13 @@ export class UserAPI extends BaseAPI {
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey
-    );
+    ).result;
     transfer.ecdsaSignature = ecdsaSignature;
     const dataToSig: Map<string, any> = new Map();
     dataToSig.set("requesterAddress", request.requesterAddress);
-    dataToSig.set("withdrawAddress", request.withdrawAddress);
     dataToSig.set("tokenId", request.tokenId);
     dataToSig.set("transfer", request.transfer);
+    dataToSig.set("withdrawAddress", request.withdrawAddress);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
       bodyParams: request,
@@ -1313,7 +1313,7 @@ export class UserAPI extends BaseAPI {
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey
-    );
+    ).result;
     transfer.ecdsaSignature = ecdsaSignature;
     const dataToSig: Map<string, any> = new Map();
     dataToSig.set("nftData", request.nftData);
@@ -1433,7 +1433,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
       request,
       eddsaKey
-    );
+    ).result;
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
@@ -1548,7 +1548,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(
       request,
       eddsaKey
-    );
+    ).result;
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
@@ -1679,7 +1679,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
       request,
       eddsaKey
-    );
+    ).result;
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
@@ -1708,7 +1708,7 @@ export class UserAPI extends BaseAPI {
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
       request,
       eddsaKey
-    );
+    ).result;
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
