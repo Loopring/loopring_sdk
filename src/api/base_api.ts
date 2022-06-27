@@ -262,8 +262,8 @@ export async function ecRecover2(
 ) {
   const messageBuffer = Buffer.from(message, "utf8");
 
-  // console.log('message:', message)
-  // console.log('signature raw:', signature)
+  // myLog('message:', message)
+  // myLog('signature raw:', signature)
 
   signature = signature.split("x")[1];
 
@@ -406,10 +406,10 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
-            console.log("ecRecover before", msg, result);
+            myLog("ecRecover before", msg, result);
             // Valid: 3. EOA signature Valid by ecRecover
             const valid: any = await ecRecover(web3, account, msg, result);
-            console.log("ecRecover after", valid.result);
+            myLog("ecRecover after", valid.result);
             if (valid.result) {
               return resolve({ sig: result });
             }
