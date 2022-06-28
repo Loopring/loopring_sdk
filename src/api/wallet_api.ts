@@ -604,8 +604,6 @@ export class WalletAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    // console.log({ raw_data });
-
     return {
       raw_data,
     };

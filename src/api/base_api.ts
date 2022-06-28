@@ -265,8 +265,8 @@ export async function ecRecover2(
 ) {
   const messageBuffer = Buffer.from(message, "utf8");
 
-  // console.log('message:', message)
-  // console.log('signature raw:', signature)
+  // myLog('message:', message)
+  // myLog('signature raw:', signature)
 
   signature = signature.split("x")[1];
 

@@ -968,7 +968,7 @@ export class ExchangeAPI extends BaseAPI {
         } else {
           const counter = (curTs - lastTs) / tsStep;
 
-          // console.log('counter:', curTs, lastTs, counter)
+          // myLog('counter:', curTs, lastTs, counter)
 
           for (let i = 1; i <= counter; i++) {
             let candlestick: Candlestick;

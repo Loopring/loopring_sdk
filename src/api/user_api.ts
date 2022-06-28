@@ -1515,7 +1515,7 @@ export class UserAPI extends BaseAPI {
 
       if (isContractCheck) {
         // signNFTWithdrawWithDataStructureForContract
-        // console.log('3. signNFTWithdrawWithDataStructureForContract')
+        // myLog('signNFTWithdrawWithDataStructureForContract')
         const result =
           await sign_tools.signNFTWithdrawWithDataStructureForContract(
             web3,
@@ -1641,7 +1641,7 @@ export class UserAPI extends BaseAPI {
 
         if (isContractCheck) {
           // signNFTMintWithDataStructureForContract
-          // console.log('3. signNFTMintWithDataStructureForContract')
+          // myLog('signNFTMintWithDataStructureForContract')
           const result =
             await sign_tools.signNFTMintWithDataStructureForContract(
               web3,
@@ -2006,7 +2006,7 @@ export class UserAPI extends BaseAPI {
       const isContractCheck = await isContract(web3, request.owner);
 
       if (isContractCheck) {
-        // console.log('3. signUpdateAccountWithDataStructureForContract')
+        // myLog('signUpdateAccountWithDataStructureForContract')
         const result =
           await sign_tools.signUpdateAccountWithDataStructureForContract(
             web3,
@@ -2015,7 +2015,7 @@ export class UserAPI extends BaseAPI {
             accountId
           );
         ecdsaSignature = result.ecdsaSig;
-        // console.log('ecdsaSignature:', ecdsaSignature)
+        // myLog('ecdsaSignature:', ecdsaSignature)
       } else if (counterFactualInfo) {
         const result =
           await sign_tools.signUpdateAccountWithDataStructureForContract(
