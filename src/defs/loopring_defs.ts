@@ -704,6 +704,9 @@ export type GetAccountRequest =
 export interface GetCounterFactualInfoRequest {
   accountId: number;
 }
+export interface GetAvailableBrokerRequest {
+  type: number;
+}
 
 export interface GetEthNonceRequest {
   owner: string;

@@ -80,8 +80,6 @@ export async function signEthereumTx(
       const jsonTx = Object.assign(ethTx.toJSON(), signature);
 
       jsonTx.from = rawTx.from;
-      // console.log('account:', account)
-      // console.log('jsonTx:', jsonTx)
 
       return { result: fm.toHex(JSON.stringify(jsonTx)), rawTx: jsonTx };
     } else {

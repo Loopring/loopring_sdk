@@ -88,15 +88,15 @@ export async function generateKeyPair({
   );
 
   if (!result.error) {
-    // console.log("sig:", result.sig);
+    // myLog("sig:", result.sig);
     const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig));
-    // console.log(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
+    // myLog(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
     const seed = BigNumber.from("0x" + seedBuff.toString("hex"));
-    // console.log(`seed ${seed.toString()}`)
+    // myLog(`seed ${seed.toString()}`)
     const bitIntDataItems = bnToBufWithFixedLength(seed.toString(), 32);
-    // console.log(`bigIntData ${bitIntDataItems}`)
+    // myLog(`bigIntData ${bitIntDataItems}`)
     const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
-    // console.log("keyPair", keyPair)
+    // myLog("keyPair", keyPair)
 
     const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)));
     const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)));
@@ -161,7 +161,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
   }
 
   const result = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
-  // console.log("signature result", result)
+  // myLog("signature result", result)
   return result;
 };
 
@@ -192,9 +192,10 @@ export function getEdDSASig(
   const uri = encodeURIComponent(`${basePath}${api_url}`);
 
   const message = `${method}&${uri}&${params}`;
-  let hash: any = new BigInteger(sha256(message).toString(), 16);
+  let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
-  hash = hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  // myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);
 
@@ -342,7 +343,7 @@ export async function getEcDSASig(
       hash = sigUtil.TypedDataUtils.sign(typedData);
       hash = fm.toHex(hash);
 
-      // console.log('WithoutDataStruct hash:', hash)
+      // myLog('WithoutDataStruct hash:', hash)
 
       if (!walletType) {
         throw Error("no walletType set!");
@@ -454,7 +455,7 @@ export async function signUpdateAccountWithDataStructure(
   counterFactualInfo?: CounterFactualInfo
 ) {
   const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
-  // console.log('typedData:', typedData)
+  // myLog('typedData:', typedData)
   const result = await getEcDSASig(
     web3,
     typedData,
@@ -1405,7 +1406,7 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
 
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
 
-  // console.log('sigHash:', sigHash, ' signature:', signature)
+  // myLog('sigHash:', sigHash, ' signature:', signature)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -1430,7 +1431,7 @@ export function getAmmJoinEcdsaTypedData(
     validUntil: data.validUntil,
   };
 
-  // console.log('message:', message)
+  // myLog('message:', message)
   const typedData = {
     types: {
       EIP712Domain: [

@@ -17,14 +17,12 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
   for (const object of objects) {
     if (object) {
       const objectTmp = sortObject(object);
-      // console.log('new obj:', objectTmp)
       for (const key in objectTmp) {
         if (objectTmp[key] != undefined) searchParams.set(key, objectTmp[key]);
       }
     }
   }
 
-  // console.log('searchParams:', searchParams)
   url.search = searchParams.toString();
 };
 
@@ -96,8 +94,6 @@ export class Request {
     setSearchParams(localUrl, params?.queryParams);
 
     const urlPathStr = toPathString(localUrl);
-
-    // console.log('urlPathStr:', urlPathStr)
 
     let headers: any = {};
 

@@ -3,6 +3,7 @@ import {
   ConnectorError,
   ConnectorNames,
   CounterFactualInfo,
+  GetAvailableBrokerRequest,
   GetCounterFactualInfoRequest,
   LoopringErrorCode,
   ReqMethod,
@@ -94,13 +95,15 @@ export class BaseAPI {
     this.timeout = timeout;
   }
 
-  public async getAvailableBroker(): Promise<{ broker: string }> {
+  public async getAvailableBroker(
+    request: GetAvailableBrokerRequest
+  ): Promise<{ broker: string }> {
     const reqParams: ReqParams = {
       sigFlag: SIG_FLAG.NO_SIG,
+      queryParams: request,
       url: LOOPRING_URLs.GET_AVAILABLE_BROKER,
       method: ReqMethod.GET,
     };
-
     const result = (await this.makeReq().request(reqParams)).data;
     return result;
   }
@@ -406,10 +409,10 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
-            console.log("ecRecover before", msg, result);
+            // myLog("ecRecover before", msg, result);
             // Valid: 3. EOA signature Valid by ecRecover
             const valid: any = await ecRecover(web3, account, msg, result);
-            console.log("ecRecover after", valid.result);
+            // myLog("ecRecover after", valid.result);
             if (valid.result) {
               return resolve({ sig: result });
             }

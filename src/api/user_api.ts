@@ -50,7 +50,6 @@ export class UserAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo) {
-      console.log(raw_data);
       return {
         ...raw_data?.resultInfo,
       };
@@ -1095,7 +1094,7 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
     transfer.payeeId = 0;
-    transfer.memo = `Force-Withdrawal-by->${request.requesterAddress}`;
+    transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`;
     transfer.maxFee = {
       volume: "0",
       tokenId: transfer.token.tokenId,
@@ -1402,7 +1401,6 @@ export class UserAPI extends BaseAPI {
 
       if (isContractCheck) {
         // signOffchainWithdrawWithDataStructureForContract
-        // console.log('3. signTransferWithDataStructureForContract')
         const result =
           await sign_tools.signNFTTransferWithDataStructureForContract(
             web3,
@@ -1412,7 +1410,6 @@ export class UserAPI extends BaseAPI {
             accountId
           );
         ecdsaSignature = result.ecdsaSig;
-        // console.log('3. result.ecdsaSig:', result.ecdsaSig)
       } else if (counterFactualInfo) {
         const result =
           await sign_tools.signNFTTransferWithDataStructureForContract(

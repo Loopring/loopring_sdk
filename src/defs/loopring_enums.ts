@@ -111,8 +111,9 @@ export enum WithdrawalTypes {
 export enum UserTxTypes {
   DEPOSIT = "deposit",
   TRANSFER = "transfer",
-  ONCHAIN_WITHDRAWAL = "onchain_withdrawal",
+  OFFCHAIN_WITHDRAWAL = "offchain_withdrawal",
   FORCE_WITHDRAWAL = "force_withdrawal",
+  DELEGATED_FORCE_WITHDRAW = "delegated_force_withdraw",
 }
 
 export enum UserNFTTxTypes {
