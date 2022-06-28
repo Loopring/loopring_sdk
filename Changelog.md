@@ -2,6 +2,11 @@
 
 ## JS SDK Version ChangeLog
 
+#### v2.0.17
+     1) submitForceWithdrawals
+     2) return a result hash
+     3) order/swap demo
+
 #### v2.0.12
      1) ipfs cid to nftId startWith 0
      2) server-side retturn nftId startWith 0
