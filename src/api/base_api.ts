@@ -176,10 +176,12 @@ export async function ecRecover(
             resolve({
               error: "ecRecover 1:" + err + "or no address:" + address,
             });
+            myLog("ecRecover error", err);
           }
         }
       );
     } catch (err) {
+      myLog("ecRecover error", err);
       resolve({ error: ("ecRecover 2:" + err) as any });
     }
   });
@@ -409,10 +411,10 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
-            // myLog("ecRecover before", msg, result);
+            myLog("ecRecover before", msg, result);
             // Valid: 3. EOA signature Valid by ecRecover
             const valid: any = await ecRecover(web3, account, msg, result);
-            // myLog("ecRecover after", valid.result);
+            myLog("ecRecover after", valid.result);
             if (valid.result) {
               return resolve({ sig: result });
             }
