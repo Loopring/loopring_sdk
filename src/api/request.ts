@@ -59,7 +59,7 @@ export class Request {
     return this._axios;
   }
 
-  constructor(baseUrl: string, timeout: number = 3000) {
+  constructor(baseUrl: string, timeout: number = 6000) {
     this.baseOptions = {
       baseURL: baseUrl,
       timeout: timeout,
@@ -114,7 +114,7 @@ export class Request {
         sig = getEdDSASigWithPoseidon(
           params.sigObj?.dataToSig,
           params.sigObj?.PrivateKey
-        );
+        ).result;
         break;
       case SIG_FLAG.EDDSA_SIG:
         sig = getEdDSASig(

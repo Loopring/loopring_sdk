@@ -7,6 +7,9 @@ import {
   web3,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import * as sign_tools from "../../../api/sign/sign_tools";
+import { OriginNFTTransferRequestV3 } from "../../../index";
+import { myLog } from "../../../utils/log_tools";
 describe("Transfer", function () {
   it(
     "submitInternalTransfer",
@@ -53,38 +56,40 @@ describe("Transfer", function () {
         apiKey
       );
       console.log("fee:", fee);
-
+      const request = {
+        exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+        payerAddr: accInfo.owner,
+        payerId: accInfo.accountId,
+        payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
+        payeeId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
+        storageId: storageId.offchainId,
+        token: {
+          tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
+          volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+        },
+        maxFee: {
+          tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          volume: fee.fees["LRC"].fee ?? "9400000000000000000",
+        },
+        validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+        /*
+         * when payPayeeUpdateAccount = ture, will help payee active account,
+         * maxFee from should:
+         * const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
+         *  {
+         *     accountId: accInfo.accountId,
+         *     requestType: sdk.OffchainFeeReqType.TRANSFER_AND_UPDATE_ACCOUNT,
+         *   },
+         *   apiKey
+         * );
+         */
+        payPayeeUpdateAccount: false,
+      };
+      const hash = sign_tools.get_EddsaSig_Transfer(request, "").hash;
+      myLog("hash", hash);
       // Step 6. transfer
       const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
-        request: {
-          exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
-          payerAddr: accInfo.owner,
-          payerId: accInfo.accountId,
-          payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
-          payeeId: LOOPRING_EXPORTED_ACCOUNT.accountId2,
-          storageId: storageId.offchainId,
-          token: {
-            tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
-            volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
-          },
-          maxFee: {
-            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
-          },
-          validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-          /*
-           * when payPayeeUpdateAccount = ture, will help payee active account,
-           * maxFee from should:
-           * const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
-           *  {
-           *     accountId: accInfo.accountId,
-           *     requestType: sdk.OffchainFeeReqType.TRANSFER_AND_UPDATE_ACCOUNT,
-           *   },
-           *   apiKey
-           * );
-           */
-          payPayeeUpdateAccount: false,
-        },
+        request,
         web3,
         chainId: sdk.ChainId.GOERLI,
         walletType: sdk.ConnectorNames.Trezor,
