@@ -51,7 +51,9 @@ it(
     );
 
     // Step 6. broker
-    const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker();
+    const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker({
+      type: 1,
+    });
 
     // Step 7. Build transfer & Deploy
     const transfer = {

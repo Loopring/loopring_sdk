@@ -51,7 +51,9 @@ describe("deployNFT", function () {
       );
 
       // Step 6. broker
-      const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker();
+      const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker({
+        type: 0,
+      });
 
       // Step 7. Build transfer & Deploy
       const transfer = {

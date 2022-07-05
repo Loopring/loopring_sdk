@@ -2,6 +2,8 @@ import sha256 from "crypto-js/sha256";
 import * as abi from "ethereumjs-abi";
 import * as sigUtil from "eth-sig-util";
 import { EIP712TypedData } from "eth-sig-util";
+import { jubjub } from "./poseidon/jubjub";
+
 import * as ethUtil from "ethereumjs-util";
 
 import BN from "bn.js";
@@ -202,6 +204,12 @@ export function getEdDSASig(
   return sig;
 }
 
+export function verifyEdDSASig(
+  hash: string,
+  input: { Rx: string; Ry: string; s: string }
+): Boolean {
+  return true;
+}
 export const getEdDSASigWithPoseidon = (
   inputs: any,
   PrivateKey: string | undefined
