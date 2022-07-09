@@ -50,7 +50,8 @@ export const DEFAULT_TIMEOUT = 30000;
 const chainId = sdk.ChainId.GOERLI;
 
 export const LoopringAPI = {
-  userAPI: new UserAPI({ chainId }),
+  // second params is http request timeout default is 6000
+  userAPI: new UserAPI({ chainId }, 6000),
   exchangeAPI: new ExchangeAPI({ chainId }),
   globalAPI: new GlobalAPI({ chainId }),
   ammpoolAPI: new AmmpoolAPI({ chainId }),

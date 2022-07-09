@@ -59,7 +59,7 @@ export class Request {
     return this._axios;
   }
 
-  constructor(baseUrl: string, timeout: number = 6000) {
+  constructor(baseUrl: string, timeout: number) {
     this.baseOptions = {
       baseURL: baseUrl,
       timeout: timeout,

@@ -84,7 +84,7 @@ export class BaseAPI {
   }
   private timeout: number;
 
-  public constructor(param: InitParam, timeout: number = 3000) {
+  public constructor(param: InitParam, timeout: number = 6000) {
     if (param.baseUrl) {
       this.baseUrl = param.baseUrl;
     } else if (param.chainId !== undefined) {
