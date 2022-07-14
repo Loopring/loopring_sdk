@@ -299,7 +299,7 @@ export class NFTAPI extends BaseAPI {
   public ipfsNftIDToCid(nftId: string) {
     const CID = require("cids");
     const hashBN = new BN(nftId.replace("0x", ""), 16);
-    const hex = hashBN.toString(16);
+    const hex = hashBN.toString(16, 64);
     const buf = Buffer.from("1220" + hex, "hex");
     const cid = new CID(buf);
     return cid.toString();
