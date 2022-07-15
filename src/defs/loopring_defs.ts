@@ -1888,6 +1888,119 @@ export interface NFTMintRequestV3 {
   counterFactualInfo?: CounterFactualInfo;
 }
 
+// /**
+//  *
+//  * @export
+//  * @interface NFTCollectionCreateRequestV3
+//  */
+// export interface NFTollectionCreateRequestV3 {
+//   /**
+//    * exchange address
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   exchange: string;
+//   /**
+//    * account ID
+//    * @type {number}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   minterId: number;
+//   /**
+//    * account owner address
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   minterAddress: string;
+//   /**
+//    * The account receive the minted NFTAction token, now should be minter himself.
+//    * @type {number}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   toAccountId: number;
+//   /**
+//    * The account receive the minted NFTAction token, now should be minter himself.
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   toAddress?: string;
+//   /**
+//    * nftType: 0 for EIP1155, 1 for EIP712. EIP1155 by default.
+//    * @type {number}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   nftType: 0 | 1;
+//   /**
+//    * Contract address
+//    * @type{string}
+//    * @memberof OriginNFTTransferRequestV3
+//    */
+//   tokenAddress: string;
+//   /**
+//    * NFT_ID url_id
+//    * @type {string}   toString(16)
+//    * @memberof OriginNFTTransferRequestV3
+//    */
+//   nftId: string;
+//   /**
+//    * The amount of the token
+//    * @type {string}
+//    * @memberof TokenVolumeV3
+//    */
+//   amount: string;
+//
+//   /**
+//    * Timestamp for order to become invalid
+//    * @type {number}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   validUntil: number;
+//   /**
+//    * offchain ID
+//    * @type {number}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   storageId: number;
+//   /**
+//    *
+//    * @type { Pick<TokenVolumeV3,'tokenId'> & {amount:string}}
+//    * @memberof OriginNFTTransferRequestV3
+//    */
+//   maxFee: Pick<TokenVolumeV3, "tokenId"> & { amount: string };
+//   /**
+//    * 0-50
+//    * @type number
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   royaltyPercentage: number;
+//   /**
+//    * force to mint, regardless the previous mint record
+//    * @type {boolean}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   forceToMint?: boolean;
+//   /**
+//    * eddsa signature
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   eddsaSignature?: string;
+//   /**
+//    * ecdsa signature
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   ecdsaSignature?: string;
+//   /**
+//    * An approved hash string which was already submitted on eth mainnet
+//    * @type {string}
+//    * @memberof OriginNFTMintRequestV3
+//    */
+//   hashApproved?: string;
+//   counterFactualNftInfo?: NFTCounterFactualInfo | null;
+//   counterFactualInfo?: CounterFactualInfo;
+// }
+
 /**
  *
  * @export
@@ -2281,6 +2394,16 @@ export interface OriginNFTMINTRequestV3WithPatch {
   eddsaKey: string;
   apiKey: string;
   isHWAddr?: boolean;
+}
+
+export interface OriginNFTCreateCollectionRequestV3WithPatch {
+  // request: NFTMintRequestV3;
+  // web3: Web3;
+  // chainId: ChainId;
+  // walletType: ConnectorNames;
+  // eddsaKey: string;
+  // apiKey: string;
+  // isHWAddr?: boolean;
 }
 
 export interface OriginNFTValidateOrderRequestV3WithPatch {

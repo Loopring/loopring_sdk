@@ -1694,6 +1694,134 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
+  // public async submitNFTCollection<T extends loopring_defs.TX_HASH_API>(
+  //   req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
+  //   options?: { accountId?: number; counterFactualInfo?: any }
+  // ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  //   const {
+  //     request,
+  //     web3,
+  //     chainId,
+  //     walletType,
+  //     eddsaKey,
+  //     apiKey,
+  //     isHWAddr: isHWAddrOld,
+  //   } = req;
+  //   const { accountId, counterFactualInfo }: any = options
+  //     ? options
+  //     : { accountId: 0 };
+  //   if (request.counterFactualNftInfo === undefined) {
+  //     request.counterFactualNftInfo = {
+  //       nftFactory: NFTFactory[chainId],
+  //       nftOwner: request.minterAddress,
+  //       nftBaseUri: "",
+  //     };
+  //   }
+  //
+  //   request.royaltyPercentage = request.royaltyPercentage
+  //     ? request.royaltyPercentage
+  //     : 0;
+  //   const isHWAddr = !!isHWAddrOld;
+  //   let ecdsaSignature = undefined;
+  //
+  //   const sigHW = async () => {
+  //     const result = await sign_tools.signNFTMintWithoutDataStructure(
+  //       web3,
+  //       request.minterAddress,
+  //       request,
+  //       chainId,
+  //       walletType,
+  //       accountId,
+  //       counterFactualInfo
+  //     );
+  //     ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+  //   };
+  //
+  //   // metamask not import hw appWallet.
+  //   if (
+  //     walletType === ConnectorNames.MetaMask ||
+  //     walletType === ConnectorNames.Gamestop ||
+  //     walletType === ConnectorNames.OtherExtension
+  //   ) {
+  //     try {
+  //       if (isHWAddr) {
+  //         await sigHW();
+  //       } else {
+  //         const result = await sign_tools.signNFTMintWithDataStructure(
+  //           web3,
+  //           request.minterAddress,
+  //           request,
+  //           chainId,
+  //           walletType,
+  //           accountId,
+  //           counterFactualInfo
+  //         );
+  //         ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+  //       }
+  //     } catch (err) {
+  //       return {
+  //         ...this.genErr(err as any),
+  //       };
+  //     }
+  //   } else {
+  //     try {
+  //       const isContractCheck = await isContract(web3, request.minterAddress);
+  //
+  //       if (isContractCheck) {
+  //         // signNFTMintWithDataStructureForContract
+  //         // myLog('signNFTMintWithDataStructureForContract')
+  //         const result =
+  //           await sign_tools.signNFTMintWithDataStructureForContract(
+  //             web3,
+  //             request.minterAddress,
+  //             request,
+  //             chainId,
+  //             accountId
+  //           );
+  //         ecdsaSignature = result.ecdsaSig;
+  //       } else if (counterFactualInfo) {
+  //         const result =
+  //           await sign_tools.signNFTMintWithDataStructureForContract(
+  //             web3,
+  //             request.minterAddress,
+  //             request,
+  //             chainId,
+  //             accountId,
+  //             counterFactualInfo
+  //           );
+  //         ecdsaSignature = result.ecdsaSig;
+  //         // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
+  //       } else {
+  //         await sigHW();
+  //       }
+  //     } catch (err) {
+  //       return {
+  //         ...this.genErr(err as any),
+  //       };
+  //     }
+  //   }
+  //
+  //   request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
+  //     request,
+  //     eddsaKey
+  //   ).result;
+  //   if (counterFactualInfo) {
+  //     request.counterFactualInfo = counterFactualInfo;
+  //   }
+  //   const reqParams: loopring_defs.ReqParams = {
+  //     url: LOOPRING_URLs.POST_NFT_MINT,
+  //     bodyParams: request,
+  //     apiKey,
+  //     method: ReqMethod.POST,
+  //     sigFlag: SIG_FLAG.NO_SIG,
+  //     ecdsaSignature,
+  //   };
+  //   // myLog("NFTMint request", request);
+  //   const raw_data = (await this.makeReq().request(reqParams)).data;
+  //
+  //   return this.returnTxHash(raw_data);
+  // }
+
   /*
    * Submit NFTAction Validate Order request
    */

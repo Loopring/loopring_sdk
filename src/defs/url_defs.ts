@@ -107,6 +107,11 @@ export enum LOOPRING_URLs {
   POST_NFT_MINT = "api/v3/nft/mint",
   POST_NFT_TRADE = "/api/v3/nft/trade",
   POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
+  // POST_NFT_COLLECTION = "api/v3/collection/createCollection",
+  // GET_NFT_COLLECTIONS = "api/v3/nft/collections",
+  // GET_NFTs_BY_COLLECTIONS = "api/v3/nft/collection/items",
+  // GET_USER_NFT_COLLECTIONS = "api/v3/nft/collections",
+  // GET_USER_NFTs_BY_COLLECTIONS = "api/v3/collection/nftBalances",
   GET_NFTs_INFO = "/api/v3/nft/info/nfts",
   GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",
   GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
