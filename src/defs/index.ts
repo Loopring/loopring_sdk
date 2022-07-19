@@ -1,3 +1,5 @@
+import { myLog } from "../utils/log_tools";
+
 export * from "./account_defs";
 export * from "./web3_defs";
 export * from "./ws_defs";
@@ -32,7 +34,7 @@ export const IsMobile = {
 
   any: function () {
     if (typeof global.navigator === 'undefined' || typeof navigator === 'undefined') {
-      console.log("IsMobile any navigator is undefined")
+      myLog("IsMobile any navigator is undefined")
       return false;
     }
     return (
