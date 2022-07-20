@@ -75,16 +75,16 @@ describe("Withdraw", function () {
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
           to: LOOPRING_EXPORTED_ACCOUNT.address,
-          storageId: 0,
+          storageId: storageId.offchainId,
           token: {
             tokenId: TOKEN_INFO.tokenMap.LRC.tokenId,
             volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
           },
-          validUntil: 0,
+          validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
-        walletType: sdk.ConnectorNames.MetaMask,
+        walletType: sdk.ConnectorNames.Unknown, //sdk.ConnectorNames.MetaMask UT only support perosonal sign, no V4
         eddsaKey: eddsaKey.sk,
         apiKey,
       });
