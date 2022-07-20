@@ -283,8 +283,8 @@ export class WalletAPI extends BaseAPI {
     );
     return { sig: result.ecdsaSig };
   }
-
-  private encodeAddressesPacked(addrs: string[]) {
+  //TODO UT is setPublic
+  public encodeAddressesPacked(addrs: string[]) {
     const addrsBs = Buffer.concat(
       addrs.map((a) => Buffer.from("00".repeat(12) + a.slice(2), "hex"))
     );
@@ -292,6 +292,7 @@ export class WalletAPI extends BaseAPI {
   }
   public async submitApproveSignature<R extends any, T extends string>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
+    guardians: string[] = [],
     isContract1XAddress?: boolean
   ): Promise<{
     hash: string | undefined;
@@ -350,7 +351,7 @@ export class WalletAPI extends BaseAPI {
           guardian.businessDataJson && guardian.businessDataJson.newOwner
             ? guardian.businessDataJson.newOwner
             : "";
-        const guardiansBs = this.encodeAddressesPacked([]);
+        const guardiansBs = this.encodeAddressesPacked(guardians);
         const guardiansHash = ethUtil.keccak(guardiansBs);
         const result = await this.signHebaoApproveWithDataStructureForContract(
           web3,
