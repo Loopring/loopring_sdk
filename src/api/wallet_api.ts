@@ -22,6 +22,7 @@ import { toHex } from "../utils";
 import { sendRawTx } from "./contract_api";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
+import * as ethUtil from "ethereumjs-util";
 
 export class WalletAPI extends BaseAPI {
   /*
@@ -63,6 +64,25 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
+  // 1.x
+
+  // 2.0
+  // const TYPE_STR =
+  //   "recover(address wallet,uint256 validUntil,address newOwner,address[] newGuardians)";
+  // const RECOVER_TYPEHASH = ethUtil.keccak(Buffer.from(TYPE_STR));
+  //
+  // const guardiansBs = encodeAddressesPacked(guardians);
+  // const guardiansHash = ethUtil.keccak(guardiansBs);
+  //
+  // const encodedRequest = ethAbi.encodeParameters(
+  //   ["bytes32", "address", "uint256", "address", "bytes32"],
+  //   [RECOVER_TYPEHASH, walletAddress, validUntil, newOwner, guardiansHash]
+  // );
+  //
+  //   const encodedRequest = web3.eth.abi.encodeParameters(
+  //     ["bytes32", "address", "uint256", "address"],
+  //     [RECOVER_TYPEHASH, request.wallet, request.validUntil, newOwner]
+  //   );
   private getApproveTypedData(
     chainId: ChainId,
     guardiaContractAddress: any,
@@ -80,14 +100,8 @@ export class WalletAPI extends BaseAPI {
         ],
         recover: [
           { name: "wallet", type: "address" },
-          {
-            name: "validUntil",
-            type: "uint256",
-          },
-          {
-            name: "newOwner",
-            type: "address",
-          },
+          { name: "validUntil", type: "uint256" },
+          { name: "newOwner", type: "address" },
         ],
       },
       domain: {
@@ -101,6 +115,46 @@ export class WalletAPI extends BaseAPI {
         wallet: wallet,
         validUntil: validUntil,
         newOwner: newOwner,
+      },
+    };
+    return typedData;
+  }
+
+  private getApproveTypedV2Data(
+    chainId: ChainId,
+    guardiaContractAddress: any,
+    wallet: any,
+    validUntil: any,
+    newOwner: any,
+    guardiansHash: Buffer
+  ) {
+    const typedData = {
+      types: {
+        EIP712Domain: [
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+          { name: "verifyingContract", type: "address" },
+        ],
+        recover: [
+          { name: "wallet", type: "address" },
+          { name: "validUntil", type: "uint256" },
+          { name: "newOwner", type: "address" },
+          { name: "guardiansHash", type: "string" },
+        ],
+      },
+      domain: {
+        name: "GuardianModule",
+        version: "1.2.0",
+        chainId: chainId,
+        verifyingContract: guardiaContractAddress,
+      },
+      primaryType: "recover",
+      message: {
+        wallet: wallet,
+        validUntil: validUntil,
+        newOwner: newOwner,
+        guardiansHash: guardiansHash,
       },
     };
     return typedData;
@@ -193,15 +247,29 @@ export class WalletAPI extends BaseAPI {
     owner: string,
     guardian: Guardian,
     chainId: ChainId,
-    newOwner = ""
+    newOwner = "",
+    guardiansHash: undefined | Buffer | any = undefined
   ) {
-    const typedData = this.getApproveTypedData(
-      chainId,
-      guardian,
-      guardian.signedRequest.wallet,
-      guardian.signedRequest.validUntil,
-      newOwner
-    );
+    let typedData;
+    if (!guardiansHash) {
+      typedData = this.getApproveTypedData(
+        chainId,
+        guardian,
+        guardian.signedRequest.wallet,
+        guardian.signedRequest.validUntil,
+        newOwner
+      );
+    } else {
+      typedData = this.getApproveTypedV2Data(
+        chainId,
+        guardian,
+        guardian.signedRequest.wallet,
+        guardian.signedRequest.validUntil,
+        newOwner,
+        guardiansHash
+      );
+    }
+
     const result = await getEcDSASig(
       web3,
       typedData,
@@ -216,8 +284,15 @@ export class WalletAPI extends BaseAPI {
     return { sig: result.ecdsaSig };
   }
 
+  private encodeAddressesPacked(addrs: string[]) {
+    const addrsBs = Buffer.concat(
+      addrs.map((a) => Buffer.from("00".repeat(12) + a.slice(2), "hex"))
+    );
+    return addrsBs;
+  }
   public async submitApproveSignature<R extends any, T extends string>(
-    req: loopring_defs.SubmitApproveSignatureRequestWithPatch
+    req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
+    isContract1XAddress?: boolean
   ): Promise<{
     hash: string | undefined;
     raw_data: R;
@@ -270,18 +345,20 @@ export class WalletAPI extends BaseAPI {
       }
     } else {
       const isContractCheck = await isContract(web3, request.signer);
-
       if (isContractCheck) {
         const newOwner =
           guardian.businessDataJson && guardian.businessDataJson.newOwner
             ? guardian.businessDataJson.newOwner
             : "";
+        const guardiansBs = this.encodeAddressesPacked([]);
+        const guardiansHash = ethUtil.keccak(guardiansBs);
         const result = await this.signHebaoApproveWithDataStructureForContract(
           web3,
           request.signer,
           guardian,
           chainId,
-          newOwner
+          newOwner,
+          isContract1XAddress ? undefined : guardiansHash
         );
         ecdsaSignature = result.sig;
       } else {
