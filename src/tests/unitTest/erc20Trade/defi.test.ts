@@ -7,7 +7,7 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
-import { calcDefi, DefiAction, DefiOrderRequest } from "../../../index";
+import { calcDefi, DefiAction } from "../../../index";
 
 describe("DefiAPI test", function () {
   it(
@@ -37,6 +37,28 @@ describe("DefiAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
+  it(
+    "getDefiTransaction",
+    async () => {
+      const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        },
+        LOOPRING_EXPORTED_ACCOUNT.privateKey
+      );
+      const response = await LoopringAPI.defiAPI.getDefiTransaction(
+        {
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          offset: 0,
+          limit: 50,
+        },
+        apiKey
+      );
+      console.log("getDefiTransaction:", response);
+    },
+    DEFAULT_TIMEOUT
+  );
+
   it(
     "orderDefi",
     async () => {

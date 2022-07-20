@@ -2,8 +2,6 @@
 import { BaseAPI } from "./base_api";
 import {
   DefiMarketInfo,
-  DefiOrderRequest,
-  DefiResult,
   LoopringMap,
   ReqParams,
   SEP,
@@ -17,6 +15,7 @@ import {
   SigPatchField,
   RESULT_INFO,
 } from "../defs";
+import * as loopring_defs from "../defs/loopring_defs";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -106,23 +105,6 @@ export class DefiAPI extends BaseAPI {
       raw_data.markets.forEach((item: any) => {
         const marketInfo: DefiMarketInfo = {
           ...item,
-          // type: item.type,
-          // market: item.market,
-          // apy: item.apy,
-          // baseTokenId: item.baseTokenId,
-          // quoteTokenId: item.quoteTokenId,
-          // precisionForPrice: item.precisionForPrice,
-          // orderbookAggLevels: item.orderbookAggLevels,
-          // enabled: item.enabled,
-          // status: item.status,
-          // accountId: item.accountId,
-          // address: item.address,
-          // depositFeeBips: item.depositFeeBips,
-          // withdrawFeeBips: item.withdrawFeeBips,
-          // depositPrice: item.depositPrice,
-          // withdrawPrice: item.withdrawPrice,
-          // baseVolume: item.baseVolume,
-          // quoteVolume:item.quoteVolume
         };
         markets[item.market] = marketInfo;
 
@@ -140,15 +122,6 @@ export class DefiAPI extends BaseAPI {
           } else {
             pairs[base].tokenList = [...pairs[base].tokenList, quote];
           }
-
-          // if (!pairs[quote]) {
-          //   pairs[quote] = {
-          //     tokenId: item.quoteTokenId,
-          //     tokenList: [base],
-          //   };
-          // } else {
-          //   pairs[quote].tokenList = [...pairs[quote].tokenList, base];
-          // }
         }
       });
     }
@@ -166,7 +139,7 @@ export class DefiAPI extends BaseAPI {
   }
 
   public async orderDefi<R>(
-    request: DefiOrderRequest,
+    request: loopring_defs.DefiOrderRequest,
     privateKey: string,
     apiKey: string
   ): Promise<
@@ -202,5 +175,74 @@ export class DefiAPI extends BaseAPI {
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
     return this.returnTxHash(raw_data);
+  }
+
+  public async getDefiReward<R>(
+    request: loopring_defs.GetUserDefiRewardRequest,
+    apiKey: string
+  ): Promise<
+    | {
+        raw_data: R;
+        totalNum: number;
+        totalRewards: string;
+        lastDayRewards: string;
+        rewards: [];
+      }
+    | RESULT_INFO
+  > {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_DEFI_REWARDS,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    };
+  }
+
+  public async getDefiTransaction<R>(
+    request: loopring_defs.GetUserDefiRewardRequest,
+    apiKey: string
+  ): Promise<
+    | {
+        raw_data: R;
+        totalNum: number;
+        userDefiTxs: loopring_defs.UserDefiTxsHistory[];
+      }
+    | RESULT_INFO
+  > {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_DEFI_TRANSACTIONS,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+
+    return {
+      totalNum: raw_data?.totalNum,
+      userDefiTxs: raw_data.transactions as loopring_defs.UserDefiTxsHistory[],
+      raw_data,
+    };
   }
 }

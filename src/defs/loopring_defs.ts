@@ -32,7 +32,6 @@ import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 import { NFTType } from "../api";
-import * as buffer from "buffer";
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
   ? (Without<T, U> & U) | (Without<U, T> & T)
@@ -2777,11 +2776,11 @@ export interface DefiOrderRequest {
    */
   validUntil: number;
   /**
-   * fee 
+   * fee
    * @type {string}
    * @memberof DefiOrderRequest
    */
-  fee:string;
+  fee: string;
   /**
    * Maximum order fee that the user can accept, value range (in ten thousandths) 1 ~ 63
    * @type {number}
@@ -2806,18 +2805,18 @@ export interface DefiOrderRequest {
    * @memberof DefiOrderRequest
    */
   eddsaSignature?: string;
-   /**
+  /**
    * type
    * @type {string}
    * @memberof DefiOrderRequest
    */
-  type:string;
+  type: string;
   /**
    * action
    * @type {string}
    * @memberof DefiOrderRequest
    */
-  action:string;
+  action: string;
 }
 
 export interface DefiResult {
@@ -2830,6 +2829,28 @@ export interface DefiResult {
 export const SEP = ",";
 
 export enum DefiAction {
-  Deposit="deposit",
-  Withdraw="withdraw"
-};
+  Deposit = "deposit",
+  Withdraw = "withdraw",
+}
+
+export interface UserDefiTxsHistory {
+  id: string;
+  txType: string;
+  action: DefiAction;
+  hash: string;
+  market: string;
+  sellToken: TokenVolumeV3;
+  buyToken: TokenVolumeV3;
+  fee: TokenVolumeV3;
+  status: TxStatus;
+  updatedAt: number;
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
+}
+
+export interface GetUserDefiRewardRequest {
+  accountId: number;
+}
