@@ -2852,6 +2852,18 @@ export interface WalletType {
   loopringWalletContractVersion: string;
 }
 
+export interface ContractType {
+  network: string;
+  contractVersion: string; //V1_x_x"|V2_x_x
+  masterCopy?: string; // V2 only
+  walletFactory?: string; // V2 only
+  ens?: string;
+  walletStatus: number;
+  queueStatus: number;
+  walletType: number; // HEBAO = 0; EOA = 1;
+  isCounterFactual: boolean; //isCounterFactual
+}
+
 /**
  * DefiOrderRequest
  */

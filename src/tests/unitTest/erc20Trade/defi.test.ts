@@ -49,8 +49,6 @@ describe("DefiAPI test", function () {
       const response = await LoopringAPI.defiAPI.getDefiTransaction(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          offset: 0,
-          limit: 50,
         },
         apiKey
       );

@@ -2,6 +2,7 @@ import { BaseAPI, personalSign } from "./base_api";
 import { isContract } from "./contract_api";
 import * as loopring_defs from "../defs/loopring_defs";
 import {
+  ContractType,
   GetUserTradesRequest,
   Guardian,
   HebaoOperationLog,
@@ -108,7 +109,7 @@ export class WalletAPI extends BaseAPI {
         name: "GuardianModule",
         version: "1.2.0",
         chainId: chainId,
-        verifyingContract: guardiaContractAddress,
+        verifyingContract: "",
       },
       primaryType: "recover",
       message: {
@@ -247,8 +248,9 @@ export class WalletAPI extends BaseAPI {
     owner: string,
     guardian: Guardian,
     chainId: ChainId,
-    newOwner = "",
-    guardiansHash: undefined | Buffer | any = undefined
+    newOwner = "0",
+    guardiansHash: undefined | Buffer | any = undefined,
+    masterCopy: undefined | string = undefined
   ) {
     let typedData;
     if (!guardiansHash) {
@@ -262,7 +264,7 @@ export class WalletAPI extends BaseAPI {
     } else {
       typedData = this.getApproveTypedV2Data(
         chainId,
-        guardian,
+        masterCopy,
         guardian.signedRequest.wallet,
         guardian.signedRequest.validUntil,
         newOwner,
@@ -293,7 +295,8 @@ export class WalletAPI extends BaseAPI {
   public async submitApproveSignature<R extends any, T extends string>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
     guardians: string[] = [],
-    isContract1XAddress?: boolean
+    isContract1XAddress?: boolean,
+    masterCopy?: string
   ): Promise<{
     hash: string | undefined;
     raw_data: R;
@@ -348,9 +351,12 @@ export class WalletAPI extends BaseAPI {
       const isContractCheck = await isContract(web3, request.signer);
       if (isContractCheck) {
         const newOwner =
-          guardian.businessDataJson && guardian.businessDataJson.newOwner
-            ? guardian.businessDataJson.newOwner
-            : "";
+          guardian.businessDataJson &&
+          guardian.businessDataJson.value &&
+          guardian.businessDataJson.value.value;
+        guardian.businessDataJson.value.value.newOwner
+          ? guardian.businessDataJson.value.value.newOwner
+          : 0;
         const guardiansBs = this.encodeAddressesPacked(guardians);
         const guardiansHash = ethUtil.keccak(guardiansBs);
         const result = await this.signHebaoApproveWithDataStructureForContract(
@@ -359,7 +365,8 @@ export class WalletAPI extends BaseAPI {
           guardian,
           chainId,
           newOwner,
-          isContract1XAddress ? undefined : guardiansHash
+          isContract1XAddress ? undefined : guardiansHash,
+          isContract1XAddress ? undefined : masterCopy
         );
         ecdsaSignature = result.sig;
       } else {
@@ -445,6 +452,36 @@ export class WalletAPI extends BaseAPI {
     }
     return {
       walletType,
+      raw_data,
+    };
+  }
+
+  public async getContractType<T = ContractType>({
+    wallet,
+    network = "eThereum",
+  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+    contractType: T | undefined;
+    raw_data: T;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_WALLET_CONTRACTVERSION,
+      queryParams: {
+        wallet,
+      },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    let contractType: T | undefined;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    } else {
+      contractType = raw_data.data[0];
+    }
+    return {
+      contractType,
       raw_data,
     };
   }

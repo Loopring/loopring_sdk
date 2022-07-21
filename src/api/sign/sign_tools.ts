@@ -378,7 +378,11 @@ export async function getEcDSASig(
       }
       throw new Error(signature.error);
     case GetEcDSASigType.Contract:
-      myLog("Contract msgParams", msgParams);
+      // TODO:
+      hash = sigUtil.TypedDataUtils.sign(typedData);
+      hash = fm.toHex(hash);
+      myLog("Contract Contract hash", hash);
+
       signEip712Result = await signEip712WalletConnect(
         web3,
         address as string,

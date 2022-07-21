@@ -1,7 +1,5 @@
 import { IsMobile, LoopringErrorCode } from "../defs";
 // import fetch from "node-fetch";
-import { CID } from "multiformats/cid";
-import { base16 } from "multiformats/bases/base16";
 
 import {
   addHexPrefix,
