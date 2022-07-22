@@ -89,6 +89,7 @@ export enum LOOPRING_URLs {
   GET_OPERATION_LOGS = "/api/wallet/v3/operationLogs",
   GET_HEBAO_CONFIG = "api/wallet/v3/getAppConfigs",
   GET_WALLET_TYPE = "api/wallet/v3/wallet/type",
+  GET_WALLET_MODULES = "api/wallet/v3/walletModules",
   GET_WALLET_CONTRACTVERSION = "api/wallet/v3/contractVersion",
 
   SUBMIT_APPROVE_SIGNATURE = "/api/wallet/v3/submitApproveSignature",

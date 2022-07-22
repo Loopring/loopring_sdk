@@ -2863,6 +2863,10 @@ export interface ContractType {
   walletType: number; // HEBAO = 0; EOA = 1;
   isCounterFactual: boolean; //isCounterFactual
 }
+export interface ModuleType {
+  moduleName: string; // FORWARDER_MODULE
+  moduleAddress: string;
+}
 
 /**
  * DefiOrderRequest
