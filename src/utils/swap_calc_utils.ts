@@ -1083,7 +1083,7 @@ export function calcDefi({
     dustToken.orderAmounts.dust
   );
 
-  const miniSellVol = minVolBuy.div(sellPrice);
+  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice),tokenSell.orderAmounts.dust);
   const maxSellVol = fm.toBig(buyTokenBalanceVol).div(sellPrice);
   /** calc MiniSellVol & MaxSellVol END**/
   // debugger;
