@@ -198,7 +198,7 @@ export class UserAPI extends BaseAPI {
    */
   public async submitOrder(
     orderRequest: loopring_defs.SubmitOrderRequestV3,
-    PrivateKey: string,
+    privateKey: string,
     apiKey: string
   ) {
     if (!orderRequest.tradeChannel) {
@@ -228,7 +228,7 @@ export class UserAPI extends BaseAPI {
       sigObj: {
         dataToSig,
         sigPatch: SigPatchField.EddsaSignature,
-        PrivateKey,
+        PrivateKey: privateKey,
       },
     };
 

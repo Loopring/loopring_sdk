@@ -38,15 +38,11 @@ import {
   AccountInfo,
   TokenAddress,
   SoursURL,
+  SEP,
 } from "../defs";
 
 import BigNumber from "bignumber.js";
 import { getBaseQuote } from "../utils";
-import { DelegateAPI } from "./delegate_api";
-import { keys } from "lodash";
-import { myLog } from "../utils/log_tools";
-
-const SEP = ",";
 
 const checkAmt = (rawStr: string) => {
   if (rawStr.trim() === "") {

@@ -233,6 +233,7 @@ export const getEdDSASigWithPoseidon = (
     bigIntInputs.push(BigNumber.from(input));
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams);
+  // myLog("getEdDSASigWithPoseidon", hash.toHexString(), bigIntInputs);
   return {
     hash,
     result: genSigWithPadding(PrivateKey, hash),
@@ -377,6 +378,11 @@ export async function getEcDSASig(
       }
       throw new Error(signature.error);
     case GetEcDSASigType.Contract:
+      // TODO:
+      hash = sigUtil.TypedDataUtils.sign(typedData);
+      hash = fm.toHex(hash);
+      myLog("Contract Contract hash", hash);
+
       signEip712Result = await signEip712WalletConnect(
         web3,
         address as string,
@@ -1530,3 +1536,59 @@ export function get_EddsaSig_ExitAmmPool(
   const typedData = getAmmExitEcdsaTypedData(data, patch);
   return eddsaSign(typedData, patch.eddsaKey);
 }
+
+// export function getDefiEcdsaTypedData(
+//   data: DefiOrderRequest,
+//   patch: DefiRequestPatch
+// ) {
+//   const message: any = {
+//     owner: data.owner,
+//     burnAmount: data.exitTokens.burned.volume,
+//     burnStorageID: data.storageId,
+//     exitMinAmounts: [
+//       data.exitTokens.unPooled[0].volume,
+//       data.exitTokens.unPooled[1].volume,
+//     ],
+//     fee: data.maxFee,
+//     validUntil: data.validUntil,
+//   };
+//
+//   const typedData: EIP712TypedData = {
+//     types: {
+//       EIP712Domain: [
+//         { name: "name", type: "string" },
+//         { name: "version", type: "string" },
+//         { name: "chainId", type: "uint256" },
+//         { name: "verifyingContract", type: "address" },
+//       ],
+//       DefiOrder: [
+//         { name: "exchange", type: "address" },
+//         { name: "storageId", type: "uint96" },
+//         { name: "accountId", type: "uint32" },
+//         { name: "sellToken.tokenId", type: "uint16" },
+//         { name: "buyToken.tokenId", type: "uint16" },
+//         { name: "sellToken.volume", type: "uint96" },
+//         { name: "buyToken.volume", type: "uint96" },
+//         { name: "validUntil", type: "uint32" },
+//         { name: "maxFeeBips", type: "uint32" },
+//         { name: "fillAmountBOrS", type: "uint32" },
+//         { nane: "taker", type: "uint32" },
+//       ],
+//     },
+//     primaryType: "DefiOrder",
+//     domain: {
+//       name: patch.ammName,
+//       version: "1.0.0",
+//       chainId: patch.chainId,
+//       verifyingContract: patch.poolAddress,
+//     },
+//     message: message,
+//   };
+//   return typedData;
+// }
+// export function get_EddsaSig_Defi(request: DefiOrderRequest, eddsaKey: string) {
+//
+//   myLog('get_EddsaSig_Defi input',inputs)
+//   return getEdDSASigWithPoseidon(inputs, eddsaKey);
+//   // return eddsaSign(typedData, patch.eddsaKey);
+// }

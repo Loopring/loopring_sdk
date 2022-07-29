@@ -3,6 +3,7 @@ import * as fm from "./formatter";
 import {
   ABInfo,
   AmmPoolSnapshot,
+  DefiMarketInfo,
   DepthData,
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
@@ -11,6 +12,7 @@ import {
   OffchainFeeInfo,
   TokenInfo,
   TokenVolumeV3,
+  XOR,
 } from "../defs";
 
 import { getExistedMarket, getTokenInfoBySymbol } from "./symbol_tools";
@@ -1020,5 +1022,98 @@ export function makeExitAmmPoolRequest2(
       .div("1e" + quoteToken.decimals)
       .toNumber(),
     request,
+  };
+}
+
+/**
+ * calcDefi
+ * @param isJoin {boolean} true is join, false is exit
+ * @param isInputSell {boolean} user input sell of buy
+ * @param XOR<sellAmount,buyAmount> user input sell amount number (without decimals)
+ * @param feeVol fee Volume from server-side (decimals)
+ * @param marketInfo {DefiMarketInfo} DefiMarketInfo from sever-side
+ * @param tokenSell {TokenInfo} token Config information
+ * @param tokenBuy {TokenInfo} token Config information
+ * @param buyTokenBalanceVol   buy Token Balance server-side (decimals)
+ * @return {sellVol} sell Volume (decimals);
+ * @return {buyVol} buy Volume (decimals);
+ * @return {maxSellVol} max Sell Volume (decimals); please use ceil for view
+ * @return {miniSellVol} min Sell Volume (decimals); please use round for view
+ * @return {maxFeeBips} number maxFeeBips;
+ * @return {isJoin} boolean;
+ * @return {isInputSell} boolean;
+ */
+export function calcDefi({
+  isJoin,
+  isInputSell,
+  sellAmount,
+  buyAmount,
+  feeVol,
+  marketInfo,
+  tokenSell,
+  tokenBuy,
+  buyTokenBalanceVol,
+}: {
+  isJoin: boolean;
+  isInputSell: boolean;
+  feeVol: string;
+  marketInfo: DefiMarketInfo;
+  tokenSell: TokenInfo;
+  tokenBuy: TokenInfo;
+  buyTokenBalanceVol: string;
+} & XOR<{ sellAmount: string }, { buyAmount: string }>): {
+  sellVol: string;
+  buyVol: string;
+  maxSellVol: string;
+  maxFeeBips: number;
+  miniSellVol: string;
+  isJoin: boolean;
+  isInputSell: boolean;
+} {
+  /** isDeposit calc sellPrice & buyPrice */
+  const [sellPrice] = isJoin
+    ? [marketInfo.depositPrice]
+    : [marketInfo.withdrawPrice];
+
+  /** calc MiniSellVol & MaxSellVol**/
+  const dustToken = tokenBuy;
+
+  const minVolBuy = BigNumber.max(
+    fm.toBig(feeVol).times(2),
+    dustToken.orderAmounts.dust
+  );
+
+  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice),tokenSell.orderAmounts.dust);
+  const maxSellVol = fm.toBig(buyTokenBalanceVol).div(sellPrice);
+  /** calc MiniSellVol & MaxSellVol END**/
+  // debugger;
+  /** View input calc sellVol & buyVol */
+  let sellVol, buyVol;
+  if (isInputSell) {
+    sellVol = fm
+      .toBig(sellAmount ? sellAmount : 0)
+      .times("1e" + tokenSell.decimals);
+    buyVol = sellVol.times(sellPrice);
+  } else {
+    buyVol = fm
+      .toBig(buyAmount ? buyAmount : 0)
+      .times("1e" + tokenBuy.decimals);
+    sellVol = buyVol.div(sellPrice);
+  }
+  /** View input calc sellVol & buyVol END */
+
+  /** calc current maxFeeBips **/
+  const maxFeeBips = Math.ceil(
+    fm.toBig(feeVol).times(10000).div(buyVol).toNumber()
+  );
+
+  return {
+    sellVol: sellVol.toString(),
+    buyVol: buyVol.toString(),
+    maxSellVol: maxSellVol.toString(),
+    isJoin,
+    isInputSell,
+    maxFeeBips,
+    miniSellVol: miniSellVol.toString(),
   };
 }

@@ -326,6 +326,38 @@ export interface MarketInfo {
   isSwapEnabled?: boolean;
   createdAt?: number;
 }
+export enum DefiMarketStatus {
+  hide = 0,
+  show = 1,
+  depositOnly = 3,
+  depositAll = 7,
+  withdrawOnly = 9,
+  depositAllAndWithdraw = 15,
+  withdrawAll = 25,
+  WithdrawAllAndDeposit = 27,
+  depositAndWithdraw = 11,
+  all = 31,
+}
+
+export interface DefiMarketInfo {
+  type: string;
+  market: string;
+  apy: string;
+  baseTokenId: number;
+  quoteTokenId: number;
+  precisionForPrice: number;
+  orderbookAggLevels: number;
+  enabled: boolean;
+  status: DefiMarketStatus;
+  accountId: number;
+  address: string;
+  depositFeeBips: number;
+  withdrawFeeBips: number;
+  depositPrice: string;
+  withdrawPrice: string;
+  baseVolume: string;
+  quoteVolume: string;
+}
 
 export interface MarketsResponse {
   hasMarket: any;
@@ -749,6 +781,10 @@ export type GetOffchainFeeAmtRequest =
         | OffchainFeeReqType.AMM_EXIT
         | OffchainFeeReqType.ORDER;
       tokenSymbol: string;
+    }
+  | {
+      requestType: OffchainFeeReqType.DEFI_EXIT | OffchainFeeReqType.DEFI_JOIN;
+      market: string;
     }
   | {
       requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL;
@@ -2814,4 +2850,146 @@ export interface WalletType {
   isInCounterFactualStatus: boolean;
   isContract: boolean;
   loopringWalletContractVersion: string;
+}
+
+export interface ContractType {
+  network: string;
+  contractVersion: string; //V1_x_x"|V2_x_x
+  masterCopy?: string; // V2 only
+  walletFactory?: string; // V2 only
+  ens?: string;
+  walletStatus: number;
+  queueStatus: number;
+  walletType: number; // HEBAO = 0; EOA = 1;
+  isCounterFactual: boolean; //isCounterFactual
+}
+export interface ModuleType {
+  moduleName: string; // FORWARDER_MODULE
+  moduleAddress: string;
+}
+
+/**
+ * DefiOrderRequest
+ */
+export interface DefiOrderRequest {
+  /**
+   * exchange address
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  exchange: string;
+  /**
+   * storageId
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  storageId: number;
+  /**
+   * accountId
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  accountId: number;
+  /**
+   * sellToken
+   * @type {{tokenId:TokenID,volume:string}}
+   * @memberof DefiOrderRequest
+   */
+  sellToken: {
+    tokenId: number;
+    volume: string;
+  };
+  /**
+   * buyToken
+   * @type {{tokenId:TokenID,volume:string}}
+   * @memberof DefiOrderRequest
+   */
+  buyToken: {
+    tokenId: number;
+    volume: string;
+  };
+  /**
+   * Timestamp for order become invalid
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  validUntil: number;
+  /**
+   * fee
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  fee: string;
+  /**
+   * Maximum order fee that the user can accept, value range (in ten thousandths) 1 ~ 63
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  maxFeeBips: number;
+  /**
+   * fillAmountBOrS
+   * @type boolean
+   * @memberof DefiOrderRequest
+   */
+  fillAmountBOrS: boolean;
+  /**
+   * taker address
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  taker?: string;
+  /**
+   * The orders EdDSA signature. The signature is a hexadecimal string obtained by signing the order itself and concatenating the resulting signature parts (Rx, Ry, and S). Used to authenticate and authorize the operation.
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  eddsaSignature?: string;
+  /**
+   * type
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  type: string;
+  /**
+   * action
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  action: string;
+}
+
+export interface DefiResult {
+  hash: string;
+  clientOrderId: string;
+  status: TxStatus;
+  isIdempotent: boolean;
+}
+
+export const SEP = ",";
+
+export enum DefiAction {
+  Deposit = "deposit",
+  Withdraw = "withdraw",
+}
+
+export interface UserDefiTxsHistory {
+  id: string;
+  txType: string;
+  action: DefiAction;
+  hash: string;
+  market: string;
+  sellToken: TokenVolumeV3;
+  buyToken: TokenVolumeV3;
+  fee: TokenVolumeV3;
+  status: TxStatus;
+  updatedAt: number;
+  storageInfo: {
+    accountId: number;
+    tokenId: number;
+    storageId: number;
+  };
+}
+
+export interface GetUserDefiRewardRequest {
+  accountId: number;
 }

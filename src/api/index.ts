@@ -10,3 +10,4 @@ export * from "./nft_api";
 export * from "./global_api";
 export * from "./delegate_api";
 export * from "./base_api";
+export * from "./defi_api";

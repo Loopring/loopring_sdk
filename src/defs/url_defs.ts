@@ -70,6 +70,12 @@ export enum LOOPRING_URLs {
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
 
+  GET_DEFI_TOKENS = "/api/v3/defi/tokens",
+  GET_DEFI_MARKETS = "/api/v3/defi/markets",
+  GET_DEFI_ORDER = "/api/v3/defi/order",
+  GET_DEFI_REWARDS = "/api/v3/defi/rewards",
+  GET_DEFI_TRANSACTIONS = "/api/v3/defi/transactions",
+
   SET_REFERRER = "/api/v3/refer",
 
   GET_WS_KEY = "/v3/ws/key",
@@ -83,6 +89,8 @@ export enum LOOPRING_URLs {
   GET_OPERATION_LOGS = "/api/wallet/v3/operationLogs",
   GET_HEBAO_CONFIG = "api/wallet/v3/getAppConfigs",
   GET_WALLET_TYPE = "api/wallet/v3/wallet/type",
+  GET_WALLET_MODULES = "api/wallet/v3/walletModules",
+  GET_WALLET_CONTRACTVERSION = "api/wallet/v3/contractVersion",
 
   SUBMIT_APPROVE_SIGNATURE = "/api/wallet/v3/submitApproveSignature",
   REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",

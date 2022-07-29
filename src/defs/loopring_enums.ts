@@ -58,6 +58,8 @@ export enum OffchainFeeReqType {
   DEPOSIT = 7,
   AMM_JOIN = 8,
   TRANSFER_AND_UPDATE_ACCOUNT = 15,
+  DEFI_JOIN = 21,
+  DEFI_EXIT = 22,
   FORCE_WITHDRAWAL = 23,
 }
 export enum OffchainNFTFeeReqType {
