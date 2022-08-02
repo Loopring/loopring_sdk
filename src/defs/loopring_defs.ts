@@ -1194,6 +1194,18 @@ export interface GetUserNFTTxsRequest {
   limit?: number;
   types?: UserNFTTxTypes[] | string;
 }
+export interface GetUserNFTTradeRequest {
+  accountId: number;
+  // tokenSymbol?: string;
+  nftData?: boolean;
+  orderHash?:string;
+  tradeHash?:string;
+  start?: number;
+  end?: number;
+  // startId: number;
+  offset?: number;  //server side call startIdd
+  limit?: number;
+}
 
 export interface UserTx {
   id: number;
@@ -2770,6 +2782,31 @@ export interface UserNFTTxsHistory {
   };
 }
 
+export interface UserNFTTradeHistory{
+  id:string,
+  hash:string,
+  sellOrderHash:string,
+  buyOrderHash:string,
+  price:string,
+  nftData:string,
+  amount:string,
+  tokenId:number,
+  feeTokenId:number,
+  sellFeeAmount:string,
+  buyFeeAmount:string,
+  createdAt:number,
+  blockIdInfo: {
+    blockId:number,
+    indexInBlock:number,
+  };
+  storageInfo:{
+    sellAccountId:number,
+    buyAccountId:number,
+    sellStorageId:number,
+    buyStorageId:number,
+  }
+}
+
 export type Protector = {
   ens: string;
   address: string;
@@ -2993,3 +3030,34 @@ export interface UserDefiTxsHistory {
 export interface GetUserDefiRewardRequest {
   accountId: number;
 }
+
+
+/**
+ * CollectionMeta
+ * @property name string useToCreate Collection
+ * @property name string
+ * @property tileUri string option
+ * @property owner? string option
+ * @property nftFactory? string option
+ * @property baseUri? string option
+ * @property collectionTitle? string option
+ * @property description? string option
+ * @property avatar? string option
+ * @property banner? string option
+ * @property thumbnail? string option
+ * @property cid? string option
+ *
+ */
+export type CollectionMeta = {
+  name: string,
+  tileUri: string,
+  owner: string,
+  nftFactory?: string,
+  baseUri?: string,
+  collectionTitle?: string,
+  description?: string,
+  avatar?: string,
+  banner?: string,
+  thumbnail?: string,
+  cid?: string,
+};

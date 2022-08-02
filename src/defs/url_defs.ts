@@ -113,8 +113,9 @@ export enum LOOPRING_URLs {
   POST_NFT_INTERNAL_TRANSFER = "/api/v3/nft/transfer",
   POST_NFT_WITHDRAWALS = "/api/v3/nft/withdrawal",
   POST_NFT_MINT = "api/v3/nft/mint",
-  POST_NFT_TRADE = "/api/v3/nft/trade",
+  POST_NFT_TRADE = "api/v3/nft/trade",
   POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
+  POST_NFT_CREATE = "nft/collection/create",
   // POST_NFT_COLLECTION = "api/v3/collection/createCollection",
   // GET_NFT_COLLECTIONS = "api/v3/nft/collections",
   // GET_NFTs_BY_COLLECTIONS = "api/v3/nft/collection/items",
@@ -125,8 +126,10 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
   GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
   GET_USER_NFT_TRANSACTION_HISTORY = "/api/v3/user/nft/transactions",
+  GET_USER_NFT_TRADE_HISTORY = "api/v3/user/nft/trades",
   GET_USER_NFT_MINT_HISTORY = "/api/v3/user/nft/mints",
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
+
 
   IPFS_META_URL = "https://infura-ipfs.io/ipfs/",
 }

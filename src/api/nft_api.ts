@@ -31,6 +31,16 @@ const CREATION_CODE = {
   [ChainId.MAINNET]:
     "3d602d80600a3d3981f3363d3d373d3d3d363d73b25f6d711aebf954fb0265a3b29f7b9beba7e55d5af43d82803e903d91602b57fd5bf3",
 };
+// export const CREATION_COLLECTION_CODE = {
+//   [ChainId.GOERLI]:{
+//     nftFactory:"0xfDDA90dbCc99B3a91e3fB1292991Ba1076d9E281",
+//     creation_code:"3d602d80600a3d3981f3363d3d373d3d3d363d73b3856c3bd3e94fec3020d44e9a684db3837b3f905af43d82803e903d91602b57fd5bf3"
+//   },
+//   [ChainId.MAINNET]:  {
+//     nftFactory: "0x97BE94250AEF1Df307749aFAeD27f9bc8aB911db",
+//     creation_code:"3d602d80600a3d3981f3363d3d373d3d3d363d73af4c6c97c620425b9d05c6a12f886d14a04eff065af43d82803e903d91602b57fd5bf3"
+//   }
+// };
 
 export enum NFTType {
   ERC1155 = 0,
