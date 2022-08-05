@@ -868,6 +868,7 @@ export interface UserFeeRateInfo {
 export interface GetNextStorageIdRequest {
   accountId: number;
   sellTokenId: number;
+  maxNext?: boolean;
 }
 
 /**
