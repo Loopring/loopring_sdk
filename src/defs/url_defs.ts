@@ -1,11 +1,11 @@
 export enum LOOPRING_URLs {
   GET_AVAILABLE_BROKER = "/api/v3/getAvailableBroker",
   GET_RELAYER_CURRENT_TIME = "/api/v3/timestamp",
-  API_KEY_ACTION = "/api/v3/apiKey", // get update
+  API_KEY_ACTION = "/api/v3/apiKey",  // get update
   GET_NEXT_STORAGE_ID = "/api/v3/storageId",
   ORDER_ACTION = "/api/v3/order", // get submit cancel
-  ORDER_CANCEL_HASH_LIST = "/api/v2/orders/byHash", // cancel multiple orders by hashs
-  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v2/orders/byClientOrderId", // cancel multiple orders by clientOrderids
+  ORDER_CANCEL_HASH_LIST = "/api/v2/orders/byHash",  // cancel multiple orders by hashs
+  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v2/orders/byClientOrderId",  // cancel multiple orders by clientOrderids
   GET_MULTI_ORDERS = "/api/v3/orders",
   GET_MARKETS = "/api/v3/exchange/markets",
   GET_TOKENS = "/api/v3/exchange/tokens",
@@ -100,13 +100,8 @@ export enum LOOPRING_URLs {
   SEND_META_TX = "/api/wallet/v3/sendMetaTx",
 
   GET_ACCOUNT_SERVICES = "/api/v3/spi/getAccountServices",
-
-  // NFTAction
-  // GET_USER_NFT_BALANCES = '/api/v3/user/nft/balances',
-
   // VIP
   GET_USER_VIP_INFO = "/api/v3/user/vipInfo",
-  // VIP calc assets
   GET_USER_VIP_ASSETS = "/api/v3/datacenter/getUserAssets",
   GET_USER_NFT_BALANCES = "/api/v3/user/nft/balances",
   GET_NFT_OFFCHAIN_FEE_AMT = "/api/v3/user/nft/offchainFee",
@@ -114,22 +109,23 @@ export enum LOOPRING_URLs {
   POST_NFT_WITHDRAWALS = "/api/v3/nft/withdrawal",
   POST_NFT_MINT = "api/v3/nft/mint",
   POST_NFT_TRADE = "api/v3/nft/trade",
-  POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
-  POST_NFT_CREATE = "nft/collection/create",
+  POST_NFT_VALIDATE_ORDER = "api/v3/nft/validateOrder", // post get
+  POST_NFT_CREATE_COLLECTION = "api/v3/nft/collection",
+  GET_NFT_COLLECTION = "api/v3/nft/collection",
   // POST_NFT_COLLECTION = "api/v3/collection/createCollection",
   // GET_NFT_COLLECTIONS = "api/v3/nft/collections",
   // GET_NFTs_BY_COLLECTIONS = "api/v3/nft/collection/items",
   // GET_USER_NFT_COLLECTIONS = "api/v3/nft/collections",
   // GET_USER_NFTs_BY_COLLECTIONS = "api/v3/collection/nftBalances",
-  GET_NFTs_INFO = "/api/v3/nft/info/nfts",
-  GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",
-  GET_USER_NFT_DEPOSIT_HISTORY = "/api/v3/user/nft/deposits",
-  GET_USER_NFT_WITHDRAW_HISTORY = "/api/v3/user/nft/withdrawals",
-  GET_USER_NFT_TRANSACTION_HISTORY = "/api/v3/user/nft/transactions",
-  GET_USER_NFT_TRADE_HISTORY = "api/v3/user/nft/trades",
-  GET_USER_NFT_MINT_HISTORY = "/api/v3/user/nft/mints",
-  GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
-
-
-  IPFS_META_URL = "https://infura-ipfs.io/ipfs/",
+  GET_NFTs_INFO = "api/v3/nft/info/nfts",
+  GET_USER_NFT_TRANSFER_HISTORY = "api/v3/user/nft/transfers",
+  GET_USER_NFT_DEPOSIT_HISTORY = "api/v3/user/nft/deposits",
+  GET_USER_NFT_WITHDRAW_HISTORY = "api/v3/user/nft/withdrawals",
+  GET_USER_NFT_TRANSACTION_HISTORY = "api/v3/user/nft/transactions",
+  GET_USER_NFT_TRADE_HISTORY_OLD = "api/v3/user/nft/trades",
+  GET_USER_NFT_TRADE_HISTORY = "api/v3/new/user/nft/trades",
+  GET_USER_NFT_MINT_HISTORY = "api/v3/user/nft/mints",
+  GET_DEPLOY_TOKEN_ADDRESS = "api/v3/nft/deployTokenAddress",
+  IPFS_META_URL = "https://infura-ipfs.io/ipfs/"
 }
+

@@ -1194,17 +1194,21 @@ export interface GetUserNFTTxsRequest {
   limit?: number;
   types?: UserNFTTxTypes[] | string;
 }
+export declare enum NFT_TRADE {
+  SELL = "SELL",
+  BUY = "BUY"
+}
 export interface GetUserNFTTradeRequest {
   accountId: number;
-  // tokenSymbol?: string;
   nftData?: boolean;
-  orderHash?:string;
-  tradeHash?:string;
+  orderHash?: string;
+  tradeHash?: string;
   start?: number;
   end?: number;
-  // startId: number;
-  offset?: number;  //server side call startIdd
+  side: NFT_TRADE;
+  offset?: number;
   limit?: number;
+  metadata?: boolean;
 }
 
 export interface UserTx {
@@ -2782,29 +2786,32 @@ export interface UserNFTTxsHistory {
   };
 }
 
-export interface UserNFTTradeHistory{
-  id:string,
-  hash:string,
-  sellOrderHash:string,
-  buyOrderHash:string,
-  price:string,
-  nftData:string,
-  amount:string,
-  tokenId:number,
-  feeTokenId:number,
-  sellFeeAmount:string,
-  buyFeeAmount:string,
-  createdAt:number,
-  blockIdInfo: {
-    blockId:number,
-    indexInBlock:number,
-  };
-  storageInfo:{
-    sellAccountId:number,
-    buyAccountId:number,
-    sellStorageId:number,
-    buyStorageId:number,
-  }
+export declare type NFTOrderInfo = {
+  orderHash: string;
+  accountId: number;
+  feeAmount: string;
+  storageId: number;
+  address: string;
+};
+
+export interface UserNFTTradeHistory {
+  fillId: number;
+  nftHash: string;
+  feeTokenId: number;
+  price: string;
+  nftAmount: string;
+  feeAmount: string;
+  feeTokenSymbol: string;
+  createdAt: number;
+  hash: string;
+  blockId: number;
+  indexInBlock: number;
+  tokenId: number;
+  counter: number;
+  tokenAddress: number;
+  sInfo: NFTOrderInfo;
+  bInfo: NFTOrderInfo;
+  metadata: IPFS_METADATA;
 }
 
 export type Protector = {
@@ -3060,4 +3067,17 @@ export type CollectionMeta = {
   banner?: string,
   thumbnail?: string,
   cid?: string,
+  id?: string,
+  contractAddress?: string,
+  isPublic?: boolean,
+  deployStatus: DEPLOYMENT_STATUS,
+  isCounterFactualNFT?: boolean,
+  updatedAt?: number,
+  createdAt?: number,
 };
+
+export interface GetUserNFTCollectionRequest {
+  owner: string;
+  offset?: number;
+  limit?: number;
+}

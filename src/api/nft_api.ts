@@ -218,7 +218,7 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType
       );
-      result = result.replace("ipfs://", LOOPRING_URLs.IPFS_META_URL);
+      result.replace(/^ipfs:\/\/(ipfs\/)?/i, LOOPRING_URLs.IPFS_META_URL);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
       return await fetch(result).then((response) => response.json());
     } catch (err) {

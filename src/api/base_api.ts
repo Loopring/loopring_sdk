@@ -4,7 +4,7 @@ import {
   ConnectorNames,
   CounterFactualInfo,
   GetAvailableBrokerRequest,
-  GetCounterFactualInfoRequest,
+  GetCounterFactualInfoRequest, LOOPRING_URLs,
   LoopringErrorCode,
   ReqMethod,
   ReqParams,
@@ -26,7 +26,6 @@ import { addHexPrefix, toBuffer, toHex } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
-import { LOOPRING_URLs } from "../defs/url_defs";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +
