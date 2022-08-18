@@ -12,18 +12,16 @@ import {
   ConnectorNames,
   SigSuffix,
   NFTFactory,
-  NFTTokenInfo,
-  OriginForcesWithdrawalsV3,
-  OriginForcesWithdrawalsRequestV3WithPatch, GetUserNFTTradeRequest, ChainId, CollectionMeta,
+  ChainId,
+  CollectionMeta,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
-import { myLog } from "../utils/log_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
-import { Chain } from '@ethereumjs/common';
+import { sortObjDictionary } from '../utils';
 
 export class UserAPI extends BaseAPI {
   /*
@@ -1695,32 +1693,24 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
+
   async submitNFTCollection<R>(
     req: CollectionMeta,
     chainId: ChainId,
     apiKey: string,
     eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
-    // const dataToSig: Map<string, any> = new Map();
-    // dataToSig.set("name",req.name)
-    // dataToSig.set("owner",req.owner)
-    // dataToSig.set("nftFactory",NFTFactory[chainId])
-    // dataToSig.set("tileUri",req.tileUri?req.tileUri:"")
-    // dataToSig.set("collectionTitle",req.collectionTitle?req.collectionTitle:"")
-    // dataToSig.set("description",req.description?req.description:"")
-    // dataToSig.set("avatar",req.avatar?req.avatar:'')
-    // dataToSig.set("cid",req.cid?req.cid:"")
-    // dataToSig.set("banner",req.banner?req.banner:"")
-    // dataToSig.set("thumbnail",req.thumbnail?req.thumbnail:"")
+    const dataToSig: Map<string, any> = sortObjDictionary({...req, nftFactory: NFTFactory[ chainId ]})
     const reqParams = {
-      url: exports.LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
-      bodyParams: {
-        ...req,
-        nftFactory: NFTFactory[ chainId ]
-      },
+      url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: exports.ReqMethod.POST,
-      sigFlag: exports.SIG_FLAG.NO_SIG
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
@@ -1802,25 +1792,49 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
-  async getUserNFTCollection(request: loopring_defs.GetUserNFTCollectionRequest, apiKey: string) {
+  async getUserOwenCollection(request: loopring_defs.GetUserOwnerCollectionRequest, apiKey: string) {
     const reqParams = {
-      url: exports.LOOPRING_URLs.GET_NFT_COLLECTION,
+      url: LOOPRING_URLs.GET_NFT_COLLECTION,
       queryParams: request,
       apiKey,
-      method: exports.ReqMethod.GET,
-      sigFlag: exports.SIG_FLAG.NO_SIG
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
-        ...(raw_data == null ? void 0 : raw_data.resultInfo)
+        ...raw_data.resultInfo
       };
     }
 
     return {
       totalNum: raw_data == null ? void 0 : raw_data.totalNum,
       collections: raw_data.collections,
+      raw_data
+    };
+  }
+
+
+  async getUserNFTCollection(request: loopring_defs.GetUserNFTCollectionRequest, apiKey: string) {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_NFT_COLLECTION_HASNFT,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo
+      };
+    }
+
+    return {
+      totalNum: raw_data == null ? void 0 : raw_data.totalNum,
+      collections: raw_data.nftCollectionDetailsWithCountSeq,
       raw_data
     };
   }
@@ -2030,23 +2044,23 @@ export class UserAPI extends BaseAPI {
     trades: loopring_defs.UserNFTTradeHistory[];
   }| RESULT_INFO> {
     const reqParams = {
-      url: exports.LOOPRING_URLs.GET_USER_NFT_TRADE_HISTORY,
+      url: LOOPRING_URLs.GET_USER_NFT_TRADE_HISTORY,
       queryParams: {...request},
       apiKey,
-      method: exports.ReqMethod.GET,
-      sigFlag: exports.SIG_FLAG.NO_SIG
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     if (raw_data != null && raw_data.resultInfo) {
       return {
-        ...(raw_data == null ? void 0 : raw_data.resultInfo)
+        ...raw_data.resultInfo
       };
     }
 
     let trades = raw_data.trades;
     return {
-      totalNum: raw_data == null ? void 0 : raw_data.totalNum,
+      totalNum: raw_data?.totalNum,
       trades,
       raw_data
     };

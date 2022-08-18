@@ -3070,14 +3070,26 @@ export type CollectionMeta = {
   id?: string,
   contractAddress?: string,
   isPublic?: boolean,
-  deployStatus: DEPLOYMENT_STATUS,
+  deployStatus?: DEPLOYMENT_STATUS,
   isCounterFactualNFT?: boolean,
   updatedAt?: number,
   createdAt?: number,
+  nftType?: string,
 };
 
-export interface GetUserNFTCollectionRequest {
+export interface GetUserOwnerCollectionRequest {
   owner: string;
   offset?: number;
   limit?: number;
+  address?: string;
 }
+
+export interface GetUserNFTCollectionRequest {
+  accountId: string;
+  offset?: number;
+  limit?: number;
+  address?: string;
+}
+
+
+

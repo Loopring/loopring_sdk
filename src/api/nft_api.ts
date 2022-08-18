@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BaseAPI } from "./base_api";
-import { LOOPRING_URLs } from "../defs/url_defs";
+import { LOOPRING_URLs } from "../defs";
 import {
   ChainId,
   ConnectorError,
@@ -17,7 +17,7 @@ import * as ethUtil from "ethereumjs-util";
 import { genExchangeData, sendRawTx } from "./contract_api";
 import contracts from "./ethereum/contracts";
 import {
-  ApproveParam,
+  ApproveParam, CallRefreshNFT,
   ContractNFTMetaParam,
   DepositNFTParam,
   IsApproveParam,
@@ -45,6 +45,11 @@ const CREATION_CODE = {
 export enum NFTType {
   ERC1155 = 0,
   ERC721,
+}
+
+export enum NFT_TYPE_STRING {
+  ERC1155 = 'ERC1155',
+  ERC721 = 'ERC721',
 }
 
 export enum NFTMethod {
@@ -195,6 +200,42 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
+  public async callRefreshNFT(request: CallRefreshNFT): Promise<{ status: string, createdAt: number, updatedAt: number } | undefined> {
+    try {
+
+      const reqParams: ReqParams = {
+        sigFlag: SIG_FLAG.NO_SIG,
+        bodyParams: request,
+        url: LOOPRING_URLs.POST_NFT_VALIDATE_REFRESH_NFT,
+        method: ReqMethod.POST,
+      };
+      const raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      const result = raw_data.reduce(
+        (prev: { [ key: string ]: NFTTokenInfo }, item: NFTTokenInfo) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+          }
+          prev[ item.nftData ] = item;
+          return prev;
+        },
+        {}
+      );
+      return {
+        ...result,
+        raw_data,
+      };
+    } catch (err) {
+      return undefined;
+    }
+  }
+
+
   /**
    * getContractNFTMeta
    * @param web3
@@ -203,11 +244,11 @@ export class NFTAPI extends BaseAPI {
    * @param nftType
    */
   public async getContractNFTMeta({
-    web3,
-    tokenAddress,
-    nftId,
-    nftType = NFTType.ERC1155,
-  }: ContractNFTMetaParam) {
+                                    web3,
+                                    tokenAddress,
+                                    nftId,
+                                    nftType = NFTType.ERC1155,
+                                  }: ContractNFTMetaParam, _IPFS_META_URL: string = LOOPRING_URLs.IPFS_META_URL) {
     try {
       myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
       let result: string;
@@ -218,9 +259,23 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType
       );
-      result.replace(/^ipfs:\/\/(ipfs\/)?/i, LOOPRING_URLs.IPFS_META_URL);
+      result = result.replace(/^ipfs:\/\/(ipfs\/)?/i, '');
+      myLog(result)
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
-      return await fetch(result).then((response) => response.json());
+
+      const reqParams: ReqParams = {
+        sigFlag: SIG_FLAG.NO_SIG,
+        url: LOOPRING_URLs.GET_DELEGATE_GET_IPFS,
+        method: ReqMethod.GET,
+        queryParams: {path: result},
+      };
+      const raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      return raw_data;
     } catch (err) {
       return {
         code: LoopringErrorCode.CONTRACTNFT_URI,
@@ -230,13 +285,13 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
+
   /**
    * approveNFT
    * @param web3
    * @param from  The address that deposits the funds to the exchange
    * @param to  The address deposits to
-   * @param loopringAddress loopring exchange Address
-   * @param nftId: the nftId
+   * @param nftId the nftId
    * @param chainId
    * @param nftType The type of NFTAction contract address (ERC721/ERC1155/...)
    * @param nonce
@@ -407,7 +462,6 @@ export class NFTAPI extends BaseAPI {
    * @function computeNFTAddress
    * @param owner {string} nftOwner address
    * @param nftFactory {string} Hash address
-   * @param chainId {ChainId}
    * @return tokenAddress
    * @throws Error
    */
@@ -455,4 +509,5 @@ export class NFTAPI extends BaseAPI {
       return err as any;
     }
   }
+
 }

@@ -270,7 +270,7 @@ export function numberWithCommas(number: any) {
     }
     try {
       const parts = number.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      parts[ 0 ] = parts[ 0 ].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     } catch (err) {
       return "-";
@@ -278,4 +278,15 @@ export function numberWithCommas(number: any) {
   } else {
     return number;
   }
+}
+
+
+export function sortObjDictionary(obj: { [ key: string ]: any }): Map<string, any> {
+  const dataToSig: Map<string, any> = new Map();
+  if (obj) {
+    Reflect.ownKeys(obj).sort((a, b) => a.toString().localeCompare(b.toString(), 'en')).forEach((key) => {
+      dataToSig.set(key.toString(), obj[ key.toString() ])
+    })
+  }
+  return dataToSig
 }

@@ -194,6 +194,7 @@ export function getEdDSASig(
   const uri = encodeURIComponent(`${basePath}${api_url}`);
 
   const message = `${method}&${uri}&${params}`;
+  // myLog("getEdDSASig",message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});

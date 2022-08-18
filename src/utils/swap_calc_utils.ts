@@ -1117,3 +1117,53 @@ export function calcDefi({
     miniSellVol: miniSellVol.toString(),
   };
 }
+
+
+/**
+ * calDual
+ * @param targetPrice
+ * @param investAmount
+ * @param baseProfit
+ * @param deliveryData
+ * @param yieldTenThousand
+ * @param investTokenInfo
+ * @param earnTokenInfo
+ */
+export function calDual({
+                          targetPrice,
+                          investAmount,
+                          baseProfit,
+                          deliveryData,
+                          yieldTenThousand,
+                          investTokenInfo,
+                          earnTokenInfo,
+                        }: {
+  targetPrice: string;
+  investAmount: string;
+  baseProfit: number;
+  deliveryData: number;
+  yieldTenThousand: number;
+  investTokenInfo: TokenInfo
+  earnTokenInfo: TokenInfo
+  // currentPrice: string;
+}): {
+  lessEarnVol: string;
+  lessEarnTokenSymbol: string;
+  greaterEarnVol: string;
+  greaterEarnTokenSymbol: string;
+} {
+  const investVol = fm
+    .toBig(investAmount ? investAmount : 0)
+    .times("1e" + investTokenInfo.decimals);
+  const lessEarnUnit = fm.toBig(yieldTenThousand).div(10000).plus(1);//.times(targetPrice);
+  const lessEarnVol = investVol.times(lessEarnUnit).toString();
+  const greaterEarnUnit = fm.toBig(targetPrice).times(fm.toBig(yieldTenThousand).div(10000).plus(1))
+  const greaterEarnVol = investVol.times(greaterEarnUnit).toString();
+
+  return {
+    lessEarnVol,
+    lessEarnTokenSymbol: investTokenInfo.symbol,
+    greaterEarnVol,
+    greaterEarnTokenSymbol: earnTokenInfo.symbol,
+  }
+}

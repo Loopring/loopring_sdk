@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { ChainId } from "./web3_defs";
-import { NFTType } from "../api";
+import { NFT_TYPE_STRING, NFTType } from "../api";
 
 /**
  *  @interface DepositNFTParam
@@ -90,3 +90,12 @@ export type ContractNFTParam = {
 export type ContractNFTMetaParam = ContractNFTParam & { _id?: string };
 
 export type UserNFTBalanceParam = ContractNFTParam & { account: string };
+
+
+export type CallRefreshNFT = {
+  network: "ETHEREUM",
+  tokenAddress: string,
+  nftId: string,
+  nftType: NFT_TYPE_STRING
+};
+
