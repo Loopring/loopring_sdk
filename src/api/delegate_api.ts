@@ -41,6 +41,6 @@ export class DelegateAPI extends BaseAPI {
   }
 
   public getCollectionDomain() {
-    return this.chainId === ChainId.GOERLI ? "https://nftinfos.loopring.network" : "https://nftinfos.loopring.io"
+    return this.chainId === ChainId.GOERLI ? "https://uatnftinfos.loopring.io" : "https://nftinfos.loopring.io"
   }
 }

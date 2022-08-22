@@ -130,6 +130,8 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_MINT_HISTORY = "/api/v3/user/nft/mints",
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
   IPFS_META_URL = "https://infura-ipfs.io/ipfs/",
+
+  GET_DUAL_PRODUCTS = "/api/v3/dual/products"
 }
 
 
