@@ -115,6 +115,7 @@ export enum LOOPRING_URLs {
   POST_NFT_VALIDATE_REFRESH_NFT = "/api/v3/nft/image/refresh",
   GET_NFT_COLLECTION = "/api/v3/nft/collection",
   GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
+
   // POST_NFT_COLLECTION = "/api/v3/collection/createCollection",
   // GET_NFT_COLLECTIONS = "/api/v3/nft/collections",
   // GET_NFTs_BY_COLLECTIONS = "/api/v3/nft/collection/items",
@@ -131,7 +132,13 @@ export enum LOOPRING_URLs {
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
   IPFS_META_URL = "https://infura-ipfs.io/ipfs/",
 
-  GET_DUAL_PRODUCTS = "/api/v3/dual/products"
+  GET_DUAL_INDEX = "/api/v3/dual/index",
+  GET_DUAL_PRICES = "/api/v3/dual/prices",
+  GET_DUAL_INFOS = "/api/v3/dual/infos",
+  GET_DUAL_TRANSACTIONS = "/api/v3/dual/transactions",
+  GET_DUAL_BALANCE = "/api/v3/dual/balance",
+  POST_DUAL_ORDER = "/api/v3/dual/order",
+
 }
 
 

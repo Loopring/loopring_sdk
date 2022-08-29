@@ -169,7 +169,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 const makeObjectStr = (request: Map<string, any>) => {
   const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt);
+  return encodeURIComponent(jsonTxt).replace("'", "%27");
 };
 
 export function getEdDSASig(

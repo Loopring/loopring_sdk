@@ -32,6 +32,7 @@ import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 import { NFTType } from "../api";
+import * as buffer from 'buffer';
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
   ? (Without<T, U> & U) | (Without<U, T> & T)
@@ -3002,6 +3003,7 @@ export interface DefiOrderRequest {
   action: string;
 }
 
+
 export interface DefiResult {
   hash: string;
   clientOrderId: string;
@@ -3040,6 +3042,14 @@ export interface GetDefiMarketRequest {
 
 export interface GetUserDefiRewardRequest {
   accountId: number;
+}
+
+export interface GetUserDefiTxRequest {
+  accountId: number,
+  offset: number,
+  start?: number,
+  end?: number,
+  limit: number,
 }
 
 
@@ -3097,5 +3107,200 @@ export interface GetUserNFTCollectionRequest {
   tokenAddress?: string;
 }
 
+export enum DUAL_TYPE {
+  DUAL_BASE = "DUAL_BASE",
+  DUAL_CURRENCY = "DUAL_CURRENCY",
+}
+
+export type GetDualInfosRequest = {
+  baseSymbol: string
+  quoteSymbol: string
+  currency: string
+  dualType: DUAL_TYPE;
+  minStrike?: string
+  maxStrike?: string
+  startTime?: number
+  timeSpan?: number
+  limit: number
+}
+export type GetDualPricesRequest = {
+  baseSymbol: string;
+  productIds: string
+}
 
 
+export type DualBid = {
+  baseProfit: string,
+  baseQty: string
+}
+export type DualPrice = {
+  productId: string
+  cacheQty: string
+  priceTime: number,
+  dualBid: DualBid[]
+
+}
+export type DualIndex = {
+  index: string;
+  base: string;
+  quote: string;
+  indexTime: number
+}
+
+
+export type DualProductAndPrice = {
+  productId: string;
+  base: string;
+  quote: string;
+  currency: string;
+  createTime: number;
+  expireTime: number;
+  strike: string;
+  expired: boolean;
+  dualType: DUAL_TYPE,
+  ratio: number,
+  dualPrice: DualPrice
+}
+
+export type  DualRulesCoinsInfo = {
+  base: string;
+  quote: string
+  currency: string;
+  basePrecision: number;
+  currencyPrecision: number;
+  baseMin: string,
+  currencyMin: string,
+  baseMax: string,
+  currencyMax: string,
+  granulation: number;
+  baseProfitStep: number
+}
+export type DualBalance = {
+  coin: string;
+  free: string;
+  frozen: string;
+}
+
+
+export interface GetUserDualTxRequest {
+  accountId: number,
+  dualTypes: DUAL_TYPE,
+  investmentStatus?: string,
+  settlementStatus?: string,
+  offset: number,
+  start: number,
+  end: number,
+  limit: number,
+}
+
+
+export interface UserDualTxsHistory {
+  id: string;
+  hash: string;
+  productId: string;
+  dualType: DUAL_TYPE;
+  settleRatio: number;
+  filled: string;
+  dualFilled: string;
+  deliveryPrice: number;
+  strike: number;
+  market: string;
+  tokenInfoOrigin: {
+    base: string;
+    quote: string;
+    currency: string;
+    amountIn: string;
+    amountOut: string;
+    tokenIn: number;
+    tokenOut: number;
+  },
+  timeOrigin: {
+    expireTime: number;
+    createTime: number;
+    updateTime: number;
+    settlementTime: number;
+  }
+  investmentStatus: "INVESTMENT_SUCCEEDED" | "INVESTMENT_FAILED" | "INVESTMENT_RECEIVED",
+  settlementStatus: "UNSETTLED" | "SETTLED" | "PAID",
+  createdAt: number,
+  updatedAt: number
+}
+
+
+/**
+ * DualOrderRequest
+ */
+export interface DualOrderRequest {
+  /**
+   * exchange address
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  exchange: string;
+  /**
+   * storageId
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  storageId: number;
+  /**
+   * accountId
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  accountId: number;
+  /**
+   * sellToken
+   * @type {{tokenId:TokenID,volume:string}}
+   * @memberof DefiOrderRequest
+   */
+  sellToken: {
+    tokenId: number;
+    volume: string;
+  };
+  /**
+   * buyToken
+   * @type {{tokenId:TokenID,volume:string}}
+   * @memberof DefiOrderRequest
+   */
+  buyToken: {
+    tokenId: number;
+    volume: string;
+  };
+  /**
+   * Timestamp for order become invalid
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  validUntil: number;
+  /**
+   * fee
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  fee: string;
+  /**
+   * Maximum order fee that the user can accept, value range (in ten thousandths) 1 ~ 63
+   * @type {number}
+   * @memberof DefiOrderRequest
+   */
+  maxFeeBips: number;
+  /**
+   * fillAmountBOrS
+   * @type boolean
+   * @memberof DefiOrderRequest
+   */
+  fillAmountBOrS: boolean;
+  /**
+   * The orders EdDSA signature. The signature is a hexadecimal string obtained by signing the order itself and concatenating the resulting signature parts (Rx, Ry, and S). Used to authenticate and authorize the operation.
+   * @type {string}
+   * @memberof DefiOrderRequest
+   */
+  eddsaSignature?: string;
+
+  baseProfit: string
+  clientOrderId: string
+  productId: string
+  settleRatio: string
+  expireTime: number
+}

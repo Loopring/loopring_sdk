@@ -76,7 +76,7 @@ describe("mintNFT", function () {
           storageId: storageId.offchainId ?? 9,
           maxFee: {
             tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-            amount: fee.fees["LRC"].fee ?? "9400000000000000000",
+            amount: fee.fees[ "LRC" ].fee ?? "9400000000000000000",
           },
           royaltyPercentage: 5,
           forceToMint: true, // suggest use as false, for here is just for run test
@@ -86,7 +86,7 @@ describe("mintNFT", function () {
         walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
-      });
+      }, {_noEcdsa: true});
 
       console.log(response);
     },

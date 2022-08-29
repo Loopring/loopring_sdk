@@ -13,7 +13,7 @@ import {
   SigSuffix,
   NFTFactory,
   ChainId,
-  CollectionMeta,
+  CollectionMeta, NFTFactory_Collection,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -1567,7 +1567,7 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
+    options?: { accountId?: number; counterFactualInfo?: any, _noEcdsa: boolean }
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
@@ -1578,9 +1578,9 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
-    const { accountId, counterFactualInfo }: any = options
+    const {accountId, counterFactualInfo, _noEcdsa}: any = options
       ? options
-      : { accountId: 0 };
+      : {accountId: 0};
     if (request.counterFactualNftInfo === undefined) {
       request.counterFactualNftInfo = {
         nftFactory: NFTFactory[chainId],
@@ -1609,67 +1609,70 @@ export class UserAPI extends BaseAPI {
     };
 
     // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signNFTMintWithDataStructure(
-            web3,
-            request.minterAddress,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      try {
-        const isContractCheck = await isContract(web3, request.minterAddress);
-
-        if (isContractCheck) {
-          // signNFTMintWithDataStructureForContract
-          // myLog('signNFTMintWithDataStructureForContract')
-          const result =
-            await sign_tools.signNFTMintWithDataStructureForContract(
+    if (!_noEcdsa) {
+      if (
+        walletType === ConnectorNames.MetaMask ||
+        walletType === ConnectorNames.Gamestop ||
+        walletType === ConnectorNames.OtherExtension
+      ) {
+        try {
+          if (isHWAddr) {
+            await sigHW();
+          } else {
+            const result = await sign_tools.signNFTMintWithDataStructure(
               web3,
               request.minterAddress,
               request,
               chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signNFTMintWithDataStructureForContract(
-              web3,
-              request.minterAddress,
-              request,
-              chainId,
+              walletType,
               accountId,
               counterFactualInfo
             );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+          }
+        } catch (err) {
+          return {
+            ...this.genErr(err as any),
+          };
         }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
+      } else {
+        try {
+          const isContractCheck = await isContract(web3, request.minterAddress);
+
+          if (isContractCheck) {
+            // signNFTMintWithDataStructureForContract
+            // myLog('signNFTMintWithDataStructureForContract')
+            const result =
+              await sign_tools.signNFTMintWithDataStructureForContract(
+                web3,
+                request.minterAddress,
+                request,
+                chainId,
+                accountId
+              );
+            ecdsaSignature = result.ecdsaSig;
+          } else if (counterFactualInfo) {
+            const result =
+              await sign_tools.signNFTMintWithDataStructureForContract(
+                web3,
+                request.minterAddress,
+                request,
+                chainId,
+                accountId,
+                counterFactualInfo
+              );
+            ecdsaSignature = result.ecdsaSig;
+            // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
+          } else {
+            await sigHW();
+          }
+        } catch (err) {
+          return {
+            ...this.genErr(err as any),
+          };
+        }
       }
+
     }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
@@ -1700,7 +1703,9 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
     eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
-    const dataToSig: Map<string, any> = sortObjDictionary({...req, nftFactory: NFTFactory[ chainId ]})
+
+    const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
+    const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
