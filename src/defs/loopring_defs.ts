@@ -3034,6 +3034,10 @@ export interface UserDefiTxsHistory {
   };
 }
 
+export interface GetDefiMarketRequest {
+  defiType?: string;
+}
+
 export interface GetUserDefiRewardRequest {
   accountId: number;
 }
@@ -3081,14 +3085,16 @@ export interface GetUserOwnerCollectionRequest {
   owner: string;
   offset?: number;
   limit?: number;
-  address?: string;
+  tokenAddress?: string;
+  isMintable?: boolean;
+
 }
 
 export interface GetUserNFTCollectionRequest {
   accountId: string;
   offset?: number;
   limit?: number;
-  address?: string;
+  tokenAddress?: string;
 }
 
 

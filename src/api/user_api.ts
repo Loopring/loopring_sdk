@@ -1792,7 +1792,7 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
-  async getUserOwenCollection(request: loopring_defs.GetUserOwnerCollectionRequest, apiKey: string) {
+  async getUserOwenCollection<R>(request: loopring_defs.GetUserOwnerCollectionRequest, apiKey: string) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_COLLECTION,
       queryParams: request,
@@ -1810,7 +1810,14 @@ export class UserAPI extends BaseAPI {
 
     return {
       totalNum: raw_data == null ? void 0 : raw_data.totalNum,
-      collections: raw_data.collections,
+      collections: raw_data.collections.map(({collection, ...rest}: any) => {
+        return {
+          ...collection,
+          extends: {
+            ...rest
+          }
+        }
+      }) as CollectionMeta & { extends: { [ a: string ]: any } }[],
       raw_data
     };
   }
@@ -1834,7 +1841,14 @@ export class UserAPI extends BaseAPI {
 
     return {
       totalNum: raw_data == null ? void 0 : raw_data.totalNum,
-      collections: raw_data.nftCollectionDetailsWithCountSeq,
+      collections: raw_data.collections.map(({collection, ...rest}: any) => {
+        return {
+          ...collection,
+          extends: {
+            ...rest
+          }
+        }
+      }) as CollectionMeta & { extends: { [ a: string ]: any } }[],
       raw_data
     };
   }
