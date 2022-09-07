@@ -32,7 +32,6 @@ import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 import { NFTType } from "../api";
-import * as buffer from 'buffer';
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
   ? (Without<T, U> & U) | (Without<U, T> & T)
@@ -3053,28 +3052,31 @@ export interface GetUserDefiTxRequest {
 }
 
 export type  CollectionExtendsKey = {
-	thumbnail?: string,
-	cid?: string,
-	id?: string,
-	contractAddress?: string,
-	isPublic?: boolean,
-	deployStatus?: DEPLOYMENT_STATUS,
-	isCounterFactualNFT?: boolean,
-	updatedAt?: number,
-	createdAt?: number,
-	nftType?: string,
+  thumbnail?: string,
+  cid?: string,
+  id?: string,
+  contractAddress: string,
+  isPublic: boolean,
+  deployStatus: DEPLOYMENT_STATUS,
+  isCounterFactualNFT: boolean,
+  updatedAt: number,
+  createdAt: number,
+  nftType: string,
+  baseUri: string,
+  collectionTitle?: string,
 }
 
 export type CollectionBasicMeta = {
   name: string,
   tileUri: string,
   nftFactory?: string,
-  collectionTitle?: string,
   description?: string,
   avatar?: string,
   banner?: string,
   owner: string,
 }
+
+
 /**
  * CollectionMeta
  * @property name string useToCreate Collection

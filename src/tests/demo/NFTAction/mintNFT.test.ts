@@ -7,8 +7,9 @@ import {
   signatureKeyPairMock,
 } from "../../MockData";
 import * as sdk from "../../../index";
+import { CollectionMeta, NFTCounterFactualInfo } from "../../../defs";
 const mockData = {
-  nftTokenAddress: ""
+  nftTokenAddress: "0xfc26d5b9277f4375ba8ff7d4708f4dbf78954124"
 }
 describe("mintNFT", function () {
   it(
@@ -96,7 +97,7 @@ describe("mintNFT", function () {
     DEFAULT_TIMEOUT * 3
   );
 
-
+  //Suggest use this function
   it(
     "submitNFTMintWithCollection",
     async () => {
@@ -119,11 +120,32 @@ describe("mintNFT", function () {
       );
       console.log("apiKey:", apiKey);
 
+      const collectionRes = await LoopringAPI.userAPI
+        .getUserOwenCollection(
+          {
+            owner: accInfo.owner,
+            tokenAddress: mockData.nftTokenAddress,
+            isMintable: true
+          },
+          apiKey
+        )
+      if (
+        (collectionRes &&
+          ((collectionRes as sdk.RESULT_INFO).code ||
+            (collectionRes as sdk.RESULT_INFO).message)) ||
+        !collectionRes.collections.length
+      ) {
+        console.log("Collection is disable to mint ");
+        throw "Collection is disable to mint ";
+      }
+
+      const collectionMeta = (collectionRes as any).collections[ 0 ] as CollectionMeta;
+
       // Step 4. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
-          tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
+          tokenAddress: collectionMeta.contractAddress,
           requestType: sdk.OffchainNFTFeeReqType.NFT_MINT,
         },
         apiKey
@@ -139,15 +161,11 @@ describe("mintNFT", function () {
       );
 
       // Step 6. nftTokenAddress
-      const counterFactualNftInfo = {
+      const counterFactualNftInfo: NFTCounterFactualInfo = {
         nftOwner: accInfo.owner,
-        nftFactory: sdk.NFTFactory[ sdk.ChainId.GOERLI ],
-        nftBaseUri: "",
+        nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[ sdk.ChainId.GOERLI ],
+        nftBaseUri: collectionMeta.baseUri,
       };
-      const nftTokenAddress =
-        LoopringAPI.nftAPI.computeNFTAddress(counterFactualNftInfo)
-          .tokenAddress || "";
-      console.log("nftTokenAddress", nftTokenAddress);
 
       // Step 7. Mint
       const response = await LoopringAPI.userAPI.submitNFTMint({
@@ -158,7 +176,7 @@ describe("mintNFT", function () {
           toAccountId: accInfo.accountId,
           toAddress: accInfo.owner,
           nftType: 0,
-          tokenAddress: nftTokenAddress,
+          tokenAddress: collectionMeta.contractAddress,
           nftId: LOOPRING_EXPORTED_ACCOUNT.nftId, //nftId.toString(16),
           amount: "1",
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
@@ -167,6 +185,7 @@ describe("mintNFT", function () {
             tokenId: TOKEN_INFO.tokenMap[ "LRC" ].tokenId,
             amount: fee.fees[ "LRC" ].fee ?? "9400000000000000000",
           },
+          counterFactualNftInfo,
           royaltyPercentage: 5,
           forceToMint: true, // suggest use as false, for here is just for run test
         },
