@@ -1,6 +1,11 @@
-# Mint NFT
+# Collection NFT
 
-Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will convert to nftId, please view MetaNFT.md
+Definition: allow user create a NFT Collection with different Contract(token) address.
+
+- allow user mint the NFTs with collection
+- when collection deployed, NFTs will have different Contract(token) address in layer1
+- Loopring own collection on L2, allow user to view/edit their Collection information.
+- will soon enable the "Import Collection" to manage legacy NFTs
 
 ***
 
