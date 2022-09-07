@@ -95,6 +95,7 @@ describe("metaNFT", function () {
 							name: 'XXX' + Date.now(), //required, one account is not able to multiple
 							tileUri: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM', //required
 							description: 'test',
+							owner: mockData.accInfo.owner,
 							avatar: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM',
 							banner: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM',
 							nftFactory: NFTFactory_Collection[ LOOPRING_EXPORTED_ACCOUNT.chainId as ChainId ]

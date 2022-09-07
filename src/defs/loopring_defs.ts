@@ -3054,7 +3054,6 @@ export interface GetUserDefiTxRequest {
 
 export type  CollectionExtendsKey = {
 	thumbnail?: string,
-	owner: string,
 	cid?: string,
 	id?: string,
 	contractAddress?: string,
@@ -3067,14 +3066,14 @@ export type  CollectionExtendsKey = {
 }
 
 export type CollectionBasicMeta = {
-	name: string,
-	tileUri: string,
-	nftFactory?: string,
-	collectionTitle?: string,
-	description?: string,
-	avatar?: string,
-	banner?: string,
-
+  name: string,
+  tileUri: string,
+  nftFactory?: string,
+  collectionTitle?: string,
+  description?: string,
+  avatar?: string,
+  banner?: string,
+  owner: string,
 }
 /**
  * CollectionMeta
