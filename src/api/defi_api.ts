@@ -19,7 +19,7 @@ import {
 	DualIndex,
 	GetDualPricesRequest,
 	GetUserDualTxRequest,
-	UserDualTxsHistory, DualOrderRequest,
+	UserDualTxsHistory, DualOrderRequest, GetDualRuleRequest, DualRulesCoinsInfo,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 
@@ -278,6 +278,7 @@ export class DefiAPI extends BaseAPI {
 			infos: loopring_defs.DualProductAndPrice[],
 			index: loopring_defs.DualIndex,
 			balance: loopring_defs.DualBalance[],
+			rules: loopring_defs.DualRulesCoinsInfo[]
 		}
 		raw_data: R,
 	}> {
@@ -299,6 +300,7 @@ export class DefiAPI extends BaseAPI {
 				infos: raw_data.infos as loopring_defs.DualProductAndPrice[],
 				index: raw_data.index as loopring_defs.DualIndex,
 				balance: raw_data.balance as loopring_defs.DualBalance[],
+				rules: raw_data.rules as loopring_defs.DualRulesCoinsInfo[],
 			},
 			raw_data,
 		};
@@ -326,6 +328,33 @@ export class DefiAPI extends BaseAPI {
 			}, {} as loopring_defs.LoopringMap<loopring_defs.DualBalance>)
 		}
 	}
+
+	// public async getDualRule<R>(request :loopring_defs.GetDualRuleRequest): Promise<RESULT_INFO | {
+	//
+	// 	raw_data: R,
+	// }> {
+	// 	const reqParams: loopring_defs.ReqParams = {
+	// 		url: LOOPRING_URLs.GET_DUAL_RULE,
+	// 		queryParams: request,
+	// 		method: ReqMethod.GET,
+	// 		sigFlag: SIG_FLAG.NO_SIG,
+	// 	};
+	// 	const raw_data = (await this.makeReq().request(reqParams)).data;
+	// 	if (raw_data?.resultInfo) {
+	// 		return {
+	// 			...raw_data?.resultInfo,
+	// 		};
+	// 	}
+	//
+	//
+	// 	return {
+	// 		raw_data,
+	// 		dualBalanceMap: [...raw_data].reduce((item, prev) => {
+	// 			return {...prev, [ item.coin ]: item};
+	// 		}, {} as loopring_defs.LoopringMap<loopring_defs.DualBalance>)
+	// 	}
+	// }
+
 
 	public async getDualPrices(request: loopring_defs.GetDualPricesRequest) {
 		const reqParams: loopring_defs.ReqParams = {

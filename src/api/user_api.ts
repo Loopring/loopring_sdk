@@ -3,17 +3,17 @@
 import { BaseAPI } from "./base_api";
 
 import {
-  RESULT_INFO,
-  ReqMethod,
-  SIG_FLAG,
-  SigPatchField,
-  TradeChannel,
-  LOOPRING_URLs,
-  ConnectorNames,
-  SigSuffix,
-  NFTFactory,
-  ChainId,
-  CollectionMeta, NFTFactory_Collection,
+	RESULT_INFO,
+	ReqMethod,
+	SIG_FLAG,
+	SigPatchField,
+	TradeChannel,
+	LOOPRING_URLs,
+	ConnectorNames,
+	SigSuffix,
+	NFTFactory,
+	ChainId,
+	CollectionMeta, NFTFactory_Collection, CollectionExtendsKey, CollectionBasicMeta,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -1566,8 +1566,8 @@ export class UserAPI extends BaseAPI {
    * Submit NFTAction 55544555555555555555555545555 request
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any, _noEcdsa: boolean }
+	  req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
+	  options?: { accountId?: number; counterFactualInfo?: any, _noEcdsa?: boolean }
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
@@ -1698,10 +1698,10 @@ export class UserAPI extends BaseAPI {
 
 
   async submitNFTCollection<R>(
-    req: CollectionMeta,
-    chainId: ChainId,
-    apiKey: string,
-    eddsaKey: string,
+	  req: CollectionBasicMeta,
+	  chainId: ChainId,
+	  apiKey: string,
+	  eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
 
     const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}

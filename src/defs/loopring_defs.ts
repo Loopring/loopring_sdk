@@ -3052,7 +3052,30 @@ export interface GetUserDefiTxRequest {
   limit: number,
 }
 
+export type  CollectionExtendsKey = {
+	thumbnail?: string,
+	owner: string,
+	cid?: string,
+	id?: string,
+	contractAddress?: string,
+	isPublic?: boolean,
+	deployStatus?: DEPLOYMENT_STATUS,
+	isCounterFactualNFT?: boolean,
+	updatedAt?: number,
+	createdAt?: number,
+	nftType?: string,
+}
 
+export type CollectionBasicMeta = {
+	name: string,
+	tileUri: string,
+	nftFactory?: string,
+	collectionTitle?: string,
+	description?: string,
+	avatar?: string,
+	banner?: string,
+
+}
 /**
  * CollectionMeta
  * @property name string useToCreate Collection
@@ -3069,27 +3092,7 @@ export interface GetUserDefiTxRequest {
  * @property cid? string option
  *
  */
-export type CollectionMeta = {
-  name: string,
-  tileUri: string,
-  owner: string,
-  nftFactory?: string,
-  baseUri?: string,
-  collectionTitle?: string,
-  description?: string,
-  avatar?: string,
-  banner?: string,
-  thumbnail?: string,
-  cid?: string,
-  id?: string,
-  contractAddress?: string,
-  isPublic?: boolean,
-  deployStatus?: DEPLOYMENT_STATUS,
-  isCounterFactualNFT?: boolean,
-  updatedAt?: number,
-  createdAt?: number,
-  nftType?: string,
-};
+export type CollectionMeta = CollectionExtendsKey & CollectionBasicMeta;
 
 export interface GetUserOwnerCollectionRequest {
   owner: string;
@@ -3124,9 +3127,10 @@ export type GetDualInfosRequest = {
   limit: number
 }
 export type GetDualPricesRequest = {
-  baseSymbol: string;
-  productIds: string
+	baseSymbol: string;
+	productIds: string
 }
+export type GetDualRuleRequest = { baseSymbol: string, currency?: string }
 
 
 export type DualBid = {

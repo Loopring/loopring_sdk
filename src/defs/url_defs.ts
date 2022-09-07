@@ -137,6 +137,7 @@ export enum LOOPRING_URLs {
   GET_DUAL_INFOS = "/api/v3/dual/infos",
   GET_DUAL_TRANSACTIONS = "/api/v3/dual/transactions",
   GET_DUAL_BALANCE = "/api/v3/dual/balance",
+  GET_DUAL_RULE = "/api/v3/dual/rules",
   POST_DUAL_ORDER = "/api/v3/dual/order",
 
 }

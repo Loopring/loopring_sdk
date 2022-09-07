@@ -2,7 +2,6 @@ import sha256 from "crypto-js/sha256";
 import * as abi from "ethereumjs-abi";
 import * as sigUtil from "eth-sig-util";
 import { EIP712TypedData } from "eth-sig-util";
-import { jubjub } from "./poseidon/jubjub";
 
 import * as ethUtil from "ethereumjs-util";
 
@@ -169,7 +168,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 const makeObjectStr = (request: Map<string, any>) => {
   const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt).replace("'", "%27");
+  return encodeURIComponent(jsonTxt).replace(/'/ig, "%27");
 };
 
 export function getEdDSASig(
