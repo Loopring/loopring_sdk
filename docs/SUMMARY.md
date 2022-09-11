@@ -27,6 +27,7 @@
     - [Transfer](./js_sdk/transfer/transferNFT.md)
     - [Withdraw](./js_sdk/withdraw/withdrawNFT.md)
     - [Mint](./js_sdk/NFTAction/metaNFT.md)
+    - [Collection](./js_sdk/NFTAction/collectionNFT.md)
     - [Deploy](./js_sdk/NFTAction/deployNFT.md)
     - [Trade](./js_sdk/NFTAction/tradeNFT.md)
       - [Validate Order](./js_sdk/NFTAction/validateNFTOrder.md)

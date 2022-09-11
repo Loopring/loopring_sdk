@@ -34,7 +34,7 @@ import {
   NFTOrderRequestV3,
   NFTTokenAmountInfo,
   NFTTradeRequestV3,
-  SubmitOrderRequestV3,
+  SubmitOrderRequestV3, DualOrderRequest,
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
@@ -1026,6 +1026,29 @@ export function get_EddsaSig_NFT_Order(
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
+
+
+export function get_EddsaSig_Dual_Order(
+  request: DualOrderRequest,
+  eddsaKey: string
+) {
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.storageId,
+    request.accountId,
+    request.sellToken.tokenId,
+    request.buyToken.tokenId,
+    request.sellToken.volume,
+    request.buyToken.volume,
+    request.validUntil,
+    request.maxFeeBips,
+    request.fillAmountBOrS ? 1 : 0,
+    0,
+  ];
+
+  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+}
+
 
 export async function signNFTMintWithDataStructure(
   web3: Web3,

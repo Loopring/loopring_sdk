@@ -13,7 +13,7 @@ describe("DefiAPI test", function () {
   it(
     "getDefiMarkets",
     async () => {
-      const response = await LoopringAPI.defiAPI.getDefiMarkets();
+      const response = await LoopringAPI.defiAPI.getDefiMarkets({defiType: undefined});
       console.log(
         "getDefiMarkets",
         response.marketArr,
@@ -48,7 +48,8 @@ describe("DefiAPI test", function () {
       );
       const response = await LoopringAPI.defiAPI.getDefiTransaction(
         {
-          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+          limit: 20, offset: 0,
+          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId
         },
         apiKey
       );
@@ -85,12 +86,12 @@ describe("DefiAPI test", function () {
         isJoin = true,
         isInputSell = true;
       const testMarket = "WSTETH-ETH";
-      const { markets } = await LoopringAPI.defiAPI.getDefiMarkets();
-      const { tokensMap } = await LoopringAPI.defiAPI.getDefiToken();
-      const marketInfo = markets[testMarket];
+      const {markets} = await LoopringAPI.defiAPI.getDefiMarkets({defiType: undefined});
+      const {tokensMap} = await LoopringAPI.defiAPI.getDefiToken();
+      const marketInfo = markets[ testMarket ];
       const buyTokenBalanceVol = marketInfo.baseVolume;
 
-      const { fees } = await LoopringAPI.userAPI.getOffchainFeeAmt(
+      const {fees} = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: isJoin

@@ -19,9 +19,11 @@ import {
 	DualIndex,
 	GetDualPricesRequest,
 	GetUserDualTxRequest,
-	UserDualTxsHistory, DualOrderRequest, GetDualRuleRequest, DualRulesCoinsInfo,
+	UserDualTxsHistory, DualOrderRequest, GetDualRuleRequest, DualRulesCoinsInfo, DualPrice,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
+import * as sdk from '../index';
+import { get_EddsaSig_Dual_Order } from '../index';
 
 export class DefiAPI extends BaseAPI {
 	/*
@@ -191,7 +193,7 @@ export class DefiAPI extends BaseAPI {
 		];
 
 		const reqParams: ReqParams = {
-			url: LOOPRING_URLs.GET_DEFI_ORDER,
+			url: LOOPRING_URLs.POST_DEFI_ORDER,
 			bodyParams: request,
 			apiKey,
 			method: ReqMethod.POST,
@@ -323,7 +325,7 @@ export class DefiAPI extends BaseAPI {
 
 		return {
 			raw_data,
-			dualBalanceMap: [...raw_data].reduce((item, prev) => {
+			dualBalanceMap: [...raw_data].reduce((prev, item) => {
 				return {...prev, [ item.coin ]: item};
 			}, {} as loopring_defs.LoopringMap<loopring_defs.DualBalance>)
 		}
@@ -374,7 +376,7 @@ export class DefiAPI extends BaseAPI {
 		return {
 			raw_data,
 			totalNum: raw_data?.totalNum,
-			infos: raw_data.dualInfo as loopring_defs.DualProductAndPrice[],
+			infos: raw_data.infos as loopring_defs.DualPrice[],
 		}
 	}
 
@@ -435,7 +437,7 @@ export class DefiAPI extends BaseAPI {
 
 		const reqParams: loopring_defs.ReqParams = {
 			url: LOOPRING_URLs.POST_DUAL_ORDER,
-			queryParams: request,
+			bodyParams: request,
 			apiKey,
 			method: ReqMethod.POST,
 			sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
@@ -445,7 +447,6 @@ export class DefiAPI extends BaseAPI {
 				PrivateKey: privateKey,
 			},
 		};
-
 		const raw_data = (await this.makeReq().request(reqParams)).data;
 		return this.returnTxHash(raw_data);
 

@@ -19,62 +19,48 @@
     2) server-side retturn nftId startWith 0
 
 #### v2.0.11
-
     1) add deposit to
     2) get Account by account id
     3) add HEBAO_META_TYPE deposit_wallet
 
 #### v2.0.7
-
     1) Fix isMobile
 
 #### v2.0.6
-
     1) mintNFT nftData
 ####  v2.0.5 (If you use v2 please move to >= v2.0.4 )
-
     1) payPayeeUpdateAccount
     2) fix generateApiKey error 
 
 ####  v2.0.0
-
     1) update poseidon
 
 ***
 ####  v1.10.3
-
     1) Demo update
 
 ####  v1.10.1
-
     1) getAllowances formatter update
     2) getTokenBalances formatter update
     3) unit test update
 
 ####  v1.9.6
-
     1) add is Mobile in personalSign
 ####  v1.9.4
-
     1) remove Authereum & walletLink
     2) DEPLOYMENT_STATUS
 ####  v1.8.13
-
     1）Update web3_defs.ts  CREATION_CODE
     2）submitDeployNFT transfer.maxFee tokenId: transfer.token.tokenId,
 ####  v1.8.7
-
     1）getAmmPoolTxs V3
 ####  v1.8.5
-
     1）validateNftOrder
 
 ####  v1.8.1
-
     1）validateNftOrder
     2）NFTCounterFactualInfo
 #### v1.7.9
-
     1) nftMint NFTCounterFactualInfo
 
 ####v1.7.6
@@ -99,65 +85,51 @@
 1) 721 NFT URI function
 
 #### v1.5.6
-
     1) submitDeployNFT
 
 #### v1.5.2
-
     1) NFT deposit
 
 #### v1.4.9
-
     1) Counter Factual check 
     2) updateAccount
 
 #### v1.4.7
-
     1) NFT META 
     2) HEBAO
 #### v1.4.5 
-
     1) CF wallet action sign update
 
 #### v1.4.4 (alpha)
-
     1) fix unlock FC wallet
     
 #### v1.4.3 (alpha)
-
     1) bug fix for NFT get contractMeta 
     2) FC wallet connect signature
     3) Error code 
 
 #### v1.4.2
-
     1) update activity
 
 #### v1.3.10
-
     1) Add recognizing header for web
 
 #### v1.3.9
-
     1) Update getLatestTokenPrice url
 
 #### v1.3.8
-
     1) SDK update for error type
 
 #### v1.3.4 - v1.3.7 destroy
 
 #### v1.3.3
-
     1) add computeNFTAddress
     2) add eslint and prettie for the code format
 
 #### v1.3.2
-
     1) Fix some bug
     2) Update withdraw NFT unit test
 
 #### v1.3.0 && v1.3.1 -- !!! revert
-
     formatter Uint8Array support
     # !!! revert

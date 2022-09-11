@@ -73,7 +73,7 @@ export enum LOOPRING_URLs {
 
   GET_DEFI_TOKENS = "/api/v3/defi/tokens",
   GET_DEFI_MARKETS = "/api/v3/defi/markets",
-  GET_DEFI_ORDER = "/api/v3/defi/order",
+  POST_DEFI_ORDER = "/api/v3/defi/order",
   GET_DEFI_REWARDS = "/api/v3/defi/rewards",
   GET_DEFI_TRANSACTIONS = "/api/v3/defi/transactions",
 
