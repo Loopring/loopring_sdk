@@ -13,17 +13,11 @@ import {
 	SIG_FLAG,
 	LOOPRING_URLs,
 	SigPatchField,
-	RESULT_INFO,
-	GetDefiMarketRequest,
-	DualProductAndPrice,
-	DualIndex,
-	GetDualPricesRequest,
-	GetUserDualTxRequest,
-	UserDualTxsHistory, DualOrderRequest, GetDualRuleRequest, DualRulesCoinsInfo, DualPrice,
+	RESULT_INFO, DualPrice,
+
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
-import * as sdk from '../index';
-import { get_EddsaSig_Dual_Order } from '../index';
+
 
 export class DefiAPI extends BaseAPI {
 	/*
@@ -381,18 +375,28 @@ export class DefiAPI extends BaseAPI {
 	}
 
 
-	// public async getDualIndex(request: any) {
-	// 	const reqParams: loopring_defs.ReqParams = {
-	// 		url: LOOPRING_URLs.GET_DUAL_INDEX,
-	// 		queryParams: request,
-	// 		method: ReqMethod.GET,
-	// 		sigFlag: SIG_FLAG.NO_SIG,
-	// 	};
-	// 	const raw_data = (await this.makeReq().request(reqParams)).data;
-	//
-	// 	return
-	// }
-	//
+	public async getDualIndex(request: {
+		baseSymbol: string; quoteSymbol: string
+	}) {
+
+		const reqParams: loopring_defs.ReqParams = {
+			url: LOOPRING_URLs.GET_DUAL_INDEX,
+			queryParams: request,
+			method: ReqMethod.GET,
+			sigFlag: SIG_FLAG.NO_SIG,
+		};
+
+		const raw_data = (await this.makeReq().request(reqParams)).data;
+		if (raw_data?.resultInfo) {
+			return {
+				...raw_data?.resultInfo,
+			};
+		}
+		return {
+			raw_data,
+			dualPrice: raw_data as loopring_defs.DualPrice[],
+		}
+	}
 
 
 	public async getDualTransactions(request: loopring_defs.GetUserDualTxRequest, apiKey: string) {
@@ -451,4 +455,5 @@ export class DefiAPI extends BaseAPI {
 		return this.returnTxHash(raw_data);
 
 	}
+
 }
