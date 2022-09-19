@@ -362,6 +362,7 @@ export interface DefiMarketInfo {
 	quoteVolume: string;
 	quoteLimitAmount: string;
 	baseLimitAmount: string;
+	quoteAlias: string;
 }
 
 export interface MarketsResponse {
@@ -3217,8 +3218,8 @@ export enum SETTLEMENT_STATUS {
 export interface GetUserDualTxRequest {
 	accountId: number,
 	dualTypes: DUAL_TYPE,
-	investmentStatus?: LABEL_INVESTMENT_STATUS,
-	settlementStatus?: SETTLEMENT_STATUS,
+	investmentStatuses?: LABEL_INVESTMENT_STATUS,
+	settlementStatuses?: SETTLEMENT_STATUS,
 	offset: number,
 	start: number,
 	end: number,
@@ -3242,6 +3243,7 @@ export interface UserDualTxsHistory {
 		currency: string;
 		amountIn: string;
 		amountOut: string;
+		market: string;
 		tokenIn: number;
 		tokenOut: number;
 	},

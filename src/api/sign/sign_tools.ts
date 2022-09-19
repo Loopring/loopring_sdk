@@ -136,7 +136,7 @@ const makeRequestParamStr = (request: Map<string, any>) => {
   }
 
   // force to change encode ',' due to different encode rules between server and client
-  return encodeURIComponent(paramlist.join("&")).replace("%2C", "%252C");
+  return encodeURIComponent(paramlist.join("&")).replace(/%2C/g, "%252C");
 };
 
 //submitOrderV3
