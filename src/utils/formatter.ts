@@ -284,7 +284,7 @@ export function numberWithCommas(number: any) {
 export function sortObjDictionary(obj: { [ key: string ]: any }): Map<string, any> {
   const dataToSig: Map<string, any> = new Map();
   if (obj) {
-    Reflect.ownKeys(obj).sort((a, b) => a.toString().localeCompare(b.toString(), 'en')).forEach((key) => {
+    Reflect.ownKeys(obj).sort((a, b) => a.toString().localeCompare(b.toString())).forEach((key) => {
       dataToSig.set(key.toString(), obj[ key.toString() ])
     })
   }

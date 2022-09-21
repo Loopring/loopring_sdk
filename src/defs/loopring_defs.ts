@@ -1641,6 +1641,49 @@ export interface OriginDeployNFTRequestV3 {
 	counterFactualInfo?: CounterFactualInfo;
 }
 
+
+export interface OriginDeployCollectionRequestV3 {
+	/**
+	 * Transfer
+	 * @type {OriginTransferRequestV3}
+	 * @memberof OriginDeployNFTRequestV3
+	 */
+	transfer: Omit<OriginTransferRequestV3, "payeeId" | "maxFee" | "memo"> & {
+		payeeId?: 0;
+		memo?: string;
+		maxFee?: {
+			volume: "0";
+			tokenId: number | string;
+		};
+	};
+	/**
+	 * nftOwner
+	 * @type {string}
+	 * @memberof OriginDeployCollectionRequestV3
+	 */
+	nftOwner: string;
+	/**
+	 * nftBaseUri
+	 * @type {string}
+	 * @memberof OriginDeployCollectionRequestV3
+	 */
+	nftBaseUri: string;
+	/**
+	 * nftFactory
+	 * @type {string}
+	 * @memberof OriginDeployCollectionRequestV3
+	 */
+	nftFactory: string;
+	/**
+	 * tokenAddress
+	 * @type {string}
+	 * @memberof OriginDeployCollectionRequestV3
+	 */
+	tokenAddress: string;
+	counterFactualInfo?: CounterFactualInfo;
+}
+
+
 /**
  * Submit internal transfer params
  * @export
@@ -2429,6 +2472,17 @@ export interface OriginDeployNFTRequestV3WithPatch {
 	apiKey: string;
 	isHWAddr?: boolean;
 }
+
+export interface OriginDeployCollectionRequestV3WithPatch {
+	request: OriginDeployCollectionRequestV3;
+	web3: Web3;
+	chainId: ChainId;
+	walletType: ConnectorNames;
+	eddsaKey: string;
+	apiKey: string;
+	isHWAddr?: boolean;
+}
+
 
 export interface OriginNFTTransferRequestV3WithPatch {
 	request: OriginNFTTransferRequestV3;

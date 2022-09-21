@@ -113,6 +113,7 @@ export enum LOOPRING_URLs {
   POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
   POST_NFT_CREATE_COLLECTION = "/api/v3/nft/collection",
   POST_NFT_VALIDATE_REFRESH_NFT = "/api/v3/nft/image/refresh",
+  POST_DEPLOY_COLLECTION = "/api/v3/collection/deployTokenAddress",
   GET_NFT_COLLECTION = "/api/v3/nft/collection",
   GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
 
