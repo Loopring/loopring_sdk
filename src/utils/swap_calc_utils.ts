@@ -1152,6 +1152,7 @@ export function calcDual(
 		balance: { [ key: string ]: DualBalance };
 		sellToken: TokenInfo;
 		buyToken: TokenInfo;
+
 		// dualViewInfo:R
 		feeVol?: string | undefined;
 		dualMarket: DefiMarketInfo;
@@ -1166,7 +1167,9 @@ export function calcDual(
 		maxSellAmount,
 		miniSellVol,
 		feeTokenSymbol,
+		quota,
 		maxFeeBips;
+
 	const settleRatio = fm.toBig(info.dualPrice.dualBid[ 0 ].baseProfit).times(info.ratio).toFixed(Number(rule.baseProfitStep), BigNumber.ROUND_DOWN);
 	if (info.dualType === DUAL_TYPE.DUAL_BASE) {
 		lessEarnVol = toBig(settleRatio).plus(1).times(sellVol); //dualViewInfo.strike);
@@ -1177,14 +1180,15 @@ export function calcDual(
 		// myLog('greaterEarnVol',toBig(settleRatio).plus(1).times(sellAmount ?sellAmount: 0)
 		// 	.times(info.strike).toFixed(buyToken.precision,BigNumber.ROUND_CEIL).toString(), greaterEarnVol.toString())
 		greaterEarnTokenSymbol = buyToken.symbol;
-		miniSellVol = dualMarket.baseLimitAmount; // rule.baseMin;
-		maxSellAmount = BigNumber.max(
+		miniSellVol = BigNumber.max(dualMarket.baseLimitAmount, rule.baseMin); // rule.baseMin;
+		quota = BigNumber.min(info.dualPrice.dualBid[ 0 ].baseQty, balance ? balance[ sellToken.symbol ]?.free : 0)
+		maxSellAmount = BigNumber.min(
 			rule.baseMax ? rule.baseMax : 0,
-			info.dualPrice.dualBid[ 0 ].baseQty,
-			balance ? balance[ sellToken.symbol ]?.free : 0
+			quota,
 		);
 		feeTokenSymbol = buyToken.symbol;
 		maxFeeBips = 5;
+		//info.dualPrice.dualBid[ 0 ].baseQty;
 	} else {
 		lessEarnVol = toBig(toBig(settleRatio).plus(1).times(sellAmount ? sellAmount : 0)
 			// .times(1 + info.ratio)
@@ -1196,11 +1200,13 @@ export function calcDual(
 		greaterEarnVol = toBig(settleRatio).plus(1).times(sellVol);
 		//.div(dualViewInfo.strike);
 		greaterEarnTokenSymbol = sellToken.symbol;
-		miniSellVol = dualMarket.quoteLimitAmount; // rule.baseMin;
-		maxSellAmount = BigNumber.max(
+		miniSellVol = BigNumber.max(dualMarket.quoteLimitAmount, rule.currencyMin); // rule.baseMin;
+
+		quota = BigNumber.min(fm.toBig(info.dualPrice.dualBid[ 0 ].baseQty).times(info.strike),
+			balance[ sellToken.symbol ].free);
+		maxSellAmount = BigNumber.min(
 			rule.currencyMax,
-			fm.toBig(info.dualPrice.dualBid[ 0 ].baseQty).times(info.strike),
-			balance[ sellToken.symbol ].free
+			quota
 		);
 		/** calc current maxFeeBips **/
 		feeTokenSymbol = buyToken.symbol;
@@ -1208,12 +1214,13 @@ export function calcDual(
 	}
 	myLog('settleRatio', settleRatio, lessEarnVol.toString(), greaterEarnVol.toString(), 'strike', info.strike,)
 	return {
+		quota: quota.toString(),
 		sellVol: sellVol.toString(),
 		lessEarnVol: lessEarnVol.toString(),
 		lessEarnTokenSymbol,
 		greaterEarnVol: greaterEarnVol.toString(),
 		greaterEarnTokenSymbol,
-		miniSellVol,
+		miniSellVol: miniSellVol.toString(),
 		sellToken,
 		maxSellAmount: maxSellAmount ? maxSellAmount?.toString() : "",
 		maxFeeBips: maxFeeBips,

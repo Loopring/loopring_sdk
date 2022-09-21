@@ -1,7 +1,7 @@
 import sha256 from "crypto-js/sha256";
 import * as abi from "ethereumjs-abi";
 import * as sigUtil from "eth-sig-util";
-import { EIP712TypedData } from "eth-sig-util";
+import { EIP712Message, EIP712TypedData, EIP712Types } from "eth-sig-util";
 
 import * as ethUtil from "ethereumjs-util";
 
@@ -41,6 +41,7 @@ import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
+import { keccak } from 'ethereumjs-util';
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -99,8 +100,8 @@ export async function generateKeyPair({
     const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
     // myLog("keyPair", keyPair)
 
-    const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)));
-    const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)));
+    const formatedPx = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyX)));
+    const formatedPy = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyY)));
     const sk = toHex(toBig(keyPair.secretKey));
 
     return {
@@ -1438,7 +1439,7 @@ export async function signNFTTransferWithDataStructureForContract(
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData));
-
+  myLog('hash', hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
 
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
@@ -1452,6 +1453,31 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
   };
 }
 
+
+export function eddsaSignWithDomain(domainHax: string, primaryType: string, message: EIP712Message, types: EIP712Types, eddsaKey: string) {
+  const parts = Buffer.concat([
+    Buffer.from('1901', 'hex'),
+    Buffer.from(domainHax, 'hex'),
+    sigUtil.TypedDataUtils.hashStruct(primaryType, message, types),
+  ])
+
+  const hash = keccak(parts).toString("hex");
+  myLog('hash', hash)
+  // ethUtil.keccak256(Buffer.concat(parts))
+  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
+
+  const signature = EDDSAUtil.sign(eddsaKey, sigHash);
+
+  // myLog('sigHash:', sigHash, ' signature:', signature)
+  return {
+    eddsaSig:
+      fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
+      fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
+      fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
+  };
+}
+
+
 export function getAmmJoinEcdsaTypedData(
   data: JoinAmmPoolRequest,
   patch: AmmPoolRequestPatch
@@ -1459,7 +1485,7 @@ export function getAmmJoinEcdsaTypedData(
   const message = {
     owner: data.owner,
     joinAmounts: [
-      data.joinTokens.pooled[0].volume,
+      data.joinTokens.pooled[ 0 ].volume,
       data.joinTokens.pooled[1].volume,
     ],
     joinStorageIDs: data.storageIds,
@@ -1503,8 +1529,14 @@ export function get_EddsaSig_JoinAmmPool(
   data: JoinAmmPoolRequest,
   patch: AmmPoolRequestPatch
 ) {
-  const typedData = getAmmJoinEcdsaTypedData(data, patch);
-  return eddsaSign(typedData, patch.eddsaKey);
+  if (data.domainSeparator) {
+    const typedData = getAmmJoinEcdsaTypedData(data, patch);
+    return eddsaSignWithDomain(data.domainSeparator,
+      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+  } else {
+    const typedData = getAmmJoinEcdsaTypedData(data, patch);
+    return eddsaSign(typedData, patch.eddsaKey);
+  }
 }
 
 export function getAmmExitEcdsaTypedData(
@@ -1556,8 +1588,15 @@ export function get_EddsaSig_ExitAmmPool(
   data: ExitAmmPoolRequest,
   patch: AmmPoolRequestPatch
 ) {
-  const typedData = getAmmExitEcdsaTypedData(data, patch);
-  return eddsaSign(typedData, patch.eddsaKey);
+  if (data.domainSeparator) {
+    const typedData = getAmmExitEcdsaTypedData(data, patch);
+    return eddsaSignWithDomain(data.domainSeparator,
+      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+  } else {
+    const typedData = getAmmExitEcdsaTypedData(data, patch);
+    return eddsaSign(typedData, patch.eddsaKey);
+  }
+
 }
 
 // export function getDefiEcdsaTypedData(

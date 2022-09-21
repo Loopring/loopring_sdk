@@ -268,6 +268,7 @@ export interface AmmPoolInfoV3 {
 	};
 	createdAt: string;
 	status: number;
+	domainSeparator: string;
 }
 
 export interface TokenRelatedInfo {
@@ -511,6 +512,7 @@ export interface JoinAmmPoolRequest {
 	validUntil?: number;
 	eddsaSignature?: string;
 	ecdsaSignature?: string;
+	domainSeparator?: string;
 }
 
 export interface JoinAmmPoolResult {
@@ -528,6 +530,7 @@ export interface ExitAmmPoolRequest {
 	validUntil?: number;
 	eddsaSignature?: string;
 	ecdsaSignature?: string;
+	domainSeparator?: string;
 }
 
 export interface ExitAmmPoolResult {
@@ -3394,6 +3397,7 @@ export interface DualOrderRequest {
 
 export type CalDualResult = {
 	sellVol: string;
+	quota: string;
 	lessEarnVol: string;
 	lessEarnTokenSymbol: string;
 	greaterEarnVol: string;
