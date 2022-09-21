@@ -42,6 +42,7 @@ import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
 import { keccak } from 'ethereumjs-util';
+import { lte } from "lodash";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -1439,7 +1440,7 @@ export async function signNFTTransferWithDataStructureForContract(
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData));
-  myLog('hash', hash)
+  myLog('eddsaSign',hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
 
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
@@ -1455,14 +1456,11 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
 
 
 export function eddsaSignWithDomain(domainHax: string, primaryType: string, message: EIP712Message, types: EIP712Types, eddsaKey: string) {
-  const parts = Buffer.concat([
-    Buffer.from('1901', 'hex'),
-    Buffer.from(domainHax, 'hex'),
-    sigUtil.TypedDataUtils.hashStruct(primaryType, message, types),
-  ])
-
-  const hash = keccak(parts).toString("hex");
-  myLog('hash', hash)
+  const parts = [Buffer.from('1901', 'hex')]
+  parts.push(Buffer.from(domainHax.slice(2),'hex'));
+  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types)); 
+  const hash =fm.toHex(ethUtil.sha3(Buffer.concat(parts)));
+  myLog('eddsaSignWithDomain',hash,Buffer.from('1901', 'hex'))
   // ethUtil.keccak256(Buffer.concat(parts))
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
 
