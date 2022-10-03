@@ -170,7 +170,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 const makeObjectStr = (request: Map<string, any>) => {
   const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt).replace(/'/ig, "%27");
+  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape); //replace(/'/ig, "%27")
 };
 
 export function getEdDSASig(

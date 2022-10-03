@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BaseAPI } from "./base_api";
-import { LOOPRING_URLs } from "../defs";
+import { CollectionMeta, LOOPRING_URLs, RESULT_INFO } from "../defs";
 import {
   ChainId,
   ConnectorError,
@@ -510,4 +510,35 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
+  public async getPublicCollectionById<R extends CollectionMeta>(request: { id: string }): Promise<({ raw_data: R } & CollectionMeta) | RESULT_INFO> {
+    try {
+
+      const reqParams: ReqParams = {
+        sigFlag: SIG_FLAG.NO_SIG,
+        queryParams: request,
+        url: LOOPRING_URLs.GET_NFT_COLLECTION_PUBLISH,
+        method: ReqMethod.GET,
+      };
+      const raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      const result = raw_data as CollectionMeta;
+      return {
+        ...result,
+        raw_data,
+      };
+    } catch (err) {
+      return {
+        ...err as any,
+        code: exports.LoopringErrorCode.SKD_UNKNOW
+      };
+    }
+
+  }
 }
+
+
+

@@ -13,7 +13,7 @@ import {
 	SIG_FLAG,
 	LOOPRING_URLs,
 	SigPatchField,
-	RESULT_INFO, DualPrice,
+	RESULT_INFO, DualPrice, DualUserLockedRequest, DUAL_TYPE,
 
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
@@ -454,6 +454,33 @@ export class DefiAPI extends BaseAPI {
 		const raw_data = (await this.makeReq().request(reqParams)).data;
 		return this.returnTxHash(raw_data);
 
+	}
+
+	public async getDualUserLocked({
+		                               lockTag = [
+			                               DUAL_TYPE.DUAL_BASE,
+			                               DUAL_TYPE.DUAL_CURRENCY
+		                               ], ...request
+	                               }: loopring_defs.DualUserLockedRequest, apiKey: string) {
+		const reqParams: loopring_defs.ReqParams = {
+			url: LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
+			queryParams: {request, lockTag: lockTag.join(",")},
+			apiKey,
+			method: ReqMethod.GET,
+			sigFlag: SIG_FLAG.NO_SIG,
+		};
+		const raw_data = (await this.makeReq().request(reqParams)).data;
+		if (raw_data?.resultInfo) {
+			return {
+				...raw_data?.resultInfo,
+			};
+		}
+
+		return {
+			lockRecord: raw_data.lockRecord,
+			raw_data
+		};
+		return
 	}
 
 }
