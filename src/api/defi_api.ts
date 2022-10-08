@@ -463,8 +463,8 @@ export class DefiAPI extends BaseAPI {
 		                               ], ...request
 	                               }: loopring_defs.DualUserLockedRequest, apiKey: string) {
 		const reqParams: loopring_defs.ReqParams = {
-			url: LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
-			queryParams: {request, lockTag: lockTag.join(",")},
+			url: LOOPRING_URLs.GET_DUAL_USER_LOCKED,
+			queryParams: {...request, lockTag: lockTag.join(",")},
 			apiKey,
 			method: ReqMethod.GET,
 			sigFlag: SIG_FLAG.NO_SIG,
