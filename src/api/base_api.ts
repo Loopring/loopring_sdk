@@ -4,7 +4,7 @@ import {
   ConnectorNames,
   CounterFactualInfo,
   GetAvailableBrokerRequest,
-  GetCounterFactualInfoRequest,
+  GetCounterFactualInfoRequest, LOOPRING_URLs,
   LoopringErrorCode,
   ReqMethod,
   ReqParams,
@@ -26,7 +26,6 @@ import { addHexPrefix, toBuffer, toHex } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
-import { LOOPRING_URLs } from "../defs/url_defs";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +
@@ -82,9 +81,13 @@ export class BaseAPI {
       raw_data,
     };
   }
-  private timeout: number;
 
-  public constructor(param: InitParam, timeout: number = 6000) {
+  private timeout: number;
+  private baseUrlMap: { [ key: number ]: string } | undefined;
+
+
+  public constructor(param: InitParam, timeout: number = 6000, baseUrlMap =
+    {[ ChainId.MAINNET ]: "https://api3.loopring.io", [ ChainId.GOERLI ]: "https://uat2.loopring.io"}) {
     if (param.baseUrl) {
       this.baseUrl = param.baseUrl;
     } else if (param.chainId !== undefined) {
@@ -92,6 +95,7 @@ export class BaseAPI {
     } else {
       this.setChainId(ChainId.GOERLI);
     }
+    this.baseUrlMap = baseUrlMap;
     this.timeout = timeout;
   }
 
@@ -143,7 +147,7 @@ export class BaseAPI {
   }
 
   public setChainId(chainId: ChainId) {
-    this.baseUrl = getBaseUrlByChainId(chainId);
+    this.baseUrl = this.baseUrlMap && this.baseUrlMap[ 0 ] ? getBaseUrlByChainId(chainId, this.baseUrlMap as any) : getBaseUrlByChainId(chainId);
     this.chainId = chainId;
   }
 
@@ -306,21 +310,21 @@ export async function ecRecover2(
   );
 }
 
-const getBaseUrlByChainId = (id: ChainId) => {
+const getBaseUrlByChainId = (id: ChainId, baseUrlMap = {
+  [ ChainId.MAINNET ]: "https://api3.loopring.io",
+  [ ChainId.GOERLI ]: "https://uat2.loopring.io"
+}) => {
   let baseUrl = "";
-
   switch (id) {
     case ChainId.MAINNET:
-      baseUrl = "https://api.loopring.network";
+      baseUrl = baseUrlMap[ ChainId.MAINNET ];
       break;
     default:
-      baseUrl = "https://uat2.loopring.io";
+      baseUrl = baseUrlMap[ ChainId.GOERLI ];
       break;
   }
-
   return baseUrl;
 };
-
 /**
  * @default chainId 1
  * @default keySeed `Sign this message to access Loopring exchange: ${exchangeAddress} with key nonce: ${nonce}`

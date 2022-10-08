@@ -1,8 +1,7 @@
 import sha256 from "crypto-js/sha256";
 import * as abi from "ethereumjs-abi";
 import * as sigUtil from "eth-sig-util";
-import { EIP712TypedData } from "eth-sig-util";
-import { jubjub } from "./poseidon/jubjub";
+import { EIP712Message, EIP712TypedData, EIP712Types } from "eth-sig-util";
 
 import * as ethUtil from "ethereumjs-util";
 
@@ -35,13 +34,15 @@ import {
   NFTOrderRequestV3,
   NFTTokenAmountInfo,
   NFTTradeRequestV3,
-  SubmitOrderRequestV3,
+  SubmitOrderRequestV3, DualOrderRequest,
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
+import { keccak } from 'ethereumjs-util';
+import { lte } from "lodash";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -100,8 +101,8 @@ export async function generateKeyPair({
     const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
     // myLog("keyPair", keyPair)
 
-    const formatedPx = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyX)));
-    const formatedPy = fm.formatEddsaKey(toHex(toBig(keyPair.publicKeyY)));
+    const formatedPx = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyX)));
+    const formatedPy = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyY)));
     const sk = toHex(toBig(keyPair.secretKey));
 
     return {
@@ -137,7 +138,7 @@ const makeRequestParamStr = (request: Map<string, any>) => {
   }
 
   // force to change encode ',' due to different encode rules between server and client
-  return encodeURIComponent(paramlist.join("&")).replace("%2C", "%252C");
+  return encodeURIComponent(paramlist.join("&")).replace(/%2C/g, "%252C");
 };
 
 //submitOrderV3
@@ -169,7 +170,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 const makeObjectStr = (request: Map<string, any>) => {
   const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt);
+  return encodeURIComponent(jsonTxt).replace(/'/ig, "%27");
 };
 
 export function getEdDSASig(
@@ -194,6 +195,7 @@ export function getEdDSASig(
   const uri = encodeURIComponent(`${basePath}${api_url}`);
 
   const message = `${method}&${uri}&${params}`;
+  myLog("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
@@ -233,6 +235,7 @@ export const getEdDSASigWithPoseidon = (
     bigIntInputs.push(BigNumber.from(input));
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams);
+  // myLog("getEdDSASigWithPoseidon", hash.toHexString(), bigIntInputs);
   return {
     hash,
     result: genSigWithPadding(PrivateKey, hash),
@@ -377,6 +380,11 @@ export async function getEcDSASig(
       }
       throw new Error(signature.error);
     case GetEcDSASigType.Contract:
+      // TODO:
+      hash = sigUtil.TypedDataUtils.sign(typedData);
+      hash = fm.toHex(hash);
+      myLog("Contract Contract hash", hash);
+
       signEip712Result = await signEip712WalletConnect(
         web3,
         address as string,
@@ -1021,6 +1029,29 @@ export function get_EddsaSig_NFT_Order(
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
 
+
+export function get_EddsaSig_Dual_Order(
+  request: DualOrderRequest,
+  eddsaKey: string
+) {
+  const inputs = [
+    new BN(ethUtil.toBuffer(request.exchange)).toString(),
+    request.storageId,
+    request.accountId,
+    request.sellToken.tokenId,
+    request.buyToken.tokenId,
+    request.sellToken.volume,
+    request.buyToken.volume,
+    request.validUntil,
+    request.maxFeeBips,
+    request.fillAmountBOrS ? 1 : 0,
+    0,
+  ];
+
+  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+}
+
+
 export async function signNFTMintWithDataStructure(
   web3: Web3,
   owner: string,
@@ -1409,7 +1440,7 @@ export async function signNFTTransferWithDataStructureForContract(
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData));
-
+  myLog('eddsaSign',hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
 
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
@@ -1423,6 +1454,28 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
   };
 }
 
+
+export function eddsaSignWithDomain(domainHax: string, primaryType: string, message: EIP712Message, types: EIP712Types, eddsaKey: string) {
+  const parts = [Buffer.from('1901', 'hex')]
+  parts.push(Buffer.from(domainHax.slice(2),'hex'));
+  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types)); 
+  const hash =fm.toHex(ethUtil.sha3(Buffer.concat(parts)));
+  myLog('eddsaSignWithDomain',hash,Buffer.from('1901', 'hex'))
+  // ethUtil.keccak256(Buffer.concat(parts))
+  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
+
+  const signature = EDDSAUtil.sign(eddsaKey, sigHash);
+
+  // myLog('sigHash:', sigHash, ' signature:', signature)
+  return {
+    eddsaSig:
+      fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
+      fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
+      fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
+  };
+}
+
+
 export function getAmmJoinEcdsaTypedData(
   data: JoinAmmPoolRequest,
   patch: AmmPoolRequestPatch
@@ -1430,7 +1483,7 @@ export function getAmmJoinEcdsaTypedData(
   const message = {
     owner: data.owner,
     joinAmounts: [
-      data.joinTokens.pooled[0].volume,
+      data.joinTokens.pooled[ 0 ].volume,
       data.joinTokens.pooled[1].volume,
     ],
     joinStorageIDs: data.storageIds,
@@ -1474,8 +1527,14 @@ export function get_EddsaSig_JoinAmmPool(
   data: JoinAmmPoolRequest,
   patch: AmmPoolRequestPatch
 ) {
-  const typedData = getAmmJoinEcdsaTypedData(data, patch);
-  return eddsaSign(typedData, patch.eddsaKey);
+  if (data.domainSeparator) {
+    const typedData = getAmmJoinEcdsaTypedData(data, patch);
+    return eddsaSignWithDomain(data.domainSeparator,
+      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+  } else {
+    const typedData = getAmmJoinEcdsaTypedData(data, patch);
+    return eddsaSign(typedData, patch.eddsaKey);
+  }
 }
 
 export function getAmmExitEcdsaTypedData(
@@ -1527,6 +1586,69 @@ export function get_EddsaSig_ExitAmmPool(
   data: ExitAmmPoolRequest,
   patch: AmmPoolRequestPatch
 ) {
-  const typedData = getAmmExitEcdsaTypedData(data, patch);
-  return eddsaSign(typedData, patch.eddsaKey);
+  if (data.domainSeparator) {
+    const typedData = getAmmExitEcdsaTypedData(data, patch);
+    return eddsaSignWithDomain(data.domainSeparator,
+      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+  } else {
+    const typedData = getAmmExitEcdsaTypedData(data, patch);
+    return eddsaSign(typedData, patch.eddsaKey);
+  }
+
 }
+
+// export function getDefiEcdsaTypedData(
+//   data: DefiOrderRequest,
+//   patch: DefiRequestPatch
+// ) {
+//   const message: any = {
+//     owner: data.owner,
+//     burnAmount: data.exitTokens.burned.volume,
+//     burnStorageID: data.storageId,
+//     exitMinAmounts: [
+//       data.exitTokens.unPooled[0].volume,
+//       data.exitTokens.unPooled[1].volume,
+//     ],
+//     fee: data.maxFee,
+//     validUntil: data.validUntil,
+//   };
+//
+//   const typedData: EIP712TypedData = {
+//     types: {
+//       EIP712Domain: [
+//         { name: "name", type: "string" },
+//         { name: "version", type: "string" },
+//         { name: "chainId", type: "uint256" },
+//         { name: "verifyingContract", type: "address" },
+//       ],
+//       DefiOrder: [
+//         { name: "exchange", type: "address" },
+//         { name: "storageId", type: "uint96" },
+//         { name: "accountId", type: "uint32" },
+//         { name: "sellToken.tokenId", type: "uint16" },
+//         { name: "buyToken.tokenId", type: "uint16" },
+//         { name: "sellToken.volume", type: "uint96" },
+//         { name: "buyToken.volume", type: "uint96" },
+//         { name: "validUntil", type: "uint32" },
+//         { name: "maxFeeBips", type: "uint32" },
+//         { name: "fillAmountBOrS", type: "uint32" },
+//         { nane: "taker", type: "uint32" },
+//       ],
+//     },
+//     primaryType: "DefiOrder",
+//     domain: {
+//       name: patch.ammName,
+//       version: "1.0.0",
+//       chainId: patch.chainId,
+//       verifyingContract: patch.poolAddress,
+//     },
+//     message: message,
+//   };
+//   return typedData;
+// }
+// export function get_EddsaSig_Defi(request: DefiOrderRequest, eddsaKey: string) {
+//
+//   myLog('get_EddsaSig_Defi input',inputs)
+//   return getEdDSASigWithPoseidon(inputs, eddsaKey);
+//   // return eddsaSign(typedData, patch.eddsaKey);
+// }

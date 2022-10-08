@@ -3,7 +3,7 @@
 ### Overview
 
 - [Introduction](README.md)
-- [Changelog](ChangeLog.md)
+- [Changelog](Changelog.md)
 - [GitHub](https://github.com/Loopring/loopring_sdk)
 
 ### SDKs demo
@@ -27,26 +27,14 @@
     - [Transfer](./js_sdk/transfer/transferNFT.md)
     - [Withdraw](./js_sdk/withdraw/withdrawNFT.md)
     - [Mint](./js_sdk/NFTAction/metaNFT.md)
+    - [Collection](./js_sdk/NFTAction/collectionNFT.md)
     - [Deploy](./js_sdk/NFTAction/deployNFT.md)
     - [Trade](./js_sdk/NFTAction/tradeNFT.md)
       - [Validate Order](./js_sdk/NFTAction/validateNFTOrder.md)
-  
-  
-### more detail
-- class
-  - [AmmpoolAPI](./detail/classes/AmmpoolAPI.md)
-  - [ExchangeAPI](./detail/classes/ExchangeAPI.md)
-  - [NFTAPI](./detail/classes/NFTAPI.md)
-  - [UserAPI](./detail/classes/UserAPI.md)
-  - [WalletAPI](./detail/classes/WalletAPI.md)
-  - [WhitelistedUserAPI](./detail/classes/WhitelistedUserAPI.md)
-  - [WsAPI](./detail/classes/WsAPI.md)
-
-- [Read More](./detail/modules.md)
 
 ### Links
 
 - [Python](https://github.com/Loopring/hello_loopring)
 - [APIs](https://docs.loopring.io/en/)
 - [About us](https://loopring.org/#/)
-- [Submit a Request](https://loopring.io/#/newticket)
+- [Submit a Request](https://desk.zoho.com/portal/loopring/en/newticket)

@@ -1,7 +1,5 @@
 import { IsMobile, LoopringErrorCode } from "../defs";
 // import fetch from "node-fetch";
-import { CID } from "multiformats/cid";
-import { base16 } from "multiformats/bases/base16";
 
 import {
   addHexPrefix,
@@ -30,9 +28,6 @@ import {
 import * as fm from "../utils/formatter";
 import { BigNumber } from "bignumber.js";
 import { LOOPRING_EXPORTED_ACCOUNT, web3 } from "./MockData";
-import BN from "bn.js";
-import { myLog } from "../utils/log_tools";
-import { bytes } from "multiformats";
 const NUMBER = 40244024;
 const BUFFER = Buffer.from("40244024", "utf8");
 const BIG_NUMBER = new BigNumber(123.4567);

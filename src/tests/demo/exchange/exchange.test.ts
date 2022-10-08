@@ -66,7 +66,9 @@ describe("exchangeMain", function () {
   it(
     "getAvailableBroker",
     async () => {
-      const result = await LoopringAPI.exchangeAPI.getAvailableBroker();
+      const result = await LoopringAPI.exchangeAPI.getAvailableBroker({
+        type: 0,
+      });
       console.log(result);
     },
     DEFAULT_TIMEOUT

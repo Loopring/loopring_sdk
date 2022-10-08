@@ -2,10 +2,12 @@ import { BaseAPI, personalSign } from "./base_api";
 import { isContract } from "./contract_api";
 import * as loopring_defs from "../defs/loopring_defs";
 import {
+  ContractType,
   GetUserTradesRequest,
   Guardian,
   HebaoOperationLog,
   LockHebaoHebaoParam,
+  ModuleType,
   Protector,
   ReqParams,
   WalletType,
@@ -23,6 +25,7 @@ import { sendRawTx } from "./contract_api";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import * as ethUtil from "ethereumjs-util";
+import { LoopringAPI } from "../tests/MockData";
 
 export class WalletAPI extends BaseAPI {
   /*
@@ -83,7 +86,7 @@ export class WalletAPI extends BaseAPI {
   //     ["bytes32", "address", "uint256", "address"],
   //     [RECOVER_TYPEHASH, request.wallet, request.validUntil, newOwner]
   //   );
-  private getApproveTypedData(
+  private getApproveRecoverTypedData(
     chainId: ChainId,
     guardiaContractAddress: any,
     wallet: any,
@@ -119,14 +122,13 @@ export class WalletAPI extends BaseAPI {
     };
     return typedData;
   }
-
-  private getApproveTypedV2Data(
+  public getApproveRecoverV2TypedData(
     chainId: ChainId,
     guardiaContractAddress: any,
     wallet: any,
     validUntil: any,
     newOwner: any,
-    guardiansHash: Buffer
+    newGuardians: Buffer | any
   ) {
     const typedData = {
       types: {
@@ -140,7 +142,7 @@ export class WalletAPI extends BaseAPI {
           { name: "wallet", type: "address" },
           { name: "validUntil", type: "uint256" },
           { name: "newOwner", type: "address" },
-          { name: "guardiansHash", type: "string" },
+          { name: "newGuardians", type: "string" },
         ],
       },
       domain: {
@@ -154,7 +156,7 @@ export class WalletAPI extends BaseAPI {
         wallet: wallet,
         validUntil: validUntil,
         newOwner: newOwner,
-        guardiansHash: guardiansHash,
+        newGuardians: newGuardians,
       },
     };
     return typedData;
@@ -248,26 +250,32 @@ export class WalletAPI extends BaseAPI {
     guardian: Guardian,
     chainId: ChainId,
     newOwner = "",
-    guardiansHash: undefined | Buffer | any = undefined
+    newGuardians: undefined | Buffer | any = undefined,
+    masterCopy: undefined | string = undefined,
+    forwarderModuleAddress: undefined | string = undefined
   ) {
     let typedData;
-    if (!guardiansHash) {
-      typedData = this.getApproveTypedData(
+    myLog("forwarderModuleAddress", forwarderModuleAddress);
+
+    if (forwarderModuleAddress) {
+      typedData = this.getApproveRecoverTypedData(
         chainId,
-        guardian,
+        forwarderModuleAddress,
         guardian.signedRequest.wallet,
         guardian.signedRequest.validUntil,
         newOwner
       );
+      myLog("typedData", typedData);
     } else {
-      typedData = this.getApproveTypedV2Data(
+      typedData = this.getApproveRecoverV2TypedData(
         chainId,
-        guardian,
+        masterCopy,
         guardian.signedRequest.wallet,
         guardian.signedRequest.validUntil,
         newOwner,
-        guardiansHash
+        newGuardians
       );
+      myLog("typedData", typedData);
     }
 
     const result = await getEcDSASig(
@@ -283,16 +291,22 @@ export class WalletAPI extends BaseAPI {
     );
     return { sig: result.ecdsaSig };
   }
-
-  private encodeAddressesPacked(addrs: string[]) {
+  //TODO UT is setPublic
+  public encodeAddressesPacked(addrs: string[]) {
     const addrsBs = Buffer.concat(
-      addrs.map((a) => Buffer.from("00".repeat(12) + a.slice(2), "hex"))
+      addrs.map((a) => {
+        return Buffer.from("00".repeat(12) + a.slice(2), "hex");
+      })
     );
+    myLog("addrsBs", addrsBs.toString());
     return addrsBs;
   }
   public async submitApproveSignature<R extends any, T extends string>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
-    isContract1XAddress?: boolean
+    guardians: string[] = [],
+    isContract1XAddress?: boolean,
+    masterCopy?: string,
+    forwarderModuleAddress: string = ""
   ): Promise<{
     hash: string | undefined;
     raw_data: R;
@@ -346,19 +360,33 @@ export class WalletAPI extends BaseAPI {
     } else {
       const isContractCheck = await isContract(web3, request.signer);
       if (isContractCheck) {
-        const newOwner =
-          guardian.businessDataJson && guardian.businessDataJson.newOwner
-            ? guardian.businessDataJson.newOwner
-            : "";
-        const guardiansBs = this.encodeAddressesPacked([]);
+        let newOwner = undefined,
+          newGuardians = [];
+
+        guardian.businessDataJson.value.value.newOwner
+          ? guardian.businessDataJson.value.value.newOwner
+          : 0;
+        if (
+          guardian.businessDataJson &&
+          guardian.businessDataJson.value &&
+          guardian.businessDataJson.value.value
+        ) {
+          newOwner = guardian.businessDataJson.value.value.newOwner;
+          newGuardians = guardian.businessDataJson.value.value.newGuardians;
+        }
+        const guardiansBs = this.encodeAddressesPacked(newGuardians);
         const guardiansHash = ethUtil.keccak(guardiansBs);
+        // const guardiansBs =
+        //   LoopringAPI.walletAPI.encodeAddressesPacked(guardian.businessDataJson.value.value.newGuardians);
         const result = await this.signHebaoApproveWithDataStructureForContract(
           web3,
           request.signer,
           guardian,
           chainId,
           newOwner,
-          isContract1XAddress ? undefined : guardiansHash
+          isContract1XAddress ? undefined : guardiansHash,
+          isContract1XAddress ? undefined : masterCopy,
+          forwarderModuleAddress ? undefined : forwarderModuleAddress
         );
         ecdsaSignature = result.sig;
       } else {
@@ -448,6 +476,65 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
+  public async getContractType<T = ContractType>({
+    wallet,
+    network = "eThereum",
+  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+    contractType: T | undefined;
+    raw_data: T;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_WALLET_CONTRACTVERSION,
+      queryParams: {
+        wallet,
+      },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    let contractType: T | undefined;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    } else {
+      contractType = raw_data.data[0];
+    }
+    return {
+      contractType,
+      raw_data,
+    };
+  }
+
+  public async getWalletModules<T = ModuleType>({
+    wallet,
+    network = "eThereum",
+  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+    walletModule: T | undefined;
+    raw_data: T;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_WALLET_MODULES,
+      queryParams: {
+        wallet,
+      },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    let walletModule: T | undefined;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    } else {
+      walletModule = raw_data.data[0];
+    }
+    return {
+      walletModule,
+      raw_data,
+    };
+  }
   public async getEnsByAddress<R extends any, T extends string>(
     request: loopring_defs.GetEnsNameRequest
   ): Promise<{

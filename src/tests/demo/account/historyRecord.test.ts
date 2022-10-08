@@ -55,7 +55,7 @@ describe("historyRecord", function () {
           types: [
             sdk.UserTxTypes.DEPOSIT,
             sdk.UserTxTypes.TRANSFER,
-            sdk.UserTxTypes.ONCHAIN_WITHDRAWAL,
+            sdk.UserTxTypes.OFFCHAIN_WITHDRAWAL,
           ],
         },
         apiKey

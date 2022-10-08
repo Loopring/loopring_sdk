@@ -8,10 +8,10 @@ import {
   DelegateAPI,
   GlobalAPI,
   WhitelistedUserAPI,
+  DefiAPI,
 } from "../api";
 import Web3 from "web3";
 import * as sdk from "../index";
-import * as ContractAPI from "../api/contract_api";
 import { EIP712TypedData } from "eth-sig-util";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 /***
@@ -59,6 +59,7 @@ export const LoopringAPI = {
   wsAPI: new WsAPI({ chainId }),
   whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
   nftAPI: new NFTAPI({ chainId }),
+  defiAPI: new DefiAPI({ chainId }),
   delegate: new DelegateAPI({ chainId }),
   __chainId__: chainId,
 };
