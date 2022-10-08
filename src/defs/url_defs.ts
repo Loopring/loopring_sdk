@@ -70,6 +70,8 @@ export enum LOOPRING_URLs {
   GET_LIQUIDITY_MINING_USER_HISTORY = "/api/v2/sidecar/liquidityMiningUserHistory",
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
+  GET_ASSET_LOCK_RECORDS = "api/v3/user/lockRecords",
+
 
   GET_DEFI_TOKENS = "/api/v3/defi/tokens",
   GET_DEFI_MARKETS = "/api/v3/defi/markets",
@@ -112,10 +114,13 @@ export enum LOOPRING_URLs {
   POST_NFT_TRADE = "/api/v3/nft/trade",
   POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
   POST_NFT_CREATE_COLLECTION = "/api/v3/nft/collection",
+  POST_NFT_EDIT_COLLECTION = "/api/v3/nft/collection/edit",
   POST_NFT_VALIDATE_REFRESH_NFT = "/api/v3/nft/image/refresh",
   POST_DEPLOY_COLLECTION = "/api/v3/collection/deployTokenAddress",
   GET_NFT_COLLECTION = "/api/v3/nft/collection",
   GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
+  GET_NFT_COLLECTION_PUBLISH = "api/v3/nft/public/collection",
+
 
   // POST_NFT_COLLECTION = "/api/v3/collection/createCollection",
   // GET_NFT_COLLECTIONS = "/api/v3/nft/collections",
@@ -140,6 +145,7 @@ export enum LOOPRING_URLs {
   GET_DUAL_BALANCE = "/api/v3/dual/balance",
   GET_DUAL_RULE = "/api/v3/dual/rules",
   POST_DUAL_ORDER = "/api/v3/dual/order",
+  GET_DUAL_USER_LOCKED = "/api/v3/dual/lockRecordAmount",
 
 }
 

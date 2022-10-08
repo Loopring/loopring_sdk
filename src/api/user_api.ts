@@ -442,7 +442,7 @@ export class UserAPI extends BaseAPI {
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-        userBalances[item.tokenId] = item;
+        userBalances[ item.tokenId ] = item;
       });
     }
 
@@ -451,6 +451,44 @@ export class UserAPI extends BaseAPI {
       raw_data,
     };
   }
+
+
+  public async getAssetLookRecords<R>(
+    request: loopring_defs.GetUserBalancesRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_ASSET_LOCK_RECORDS,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
+      {};
+
+    if (raw_data instanceof Array) {
+      raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
+        userBalances[ item.tokenId ] = item;
+      });
+    }
+
+    return {
+      userBalances,
+      raw_data,
+    };
+  }
+
 
   /*
    * Returns user's deposit records.
@@ -1712,6 +1750,41 @@ export class UserAPI extends BaseAPI {
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo
+      };
+    }
+
+    return {
+      raw_data,
+      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress
+    };
+  }
+
+
+  async submitEditNFTCollection<R>(
+    req: Omit<CollectionBasicMeta, 'nftFactory'> & { collectionId: string },
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string,
+  ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
+
+    // const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
+    const dataToSig: Map<string, any> = sortObjDictionary(req)
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
       method: ReqMethod.POST,

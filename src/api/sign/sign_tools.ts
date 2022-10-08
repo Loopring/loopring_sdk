@@ -170,7 +170,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 const makeObjectStr = (request: Map<string, any>) => {
   const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt).replace(/'/ig, "%27");
+  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape); //replace(/'/ig, "%27")
 };
 
 export function getEdDSASig(
@@ -1442,10 +1442,7 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData));
   myLog('eddsaSign',hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
-
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
-
-  // myLog('sigHash:', sigHash, ' signature:', signature)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
@@ -1460,13 +1457,8 @@ export function eddsaSignWithDomain(domainHax: string, primaryType: string, mess
   parts.push(Buffer.from(domainHax.slice(2),'hex'));
   parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types)); 
   const hash =fm.toHex(ethUtil.sha3(Buffer.concat(parts)));
-  myLog('eddsaSignWithDomain',hash,Buffer.from('1901', 'hex'))
-  // ethUtil.keccak256(Buffer.concat(parts))
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
-
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
-
-  // myLog('sigHash:', sigHash, ' signature:', signature)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +

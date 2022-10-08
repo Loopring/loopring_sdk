@@ -400,6 +400,7 @@ export async function personalSign(
             if (
               typeof window !== "undefined" &&
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
+
               isMobile &&
               // Mobile directory connect will sign ConnectorNames as MetaMask only
               walletType === ConnectorNames.MetaMask
@@ -412,28 +413,23 @@ export async function personalSign(
                   (item) => item.toLowerCase() === account.toLowerCase()
                 )
               ) {
-                return resolve({ sig: result });
+                return resolve({sig: result});
               }
             }
             myLog("ecRecover before", msg, result);
+
             // Valid: 3. EOA signature Valid by ecRecover
-            const valid: any = await ecRecover(web3, account, msg, result);
-            myLog("ecRecover after", valid.result);
-            if (valid.result) {
-              return resolve({ sig: result });
+            if (web3?.currentProvider?.isWalletLink && web3?.currentProvider?.isConnected) {
+              account === web3.currentProvider?.selectedAddress;
+              return resolve({sig: result});
+            } else {
+              const valid: any = await ecRecover(web3, account, msg, result);
+              myLog("ecRecover after", valid.result);
+              if (valid.result) {
+                return resolve({sig: result});
+              }
             }
 
-            // // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
-            // const walletValid: any = await contractWalletValidate(
-            //   web3,
-            //   account,
-            //   msg,
-            //   result
-            // );
-            //
-            // if (walletValid.result) {
-            //   return resolve({ sig: result });
-            // }
 
             // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(

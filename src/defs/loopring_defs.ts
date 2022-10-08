@@ -852,6 +852,20 @@ export interface GetUserBalancesRequest {
 	tokens: string;
 }
 
+// export interface GetUserBalancesRequest {
+// 	accountId: number;
+// 	tokens: string;
+// 	*accountId		10106
+// 	*tokenId		1
+// 	*status		10106
+// 	*lockTag		DUAL_CURRENCY,DUAL_BASE
+// 	offset		3
+// 	limit
+// 	hash
+// 	delegatorAccountId
+// 	start
+// }
+
 export interface UserBalanceInfo {
 	tokenId: number;
 	total: string;
@@ -3132,6 +3146,7 @@ export type  CollectionExtendsKey = {
 	id?: string,
 	contractAddress: string,
 	isPublic: boolean,
+	isMintable: boolean,
 	deployStatus: DEPLOYMENT_STATUS,
 	isCounterFactualNFT: boolean,
 	updatedAt: number,
@@ -3409,4 +3424,10 @@ export type CalDualResult = {
 	maxFeeBips: number;
 	sellToken: TokenInfo;
 };
+
+
+export interface DualUserLockedRequest {
+	accountId: number,
+	lockTag: DUAL_TYPE[],
+}
 
