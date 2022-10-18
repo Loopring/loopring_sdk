@@ -18,6 +18,7 @@ import {
   CollectionExtendsKey,
   CollectionBasicMeta,
   OriginDeployCollectionRequestV3WithPatch,
+  GetUserNFTBalancesByCollectionRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -25,7 +26,7 @@ import * as loopring_defs from "../defs/loopring_defs";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
-import { sortObjDictionary } from '../utils';
+import { sortObjDictionary } from "../utils";
 
 export class UserAPI extends BaseAPI {
   /*
@@ -442,7 +443,7 @@ export class UserAPI extends BaseAPI {
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-        userBalances[ item.tokenId ] = item;
+        userBalances[item.tokenId] = item;
       });
     }
 
@@ -451,7 +452,6 @@ export class UserAPI extends BaseAPI {
       raw_data,
     };
   }
-
 
   public async getAssetLookRecords<R>(
     request: loopring_defs.GetUserBalancesRequest,
@@ -479,7 +479,7 @@ export class UserAPI extends BaseAPI {
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-        userBalances[ item.tokenId ] = item;
+        userBalances[item.tokenId] = item;
       });
     }
 
@@ -488,7 +488,6 @@ export class UserAPI extends BaseAPI {
       raw_data,
     };
   }
-
 
   /*
    * Returns user's deposit records.
@@ -1608,8 +1607,12 @@ export class UserAPI extends BaseAPI {
    * Submit NFTAction 55544555555555555555555545555 request
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
-	  req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
-	  options?: { accountId?: number; counterFactualInfo?: any, _noEcdsa?: boolean }
+    req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
+    options?: {
+      accountId?: number;
+      counterFactualInfo?: any;
+      _noEcdsa?: boolean;
+    }
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
@@ -1620,9 +1623,9 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
-    const {accountId, counterFactualInfo, _noEcdsa}: any = options
+    const { accountId, counterFactualInfo, _noEcdsa }: any = options
       ? options
-      : {accountId: 0};
+      : { accountId: 0 };
     if (request.counterFactualNftInfo === undefined) {
       request.counterFactualNftInfo = {
         nftFactory: NFTFactory[chainId],
@@ -1714,7 +1717,6 @@ export class UserAPI extends BaseAPI {
           };
         }
       }
-
     }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
@@ -1738,16 +1740,16 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
-
   async submitNFTCollection<R>(
-	  req: CollectionBasicMeta,
-	  chainId: ChainId,
-	  apiKey: string,
-	  eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
-
-    const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
-    const dataToSig: Map<string, any> = sortObjDictionary(_req)
+    req: CollectionBasicMeta,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
+    const _req = req.nftFactory
+      ? req
+      : { ...req, nftFactory: NFTFactory_Collection[chainId] };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -1761,28 +1763,34 @@ export class UserAPI extends BaseAPI {
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
       return {
-        ...raw_data.resultInfo
+        ...raw_data.resultInfo,
       };
     }
 
     return {
       raw_data,
-      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress
+      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
     };
   }
 
-
   async submitEditNFTCollection<R>(
-    req: Omit<CollectionBasicMeta, 'nftFactory'> & { collectionId: string },
+    req: Omit<CollectionBasicMeta, "nftFactory" | "owner"> & {
+      collectionId: string;
+      accountId: number;
+    },
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R, contractAddress: string }> {
-
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
     // const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
-    const dataToSig: Map<string, any> = sortObjDictionary(req)
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -1796,22 +1804,26 @@ export class UserAPI extends BaseAPI {
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
       return {
-        ...raw_data.resultInfo
+        ...raw_data.resultInfo,
       };
     }
 
     return {
       raw_data,
-      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress
+      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
     };
   }
 
-
   /*
- * Submit NFTAction Deploy request
- */
+   * Submit NFTAction Deploy request
+   */
   public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
@@ -1825,10 +1837,10 @@ export class UserAPI extends BaseAPI {
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
-    const {accountId, counterFactualInfo}: any = options
+    const { accountId, counterFactualInfo }: any = options
       ? options
-      : {accountId: 0};
-    const {transfer} = request;
+      : { accountId: 0 };
+    const { transfer } = request;
 
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
@@ -1920,7 +1932,7 @@ export class UserAPI extends BaseAPI {
       eddsaKey
     ).result;
     transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = sortObjDictionary(request)
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_DEPLOY_COLLECTION,
       bodyParams: request,
@@ -1938,14 +1950,13 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
-
   /*
    * Submit NFTAction Validate Order request
    */
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {request, eddsaKey, apiKey} = req;
+    const { request, eddsaKey, apiKey } = req;
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
       request,
@@ -1964,10 +1975,6 @@ export class UserAPI extends BaseAPI {
 
     return this.returnTxHash(raw_data);
   }
-
-
-
-
 
   /*
    * Submit NFTAction Trade request
@@ -2004,67 +2011,81 @@ export class UserAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 
-  async getUserOwenCollection<R>(request: loopring_defs.GetUserOwnerCollectionRequest, apiKey: string) {
+  async getUserOwenCollection<R>(
+    request: loopring_defs.GetUserOwnerCollectionRequest,
+    apiKey: string
+  ) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_COLLECTION,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG
+      sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
       return {
-        ...raw_data.resultInfo
+        ...raw_data.resultInfo,
       };
     }
 
     return {
       totalNum: raw_data == null ? void 0 : raw_data.totalNum,
-      collections: raw_data.collections.map(({collection, ...rest}: any) => {
+      collections: raw_data.collections.map(({ collection, ...rest }: any) => {
         return {
           ...collection,
           extends: {
-            ...rest
-          }
-        }
-      }) as CollectionMeta & { extends: { [ a: string ]: any } }[],
-      raw_data
+            ...rest,
+          },
+        };
+      }) as CollectionMeta & { extends: { [a: string]: any } }[],
+      raw_data,
     };
   }
 
-
-  async getUserNFTCollection(request: loopring_defs.GetUserNFTCollectionRequest, apiKey: string) {
+  async getUserNFTCollection(
+    request: loopring_defs.GetUserNFTCollectionRequest,
+    apiKey: string
+  ) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_COLLECTION_HASNFT,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG
+      sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
-    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
       return {
-        ...raw_data.resultInfo
+        ...raw_data.resultInfo,
       };
     }
 
     return {
       totalNum: raw_data == null ? void 0 : raw_data.totalNum,
-      collections: raw_data.collections.map(({collection, ...rest}: any) => {
+      collections: raw_data.collections.map(({ collection, ...rest }: any) => {
         return {
           ...collection,
           extends: {
-            ...rest
-          }
-        }
-      }) as CollectionMeta & { extends: { [ a: string ]: any } }[],
-      raw_data
+            ...rest,
+          },
+        };
+      }) as CollectionMeta & { extends: { [a: string]: any } }[],
+      raw_data,
     };
   }
-
 
   /*
    * Returns User NFTAction deposit records.
@@ -2264,23 +2285,26 @@ export class UserAPI extends BaseAPI {
   public async getUserNFTTradeHistory<R>(
     request: loopring_defs.GetUserNFTTradeRequest,
     apiKey: string
-  ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    trades: loopring_defs.UserNFTTradeHistory[];
-  }| RESULT_INFO> {
+  ): Promise<
+    | {
+        raw_data: R;
+        totalNum: number;
+        trades: loopring_defs.UserNFTTradeHistory[];
+      }
+    | RESULT_INFO
+  > {
     const reqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_TRADE_HISTORY,
-      queryParams: {...request},
+      queryParams: { ...request },
       apiKey,
       method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG
+      sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
 
     if (raw_data != null && raw_data.resultInfo) {
       return {
-        ...raw_data.resultInfo
+        ...raw_data.resultInfo,
       };
     }
 
@@ -2288,7 +2312,7 @@ export class UserAPI extends BaseAPI {
     return {
       totalNum: raw_data?.totalNum,
       trades,
-      raw_data
+      raw_data,
     };
   }
   /*
@@ -2484,6 +2508,65 @@ export class UserAPI extends BaseAPI {
     };
   }
 
+  public async getUserNFTBalancesByCollection<R>(
+    request: loopring_defs.GetUserNFTBalancesByCollectionRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_NFT_BALANCES_BY_COLLECTION,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    if (raw_data.data.length) {
+      raw_data.data = raw_data.data.reduce(
+        (
+          prev: loopring_defs.UserNFTBalanceInfo[],
+          item: loopring_defs.UserNFTBalanceInfo
+        ) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+            if (
+              request.metadata === true &&
+              item.metadata &&
+              item.metadata.nftId &&
+              item.metadata.nftId.startsWith("0x")
+            ) {
+              // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+              item.metadata.nftId =
+                "0x" + hashBN.toString("hex").padStart(64, "0");
+            }
+          }
+          return [...prev, item];
+        },
+        []
+      );
+      // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+      // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
+    }
+    // if (raw_data.data.nftId && raw_data.data.nftId.startsWith("0x")) {
+    //   const hashBN = new BN(raw_data.data.nftId.replace("0x", ""), 16);
+    //   raw_data.data.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+    // }
+    return {
+      totalNum: raw_data?.totalNum,
+      userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
+      raw_data,
+    };
+  }
   public async getUserVIPAssets<R>(
     request: loopring_defs.getUserVIPAssetsRequest
   ): Promise<{ raw_data: { data: R }; vipAsset: R }> {

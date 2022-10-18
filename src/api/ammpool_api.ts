@@ -120,7 +120,7 @@ export class AmmpoolAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       queryParams: request,
-      url: LOOPRING_URLs.GET_AMMPOOL_USER_REWARDS,
+      url: LOOPRING_URLs.GET_AMMPOOL_REWARDS,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -135,9 +135,20 @@ export class AmmpoolAPI extends BaseAPI {
 
     const ammUserRewardMap: AmmUserRewardMap = {};
 
-    if (raw_data instanceof Array) {
-      raw_data.forEach((item: AmmUserReward) => {
-        ammUserRewardMap[item.market] = item;
+    if (raw_data?.current) {
+      raw_data?.current.forEach((item: AmmUserReward) => {
+        ammUserRewardMap[item.market] = {
+          current: item,
+          lastDay: undefined,
+        };
+      });
+    }
+    if (raw_data?.lastDay) {
+      raw_data?.lastDay.forEach((item: AmmUserReward) => {
+        ammUserRewardMap[item.market] = {
+          ...ammUserRewardMap[item.market],
+          lastDay: item,
+        };
       });
     }
 

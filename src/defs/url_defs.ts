@@ -1,11 +1,11 @@
 export enum LOOPRING_URLs {
   GET_AVAILABLE_BROKER = "/api/v3/getAvailableBroker",
   GET_RELAYER_CURRENT_TIME = "/api/v3/timestamp",
-  API_KEY_ACTION = "/api/v3/apiKey",  // get update
+  API_KEY_ACTION = "/api/v3/apiKey", // get update
   GET_NEXT_STORAGE_ID = "/api/v3/storageId",
   ORDER_ACTION = "/api/v3/order", // get submit cancel
-  ORDER_CANCEL_HASH_LIST = "/api/v2/orders/byHash",  // cancel multiple orders by hashs
-  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v2/orders/byClientOrderId",  // cancel multiple orders by clientOrderids
+  ORDER_CANCEL_HASH_LIST = "/api/v2/orders/byHash", // cancel multiple orders by hashs
+  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v2/orders/byClientOrderId", // cancel multiple orders by clientOrderids
   GET_MULTI_ORDERS = "/api/v3/orders",
   GET_MARKETS = "/api/v3/exchange/markets",
   GET_TOKENS = "/api/v3/exchange/tokens",
@@ -62,6 +62,7 @@ export enum LOOPRING_URLs {
   GET_AMM_POOL_TRADE_TXS = "/api/v3/amm/trades",
   GET_AMM_ACTIVITY_RULES = "/api/v3/sidecar/activityRules",
   GET_AMMPOOL_USER_REWARDS = "/api/v3/amm/user/rewards",
+  GET_AMMPOOL_REWARDS = "/api/v3/amm/rewards",
   GET_AMMPOOL_GAME_RANK = "/api/v3/game/rank",
   GET_AMMPOOL_GAME_USER_RANK = "/api/v2/game/user/rank",
   GET_LIQUIDITY_MINING = "/api/v2/sidecar/liquidityMining",
@@ -71,7 +72,6 @@ export enum LOOPRING_URLs {
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
   GET_ASSET_LOCK_RECORDS = "api/v3/user/lockRecords",
-
 
   GET_DEFI_TOKENS = "/api/v3/defi/tokens",
   GET_DEFI_MARKETS = "/api/v3/defi/markets",
@@ -107,6 +107,7 @@ export enum LOOPRING_URLs {
   GET_USER_VIP_INFO = "/api/v3/user/vipInfo",
   GET_USER_VIP_ASSETS = "/api/v3/datacenter/getUserAssets",
   GET_USER_NFT_BALANCES = "/api/v3/user/nft/balances",
+  GET_USER_NFT_BALANCES_BY_COLLECTION = "/api/v3/user/nft/collection/balances",
   GET_NFT_OFFCHAIN_FEE_AMT = "/api/v3/user/nft/offchainFee",
   POST_NFT_INTERNAL_TRANSFER = "/api/v3/nft/transfer",
   POST_NFT_WITHDRAWALS = "/api/v3/nft/withdrawal",
@@ -120,7 +121,6 @@ export enum LOOPRING_URLs {
   GET_NFT_COLLECTION = "/api/v3/nft/collection",
   GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
   GET_NFT_COLLECTION_PUBLISH = "api/v3/nft/public/collection",
-
 
   // POST_NFT_COLLECTION = "/api/v3/collection/createCollection",
   // GET_NFT_COLLECTIONS = "/api/v3/nft/collections",
@@ -146,7 +146,4 @@ export enum LOOPRING_URLs {
   GET_DUAL_RULE = "/api/v3/dual/rules",
   POST_DUAL_ORDER = "/api/v3/dual/order",
   GET_DUAL_USER_LOCKED = "/api/v3/dual/lockRecordAmount",
-
 }
-
-
