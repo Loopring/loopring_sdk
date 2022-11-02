@@ -32,6 +32,7 @@ import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 import { NFTType } from "../api";
+import { convertExpression } from "typedoc/dist/lib/converter";
 
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
@@ -3485,6 +3486,14 @@ export enum LuckyTokenItemStatusIndex {
   OVER_DUE = 4,
   FAILED = 5,
 }
+export enum LuckyTokenWithdrawStatus {
+  RECEIVED = 0,
+  PROCESSING = 1,
+  PROCESSED = 2,
+  WITHDRAW_FAILED = 3,
+  PREPARE_FAILED = 4,
+}
+
 export enum LuckyTokenItemStatus {
   SUBMITTING = "SUBMITTING",
   NOT_EFFECTIVE = "NOT_EFFECTIVE",
@@ -3546,4 +3555,52 @@ export type LuckyTokenItemForReceive = {
   info: LuckyTokenInfo;
   templateNo: number;
   createdAt: number;
+};
+export type LuckTokenClaim = {
+  hash: string;
+  claimer: {
+    accountId: number;
+    address: number;
+    ens: string;
+  };
+  referrer: {
+    accountId: number;
+    address: number;
+    ens: string;
+  };
+  helper: {
+    accountId: number;
+    address: number;
+    ens: number;
+  };
+  amount: number;
+  createdAt: number;
+  claimId: number;
+};
+
+export type LuckyTokenSignerFlag = 0 | 1;
+export type LuckTokenHistory = {
+  luckyToken: {
+    id: number;
+  } & LuckyTokenItemForReceive;
+  claim: {
+    id: number;
+  } & LuckTokenClaim;
+};
+
+export type LuckTokenWithdraw = {
+  id: number;
+  hash: string;
+  claimer: {
+    accountId: number;
+    address: number;
+    ens: string;
+  };
+  tokenId: number;
+  amount: string;
+  feeTokenId: number;
+  feeAmount: number;
+  status: 0 | 1 | 2; // PENDING:0 SUCCESS:1  FAIL:2
+  createdAt: number;
+  updatedAt: number;
 };
