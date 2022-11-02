@@ -88,7 +88,7 @@ export class DefiAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       url,
-      queryParams: request,
+      queryParams: {}, //request
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -106,7 +106,16 @@ export class DefiAPI extends BaseAPI {
     // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
 
     if (raw_data?.markets instanceof Array) {
-      raw_data.markets.forEach((item: any) => {
+      const types = request?.defiType?.split(",");
+      let _markets = [];
+      if (types) {
+        _markets = raw_data.markets.filter((item: DefiMarketInfo) =>
+          types.includes(item.type?.toUpperCase())
+        );
+      } else {
+        _markets = raw_data.markets;
+      }
+      _markets.forEach((item: any) => {
         const marketInfo: DefiMarketInfo = {
           ...item,
         };

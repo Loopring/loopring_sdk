@@ -13,12 +13,7 @@ import {
   SigSuffix,
   NFTFactory,
   ChainId,
-  CollectionMeta,
   NFTFactory_Collection,
-  CollectionExtendsKey,
-  CollectionBasicMeta,
-  OriginDeployCollectionRequestV3WithPatch,
-  GetUserNFTBalancesByCollectionRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -1741,7 +1736,7 @@ export class UserAPI extends BaseAPI {
   }
 
   async submitNFTCollection<R>(
-    req: CollectionBasicMeta,
+    req: loopring_defs.CollectionBasicMeta,
     chainId: ChainId,
     apiKey: string,
     eddsaKey: string
@@ -1780,8 +1775,48 @@ export class UserAPI extends BaseAPI {
     };
   }
 
+  async submitNFTLegacyCollection<R>(
+    req: loopring_defs.CollectionLegacyMeta,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    // const _req = req.nftFactory
+    //   ? req
+    //   : { ...req, nftFactory: NFTFactory_Collection[chainId] };
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_CREATE_LEGACY_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
+    };
+  }
+
   async submitEditNFTCollection<R>(
-    req: Omit<CollectionBasicMeta, "nftFactory" | "owner"> & {
+    req: Omit<loopring_defs.CollectionBasicMeta, "nftFactory" | "owner"> & {
       collectionId: string;
       accountId: number;
     },
@@ -1818,6 +1853,44 @@ export class UserAPI extends BaseAPI {
     return {
       raw_data,
       contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
+    };
+  }
+
+  async submitUpdateNFTLegacyCollection<R>(
+    req: loopring_defs.UpdateNFTLegacyCollectionRequest,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
     };
   }
 
@@ -2044,7 +2117,45 @@ export class UserAPI extends BaseAPI {
             ...rest,
           },
         };
-      }) as CollectionMeta & { extends: { [a: string]: any } }[],
+      }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
+      raw_data,
+    };
+  }
+
+  async getUserLegacyCollection<R>(
+    request: loopring_defs.GetUserLegacyCollectionRequest,
+    apiKey: string
+  ) {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_NFT_LEGACY_COLLECTION,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      totalNum: raw_data == null ? void 0 : raw_data.totalNum,
+      collections: raw_data.collections.map(({ collection, ...rest }: any) => {
+        return {
+          ...collection,
+          extends: {
+            ...rest,
+          },
+        };
+      }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
       raw_data,
     };
   }
@@ -2082,7 +2193,37 @@ export class UserAPI extends BaseAPI {
             ...rest,
           },
         };
-      }) as CollectionMeta & { extends: { [a: string]: any } }[],
+      }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
+      raw_data,
+    };
+  }
+
+  async getUserNFTLegacyTokenAddress(
+    request: { accountId: number },
+    apiKey: string
+  ) {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_NFT_LEGACY_TOKENADDRESS,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      result: raw_data.addresses,
       raw_data,
     };
   }
@@ -2518,6 +2659,66 @@ export class UserAPI extends BaseAPI {
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_BALANCES_BY_COLLECTION,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    if (raw_data.data.length) {
+      raw_data.data = raw_data.data.reduce(
+        (
+          prev: loopring_defs.UserNFTBalanceInfo[],
+          item: loopring_defs.UserNFTBalanceInfo
+        ) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+            if (
+              request.metadata === true &&
+              item.metadata &&
+              item.metadata.nftId &&
+              item.metadata.nftId.startsWith("0x")
+            ) {
+              // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+              item.metadata.nftId =
+                "0x" + hashBN.toString("hex").padStart(64, "0");
+            }
+          }
+          return [...prev, item];
+        },
+        []
+      );
+      // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+      // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
+    }
+    // if (raw_data.data.nftId && raw_data.data.nftId.startsWith("0x")) {
+    //   const hashBN = new BN(raw_data.data.nftId.replace("0x", ""), 16);
+    //   raw_data.data.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+    // }
+    return {
+      totalNum: raw_data?.totalNum,
+      userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
+      raw_data,
+    };
+  }
+
+  public async getUserNFTLegacyBalance<R>(
+    request: loopring_defs.GetUserNFTLegacyBalanceRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_NFT_LEGACY_BALANCE,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,

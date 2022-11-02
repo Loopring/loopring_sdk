@@ -2605,6 +2605,21 @@ export interface GetUserNFTBalancesByCollectionRequest {
   metadata?: boolean;
 }
 
+export enum LegacyNFT {
+  inside = "inside",
+  outside = "outside",
+  undecided = "undecided",
+}
+export interface GetUserNFTLegacyBalanceRequest {
+  accountId: number;
+  tokenAddress: string;
+  collectionId: number;
+  filter?: LegacyNFT;
+  offset?: number;
+  limit?: number;
+  metadata?: boolean;
+}
+
 export enum DEPLOYMENT_STATUS {
   NOT_DEPLOYED = "NOT_DEPLOYED",
   DEPLOY_FAILED = "DEPLOY_FAILED",
@@ -3164,6 +3179,7 @@ export type CollectionExtendsKey = {
   isPublic: boolean;
   isMintable: boolean;
   isEditable?: boolean;
+  isDeletable: boolean;
   deployStatus: DEPLOYMENT_STATUS;
   isCounterFactualNFT: boolean;
   updatedAt: number;
@@ -3181,6 +3197,17 @@ export type CollectionBasicMeta = {
   avatar?: string;
   banner?: string;
   owner: string;
+};
+
+export type CollectionLegacyMeta = Omit<CollectionBasicMeta, "owner"> & {
+  accountId: number;
+  tokenAddress: string;
+};
+
+export type UpdateNFTLegacyCollectionRequest = {
+  accountId: number;
+  nftHashes: string[];
+  collectionId?: number;
 };
 
 /**
@@ -3207,6 +3234,13 @@ export interface GetUserOwnerCollectionRequest {
   limit?: number;
   tokenAddress?: string;
   isMintable?: boolean;
+}
+
+export interface GetUserLegacyCollectionRequest {
+  accountId: string;
+  tokenAddress: string;
+  offset?: number;
+  limit?: number;
 }
 
 export interface GetUserNFTCollectionRequest {
@@ -3442,3 +3476,74 @@ export interface DualUserLockedRequest {
   lockTag: DUAL_TYPE[];
   status: string;
 }
+
+export enum LuckyTokenItemStatusIndex {
+  SUBMITTING = 0,
+  NOT_EFFECTIVE = 1,
+  PENDING = 2,
+  COMPLETED = 3,
+  OVER_DUE = 4,
+  FAILED = 5,
+}
+export enum LuckyTokenItemStatus {
+  SUBMITTING = "SUBMITTING",
+  NOT_EFFECTIVE = "NOT_EFFECTIVE",
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  OVER_DUE = "OVER_DUE",
+  FAILED = "FAILED",
+}
+export enum LuckyTokenAmountType {
+  RANDOM = 0,
+  AVERAGE = 1,
+}
+export enum LuckyTokenViewType {
+  PUBLIC = 0,
+  PRIVATE = 1,
+}
+export enum LuckyTokenClaimType {
+  RELAY = 0,
+  COMMON = 1,
+}
+export type LuckyTokenChampion = {
+  accountId: number;
+  address: string;
+  ens: string;
+  amount: number;
+};
+export type LuckyTokenAmount = {
+  accountId: 10026;
+  address: string;
+  ens: string;
+  amount: number;
+};
+export type LuckyTokenType = {
+  partition: LuckyTokenAmountType;
+  scope: LuckyTokenViewType;
+  mode: LuckyTokenClaimType;
+};
+export type LuckyTokenInfo = {
+  memo: string;
+  signer: string;
+  signerUrl: string;
+  logoUrl: string;
+};
+export type LuckyTokenSender = {
+  accountId: number;
+  address: string;
+  ens: string;
+};
+export type LuckyTokenItemForReceive = {
+  hash: string;
+  sender: LuckyTokenSender;
+  champion: LuckyTokenChampion;
+  tokenId: number;
+  tokenAmount: LuckyTokenAmount;
+  type: LuckyTokenType;
+  status: LuckyTokenItemStatus;
+  validSince: number;
+  validUntil: number;
+  info: LuckyTokenInfo;
+  templateNo: number;
+  createdAt: number;
+};
