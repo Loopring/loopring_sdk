@@ -1,27 +1,19 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from "./base_api";
 import {
-  DefiMarketInfo,
-  LoopringMap,
   ReqParams,
   ReqMethod,
   SIG_FLAG,
   LOOPRING_URLs,
-  SigPatchField,
   RESULT_INFO,
-  DUAL_TYPE,
   ChainId,
   ConnectorNames,
-  LuckyTokenSignerFlag,
   LuckTokenHistory,
-  LuckyTokenItemForReceive,
   LuckTokenWithdraw,
   LuckTokenClaim,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
-import Web3 from "web3";
 import { sortObjDictionary } from "../utils";
-import { UserBalanceInfo } from "../../dist";
 
 export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenAgents<R>(): Promise<{

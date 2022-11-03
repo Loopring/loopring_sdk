@@ -3521,10 +3521,10 @@ export type LuckyTokenChampion = {
   amount: number;
 };
 export type LuckyTokenAmount = {
-  accountId: 10026;
-  address: string;
-  ens: string;
-  amount: number;
+  totalCount: number;
+  remainCount: number;
+  totalAmount: string;
+  remainAmount: string;
 };
 export type LuckyTokenType = {
   partition: LuckyTokenAmountType;
