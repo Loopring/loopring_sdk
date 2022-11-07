@@ -14,6 +14,12 @@ import {
   NFTFactory,
   ChainId,
   NFTFactory_Collection,
+  LoopringMap,
+  AmmPoolStat,
+  LoopringErrorCode,
+  ConnectorError,
+  checkErrorInfo,
+  CounterFactualInfo,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -22,45 +28,11 @@ import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
 import { sortObjDictionary } from "../utils";
+import Web3 from "web3";
+import { generateKeyPair, KeyPairParams } from "./sign/sign_tools";
+import { AxiosResponse } from "axios";
 
 export class UserAPI extends BaseAPI {
-  /*
-   * Get the ApiKey associated with the user's account.
-   */
-  public async getUserApiKey<R>(
-    request: loopring_defs.GetUserApiKeyRequest,
-    eddsaKey: string
-  ): Promise<{ raw_data: R; apiKey: string }> {
-    const dataToSig: Map<string, any> = new Map();
-
-    dataToSig.set("accountId", request.accountId);
-
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.API_KEY_ACTION,
-      queryParams: request,
-      bodyParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-    if (raw_data?.resultInfo) {
-      return {
-        ...raw_data?.resultInfo,
-      };
-    }
-    const apiKey = raw_data["apiKey"];
-
-    return {
-      apiKey,
-      raw_data,
-    };
-  }
-
   /*
    * Change the ApiKey associated with the user's account.
    * The current ApiKey must be provided as the value of the X-API-KEY HTTP header.
@@ -875,866 +847,6 @@ export class UserAPI extends BaseAPI {
     };
   }
 
-  /*
-   * Submit offchain withdraw request
-   */
-
-  public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signOffchainWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signOffchainWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-
-      if (isContractCheck) {
-        const result =
-          await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
-      request,
-      eddsaKey
-    ).result;
-
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.WITHDRAWALS_ACTION,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit Internal Transfer request
-   */
-  public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginTransferRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        request.payerAddr,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitInternalTransfer notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            request.payerAddr,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.payerAddr);
-      // myLog(
-      //   "submitInternalTransfer isContractCheck,accountId:",
-      //   isContractCheck,
-      //   accountId
-      // );
-      if (isContractCheck) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            request.payerAddr,
-            request,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            request.payerAddr,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      request,
-      eddsaKey
-    ).result;
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit NFTAction Deploy request
-   */
-  public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      // myLog(
-      //   "submitDeployNFT isContractCheck,accountId:",
-      //   isContractCheck,
-      //   accountId
-      // );
-      if (isContractCheck) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
-    }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("requesterAddress", request.requesterAddress);
-    dataToSig.set("tokenId", request.tokenId);
-    dataToSig.set("transfer", request.transfer);
-    dataToSig.set("withdrawAddress", request.withdrawAddress);
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit NFTAction Deploy request
-   */
-  public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      // myLog(
-      //   "submitDeployNFT isContractCheck,accountId:",
-      //   isContractCheck,
-      //   accountId
-      // );
-      if (isContractCheck) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
-    }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("nftData", request.nftData);
-    dataToSig.set("tokenAddress", request.tokenAddress);
-    dataToSig.set("transfer", request.transfer);
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit NFTAction Transfer request
-   */
-  public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTTransferWithoutDataStructure(
-        web3,
-        request.fromAddress,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signTNFTransferWithDataStructure(
-            web3,
-            request.fromAddress,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.fromAddress);
-
-      if (isContractCheck) {
-        // signOffchainWithdrawWithDataStructureForContract
-        const result =
-          await sign_tools.signNFTTransferWithDataStructureForContract(
-            web3,
-            request.fromAddress,
-            request,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signNFTTransferWithDataStructureForContract(
-            web3,
-            request.fromAddress,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
-      request,
-      eddsaKey
-    ).result;
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit NFTAction Withdraw request
-   */
-  public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signNFTWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-
-      if (isContractCheck) {
-        // signNFTWithdrawWithDataStructureForContract
-        // myLog('signNFTWithdrawWithDataStructureForContract')
-        const result =
-          await sign_tools.signNFTWithdrawWithDataStructureForContract(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signNFTWithdrawWithDataStructureForContract(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(
-      request,
-      eddsaKey
-    ).result;
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
-  /*
-   * Submit NFTAction 55544555555555555555555545555 request
-   */
-  public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
-    options?: {
-      accountId?: number;
-      counterFactualInfo?: any;
-      _noEcdsa?: boolean;
-    }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo, _noEcdsa }: any = options
-      ? options
-      : { accountId: 0 };
-    if (request.counterFactualNftInfo === undefined) {
-      request.counterFactualNftInfo = {
-        nftFactory: NFTFactory[chainId],
-        nftOwner: request.minterAddress,
-        nftBaseUri: "",
-      };
-    }
-
-    request.royaltyPercentage = request.royaltyPercentage
-      ? request.royaltyPercentage
-      : 0;
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTMintWithoutDataStructure(
-        web3,
-        request.minterAddress,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (!_noEcdsa) {
-      if (
-        walletType === ConnectorNames.MetaMask ||
-        walletType === ConnectorNames.Gamestop ||
-        walletType === ConnectorNames.OtherExtension
-      ) {
-        try {
-          if (isHWAddr) {
-            await sigHW();
-          } else {
-            const result = await sign_tools.signNFTMintWithDataStructure(
-              web3,
-              request.minterAddress,
-              request,
-              chainId,
-              walletType,
-              accountId,
-              counterFactualInfo
-            );
-            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          }
-        } catch (err) {
-          return {
-            ...this.genErr(err as any),
-          };
-        }
-      } else {
-        try {
-          const isContractCheck = await isContract(web3, request.minterAddress);
-
-          if (isContractCheck) {
-            // signNFTMintWithDataStructureForContract
-            // myLog('signNFTMintWithDataStructureForContract')
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId
-              );
-            ecdsaSignature = result.ecdsaSig;
-          } else if (counterFactualInfo) {
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId,
-                counterFactualInfo
-              );
-            ecdsaSignature = result.ecdsaSig;
-            // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
-          } else {
-            await sigHW();
-          }
-        } catch (err) {
-          return {
-            ...this.genErr(err as any),
-          };
-        }
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
-      request,
-      eddsaKey
-    ).result;
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_MINT,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-    // myLog("NFTMint request", request);
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
-
   async submitNFTCollection<R>(
     req: loopring_defs.CollectionBasicMeta,
     chainId: ChainId,
@@ -1892,135 +1004,6 @@ export class UserAPI extends BaseAPI {
       raw_data,
       result: raw_data.result,
     };
-  }
-
-  /*
-   * Submit NFTAction Deploy request
-   */
-  public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      // myLog(
-      //   "submitDeployNFT isContractCheck,accountId:",
-      //   isContractCheck,
-      //   accountId
-      // );
-      if (isContractCheck) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signTransferWithDataStructureForContract(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-
-    if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
-    }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = sortObjDictionary(request);
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_DEPLOY_COLLECTION,
-      bodyParams: request,
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
   }
 
   /*
@@ -2456,101 +1439,6 @@ export class UserAPI extends BaseAPI {
       raw_data,
     };
   }
-  /*
-   * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
-   */
-  public async updateAccount<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.UpdateAccountRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signUpdateAccountWithoutDataStructure(
-        web3,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signUpdateAccountWithDataStructure(
-            web3,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        return {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-
-      if (isContractCheck) {
-        // myLog('signUpdateAccountWithDataStructureForContract')
-        const result =
-          await sign_tools.signUpdateAccountWithDataStructureForContract(
-            web3,
-            request,
-            chainId,
-            accountId
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog('ecdsaSignature:', ecdsaSignature)
-      } else if (counterFactualInfo) {
-        const result =
-          await sign_tools.signUpdateAccountWithDataStructureForContract(
-            web3,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-        ecdsaSignature = result.ecdsaSig;
-        // myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
-      } else {
-        await sigHW();
-      }
-    }
-    if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
-    }
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ACCOUNT_ACTION,
-      bodyParams: request,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    return this.returnTxHash(raw_data);
-  }
 
   public async SetReferrer<R>(
     request: loopring_defs.SetReferrerRequest,
@@ -2827,5 +1715,1250 @@ export class UserAPI extends BaseAPI {
       vipInfo,
       raw_data,
     };
+  }
+
+  public async unLockAccount<R>({
+    keyPair,
+    request,
+  }: {
+    keyPair: KeyPairParams;
+    request: loopring_defs.GetUserApiKeyRequest;
+  }): Promise<
+    | AxiosResponse
+    | RESULT_INFO
+    | {
+        raw_data: R;
+        eddsaKey: {
+          keyPair: object;
+          formatedPx: string;
+          formatedPy: string;
+          sk: string;
+          counterFactualInfo: CounterFactualInfo;
+        };
+        apiKey: string;
+      }
+  > {
+    let eddsaKey;
+    try {
+      eddsaKey = await generateKeyPair(keyPair);
+    } catch (error) {
+      throw error;
+    }
+    if (eddsaKey) {
+      const dataToSig: Map<string, any> = sortObjDictionary(request);
+      const reqParams: loopring_defs.ReqParams = {
+        url: LOOPRING_URLs.API_KEY_ACTION,
+        queryParams: request,
+        bodyParams: request,
+        method: ReqMethod.GET,
+        sigFlag: SIG_FLAG.EDDSA_SIG,
+        sigObj: {
+          dataToSig,
+          PrivateKey: eddsaKey.sk,
+        },
+      };
+      let raw_data;
+      try {
+        raw_data = (await this.makeReq().request(reqParams)).data;
+      } catch (error) {
+        throw error as AxiosResponse;
+      }
+      if (raw_data?.resultInfo) {
+        throw {
+          ...raw_data?.resultInfo,
+        };
+      } else {
+        return {
+          apiKey: raw_data.apiKey,
+          raw_data,
+          eddsaKey,
+        };
+      }
+    } else {
+      throw {
+        code: LoopringErrorCode.NO_EDDSA_KEY,
+        message: ConnectorError.NO_EDDSA_KEY,
+      };
+    }
+  }
+
+  /*
+   * Submit offchain withdraw request
+   */
+  public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | AxiosResponse | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signOffchainWithdrawWithoutDataStructure(
+        web3,
+        request.owner,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+
+    // metamask not import hw appWallet.
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          const result = await sign_tools.signOffchainWithdrawWithDataStructure(
+            web3,
+            request.owner,
+            request,
+            chainId,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.owner);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
+              web3,
+              request.owner,
+              request,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
+              web3,
+              request.owner,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
+      request,
+      eddsaKey
+    ).result;
+
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.WITHDRAWALS_ACTION,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
+   * Submit Internal Transfer request
+   */
+  public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginTransferRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | AxiosResponse | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        request.payerAddr,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          // myLog("submitInternalTransfer notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            request.payerAddr,
+            request,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.payerAddr);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              request.payerAddr,
+              request,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              request.payerAddr,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      request,
+      eddsaKey
+    ).result;
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
+   * Submit NFTAction Deploy request
+   */
+  public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`;
+    transfer.maxFee = {
+      volume: "0",
+      tokenId: transfer.token.tokenId,
+    };
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        transfer.payerAddr,
+        transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            transfer.payerAddr,
+            transfer as loopring_defs.OriginTransferRequestV3,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, transfer.payerAddr);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey
+    ).result;
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = new Map();
+    dataToSig.set("requesterAddress", request.requesterAddress);
+    dataToSig.set("tokenId", request.tokenId);
+    dataToSig.set("transfer", request.transfer);
+    dataToSig.set("withdrawAddress", request.withdrawAddress);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
+   * Submit NFTAction Deploy request
+   */
+  public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
+    transfer.maxFee = {
+      volume: "0",
+      tokenId: transfer.token.tokenId,
+    };
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        transfer.payerAddr,
+        transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            transfer.payerAddr,
+            transfer as loopring_defs.OriginTransferRequestV3,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, transfer.payerAddr);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey
+    ).result;
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = new Map();
+    dataToSig.set("nftData", request.nftData);
+    dataToSig.set("tokenAddress", request.tokenAddress);
+    dataToSig.set("transfer", request.transfer);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+  /*
+   * Submit NFTAction Transfer request
+   */
+  public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signNFTTransferWithoutDataStructure(
+        web3,
+        request.fromAddress,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          const result = await sign_tools.signTNFTransferWithDataStructure(
+            web3,
+            request.fromAddress,
+            request,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.fromAddress);
+      try {
+        if (isContractCheck) {
+          // signOffchainWithdrawWithDataStructureForContract
+          const result =
+            await sign_tools.signNFTTransferWithDataStructureForContract(
+              web3,
+              request.fromAddress,
+              request,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signNFTTransferWithDataStructureForContract(
+              web3,
+              request.fromAddress,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
+      request,
+      eddsaKey
+    ).result;
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
+   * Submit NFTAction Withdraw request
+   */
+  public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signNFTWithdrawWithoutDataStructure(
+        web3,
+        request.owner,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+
+    // metamask not import hw appWallet.
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          const result = await sign_tools.signNFTWithdrawWithDataStructure(
+            web3,
+            request.owner,
+            request,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.owner);
+
+      try {
+        if (isContractCheck) {
+          // signNFTWithdrawWithDataStructureForContract
+          // myLog('signNFTWithdrawWithDataStructureForContract')
+          const result =
+            await sign_tools.signNFTWithdrawWithDataStructureForContract(
+              web3,
+              request.owner,
+              request,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signNFTWithdrawWithDataStructureForContract(
+              web3,
+              request.owner,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(
+      request,
+      eddsaKey
+    ).result;
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+  /*
+   * Submit NFTAction
+   */
+  public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
+    options?: {
+      accountId?: number;
+      counterFactualInfo?: any;
+      _noEcdsa?: boolean;
+    }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo, _noEcdsa }: any = options
+      ? options
+      : { accountId: 0 };
+    if (request.counterFactualNftInfo === undefined) {
+      request.counterFactualNftInfo = {
+        nftFactory: NFTFactory[chainId],
+        nftOwner: request.minterAddress,
+        nftBaseUri: "",
+      };
+    }
+
+    request.royaltyPercentage = request.royaltyPercentage
+      ? request.royaltyPercentage
+      : 0;
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signNFTMintWithoutDataStructure(
+        web3,
+        request.minterAddress,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+
+    // metamask not import hw appWallet.
+    if (!_noEcdsa) {
+      if (
+        walletType === ConnectorNames.MetaMask ||
+        walletType === ConnectorNames.Gamestop ||
+        walletType === ConnectorNames.OtherExtension
+      ) {
+        try {
+          if (isHWAddr) {
+            await sigHW();
+          } else {
+            const result = await sign_tools.signNFTMintWithDataStructure(
+              web3,
+              request.minterAddress,
+              request,
+              chainId,
+              walletType,
+              accountId,
+              counterFactualInfo
+            );
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+          }
+        } catch (err) {
+          throw {
+            ...this.genErr(err as any),
+          };
+        }
+      } else {
+        try {
+          const isContractCheck = await isContract(web3, request.minterAddress);
+
+          if (isContractCheck) {
+            // signNFTMintWithDataStructureForContract
+            // myLog('signNFTMintWithDataStructureForContract')
+            const result =
+              await sign_tools.signNFTMintWithDataStructureForContract(
+                web3,
+                request.minterAddress,
+                request,
+                chainId,
+                accountId
+              );
+            ecdsaSignature = result.ecdsaSig;
+          } else if (counterFactualInfo) {
+            const result =
+              await sign_tools.signNFTMintWithDataStructureForContract(
+                web3,
+                request.minterAddress,
+                request,
+                chainId,
+                accountId,
+                counterFactualInfo
+              );
+            ecdsaSignature = result.ecdsaSig;
+            // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
+          } else {
+            await sigHW();
+          }
+        } catch (err) {
+          throw {
+            ...this.genErr(err as any),
+          };
+        }
+      }
+    }
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
+      request,
+      eddsaKey
+    ).result;
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NFT_MINT,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+  /*
+   * Submit NFTAction Deploy request
+   */
+  public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
+    transfer.maxFee = {
+      volume: "0",
+      tokenId: transfer.token.tokenId,
+    };
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        transfer.payerAddr,
+        transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            transfer.payerAddr,
+            transfer as loopring_defs.OriginTransferRequestV3,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, transfer.payerAddr);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey
+    ).result;
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_DEPLOY_COLLECTION,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+
+  /*
+   * Updates the EDDSA key associated with the specified account, making the previous one invalid in the process.
+   */
+  public async updateAccount<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.UpdateAccountRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+    const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signUpdateAccountWithoutDataStructure(
+        web3,
+        request,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          const result = await sign_tools.signUpdateAccountWithDataStructure(
+            web3,
+            request,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, request.owner);
+      try {
+        if (isContractCheck) {
+          // myLog('signUpdateAccountWithDataStructureForContract')
+          const result =
+            await sign_tools.signUpdateAccountWithDataStructureForContract(
+              web3,
+              request,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog('ecdsaSignature:', ecdsaSignature)
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signUpdateAccountWithDataStructureForContract(
+              web3,
+              request,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+    if (counterFactualInfo) {
+      request.counterFactualInfo = counterFactualInfo;
+    }
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.ACCOUNT_ACTION,
+      bodyParams: request,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    return this.returnTxHash(raw_data);
+  }
+  /*
+   * Get the ApiKey associated with the user's account.
+   */
+  public async getUserApiKey<R>(
+    request: loopring_defs.GetUserApiKeyRequest,
+    eddsaKey: string
+  ): Promise<{ raw_data: R; apiKey: string }> {
+    const dataToSig: Map<string, any> = new Map();
+
+    dataToSig.set("accountId", request.accountId);
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.API_KEY_ACTION,
+      queryParams: request,
+      bodyParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    if (raw_data?.resultInfo) {
+      throw {
+        ...raw_data?.resultInfo,
+      };
+    } else {
+      return {
+        apiKey: raw_data.apiKey,
+        raw_data,
+      };
+    }
   }
 }

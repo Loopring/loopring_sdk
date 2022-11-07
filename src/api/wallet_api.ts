@@ -17,7 +17,13 @@ import { ReqMethod, SIG_FLAG } from "../defs/loopring_enums";
 import api from "./ethereum/contracts";
 
 import { LOOPRING_URLs } from "../defs/url_defs";
-import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from "../defs";
+import {
+  ChainId,
+  ConnectorNames,
+  HEBAO_META_TYPE,
+  RESULT_INFO,
+  SigSuffix,
+} from "../defs";
 import { getEcDSASig, GetEcDSASigType } from "./sign/sign_tools";
 import { sha256 } from "ethereumjs-util";
 import { toHex } from "../utils";
@@ -26,6 +32,7 @@ import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import * as ethUtil from "ethereumjs-util";
 import { LoopringAPI } from "../tests/MockData";
+import { AxiosResponse } from "axios";
 
 export class WalletAPI extends BaseAPI {
   /*
@@ -301,16 +308,13 @@ export class WalletAPI extends BaseAPI {
     myLog("addrsBs", addrsBs.toString());
     return addrsBs;
   }
-  public async submitApproveSignature<R extends any, T extends string>(
+  public async submitApproveSignature<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
     guardians: string[] = [],
     isContract1XAddress?: boolean,
     masterCopy?: string,
     forwarderModuleAddress: string = ""
-  ): Promise<{
-    hash: string | undefined;
-    raw_data: R;
-  }> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
     const {
       request,
       web3,
@@ -353,44 +357,51 @@ export class WalletAPI extends BaseAPI {
           ecdsaSignature = result?.sig + SigSuffix.Suffix03;
         }
       } catch (err) {
-        return {
+        throw {
           ...this.genErr(err as any),
-        } as any;
+        };
       }
     } else {
       const isContractCheck = await isContract(web3, request.signer);
-      if (isContractCheck) {
-        let newOwner = undefined,
-          newGuardians = [];
+      try {
+        if (isContractCheck) {
+          let newOwner = undefined,
+            newGuardians = [];
 
-        guardian.businessDataJson.value.value.newOwner
-          ? guardian.businessDataJson.value.value.newOwner
-          : 0;
-        if (
-          guardian.businessDataJson &&
-          guardian.businessDataJson.value &&
-          guardian.businessDataJson.value.value
-        ) {
-          newOwner = guardian.businessDataJson.value.value.newOwner;
-          newGuardians = guardian.businessDataJson.value.value.newGuardians;
+          guardian.businessDataJson.value.value.newOwner
+            ? guardian.businessDataJson.value.value.newOwner
+            : 0;
+          if (
+            guardian.businessDataJson &&
+            guardian.businessDataJson.value &&
+            guardian.businessDataJson.value.value
+          ) {
+            newOwner = guardian.businessDataJson.value.value.newOwner;
+            newGuardians = guardian.businessDataJson.value.value.newGuardians;
+          }
+          const guardiansBs = this.encodeAddressesPacked(newGuardians);
+          const guardiansHash = ethUtil.keccak(guardiansBs);
+          // const guardiansBs =
+          //   LoopringAPI.walletAPI.encodeAddressesPacked(guardian.businessDataJson.value.value.newGuardians);
+          const result =
+            await this.signHebaoApproveWithDataStructureForContract(
+              web3,
+              request.signer,
+              guardian,
+              chainId,
+              newOwner,
+              isContract1XAddress ? undefined : guardiansHash,
+              isContract1XAddress ? undefined : masterCopy,
+              forwarderModuleAddress ? undefined : forwarderModuleAddress
+            );
+          ecdsaSignature = result.sig;
+        } else {
+          await sigHW();
         }
-        const guardiansBs = this.encodeAddressesPacked(newGuardians);
-        const guardiansHash = ethUtil.keccak(guardiansBs);
-        // const guardiansBs =
-        //   LoopringAPI.walletAPI.encodeAddressesPacked(guardian.businessDataJson.value.value.newGuardians);
-        const result = await this.signHebaoApproveWithDataStructureForContract(
-          web3,
-          request.signer,
-          guardian,
-          chainId,
-          newOwner,
-          isContract1XAddress ? undefined : guardiansHash,
-          isContract1XAddress ? undefined : masterCopy,
-          forwarderModuleAddress ? undefined : forwarderModuleAddress
-        );
-        ecdsaSignature = result.sig;
-      } else {
-        await sigHW();
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
       }
     }
     request.signature = ecdsaSignature;
@@ -402,20 +413,13 @@ export class WalletAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
 
-    let hash: string | undefined = undefined;
-    const raw_data = (await this.makeReq().request(reqParams)).data;
-
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      return {
-        ...raw_data?.resultInfo,
-      };
-    } else {
-      hash = raw_data.data;
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
     }
-    return {
-      hash,
-      raw_data,
-    };
+    return this.returnTxHash(raw_data);
   }
 
   public async getAddressByENS<R extends any, T extends string>(

@@ -4,7 +4,8 @@ import {
   ConnectorNames,
   CounterFactualInfo,
   GetAvailableBrokerRequest,
-  GetCounterFactualInfoRequest, LOOPRING_URLs,
+  GetCounterFactualInfoRequest,
+  LOOPRING_URLs,
   LoopringErrorCode,
   ReqMethod,
   ReqParams,
@@ -26,6 +27,7 @@ import { addHexPrefix, toBuffer, toHex } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
+import { AxiosResponse } from "axios";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +
@@ -36,32 +38,41 @@ export class BaseAPI {
   static KEY_MESSAGE: string = KEY_MESSAGE;
   protected baseUrl = "";
   protected chainId: ChainId = ChainId.MAINNET;
-  public genErr(err: Error): RESULT_INFO {
-    if (!err || !err?.message) {
+  public genErr(err: Error | (AxiosResponse & Error)): RESULT_INFO {
+    if (err.hasOwnProperty("request")) {
+      // const axiosError = errorInfo as AxiosResponse;
       return {
+        // @ts-ignore;
+        message: ConnectorError.HTTP_ERROR,
         ...err,
+        msg: ConnectorError.HTTP_ERROR,
+        code: LoopringErrorCode.HTTP_ERROR,
+      };
+      err?.message;
+    } else if (!err || !err?.message) {
+      return {
         message: "unKnown",
         code: LoopringErrorCode.SKD_UNKNOW,
       };
-    }
-    const key = Reflect.ownKeys(ConnectorError).find(
-      (key) =>
-        err?.message.search(
-          ConnectorError[key as keyof typeof ConnectorError]
-        ) !== -1
-    );
-    if (key) {
+    } else {
+      const key = Reflect.ownKeys(ConnectorError).find(
+        (key) =>
+          err?.message.search(
+            ConnectorError[key as keyof typeof ConnectorError]
+          ) !== -1
+      );
+      if (key) {
+        return {
+          ...err,
+          message: key as keyof typeof ConnectorError,
+          code: LoopringErrorCode[key as keyof typeof ConnectorError],
+        };
+      }
       return {
         ...err,
-        message: key as keyof typeof ConnectorError,
-        code: LoopringErrorCode[key as keyof typeof ConnectorError],
+        code: LoopringErrorCode.SKD_UNKNOW,
       };
     }
-
-    return {
-      ...err,
-      code: LoopringErrorCode.SKD_UNKNOW,
-    };
   }
   protected returnTxHash<T extends TX_HASH_API>(
     raw_data: T
@@ -83,11 +94,16 @@ export class BaseAPI {
   }
 
   private timeout: number;
-  private baseUrlMap: { [ key: number ]: string } | undefined;
+  private baseUrlMap: { [key: number]: string } | undefined;
 
-
-  public constructor(param: InitParam, timeout: number = 6000, baseUrlMap =
-    {[ ChainId.MAINNET ]: "https://api3.loopring.io", [ ChainId.GOERLI ]: "https://uat2.loopring.io"}) {
+  public constructor(
+    param: InitParam,
+    timeout: number = 6000,
+    baseUrlMap = {
+      [ChainId.MAINNET]: "https://api3.loopring.io",
+      [ChainId.GOERLI]: "https://uat2.loopring.io",
+    }
+  ) {
     if (param.baseUrl) {
       this.baseUrl = param.baseUrl;
     } else if (param.chainId !== undefined) {
@@ -147,7 +163,10 @@ export class BaseAPI {
   }
 
   public setChainId(chainId: ChainId) {
-    this.baseUrl = this.baseUrlMap && this.baseUrlMap[ 0 ] ? getBaseUrlByChainId(chainId, this.baseUrlMap as any) : getBaseUrlByChainId(chainId);
+    this.baseUrl =
+      this.baseUrlMap && this.baseUrlMap[0]
+        ? getBaseUrlByChainId(chainId, this.baseUrlMap as any)
+        : getBaseUrlByChainId(chainId);
     this.chainId = chainId;
   }
 
@@ -310,17 +329,20 @@ export async function ecRecover2(
   );
 }
 
-const getBaseUrlByChainId = (id: ChainId, baseUrlMap = {
-  [ ChainId.MAINNET ]: "https://api3.loopring.io",
-  [ ChainId.GOERLI ]: "https://uat2.loopring.io"
-}) => {
+const getBaseUrlByChainId = (
+  id: ChainId,
+  baseUrlMap = {
+    [ChainId.MAINNET]: "https://api3.loopring.io",
+    [ChainId.GOERLI]: "https://uat2.loopring.io",
+  }
+) => {
   let baseUrl = "";
   switch (id) {
     case ChainId.MAINNET:
-      baseUrl = baseUrlMap[ ChainId.MAINNET ];
+      baseUrl = baseUrlMap[ChainId.MAINNET];
       break;
     default:
-      baseUrl = baseUrlMap[ ChainId.GOERLI ];
+      baseUrl = baseUrlMap[ChainId.GOERLI];
       break;
   }
   return baseUrl;
@@ -400,7 +422,6 @@ export async function personalSign(
             if (
               typeof window !== "undefined" &&
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
-
               isMobile &&
               // Mobile directory connect will sign ConnectorNames as MetaMask only
               walletType === ConnectorNames.MetaMask
@@ -413,23 +434,25 @@ export async function personalSign(
                   (item) => item.toLowerCase() === account.toLowerCase()
                 )
               ) {
-                return resolve({sig: result});
+                return resolve({ sig: result });
               }
             }
             myLog("ecRecover before", msg, result);
 
             // Valid: 3. EOA signature Valid by ecRecover
-            if (web3?.currentProvider?.isWalletLink && web3?.currentProvider?.isConnected) {
+            if (
+              web3?.currentProvider?.isWalletLink &&
+              web3?.currentProvider?.isConnected
+            ) {
               account === web3.currentProvider?.selectedAddress;
-              return resolve({sig: result});
+              return resolve({ sig: result });
             } else {
               const valid: any = await ecRecover(web3, account, msg, result);
               myLog("ecRecover after", valid.result);
               if (valid.result) {
-                return resolve({sig: result});
+                return resolve({ sig: result });
               }
             }
-
 
             // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(

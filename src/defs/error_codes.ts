@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 export enum LoopringErrorCode {
   Unknown_Error = 100000,
   Invalid_Args = 100001,
@@ -49,6 +51,8 @@ export enum LoopringErrorCode {
   NOT_SUPPORT_ERROR = 500005,
   USER_DENIED = 500006,
   USER_DENIED_2 = 500007,
+  NO_EDDSA_KEY = 500008,
+  HTTP_ERROR = 500009,
 }
 
 export enum ConnectorError {
@@ -59,6 +63,8 @@ export enum ConnectorError {
   CONTRACTNFT_BALANCE = "contract nft balance error",
   CONTRACTNFT_IS_APPROVE = "ContractNFT is Approve error",
   CONTRACTNFT_SET_APPROVE = "ContractNFT set Approve error",
+  NO_EDDSA_KEY = "No EDDSA KEY",
+  HTTP_ERROR = "HTTP Request Failed!",
 }
 
 export interface RESULT_INFO {
@@ -68,4 +74,23 @@ export interface RESULT_INFO {
 }
 export type ERROR_INFO = {
   resultInfo: RESULT_INFO;
+};
+
+export const checkErrorInfo = (
+  errorInfo: RESULT_INFO,
+  isFirstTime?: boolean
+) => {
+  const message = errorInfo.message;
+  if (isFirstTime && message === "NOT_SUPPORT_ERROR") {
+    return ConnectorError.NOT_SUPPORT_ERROR;
+  } else if (message === "USER_DENIED" || message === "USER_DENIED_2") {
+    return ConnectorError.USER_DENIED;
+  } else if (
+    message &&
+    (message.startsWith("personalSign last") ||
+      message.indexOf("User denied transaction") > 0)
+  ) {
+    return ConnectorError.USER_DENIED;
+  }
+  return message;
 };
