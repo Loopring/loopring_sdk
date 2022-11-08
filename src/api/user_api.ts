@@ -14,11 +14,8 @@ import {
   NFTFactory,
   ChainId,
   NFTFactory_Collection,
-  LoopringMap,
-  AmmPoolStat,
   LoopringErrorCode,
   ConnectorError,
-  checkErrorInfo,
   CounterFactualInfo,
 } from "../defs";
 
@@ -28,7 +25,6 @@ import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
 import { sortObjDictionary } from "../utils";
-import Web3 from "web3";
 import { generateKeyPair, KeyPairParams } from "./sign/sign_tools";
 import { AxiosResponse } from "axios";
 
