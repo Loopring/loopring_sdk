@@ -560,8 +560,8 @@ export class NFTAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    if (raw_data.data.length) {
-      raw_data.data = raw_data.data.reduce(
+    if (raw_data.nftTokenInfos.length) {
+      raw_data.nftTokenInfos = raw_data.nftTokenInfos.reduce(
         (
           prev: loopring_defs.UserNFTBalanceInfo[],
           item: loopring_defs.UserNFTBalanceInfo
@@ -589,7 +589,8 @@ export class NFTAPI extends BaseAPI {
     }
     return {
       totalNum: raw_data?.totalNum,
-      userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
+      userNFTBalances:
+        raw_data.nftTokenInfos as loopring_defs.UserNFTBalanceInfo[],
       raw_data,
     };
   }
