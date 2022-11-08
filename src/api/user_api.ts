@@ -17,6 +17,8 @@ import {
   LoopringErrorCode,
   ConnectorError,
   CounterFactualInfo,
+  CollectionDelete,
+  UpdateNFTGroupRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -2679,6 +2681,233 @@ export class UserAPI extends BaseAPI {
     }
     return this.returnTxHash(raw_data);
   }
+
+  async submitNFTCollection<R>(
+    req: loopring_defs.CollectionBasicMeta,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
+    const _req = req.nftFactory
+      ? req
+      : { ...req, nftFactory: NFTFactory_Collection[chainId] };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
+    };
+  }
+
+  async deleteNFTCollection<R>(
+    req: loopring_defs.CollectionDelete,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<{ raw_data: R }> {
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.DELETE_NFT_CREATE_COLLECTION,
+      queryParams: req,
+      apiKey,
+      method: ReqMethod.DELETE,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      raw_data,
+    };
+  }
+
+  async submitNFTLegacyCollection<R>(
+    req: loopring_defs.CollectionLegacyMeta,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    // const _req = req.nftFactory
+    //   ? req
+    //   : { ...req, nftFactory: NFTFactory_Collection[chainId] };
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_CREATE_LEGACY_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
+    };
+  }
+
+  async submitEditNFTCollection<R>(
+    req: Omit<loopring_defs.CollectionBasicMeta, "nftFactory" | "owner"> & {
+      collectionId: string;
+      accountId: number;
+    },
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
+    // const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
+    };
+  }
+
+  async submitUpdateNFTLegacyCollection<R>(
+    req: loopring_defs.UpdateNFTLegacyCollectionRequest,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
+    };
+  }
+
+  async submitUpdateNFTGroup<R>(
+    req: loopring_defs.UpdateNFTGroupRequest,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_UPDATE_NFT_GROUP,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
+    };
+  }
+
   /*
    * Submit NFTAction Deploy request
    */
@@ -2931,7 +3160,6 @@ export class UserAPI extends BaseAPI {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.API_KEY_ACTION,
       queryParams: request,
-      bodyParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
