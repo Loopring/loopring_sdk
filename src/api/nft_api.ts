@@ -17,13 +17,15 @@ import * as ethUtil from "ethereumjs-util";
 import { genExchangeData, sendRawTx } from "./contract_api";
 import contracts from "./ethereum/contracts";
 import {
-  ApproveParam, CallRefreshNFT,
+  ApproveParam,
+  CallRefreshNFT,
   ContractNFTMetaParam,
   DepositNFTParam,
   IsApproveParam,
   UserNFTBalanceParam,
 } from "../defs/nft_defs";
 import BN from "bn.js";
+import * as loopring_defs from "../defs/loopring_defs";
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -48,8 +50,8 @@ export enum NFTType {
 }
 
 export enum NFT_TYPE_STRING {
-  ERC1155 = 'ERC1155',
-  ERC721 = 'ERC721',
+  ERC1155 = "ERC1155",
+  ERC721 = "ERC721",
 }
 
 export enum NFTMethod {
@@ -200,9 +202,12 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
-  public async callRefreshNFT(request: CallRefreshNFT): Promise<{ status: string, createdAt: number, updatedAt: number } | undefined> {
+  public async callRefreshNFT(
+    request: CallRefreshNFT
+  ): Promise<
+    { status: string; createdAt: number; updatedAt: number } | undefined
+  > {
     try {
-
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
         bodyParams: request,
@@ -216,12 +221,12 @@ export class NFTAPI extends BaseAPI {
         };
       }
       const result = raw_data.reduce(
-        (prev: { [ key: string ]: NFTTokenInfo }, item: NFTTokenInfo) => {
+        (prev: { [key: string]: NFTTokenInfo }, item: NFTTokenInfo) => {
           if (item.nftId && item.nftId.startsWith("0x")) {
             const hashBN = new BN(item.nftId.replace("0x", ""), 16);
             item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
           }
-          prev[ item.nftData ] = item;
+          prev[item.nftData] = item;
           return prev;
         },
         {}
@@ -235,7 +240,6 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
-
   /**
    * getContractNFTMeta
    * @param web3
@@ -243,12 +247,15 @@ export class NFTAPI extends BaseAPI {
    * @param _id
    * @param nftType
    */
-  public async getContractNFTMeta({
-                                    web3,
-                                    tokenAddress,
-                                    nftId,
-                                    nftType = NFTType.ERC1155,
-                                  }: ContractNFTMetaParam, _IPFS_META_URL: string = LOOPRING_URLs.IPFS_META_URL) {
+  public async getContractNFTMeta(
+    {
+      web3,
+      tokenAddress,
+      nftId,
+      nftType = NFTType.ERC1155,
+    }: ContractNFTMetaParam,
+    _IPFS_META_URL: string = LOOPRING_URLs.IPFS_META_URL
+  ) {
     try {
       myLog(tokenAddress, "nftid", nftId, web3.utils.hexToNumberString(nftId));
       let result: string;
@@ -259,15 +266,15 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType
       );
-      result = result.replace(/^ipfs:\/\/(ipfs\/)?/i, '');
-      myLog(result)
+      result = result.replace(/^ipfs:\/\/(ipfs\/)?/i, "");
+      myLog(result);
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
 
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
         url: LOOPRING_URLs.GET_DELEGATE_GET_IPFS,
         method: ReqMethod.GET,
-        queryParams: {path: result},
+        queryParams: { path: result },
       };
       const raw_data = (await this.makeReq().request(reqParams)).data;
       if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -284,7 +291,6 @@ export class NFTAPI extends BaseAPI {
       };
     }
   }
-
 
   /**
    * approveNFT
@@ -510,9 +516,10 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
-  public async getPublicCollectionById<R extends CollectionMeta>(request: { id: string }): Promise<({ raw_data: R } & CollectionMeta) | RESULT_INFO> {
+  public async getPublicCollectionById<R extends CollectionMeta>(request: {
+    id: string;
+  }): Promise<({ raw_data: R } & CollectionMeta) | RESULT_INFO> {
     try {
-
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
         queryParams: request,
@@ -532,13 +539,58 @@ export class NFTAPI extends BaseAPI {
       };
     } catch (err) {
       return {
-        ...err as any,
-        code: exports.LoopringErrorCode.SKD_UNKNOW
+        ...(err as any),
+        code: exports.LoopringErrorCode.SKD_UNKNOW,
       };
     }
+  }
 
+  async getCollectionWholeNFTs<R>(
+    request: loopring_defs.GetCollectionWholeNFTsRequest
+  ) {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_COLLECTION_WHOLE_NFTS,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    if (raw_data.data.length) {
+      raw_data.data = raw_data.data.reduce(
+        (
+          prev: loopring_defs.UserNFTBalanceInfo[],
+          item: loopring_defs.UserNFTBalanceInfo
+        ) => {
+          if (item.nftId && item.nftId.startsWith("0x")) {
+            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
+            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+            if (
+              request.metadata === true &&
+              item.metadata &&
+              item.metadata.nftId &&
+              item.metadata.nftId.startsWith("0x")
+            ) {
+              // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+              item.metadata.nftId =
+                "0x" + hashBN.toString("hex").padStart(64, "0");
+            }
+          }
+          return [...prev, item];
+        },
+        []
+      );
+      // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+      // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
+    }
+    return {
+      totalNum: raw_data?.totalNum,
+      userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
+      raw_data,
+    };
   }
 }
-
-
-

@@ -1,3 +1,6 @@
+import * as loopring_defs from "./loopring_defs";
+import { ReqMethod, SIG_FLAG } from "./loopring_enums";
+
 export enum LOOPRING_URLs {
   GET_AVAILABLE_BROKER = "/api/v3/getAvailableBroker",
   GET_RELAYER_CURRENT_TIME = "/api/v3/timestamp",
@@ -114,15 +117,18 @@ export enum LOOPRING_URLs {
   POST_NFT_MINT = "/api/v3/nft/mint",
   POST_NFT_TRADE = "/api/v3/nft/trade",
   POST_NFT_VALIDATE_ORDER = "/api/v3/nft/validateOrder", // post get
-  POST_NFT_CREATE_COLLECTION = "/api/v3/nft/collection",
   POST_NFT_EDIT_COLLECTION = "/api/v3/nft/collection/edit",
   POST_NFT_CREATE_LEGACY_COLLECTION = "/api/v3/nft/collection/legacy/tokenAddress",
   POST_NFT_VALIDATE_REFRESH_NFT = "/api/v3/nft/image/refresh",
   POST_DEPLOY_COLLECTION = "/api/v3/collection/deployTokenAddress",
   POST_NFT_LEGACY_UPDATE_COLLECTION = "/api/v3/nft/collection/legacy/updateNftCollection",
+  POST_NFT_UPDATE_NFT_GROUP = "/api/v3/user/nft/updateNftPreference",
   GET_NFT_COLLECTION = "/api/v3/nft/collection",
-  GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
+  POST_NFT_CREATE_COLLECTION = "/api/v3/nft/collection",
+  DELETE_NFT_CREATE_COLLECTION = "/api/v3/nft/collection",
+  GET_COLLECTION_WHOLE_NFTS = "/api/v3/nft/public/collection/items",
   GET_NFT_COLLECTION_PUBLISH = "/api/v3/nft/public/collection",
+  GET_NFT_COLLECTION_HASNFT = "/api/v3/user/collection/details",
   GET_NFT_LEGACY_COLLECTION = "/api/v3/nft/collection/legacy",
   GET_NFT_LEGACY_TOKENADDRESS = "/api/v3/nft/collection/legacy/tokenAddress",
   GET_NFT_LEGACY_BALANCE = "/api/v3/nft/collection/legacy/balance",

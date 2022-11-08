@@ -3199,18 +3199,33 @@ export type CollectionBasicMeta = {
   banner?: string;
   owner: string;
 };
+export type CollectionDelete = {
+  accountId: number;
+  collectionId: number;
+};
 
 export type CollectionLegacyMeta = Omit<CollectionBasicMeta, "owner"> & {
   accountId: number;
   tokenAddress: string;
 };
 
+export enum NFT_PREFERENCE_TYPE {
+  fav = "fav",
+  hide = "hide",
+}
 export type UpdateNFTLegacyCollectionRequest = {
   accountId: number;
   nftHashes: string[];
   collectionId?: number;
 };
 
+export type UpdateNFTGroupRequest = {
+  accountId: number;
+  nftHashes: string[];
+  collectionId?: number;
+  preferenceType: NFT_PREFERENCE_TYPE;
+  statusToUpdate: boolean;
+};
 /**
  * CollectionMeta
  * @property name string useToCreate Collection
@@ -3240,6 +3255,12 @@ export interface GetUserOwnerCollectionRequest {
 export interface GetUserLegacyCollectionRequest {
   accountId: string;
   tokenAddress: string;
+  offset?: number;
+  limit?: number;
+}
+export interface GetCollectionWholeNFTsRequest {
+  id: number;
+  metadata?: boolean;
   offset?: number;
   limit?: number;
 }

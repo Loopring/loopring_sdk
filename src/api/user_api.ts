@@ -14,6 +14,8 @@ import {
   NFTFactory,
   ChainId,
   NFTFactory_Collection,
+  CollectionDelete,
+  UpdateNFTGroupRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -38,7 +40,6 @@ export class UserAPI extends BaseAPI {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.API_KEY_ACTION,
       queryParams: request,
-      bodyParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
@@ -1775,6 +1776,35 @@ export class UserAPI extends BaseAPI {
     };
   }
 
+  async deleteNFTCollection<R>(
+    req: loopring_defs.CollectionDelete,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<{ raw_data: R }> {
+    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.DELETE_NFT_CREATE_COLLECTION,
+      queryParams: req,
+      apiKey,
+      method: ReqMethod.DELETE,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      raw_data,
+    };
+  }
+
   async submitNFTLegacyCollection<R>(
     req: loopring_defs.CollectionLegacyMeta,
     chainId: ChainId,
@@ -1866,6 +1896,44 @@ export class UserAPI extends BaseAPI {
     const dataToSig: Map<string, any> = sortObjDictionary(_req);
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
+      bodyParams: Object.fromEntries(dataToSig),
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    if (
+      raw_data != null &&
+      raw_data.resultInfo &&
+      raw_data != null &&
+      raw_data.resultInfo.code
+    ) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      raw_data,
+      result: raw_data.result,
+    };
+  }
+
+  async submitUpdateNFTGroup<R>(
+    req: loopring_defs.UpdateNFTGroupRequest,
+    chainId: ChainId,
+    apiKey: string,
+    eddsaKey: string
+  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
+    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const reqParams = {
+      url: LOOPRING_URLs.POST_NFT_UPDATE_NFT_GROUP,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
       method: ReqMethod.POST,
@@ -2638,10 +2706,6 @@ export class UserAPI extends BaseAPI {
       // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
       // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
-    // if (raw_data.data.nftId && raw_data.data.nftId.startsWith("0x")) {
-    //   const hashBN = new BN(raw_data.data.nftId.replace("0x", ""), 16);
-    //   raw_data.data.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
-    // }
     return {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
