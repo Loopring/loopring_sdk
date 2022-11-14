@@ -717,6 +717,9 @@ export interface GetTokenBalancesRequest {
   owner: string;
   token: TokenAddress[];
 }
+export interface GetALLTokenBalancesRequest {
+  owner: string;
+}
 
 export interface GetAllowancesRequest {
   owner: string;
@@ -3177,6 +3180,7 @@ export type CollectionExtendsKey = {
   cid?: string;
   id?: string;
   contractAddress: string;
+  collectionAddress: string;
   isPublic: boolean;
   isMintable: boolean;
   isEditable?: boolean;

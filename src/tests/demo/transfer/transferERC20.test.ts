@@ -8,7 +8,6 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 import * as sign_tools from "../../../api/sign/sign_tools";
-import { OriginNFTTransferRequestV3 } from "../../../index";
 import { myLog } from "../../../utils/log_tools";
 describe("Transfer", function () {
   it(
@@ -92,7 +91,7 @@ describe("Transfer", function () {
         request,
         web3,
         chainId: sdk.ChainId.GOERLI,
-        walletType: sdk.ConnectorNames.Trezor,
+        walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
       });

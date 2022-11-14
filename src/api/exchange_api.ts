@@ -39,6 +39,7 @@ import {
   TokenAddress,
   SoursURL,
   SEP,
+  GetALLTokenBalancesRequest,
 } from "../defs";
 
 import BigNumber from "bignumber.js";
@@ -594,6 +595,30 @@ export class ExchangeAPI extends BaseAPI {
 
     return {
       tokenBalances,
+      raw_data,
+    };
+  }
+  public async getAllTokenBalances<R, T = TokenAddress>(
+    request: GetALLTokenBalancesRequest
+  ): Promise<{
+    tokenBalances: Map<T, string>;
+    raw_data: R;
+  }> {
+    const reqParams: ReqParams = {
+      queryParams: { ...request },
+      url: LOOPRING_URLs.GET_AKK_TOKEN_BALANCES,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      tokenBalances: raw_data,
       raw_data,
     };
   }

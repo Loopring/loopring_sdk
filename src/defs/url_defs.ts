@@ -49,6 +49,8 @@ export enum LOOPRING_URLs {
   GET_ETH_NONCE = "/api/v3/eth/nonce",
   GET_ETH_BALANCES = "/api/v3/eth/balances",
   GET_TOKEN_BALANCES = "/api/v3/eth/tokenBalances",
+  GET_AKK_TOKEN_BALANCES = "/api/v3/eth/tokenBalances/all",
+
   GET_GAS_PRICE = "/api/v3/eth/recommendedGasPrice",
   GET_GAS_PRICE_RANGE = "/api/v3/eth/recommendedGasPriceRange",
 

@@ -341,6 +341,7 @@ export class WalletAPI extends BaseAPI {
     if (
       walletType === ConnectorNames.MetaMask ||
       walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.Coinbase ||
       walletType === ConnectorNames.OtherExtension
     ) {
       try {
