@@ -2607,6 +2607,8 @@ export interface GetUserNFTBalancesByCollectionRequest {
   limit?: number;
   nonZero?: boolean;
   metadata?: boolean;
+  favourite?: boolean;
+  hidden?: boolean;
 }
 
 export enum LegacyNFT {
@@ -2677,6 +2679,11 @@ export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> {
     withdraw: string;
     deposit: string;
   };
+  preference: {
+    favourite: boolean;
+    hide: boolean;
+  };
+  collectionInfo: CollectionMeta;
   metadata?: IPFS_METADATA;
   deploymentStatus: DEPLOYMENT_STATUS;
   isCounterFactualNFT: boolean;

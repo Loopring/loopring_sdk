@@ -266,23 +266,12 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType
       );
-      result = result.replace(/^ipfs:\/\/(ipfs\/)?/i, "");
-      myLog(result);
+      result = result.replace(
+        /^ipfs:\/\/(ipfs\/)?/,
+        LOOPRING_URLs.IPFS_META_URL
+      );
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
-
-      const reqParams: ReqParams = {
-        sigFlag: SIG_FLAG.NO_SIG,
-        url: LOOPRING_URLs.GET_DELEGATE_GET_IPFS,
-        method: ReqMethod.GET,
-        queryParams: { path: result },
-      };
-      const raw_data = (await this.makeReq().request(reqParams)).data;
-      if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-        return {
-          ...raw_data?.resultInfo,
-        };
-      }
-      return raw_data;
+      return await fetch(result).then((response) => response.json());
     } catch (err) {
       return {
         code: LoopringErrorCode.CONTRACTNFT_URI,

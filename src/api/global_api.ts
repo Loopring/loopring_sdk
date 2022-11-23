@@ -130,4 +130,43 @@ export class GlobalAPI extends BaseAPI {
       raw_data: raw_data.data,
     };
   }
+  public async getBanxaAPI<R>({
+    method,
+    query,
+    payload,
+  }: {
+    method: ReqMethod;
+    query: string;
+    payload: string;
+  }): Promise<{
+    result: R;
+    raw_data: R;
+  }> {
+    payload;
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_BANXA_API_KEY,
+      method: ReqMethod.GET,
+      queryParams: {
+        method: method.toString(),
+        query: query,
+        payload: payload ? "" : payload,
+      },
+      // apiKey:
+      //   this.chainId === ChainId.MAINNET
+      //     ? GLOBAL_KEY.MAIN.key
+      //     : GLOBAL_KEY.GOERLI.key,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+    return {
+      result: raw_data.result,
+      raw_data: raw_data,
+    };
+  }
+  // http://dev.loopring.io?method=GET&query=/api/coins&payload
 }

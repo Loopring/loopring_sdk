@@ -601,7 +601,7 @@ export class ExchangeAPI extends BaseAPI {
   public async getAllTokenBalances<R, T = TokenAddress>(
     request: GetALLTokenBalancesRequest
   ): Promise<{
-    tokenBalances: Map<T, string>;
+    tokenBalances: LoopringMap<string>;
     raw_data: R;
   }> {
     const reqParams: ReqParams = {

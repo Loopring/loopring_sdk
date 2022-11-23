@@ -144,7 +144,7 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRADE_HISTORY = "/api/v3/new/user/nft/trades",
   GET_USER_NFT_MINT_HISTORY = "/api/v3/user/nft/mints",
   GET_DEPLOY_TOKEN_ADDRESS = "/api/v3/nft/deployTokenAddress",
-  IPFS_META_URL = "https://infura-ipfs.io/ipfs/",
+  IPFS_META_URL = "https://ipfs.loopring.io/ipfs/",
 
   GET_DUAL_INDEX = "/api/v3/dual/index",
   GET_DUAL_PRICES = "/api/v3/dual/prices",
@@ -167,4 +167,5 @@ export enum LOOPRING_URLs {
   POST_LUCK_TOKEN_SENDLUCKYTOKEN = "/api/v3/luckyToken/sendLuckyToken",
   POST_LUCK_TOKEN_CLAIMLUCKYTOKEN = "/api/v3/luckyToken/claimLuckyToken",
   POST_LUCK_TOKEN_WITHDRAWS = "/api/v3/luckyToken/user/withdraws",
+  GET_BANXA_API_KEY = "/api/v3/hmacAuthentication",
 }
