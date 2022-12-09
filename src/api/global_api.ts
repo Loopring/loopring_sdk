@@ -15,6 +15,7 @@ import {
 } from "../defs/loopring_defs";
 import { ChainId } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
+import { sortObjDictionary } from "../utils";
 
 const GLOBAL_KEY = {
   GOERLI: {
@@ -130,33 +131,51 @@ export class GlobalAPI extends BaseAPI {
       raw_data: raw_data.data,
     };
   }
-  public async getBanxaAPI<R>({
-    method,
-    query,
-    payload,
-  }: {
-    method: ReqMethod;
-    query: string;
-    payload: string;
-  }): Promise<{
+  public async getBanxaAPI<R>(
+    {
+      method,
+      query,
+      payload,
+      url,
+      accountId,
+    }: {
+      method: ReqMethod;
+      query: string;
+      payload: string;
+      url: string;
+      accountId: number;
+    },
+    eddsaKey: string,
+    apiKey: string
+  ): Promise<{
     result: R;
     raw_data: R;
   }> {
-    payload;
+    const queryParams = {
+      accountId,
+      url,
+      method: method.toString(),
+      query: query,
+      payload: payload ? payload : "",
+    };
+    const dataToSig = sortObjDictionary({
+      ...queryParams,
+      url: encodeURIComponent(queryParams.url),
+      query: encodeURIComponent(queryParams.query),
+      payload: encodeURIComponent(queryParams.payload),
+    });
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_BANXA_API_KEY,
       method: ReqMethod.GET,
-      queryParams: {
-        method: method.toString(),
-        query: query,
-        payload: payload ? "" : payload,
+      queryParams,
+      apiKey,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        PrivateKey: eddsaKey,
+        dataToSig: dataToSig,
       },
-      // apiKey:
-      //   this.chainId === ChainId.MAINNET
-      //     ? GLOBAL_KEY.MAIN.key
-      //     : GLOBAL_KEY.GOERLI.key,
-      sigFlag: SIG_FLAG.NO_SIG,
     };
+
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
@@ -168,5 +187,6 @@ export class GlobalAPI extends BaseAPI {
       raw_data: raw_data,
     };
   }
+  // public async getBanxaAPIRequest<R>({}) {}
   // http://dev.loopring.io?method=GET&query=/api/coins&payload
 }

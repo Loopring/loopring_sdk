@@ -34,14 +34,15 @@ import {
   NFTOrderRequestV3,
   NFTTokenAmountInfo,
   NFTTradeRequestV3,
-  SubmitOrderRequestV3, DualOrderRequest,
+  SubmitOrderRequestV3,
+  DualOrderRequest,
 } from "../../defs/loopring_defs";
 
 import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
-import { keccak } from 'ethereumjs-util';
+import { keccak } from "ethereumjs-util";
 import { lte } from "lodash";
 
 export enum GetEcDSASigType {
@@ -101,8 +102,12 @@ export async function generateKeyPair({
     const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
     // myLog("keyPair", keyPair)
 
-    const formatedPx = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyX)));
-    const formatedPy = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyY)));
+    const formatedPx = fm.formatEddsaKey(
+      fm.toHex(fm.toBig(keyPair.publicKeyX))
+    );
+    const formatedPy = fm.formatEddsaKey(
+      fm.toHex(fm.toBig(keyPair.publicKeyY))
+    );
     const sk = toHex(toBig(keyPair.secretKey));
 
     return {
@@ -199,7 +204,7 @@ export function getEdDSASig(
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
-  // myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);
 
@@ -1029,7 +1034,6 @@ export function get_EddsaSig_NFT_Order(
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
 
-
 export function get_EddsaSig_Dual_Order(
   request: DualOrderRequest,
   eddsaKey: string
@@ -1050,7 +1054,6 @@ export function get_EddsaSig_Dual_Order(
 
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
-
 
 export async function signNFTMintWithDataStructure(
   web3: Web3,
@@ -1440,7 +1443,7 @@ export async function signNFTTransferWithDataStructureForContract(
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData));
-  myLog('eddsaSign',hash)
+  myLog("eddsaSign", hash);
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
   return {
@@ -1451,12 +1454,17 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
   };
 }
 
-
-export function eddsaSignWithDomain(domainHax: string, primaryType: string, message: EIP712Message, types: EIP712Types, eddsaKey: string) {
-  const parts = [Buffer.from('1901', 'hex')]
-  parts.push(Buffer.from(domainHax.slice(2),'hex'));
-  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types)); 
-  const hash =fm.toHex(ethUtil.sha3(Buffer.concat(parts)));
+export function eddsaSignWithDomain(
+  domainHax: string,
+  primaryType: string,
+  message: EIP712Message,
+  types: EIP712Types,
+  eddsaKey: string
+) {
+  const parts = [Buffer.from("1901", "hex")];
+  parts.push(Buffer.from(domainHax.slice(2), "hex"));
+  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types));
+  const hash = fm.toHex(ethUtil.sha3(Buffer.concat(parts)));
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
   const signature = EDDSAUtil.sign(eddsaKey, sigHash);
   return {
@@ -1466,7 +1474,6 @@ export function eddsaSignWithDomain(domainHax: string, primaryType: string, mess
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
   };
 }
-
 
 export function getAmmJoinEcdsaTypedData(
   data: JoinAmmPoolRequest,
@@ -1475,7 +1482,7 @@ export function getAmmJoinEcdsaTypedData(
   const message = {
     owner: data.owner,
     joinAmounts: [
-      data.joinTokens.pooled[ 0 ].volume,
+      data.joinTokens.pooled[0].volume,
       data.joinTokens.pooled[1].volume,
     ],
     joinStorageIDs: data.storageIds,
@@ -1521,8 +1528,13 @@ export function get_EddsaSig_JoinAmmPool(
 ) {
   if (data.domainSeparator) {
     const typedData = getAmmJoinEcdsaTypedData(data, patch);
-    return eddsaSignWithDomain(data.domainSeparator,
-      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+    return eddsaSignWithDomain(
+      data.domainSeparator,
+      typedData.primaryType,
+      typedData.message,
+      typedData.types,
+      patch.eddsaKey
+    );
   } else {
     const typedData = getAmmJoinEcdsaTypedData(data, patch);
     return eddsaSign(typedData, patch.eddsaKey);
@@ -1580,13 +1592,17 @@ export function get_EddsaSig_ExitAmmPool(
 ) {
   if (data.domainSeparator) {
     const typedData = getAmmExitEcdsaTypedData(data, patch);
-    return eddsaSignWithDomain(data.domainSeparator,
-      typedData.primaryType, typedData.message, typedData.types, patch.eddsaKey);
+    return eddsaSignWithDomain(
+      data.domainSeparator,
+      typedData.primaryType,
+      typedData.message,
+      typedData.types,
+      patch.eddsaKey
+    );
   } else {
     const typedData = getAmmExitEcdsaTypedData(data, patch);
     return eddsaSign(typedData, patch.eddsaKey);
   }
-
 }
 
 // export function getDefiEcdsaTypedData(

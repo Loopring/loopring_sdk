@@ -3188,17 +3188,35 @@ export type CollectionExtendsKey = {
   id?: string;
   contractAddress: string;
   collectionAddress: string;
-  isPublic: boolean;
-  isMintable: boolean;
-  isEditable?: boolean;
-  isDeletable: boolean;
   deployStatus: DEPLOYMENT_STATUS;
-  isCounterFactualNFT: boolean;
   updatedAt: number;
   createdAt: number;
   nftType: string;
   baseUri: string;
   collectionTitle?: string;
+  extra: {
+    mintChannel: string;
+    properties: {
+      isCounterFactualNFT: boolean;
+      isDeletable: boolean;
+      isEditable: boolean;
+      isLegacy: boolean;
+      isMintable: boolean;
+      isPublic: boolean;
+    };
+  };
+  cached: {
+    avatar: string;
+    banner: string;
+    thumbnail: string;
+    tileUri: string;
+  };
+  isCounterFactualNFT?: boolean;
+  isDeletable?: boolean;
+  isEditable?: boolean;
+  isLegacy?: boolean;
+  isMintable?: boolean;
+  isPublic?: boolean;
 };
 
 export type CollectionBasicMeta = {
@@ -3588,6 +3606,15 @@ export type LuckyTokenItemForReceive = {
   templateNo: number;
   createdAt: number;
 };
+export type LuckyTokenItemForSend = {
+  type: LuckyTokenType;
+  signerFlag: LuckyTokenSignerFlag;
+  luckyToken: LuckyTokenInfo;
+  numbers: number;
+  templateID: number;
+  memo: string;
+  validSince: number;
+};
 export type LuckTokenClaim = {
   hash: string;
   claimer: {
@@ -3635,4 +3662,24 @@ export type LuckTokenWithdraw = {
   status: 0 | 1 | 2; // PENDING:0 SUCCESS:1  FAIL:2
   createdAt: number;
   updatedAt: number;
+};
+
+export type TOKENMAPLIST = {
+  tokensMap: LoopringMap<TokenInfo>;
+  coinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }>;
+  totalCoinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }>;
+  idIndex: LoopringMap<string>;
+  addressIndex: LoopringMap<TokenAddress>;
 };
