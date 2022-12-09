@@ -40,10 +40,11 @@ import {
   SoursURL,
   SEP,
   GetALLTokenBalancesRequest,
+  TOKENMAPLIST,
 } from "../defs";
 
 import BigNumber from "bignumber.js";
-import { getBaseQuote } from "../utils";
+import { getBaseQuote, makeMarket, makeMarkets } from "../utils";
 
 const checkAmt = (rawStr: string) => {
   if (rawStr.trim() === "") {
@@ -335,71 +336,18 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const markets: LoopringMap<MarketInfo> = {};
-
-    const pairs: LoopringMap<TokenRelatedInfo> = {};
-
-    const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
-
-    if (raw_data?.markets instanceof Array) {
-      raw_data.markets.forEach((item: any) => {
-        const marketInfo: MarketInfo = {
-          baseTokenId: item.baseTokenId,
-          enabled: item.enabled,
-          market: item.market,
-          orderbookAggLevels: item.orderbookAggLevels,
-          precisionForPrice: item.precisionForPrice,
-          quoteTokenId: item.quoteTokenId,
-        };
-
-        if (isMix) {
-          marketInfo.status = item.status as MarketStatus;
-          marketInfo.isSwapEnabled =
-            marketInfo.status === MarketStatus.ALL ||
-            marketInfo.status === MarketStatus.AMM;
-          marketInfo.createdAt = parseInt(item.createdAt);
-        }
-
-        markets[item.market] = marketInfo;
-
-        if (item.enabled) {
-          const market: string = item.market;
-          const ind = market.indexOf("-");
-          const base = market.substring(0, ind);
-          const quote = market.substring(ind + 1, market.length);
-
-          if (!pairs[base]) {
-            pairs[base] = {
-              tokenId: item.baseTokenId,
-              tokenList: [quote],
-            };
-          } else {
-            pairs[base].tokenList = [...pairs[base].tokenList, quote];
-          }
-
-          if (!pairs[quote]) {
-            pairs[quote] = {
-              tokenId: item.quoteTokenId,
-              tokenList: [base],
-            };
-          } else {
-            pairs[quote].tokenList = [...pairs[quote].tokenList, base];
-          }
-        }
-      });
-    }
-
-    const marketArr: string[] = Reflect.ownKeys(markets) as string[];
-
-    const tokenArr: string[] = Reflect.ownKeys(pairs) as string[];
+    const { markets, pairs, tokenArr, tokenArrStr, marketArr, marketArrStr } =
+      makeMarkets(raw_data, url);
 
     return {
       markets,
       pairs,
       tokenArr,
-      tokenArrStr: tokenArr.join(SEP),
+      tokenArrStr,
+      // tokenArrStr: tokenArr.join(SEP),
       marketArr,
-      marketArrStr: marketArr.join(SEP),
+      marketArrStr,
+      // marketArrStr: marketArr.join(SEP),
       raw_data,
     };
   }
@@ -422,26 +370,11 @@ export class ExchangeAPI extends BaseAPI {
   /*
    * Returns the configurations of all supported tokens, including Ether.
    */
-  public async getTokens<R>(): Promise<{
-    tokensMap: LoopringMap<TokenInfo>;
-    coinMap: LoopringMap<{
-      icon?: string;
-      name: string;
-      simpleName: string;
-      description?: string;
-      company: string;
-    }>;
-    totalCoinMap: LoopringMap<{
-      icon?: string;
-      name: string;
-      simpleName: string;
-      description?: string;
-      company: string;
-    }>;
-    idIndex: LoopringMap<string>;
-    addressIndex: LoopringMap<TokenAddress>;
-    raw_data: R;
-  }> {
+  public async getTokens<R>(): Promise<
+    TOKENMAPLIST & {
+      raw_data: R;
+    }
+  > {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_TOKENS,
       method: ReqMethod.GET,
@@ -454,53 +387,57 @@ export class ExchangeAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const coinMap: LoopringMap<{
-      icon?: string;
-      name: string;
-      simpleName: string;
-      description?: string;
-      company: string;
-    }> = {};
-    const totalCoinMap: LoopringMap<{
-      icon?: string;
-      name: string;
-      simpleName: string;
-      description?: string;
-      company: string;
-    }> = {};
-    const addressIndex: LoopringMap<TokenAddress> = {};
-    const idIndex: LoopringMap<string> = {};
-    const tokensMap: LoopringMap<TokenInfo> = {};
-    if (raw_data instanceof Array) {
-      raw_data.forEach((item: TokenInfo) => {
-        if (item.symbol.startsWith("LP-")) {
-          item.isLpToken = true;
-        } else {
-          item.isLpToken = false;
-        }
-        tokensMap[item.symbol] = item;
 
-        const coinInfo = {
-          icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
-          name: item.symbol,
-          simpleName: item.symbol,
-          description: item.type,
-          company: "",
-        };
-        if (!item.symbol.startsWith("LP-")) {
-          coinMap[item.symbol] = coinInfo;
-        }
-        totalCoinMap[item.symbol] = coinInfo;
-        addressIndex[item.address.toLowerCase()] = item.symbol;
-        idIndex[item.tokenId] = item.symbol;
-      });
-    }
+    // raw_data
+    // const coinMap: LoopringMap<{
+    //   icon?: string;
+    //   name: string;                   makeMarket
+    //   simpleName: string;
+    //   description?: string;
+    //   company: string;
+    // }> = {};
+    // const totalCoinMap: LoopringMap<{
+    //   icon?: string;
+    //   name: string;
+    //   simpleName: string;
+    //   description?: string;
+    //   company: string;
+    // }> = {};
+    // const addressIndex: LoopringMap<TokenAddress> = {};
+    // const idIndex: LoopringMap<string> = {};
+    // const tokensMap: LoopringMap<TokenInfo> = {};
+    // if (raw_data instanceof Array) {
+    //   raw_data.forEach((item: TokenInfo) => {
+    //     if (item.symbol.startsWith("LP-")) {
+    //       item.isLpToken = true;
+    //     } else {
+    //       item.isLpToken = false;
+    //     }
+    //     tokensMap[item.symbol] = item;
+    //
+    //     const coinInfo = {
+    //       icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
+    //       name: item.symbol,
+    //       simpleName: item.symbol,
+    //       description: item.type,
+    //       company: "",
+    //     };
+    //     if (!item.symbol.startsWith("LP-")) {
+    //       coinMap[item.symbol] = coinInfo;
+    //     }
+    //     totalCoinMap[item.symbol] = coinInfo;
+    //     addressIndex[item.address.toLowerCase()] = item.symbol;
+    //     idIndex[item.tokenId] = item.symbol;
+    //   });
+    // }
+    // raw_data: R;
     return {
-      tokensMap,
-      coinMap,
-      totalCoinMap,
-      idIndex,
-      addressIndex,
+      ...makeMarket(raw_data),
+      // tokensMap,
+      // coinMap,
+      // totalCoinMap,
+      // idIndex,
+      // addressIndex,
       raw_data,
     };
   }

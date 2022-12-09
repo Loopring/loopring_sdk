@@ -11,6 +11,7 @@ import {
   LuckTokenHistory,
   LuckTokenWithdraw,
   LuckTokenClaim,
+  LuckyTokenItemForSend,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 import { sortObjDictionary } from "../utils";
@@ -322,15 +323,7 @@ export class LuckTokenAPI extends BaseAPI {
       apiKey,
       eddsaKey,
     }: {
-      request: {
-        type: loopring_defs.LuckyTokenType;
-        numbers: number;
-        memo: string;
-        signerFlag: loopring_defs.LuckyTokenSignerFlag; //是否使用签名信息，是的话后续红包返回的签名信息包含签名信息
-        templateID: number;
-        validSince: number; // 秒
-        luckyToken: loopring_defs.LuckyTokenInfo;
-      };
+      request: LuckyTokenItemForSend;
       chainId: ChainId;
       walletType: ConnectorNames;
       eddsaKey: string;

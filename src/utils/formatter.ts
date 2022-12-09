@@ -1,6 +1,19 @@
 import * as ethUtil from "ethereumjs-util";
 import BN from "bn.js";
 import BigNumber from "bignumber.js";
+import {
+  AmmPoolInfoV3,
+  LOOPRING_URLs,
+  LoopringMap,
+  MarketInfo,
+  MarketStatus,
+  SEP,
+  SoursURL,
+  TokenAddress,
+  TokenInfo,
+  TOKENMAPLIST,
+  TokenRelatedInfo,
+} from "../defs";
 
 BigNumber.config({
   EXPONENTIAL_AT: 100,
@@ -270,7 +283,7 @@ export function numberWithCommas(number: any) {
     }
     try {
       const parts = number.toString().split(".");
-      parts[ 0 ] = parts[ 0 ].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
     } catch (err) {
       return "-";
@@ -280,13 +293,186 @@ export function numberWithCommas(number: any) {
   }
 }
 
-
-export function sortObjDictionary(obj: { [ key: string ]: any }): Map<string, any> {
+export function sortObjDictionary(obj: {
+  [key: string]: any;
+}): Map<string, any> {
   const dataToSig: Map<string, any> = new Map();
   if (obj) {
-    Reflect.ownKeys(obj).sort((a, b) => a.toString().localeCompare(b.toString())).forEach((key) => {
-      dataToSig.set(key.toString(), obj[ key.toString() ])
-    })
+    Reflect.ownKeys(obj)
+      .sort((a, b) => a.toString().localeCompare(b.toString()))
+      .forEach((key) => {
+        dataToSig.set(key.toString(), obj[key.toString()]);
+      });
   }
-  return dataToSig
+  return dataToSig;
+}
+export function makeMarket<R>(raw_data: TokenInfo[]): TOKENMAPLIST {
+  const coinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }> = {};
+  const totalCoinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }> = {};
+  const addressIndex: LoopringMap<TokenAddress> = {};
+  const idIndex: LoopringMap<string> = {};
+  const tokensMap: LoopringMap<TokenInfo> = {};
+  if (raw_data instanceof Array) {
+    raw_data.forEach((item: TokenInfo) => {
+      if (item.symbol.startsWith("LP-")) {
+        item.isLpToken = true;
+      } else {
+        item.isLpToken = false;
+      }
+      tokensMap[item.symbol] = item;
+
+      const coinInfo = {
+        icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
+        name: item.symbol,
+        simpleName: item.symbol,
+        description: item.type,
+        company: "",
+      };
+      if (!item.symbol.startsWith("LP-")) {
+        coinMap[item.symbol] = coinInfo;
+      }
+      totalCoinMap[item.symbol] = coinInfo;
+      addressIndex[item.address.toLowerCase()] = item.symbol;
+      idIndex[item.tokenId] = item.symbol;
+    });
+  }
+  return {
+    tokensMap,
+    coinMap,
+    totalCoinMap,
+    idIndex,
+    addressIndex,
+  };
+}
+export function makeAmmPool<R>(raw_data: any): {
+  ammpools: LoopringMap<AmmPoolInfoV3>;
+  pairs: LoopringMap<TokenRelatedInfo>;
+} {
+  const ammpools: LoopringMap<AmmPoolInfoV3> = {};
+  const pairs: LoopringMap<TokenRelatedInfo> = {};
+  if (raw_data?.pools instanceof Array) {
+    raw_data.pools.forEach((item: any) => {
+      const market: string = item.market;
+      ammpools[market] = item;
+      let base = "",
+        quote = "";
+      const ind = market.indexOf("-");
+      const ind2 = market.lastIndexOf("-");
+      base = market.substring(ind + 1, ind2);
+      quote = market.substring(ind2 + 1, market.length);
+
+      if (!pairs[base]) {
+        pairs[base] = {
+          tokenId: item.tokens.pooled[0],
+          tokenList: [quote],
+        };
+      } else {
+        pairs[base].tokenList = [...pairs[base].tokenList, quote];
+      }
+
+      if (!pairs[quote]) {
+        pairs[quote] = {
+          tokenId: item.tokens.pooled[1],
+          tokenList: [base],
+        };
+      } else {
+        pairs[quote].tokenList = [...pairs[quote].tokenList, base];
+      }
+    });
+  }
+  return {
+    ammpools,
+    pairs,
+  };
+}
+
+export function makeMarkets<R>(
+  raw_data: any,
+  url: string = LOOPRING_URLs.GET_MARKETS
+): {
+  markets: LoopringMap<MarketInfo>;
+  pairs: LoopringMap<TokenRelatedInfo>;
+  tokenArr: string[];
+  tokenArrStr: string;
+  marketArr: string[];
+  marketArrStr: string;
+} {
+  const markets: LoopringMap<MarketInfo> = {};
+
+  const pairs: LoopringMap<TokenRelatedInfo> = {};
+
+  const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
+
+  if (raw_data?.markets instanceof Array) {
+    raw_data.markets.forEach((item: any) => {
+      const marketInfo: MarketInfo = {
+        baseTokenId: item.baseTokenId,
+        enabled: item.enabled,
+        market: item.market,
+        orderbookAggLevels: item.orderbookAggLevels,
+        precisionForPrice: item.precisionForPrice,
+        quoteTokenId: item.quoteTokenId,
+      };
+
+      if (isMix) {
+        marketInfo.status = item.status as MarketStatus;
+        marketInfo.isSwapEnabled =
+          marketInfo.status === MarketStatus.ALL ||
+          marketInfo.status === MarketStatus.AMM;
+        marketInfo.createdAt = parseInt(item.createdAt);
+      }
+
+      markets[item.market] = marketInfo;
+
+      if (item.enabled) {
+        const market: string = item.market;
+        const ind = market.indexOf("-");
+        const base = market.substring(0, ind);
+        const quote = market.substring(ind + 1, market.length);
+
+        if (!pairs[base]) {
+          pairs[base] = {
+            tokenId: item.baseTokenId,
+            tokenList: [quote],
+          };
+        } else {
+          pairs[base].tokenList = [...pairs[base].tokenList, quote];
+        }
+
+        if (!pairs[quote]) {
+          pairs[quote] = {
+            tokenId: item.quoteTokenId,
+            tokenList: [base],
+          };
+        } else {
+          pairs[quote].tokenList = [...pairs[quote].tokenList, base];
+        }
+      }
+    });
+  }
+
+  const marketArr: string[] = Reflect.ownKeys(markets) as string[];
+
+  const tokenArr: string[] = Reflect.ownKeys(pairs) as string[];
+
+  return {
+    markets,
+    pairs,
+    tokenArr,
+    tokenArrStr: tokenArr.join(SEP),
+    marketArr,
+    marketArrStr: marketArr.join(SEP),
+  };
 }

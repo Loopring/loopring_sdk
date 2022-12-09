@@ -3588,6 +3588,15 @@ export type LuckyTokenItemForReceive = {
   templateNo: number;
   createdAt: number;
 };
+export type LuckyTokenItemForSend = {
+  type: LuckyTokenType;
+  signerFlag: LuckyTokenSignerFlag;
+  luckyToken: LuckyTokenInfo;
+  numbers: number;
+  templateID: number;
+  memo: string;
+  validSince: number;
+};
 export type LuckTokenClaim = {
   hash: string;
   claimer: {
@@ -3635,4 +3644,24 @@ export type LuckTokenWithdraw = {
   status: 0 | 1 | 2; // PENDING:0 SUCCESS:1  FAIL:2
   createdAt: number;
   updatedAt: number;
+};
+
+export type TOKENMAPLIST = {
+  tokensMap: LoopringMap<TokenInfo>;
+  coinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }>;
+  totalCoinMap: LoopringMap<{
+    icon?: string;
+    name: string;
+    simpleName: string;
+    description?: string;
+    company: string;
+  }>;
+  idIndex: LoopringMap<string>;
+  addressIndex: LoopringMap<TokenAddress>;
 };

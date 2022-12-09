@@ -41,6 +41,7 @@ import { AmmPoolActivityStatus, ReqMethod, SIG_FLAG, SortOrder } from "../defs";
 import { LOOPRING_URLs } from "../defs";
 
 import * as sign_tools from "./sign/sign_tools";
+import { makeAmmPool } from "../utils";
 
 export class AmmpoolAPI extends BaseAPI {
   /*
@@ -63,40 +64,8 @@ export class AmmpoolAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const ammpools: LoopringMap<AmmPoolInfoV3> = {};
 
-    const pairs: LoopringMap<TokenRelatedInfo> = {};
-
-    if (raw_data?.pools instanceof Array) {
-      raw_data.pools.forEach((item: any) => {
-        const market: string = item.market;
-        ammpools[market] = item;
-        let base = "",
-          quote = "";
-        const ind = market.indexOf("-");
-        const ind2 = market.lastIndexOf("-");
-        base = market.substring(ind + 1, ind2);
-        quote = market.substring(ind2 + 1, market.length);
-
-        if (!pairs[base]) {
-          pairs[base] = {
-            tokenId: item.tokens.pooled[0],
-            tokenList: [quote],
-          };
-        } else {
-          pairs[base].tokenList = [...pairs[base].tokenList, quote];
-        }
-
-        if (!pairs[quote]) {
-          pairs[quote] = {
-            tokenId: item.tokens.pooled[1],
-            tokenList: [base],
-          };
-        } else {
-          pairs[quote].tokenList = [...pairs[quote].tokenList, base];
-        }
-      });
-    }
+    const { ammpools, pairs } = makeAmmPool(raw_data);
     // if (raw_data.code) {
     //   return {
     //     ...raw_data,
