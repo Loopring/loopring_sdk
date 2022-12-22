@@ -3606,15 +3606,37 @@ export type LuckyTokenItemForReceive = {
   templateNo: number;
   createdAt: number;
 };
+/**
+ * LuckyTokenItemForSend
+ *
+ */
 export type LuckyTokenItemForSend = {
   type: LuckyTokenType;
-  signerFlag: LuckyTokenSignerFlag;
-  luckyToken: LuckyTokenInfo;
-  numbers: number;
-  templateID: number;
+  /**
+   * numbers
+   * @type {number}  ERC20 [1,10000], NFT [1,20000]
+   * @memberof LuckyTokenItemForSend
+   */
+  numbers: number; // <10000
   memo: string;
+  signerFlag: LuckyTokenSignerFlag;
+  templateID: number;
   validSince: number;
-};
+  validUntil: number;
+} & (
+  | {
+      luckyToken: OriginNFTTransferRequestV3;
+      /**
+       * nftData
+       * @type {string}  NFT required
+       * @memberof LuckyTokenItemForSend
+       */
+      nftData: string;
+    }
+  | {
+      luckyToken: OriginTransferRequestV3;
+    }
+);
 export type LuckTokenClaim = {
   hash: string;
   claimer: {

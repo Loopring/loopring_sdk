@@ -378,8 +378,8 @@ export class AmmpoolAPI extends BaseAPI {
     }
     const ammPoolStats: LoopringMap<AmmPoolStat> = {};
 
-    if (raw_data.data instanceof Array) {
-      raw_data.data.forEach((item: AmmPoolStat) => {
+    if (raw_data instanceof Array) {
+      raw_data.forEach((item: AmmPoolStat) => {
         ammPoolStats[item.market] = item;
       });
     }

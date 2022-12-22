@@ -7,8 +7,8 @@ export enum LOOPRING_URLs {
   API_KEY_ACTION = "/api/v3/apiKey", // get update
   GET_NEXT_STORAGE_ID = "/api/v3/storageId",
   ORDER_ACTION = "/api/v3/order", // get submit cancel
-  ORDER_CANCEL_HASH_LIST = "/api/v2/orders/byHash", // cancel multiple orders by hashs
-  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v2/orders/byClientOrderId", // cancel multiple orders by clientOrderids
+  ORDER_CANCEL_HASH_LIST = "/api/v3/orders/byHash", // cancel multiple orders by hashs
+  ORDER_CANCEL_CLIENT_ORDER_ID_LIST = "/api/v3/orders/byClientOrderId", // cancel multiple orders by clientOrderids
   GET_MULTI_ORDERS = "/api/v3/orders",
   GET_MARKETS = "/api/v3/exchange/markets",
   GET_TOKENS = "/api/v3/exchange/tokens",
@@ -59,7 +59,7 @@ export enum LOOPRING_URLs {
   GET_AMM_POOLS_CONF = "/api/v3/amm/pools",
   GET_AMM_POOLS_SNAPSHOT = "/api/v3/amm/balance",
   GET_AMM_POOLS_BALANCES = "/api/v3/amm/balances",
-  GET_AMM_POOL_STATS = "/api/v2/amm/poolsStats",
+  GET_AMM_POOL_STATS = "/api/v3/amm/poolsStats",
   POST_JOIN_AMM_POOL = "/api/v3/amm/join",
   POST_EXIT_AMM_POOL = "/api/v3/amm/exit",
   GET_AMM_POOL_TXS = "/api/v3/amm/transactions",
@@ -69,11 +69,11 @@ export enum LOOPRING_URLs {
   GET_AMMPOOL_USER_REWARDS = "/api/v3/amm/user/rewards",
   GET_AMMPOOL_REWARDS = "/api/v3/amm/rewards",
   GET_AMMPOOL_GAME_RANK = "/api/v3/game/rank",
-  GET_AMMPOOL_GAME_USER_RANK = "/api/v2/game/user/rank",
-  GET_LIQUIDITY_MINING = "/api/v2/sidecar/liquidityMining",
+  GET_AMMPOOL_GAME_USER_RANK = "/api/v3/game/user/rank",
+  GET_LIQUIDITY_MINING = "/api/v3/sidecar/liquidityMining",
   GET_DELEGATE_GET_CODE = "/api/v3/delegator/getCode",
   GET_DELEGATE_GET_IPFS = "/api/v3/delegator/ipfs",
-  GET_LIQUIDITY_MINING_USER_HISTORY = "/api/v2/sidecar/liquidityMiningUserHistory",
+  GET_LIQUIDITY_MINING_USER_HISTORY = "/api/v3/sidecar/liquidityMiningUserHistory",
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
   GET_ASSET_LOCK_RECORDS = "api/v3/user/lockRecords",
