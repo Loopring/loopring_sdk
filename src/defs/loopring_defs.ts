@@ -3333,7 +3333,7 @@ export type DualProductAndPrice = {
   expired: boolean;
   dualType: DUAL_TYPE;
   ratio: number;
-  dualPrice: DualPrice;
+  profit: string;
 };
 
 export type DualRulesCoinsInfo = {
