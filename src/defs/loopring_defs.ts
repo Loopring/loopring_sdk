@@ -3606,37 +3606,6 @@ export type LuckyTokenItemForReceive = {
   templateNo: number;
   createdAt: number;
 };
-/**
- * LuckyTokenItemForSend
- *
- */
-export type LuckyTokenItemForSend = {
-  type: LuckyTokenType;
-  /**
-   * numbers
-   * @type {number}  ERC20 [1,10000], NFT [1,20000]
-   * @memberof LuckyTokenItemForSend
-   */
-  numbers: number; // <10000
-  memo: string;
-  signerFlag: LuckyTokenSignerFlag;
-  templateID: number;
-  validSince: number;
-  validUntil: number;
-} & (
-  | {
-      luckyToken: OriginNFTTransferRequestV3;
-      /**
-       * nftData
-       * @type {string}  NFT required
-       * @memberof LuckyTokenItemForSend
-       */
-      nftData: string;
-    }
-  | {
-      luckyToken: OriginTransferRequestV3;
-    }
-);
 export type LuckTokenClaim = {
   hash: string;
   claimer: {
@@ -3705,3 +3674,70 @@ export type TOKENMAPLIST = {
   idIndex: LoopringMap<string>;
   addressIndex: LoopringMap<TokenAddress>;
 };
+
+export interface OriginLuckTokenWithdrawsRequestV3 {
+  tokenId: number;
+  feeTokenId: number;
+  amount: string;
+  claimer: string;
+  transfer: Omit<OriginTransferRequestV3, "payeeId" | "maxFee" | "memo"> & {
+    payeeId?: 0;
+    memo?: string;
+    maxFee?: {
+      volume: "0";
+      tokenId: number | string;
+    };
+  };
+}
+
+export interface OriginLuckTokenWithdrawsRequestV3WithPatch {
+  request: OriginLuckTokenWithdrawsRequestV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
+
+/**
+ * LuckyTokenItemForSend
+ *
+ */
+export type LuckyTokenItemForSendV3 = {
+  type: LuckyTokenType;
+  /**
+   * numbers
+   * @type {number}  ERC20 [1,10000], NFT [1,20000]
+   * @memberof LuckyTokenItemForSend
+   */
+  numbers: number; // <10000
+  memo: string;
+  signerFlag: LuckyTokenSignerFlag;
+  templateID: number;
+  validSince: number;
+  validUntil: number;
+} & (
+  | {
+      luckyToken: OriginNFTTransferRequestV3;
+      /**
+       * nftData
+       * @type {string}  NFT required
+       * @memberof LuckyTokenItemForSend
+       */
+      nftData: string;
+    }
+  | {
+      luckyToken: OriginTransferRequestV3;
+    }
+);
+
+export interface OriginLuckTokenSendRequestV3WithPatch {
+  request: LuckyTokenItemForSendV3;
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
