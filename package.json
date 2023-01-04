@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.0.8",
+  "version": "3.0.11",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "private": false,
@@ -16,6 +16,7 @@
     "@ethereumjs/tx": "^3.3.0",
     "@types/jsbn": "^1.2.30",
     "axios": "^0.21.1",
+    "babel-preset-stage-3": "^6.24.1",
     "bignumber.js": "^9.0.1",
     "blake-hash": "^2.0.0",
     "blake2b": "^2.1.3",
