@@ -7,14 +7,14 @@ Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will 
 >    <p>New Version of NFT will has it isolate Contract/colletion with metadata inforamtion</p> 
 >    <P>From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT</p>
 >    
-```
+```ts
 tokenAddress: collectionMeta.contractAddress
 counterFactualNftInfo: {
 	nftOwner: ccInfo.owner,
 	nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
 	nftBaseUri: collectionMeta?.baseUri ?? "",
-},`
-``
+},
+```
 
 ## Step 1. get Account
 
