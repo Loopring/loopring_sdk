@@ -11,6 +11,18 @@ import { CollectionMeta, NFTCounterFactualInfo } from "../../../defs";
 const mockData = {
   nftTokenAddress: "0xfc26d5b9277f4375ba8ff7d4708f4dbf78954124"
 }
+/** 
+ * !!!important  describe
+ * Follow mehod is the simple way for mint NTF, but this kind of NFT will using the same contact & with no Contract metadata forever on L1, 
+ * New Version of NFT will has it isolate Contract/colletion with metadata inforamtion 
+ * From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT
+ * tokenAddress: collectionMeta.contractAddress,
+ * counterFactualNftInfo: {
+ *  nftOwner: ccInfo.owner,
+ *  nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
+ *  nftBaseUri: collectionMeta?.baseUri ?? "",
+ * },
+ **/
 describe("mintNFT", function () {
   it(
     "submitNFTMint",
@@ -75,7 +87,7 @@ describe("mintNFT", function () {
           toAccountId: accInfo.accountId,
           toAddress: accInfo.owner,
           nftType: 0,
-          tokenAddress: nftTokenAddress,
+          tokenAddress: nftTokenAddress, // please read the description -> tokenAddress: collectionMeta.contractAddress,
           nftId: LOOPRING_EXPORTED_ACCOUNT.nftId, //nftId.toString(16),
           amount: "1",
           validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
@@ -86,6 +98,12 @@ describe("mintNFT", function () {
           },
           royaltyPercentage: 5,
           forceToMint: true, // suggest use as false, for here is just for run test
+          // please read the description
+          // counterFactualNftInfo: {
+          //  nftOwner: ccInfo.owner,
+          //  nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
+          //  nftBaseUri: collectionMeta?.baseUri ?? "",
+          // },
         },
         web3,
         chainId: sdk.ChainId.GOERLI,
