@@ -9,8 +9,6 @@ import {
   ChainId,
   ConnectorNames,
   SigSuffix,
-  OriginLuckTokenWithdrawsRequestV3WithPatch,
-  OriginLuckTokenSendRequestV3WithPatch,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 import { sortObjDictionary } from "../utils";
@@ -21,7 +19,7 @@ import { AxiosResponse } from "axios";
 export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenAgents<R>(): Promise<{
     raw_data: R;
-    luckTokenAgents: R & { infos: loopring_defs.LuckyTokenInfo[] };
+    luckTokenAgents: { [key: string]: loopring_defs.LuckyTokenInfo };
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_AGENTS,
@@ -35,17 +33,30 @@ export class LuckTokenAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const luckTokenAgents = raw_data.map((item: string[]) => {
-      return {
-        ...item,
-        infos: {
-          signer: item[0],
-          signerUrl: item[1],
-          logoUrl: item[2],
-          memo: item[3],
-        },
-      };
-    });
+    const luckTokenAgents = raw_data.reduce(
+      (
+        prev: { [key: string]: loopring_defs.LuckyTokenInfo },
+        item: { owner: string; infos: any[] }
+      ) => {
+        prev[item.owner] = {
+          signer: item.infos[0],
+          signerUrl: item.infos[1],
+          logoUrl: item.infos[2],
+          memo: item.infos[3],
+        };
+        return prev;
+        // return {
+        //   ...item,
+        //   infos: {
+        //     signer: item[0],
+        //     signerUrl: item[1],
+        //     logoUrl: item[2],
+        //     memo: item[3],
+        //   },
+        // };
+      },
+      {} as { [key: string]: loopring_defs.LuckyTokenInfo }
+    );
     return {
       raw_data,
       luckTokenAgents,
@@ -54,7 +65,7 @@ export class LuckTokenAPI extends BaseAPI {
 
   public async getLuckTokenAuthorizedSigners<R>(): Promise<{
     raw_data: R;
-    luckTokenAgents: R & { infos: loopring_defs.LuckyTokenInfo[] };
+    luckTokenAgents: { [key: string]: loopring_defs.LuckyTokenInfo };
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_AUTHORIZEDSIGNERS,
@@ -68,17 +79,21 @@ export class LuckTokenAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const luckTokenAgents = raw_data.map((item: string[]) => {
-      return {
-        ...item,
-        infos: {
-          signer: item[0],
-          signerUrl: item[1],
-          logoUrl: item[2],
-          memo: item[3],
-        },
-      };
-    });
+    const luckTokenAgents = raw_data.reduce(
+      (
+        prev: { [key: string]: loopring_defs.LuckyTokenInfo },
+        item: { owner: string; infos: any[] }
+      ) => {
+        prev[item.owner] = {
+          signer: item.infos[0],
+          signerUrl: item.infos[1],
+          logoUrl: item.infos[2],
+          memo: item.infos[3],
+        };
+        return prev;
+      },
+      {} as { [key: string]: loopring_defs.LuckyTokenInfo }
+    );
     return {
       raw_data,
       luckTokenAgents,
@@ -506,7 +521,7 @@ export class LuckTokenAPI extends BaseAPI {
     // } // {},
   ): // apikey
   Promise<loopring_defs.TX_HASH_RESULT<R> | RESULT_INFO> {
-    const {
+    let {
       request,
       web3,
       chainId,
@@ -521,14 +536,16 @@ export class LuckTokenAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
     const { luckyToken } = request;
-    let transfer = luckyToken as loopring_defs.OriginTransferRequestV3;
-
-    // if( transfer as loopring_defs.OriginTransferRequestV3)
+    let transfer = { ...luckyToken } as loopring_defs.OriginTransferRequestV3;
     transfer.payeeId = 0;
     transfer.memo = `LuckTokenSendBy${accountId}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: transfer.token.tokenId,
+    // transfer.maxFee = {
+    //   volume: "0",
+    //   tokenId: transfer.token.tokenId,
+    // };
+    request = {
+      ...request,
+      luckyToken: transfer,
     };
 
     const sigHW = async () => {
@@ -613,15 +630,12 @@ export class LuckTokenAPI extends BaseAPI {
       eddsaKey
     ).result;
     transfer.ecdsaSignature = ecdsaSignature;
-    // const dataToSig: Map<string, any> = new Map();
-    // const dataToSig: Map<string, any> = sortObjDictionary(request);
 
     const dataToSig: Map<string, any> = sortObjDictionary(request);
-    // dataToSig.set("luckyToken", request.luckyToken);
 
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_LUCK_TOKEN_SENDLUCKYTOKEN,
-      bodyParams: request,
+      bodyParams: { ...request },
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.EDDSA_SIG,
