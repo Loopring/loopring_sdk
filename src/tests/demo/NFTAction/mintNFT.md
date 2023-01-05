@@ -1,8 +1,20 @@
 # Mint NFT
 
 Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will convert to nftId, please view MetaNFT.md
-
-***
+ 
+>    <p style={color:"red"}>!!! important  describe<p>
+>    <p>Follow mehod is the simple way for mint NTF, but this kind of NFT will using the same contact & with   no Contract metadata forever on L1</p> 
+>    <p>New Version of NFT will has it isolate Contract/colletion with metadata inforamtion</p> 
+>    <P>From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT</p>
+>    
+```ts
+tokenAddress: collectionMeta.contractAddress
+counterFactualNftInfo: {
+	nftOwner: ccInfo.owner,
+	nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
+	nftBaseUri: collectionMeta?.baseUri ?? "",
+},
+```
 
 ## Step 1. get Account
 
@@ -27,11 +39,10 @@ console.log("eddsaKey:", eddsaKey.sk);
 ## Step 3. get apiKey
 
 ```ts
-const {apiKey} = await LoopringAPI.userAPI.getUserApiKey(
-	{
-		accountId: accInfo.accountId,
-	},
-	eddsaKey.sk
+const {apiKey} = await LoopringAPI.userAPI.getUserApiKey({
+   accountId: accInfo.accountId,
+ },
+ eddsaKey.sk
 );
 console.log("apiKey:", apiKey);
 
@@ -43,11 +54,11 @@ console.log("apiKey:", apiKey);
 
 ```ts
 const storageId = await LoopringAPI.userAPI.getNextStorageId(
-	{
-		accountId: accInfo.accountId,
-		sellTokenId: TOKEN_INFO.tokenMap[ "LRC" ].tokenId, // same as maxFee tokenId
-	},
-	apiKey
+{
+	accountId: accInfo.accountId,
+	sellTokenId: TOKEN_INFO.tokenMap[ "LRC" ].tokenId, // same as maxFee tokenId
+},
+apiKey
 );
 ```
 
@@ -110,7 +121,7 @@ const response = await LoopringAPI.userAPI.submitNFTMint({
 		toAccountId: accInfo.accountId,
 		toAddress: accInfo.owner,
 		nftType: 0,
-		tokenAddress: collectionMeta.contractAddress,
+		tokenAddress: nftTokenAddress, // please read the description -> tokenAddress: collectionMeta.contractAddress,
 		nftId: LOOPRING_EXPORTED_ACCOUNT.nftId, //nftId.toString(16),
 		amount: "1",
 		validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
@@ -122,6 +133,12 @@ const response = await LoopringAPI.userAPI.submitNFTMint({
 		counterFactualNftInfo,
 		royaltyPercentage: 5,
 		forceToMint: true, // suggest use as false, for here is just for run test
+	        // please read the description
+	        // counterFactualNftInfo: {
+	        //  nftOwner: ccInfo.owner,
+	        //  nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
+	        //  nftBaseUri: collectionMeta?.baseUri ?? "",
+	        // },
 	},
 	web3,
 	chainId: sdk.ChainId.GOERLI,
