@@ -336,11 +336,11 @@ export class LuckTokenAPI extends BaseAPI {
       claimer: string;
       referrer: string;
     };
-    chainId: ChainId;
-    walletType: ConnectorNames;
+    // chainId: ChainId;
+    // walletType: ConnectorNames;
     eddsaKey: string;
     apiKey: string;
-    isHWAddr?: boolean;
+    // isHWAddr?: boolean;
   }): Promise<{
     raw_data: R;
   }> {
@@ -369,7 +369,7 @@ export class LuckTokenAPI extends BaseAPI {
     req: loopring_defs.OriginLuckTokenWithdrawsRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
   ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const {
+    let {
       request,
       web3,
       chainId,
@@ -382,13 +382,15 @@ export class LuckTokenAPI extends BaseAPI {
 
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
-    const { transfer } = request;
-
-    transfer.payeeId = 0;
-    transfer.memo = `LuckTokenWithdrawalBy${request.claimer}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: transfer.token.tokenId,
+    let { transfer } = request;
+    transfer = {
+      ...transfer,
+      payeeId: 0,
+      memo: `LuckTokenWithdrawalBy${request.claimer}`,
+    };
+    request = {
+      ...request,
+      transfer,
     };
 
     const sigHW = async () => {
@@ -507,20 +509,7 @@ export class LuckTokenAPI extends BaseAPI {
   >(
     req: loopring_defs.OriginLuckTokenSendRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-    // {
-    //   request,
-    //   apiKey,
-    //   eddsaKey,
-    // }: {
-    //   request: loopring_defs.LuckyTokenItemForSend;
-    //   chainId: ChainId;
-    //   walletType: ConnectorNames;
-    //   eddsaKey: string;
-    //   apiKey: string;
-    //   isHWAddr?: boolean;
-    // } // {},
-  ): // apikey
-  Promise<loopring_defs.TX_HASH_RESULT<R> | RESULT_INFO> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<R> | RESULT_INFO> {
     let {
       request,
       web3,
@@ -535,18 +524,23 @@ export class LuckTokenAPI extends BaseAPI {
 
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
-    const { luckyToken } = request;
-    let transfer = { ...luckyToken } as loopring_defs.OriginTransferRequestV3;
-    transfer.payeeId = 0;
-    transfer.memo = `LuckTokenSendBy${accountId}`;
-    // transfer.maxFee = {
-    //   volume: "0",
-    //   tokenId: transfer.token.tokenId,
-    // };
-    request = {
-      ...request,
-      luckyToken: transfer,
-    };
+    const {
+      luckyToken: { maxFeeAmount, token, amount, feeToken, ...rest },
+    } = request;
+
+    let transfer = {
+      ...rest,
+      maxFee: {
+        tokenId: feeToken,
+        volume: maxFeeAmount,
+      },
+      payeeId: 0,
+      memo: `LuckTokenSendBy${accountId}`,
+      token: {
+        tokenId: token,
+        volume: amount,
+      },
+    } as loopring_defs.OriginTransferRequestV3;
 
     const sigHW = async () => {
       const result = await sign_tools.signTransferWithoutDataStructure(
@@ -629,20 +623,30 @@ export class LuckTokenAPI extends BaseAPI {
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey
     ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
 
-    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    request = {
+      ...request,
+      luckyToken: {
+        ...request.luckyToken,
+        payeeId: 0,
+        memo: `LuckTokenSendBy${accountId}`,
+        eddsaSig: sign_tools.get_EddsaSig_Transfer(
+          transfer as loopring_defs.OriginTransferRequestV3,
+          eddsaKey
+        ).result,
+      },
+    };
+    // ecdsaSig: ecdsaSignature,
 
-    const reqParams: ReqParams = {
+    // const dataToSig: Map<string, any> = sortObjDictionary(request);
+
+    const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_LUCK_TOKEN_SENDLUCKYTOKEN,
       bodyParams: { ...request },
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
+      sigFlag: SIG_FLAG.NO_SIG,
+      ecdsaSignature,
     };
 
     let raw_data;

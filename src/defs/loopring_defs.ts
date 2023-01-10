@@ -3717,13 +3717,13 @@ export type LuckyTokenItemForSendV3 = {
    */
   numbers: number; // <10000
   memo: string;
-  signerFlag: LuckyTokenSignerFlag;
-  templateID: number;
+  signerFlag: boolean;
+  templateId: number;
   validSince: number;
   validUntil: number;
 } & (
   | {
-      luckyToken: OriginNFTTransferRequestV3;
+      luckyToken: OriginTransfer3RequestV3;
       /**
        * nftData
        * @type {string}  NFT required
@@ -3732,7 +3732,7 @@ export type LuckyTokenItemForSendV3 = {
       nftData: string;
     }
   | {
-      luckyToken: OriginTransferRequestV3;
+      luckyToken: OriginTransfer3RequestV3;
     }
 );
 
@@ -3744,4 +3744,82 @@ export interface OriginLuckTokenSendRequestV3WithPatch {
   eddsaKey: string;
   apiKey: string;
   isHWAddr?: boolean;
+}
+
+export interface OriginTransfer3RequestV3 {
+  /**
+   * exchange address
+   * @type {string}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  exchange: string;
+  /**
+   * payer account ID
+   * @type {number}
+   * @memberof OriginTransferRequestV3
+   */
+  payerId: number;
+  /**
+   * payer account address
+   * @type {string}
+   * @memberof OriginTransferRequestV3
+   */
+  payerAddr: string;
+  /**
+   * payee account ID
+   * @type {number}
+   * @memberof OriginTransferRequestV3
+   */
+  payeeId: number;
+  /**
+   * payee account address
+   * @type {string}
+   * @memberof OriginTransferRequestV3
+   */
+  payeeAddr: string;
+  /**
+   *
+   * @type {TokenVolumeV3}
+   * @memberof OriginTransferRequestV3
+   */
+  token: string;
+  amount: string;
+  /**
+   *
+   * @type { Pick<TokenVolumeV3,'tokenId'> & {amount:string}}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  feeToken: string;
+  maxFeeAmount: string; //Pick<TokenVolumeV3, "tokenId"> & { amount: string };
+  /**
+   * offchain Id
+   * @type {number}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  storageId: number;
+  /**
+   * Timestamp for order to become invalid
+   * @type {number}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  validUntil: number;
+  /**
+   * transfer memo
+   * @type {string}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  memo?: string;
+  /**
+   * eddsa signature
+   * @type {string}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  eddsaSig?: string;
+  /**
+   * ecdsa signature
+   * @type {string}
+   * @memberof OriginNFTTransferRequestV3
+   */
+  ecdsaSig?: string;
+  counterFactualInfo?: CounterFactualInfo;
 }

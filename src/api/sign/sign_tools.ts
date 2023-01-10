@@ -1147,6 +1147,50 @@ export function get_EddsaSig_Transfer(
   ];
   return getEdDSASigWithPoseidon(inputs, eddsaKey);
 }
+export function getTransferOldTypedData(
+  data: OriginTransferRequestV3,
+  chainId: ChainId
+): EIP712TypedData {
+  const message = {
+    from: data.payerAddr,
+    to: data.payeeAddr,
+    tokenID: data.token.tokenId,
+    amount: data.token.volume,
+    feeTokenID: data.maxFee.tokenId,
+    maxFee: data.maxFee.volume,
+    validUntil: data.validUntil,
+    storageID: data.storageId,
+  };
+  const typedData: EIP712TypedData = {
+    types: {
+      EIP712Domain: [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
+      ],
+      Transfer: [
+        { name: "from", type: "address" },
+        { name: "to", type: "address" },
+        { name: "tokenID", type: "uint16" },
+        { name: "amount", type: "uint96" },
+        { name: "feeTokenID", type: "uint16" },
+        { name: "maxFee", type: "uint96" },
+        { name: "validUntil", type: "uint32" },
+        { name: "storageID", type: "uint32" },
+      ],
+    },
+    primaryType: "Transfer",
+    domain: {
+      name: "Loopring Protocol",
+      version: "3.6.0",
+      chainId: chainId,
+      verifyingContract: data.exchange,
+    },
+    message: message,
+  };
+  return typedData;
+}
 
 export function getTransferTypedData(
   data: OriginTransferRequestV3,
