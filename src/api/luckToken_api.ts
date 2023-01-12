@@ -348,7 +348,7 @@ export class LuckTokenAPI extends BaseAPI {
 
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_LUCK_TOKEN_CLAIMLUCKYTOKEN,
-      apiKey,
+      bodyParams: request,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
@@ -508,6 +508,7 @@ export class LuckTokenAPI extends BaseAPI {
     }
   >(
     req: loopring_defs.OriginLuckTokenSendRequestV3WithPatch,
+
     options?: { accountId?: number; counterFactualInfo?: any }
   ): Promise<loopring_defs.TX_HASH_RESULT<R> | RESULT_INFO> {
     let {
@@ -658,16 +659,3 @@ export class LuckTokenAPI extends BaseAPI {
     return this.returnTxHash(raw_data);
   }
 }
-
-// GET_LUCK_TOKEN_AGENTS
-// GET_LUCK_TOKEN_AUTHORIZEDSIGNERS
-// GET_LUCK_TOKEN_CLAIMHISTORY
-// GET_LUCK_TOKEN_LUCKYTOKENS
-// GET_LUCK_TOKEN_LUCKYTOKENDETAIL
-// GET_LUCK_TOKEN_WITHDRAWALS
-// GET_LUCK_TOKEN_BALANCES
-// GET_LUCK_TOKEN_CLAIMEDLUCKYTOKENS
-// GET_LUCK_TOKEN_SUMMARY
-// POST_LUCK_TOKEN_SENDLUCKYTOKEN
-// POST_LUCK_TOKEN_CLAIMLUCKYTOKEN
-// POST_LUCK_TOKEN_WITHDRAWS

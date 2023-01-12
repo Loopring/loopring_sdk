@@ -3820,6 +3820,5 @@ export interface OriginTransfer3RequestV3 {
    * @type {string}
    * @memberof OriginNFTTransferRequestV3
    */
-  ecdsaSig?: string;
   counterFactualInfo?: CounterFactualInfo;
 }

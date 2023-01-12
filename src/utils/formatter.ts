@@ -335,10 +335,10 @@ export function makeMarket<R>(raw_data: TokenInfo[]): TOKENMAPLIST {
 
       const coinInfo = {
         icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
-        name: item.symbol,
+        name: item.name,
         simpleName: item.symbol,
         description: item.type,
-        company: "",
+        company: item.name,
       };
       if (!item.symbol.startsWith("LP-")) {
         coinMap[item.symbol] = coinInfo;
