@@ -355,6 +355,7 @@ export class LuckTokenAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
+      apiKey,
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
