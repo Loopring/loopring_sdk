@@ -205,10 +205,11 @@ export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenWithdrawals<R>(
     request: {
       statuses: loopring_defs.LuckyTokenWithdrawStatus[];
-      tokenId: number;
-      startTime: number;
-      endTime: number;
-      fromId: number;
+      tokenId?: number;
+      startTime?: number;
+      endTime?: number;
+      fromId?: number;
+      offset?: number;
       limit?: number;
     },
     apiKey: string
@@ -240,17 +241,25 @@ export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenBalances<R>(
     request: {
       accountId: number;
-      tokens: number[]; // tokenId
+      tokens?: number[]; // tokenId
+      isNft?: boolean; //非必填项;nft红包时传true
+      offset?: number;
+      limit?: number;
     },
     apiKey: string
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    tokenBalance: loopring_defs.UserBalanceInfo[];
+    tokenBalance: Array<
+      loopring_defs.UserBalanceInfo & {
+        isNft?: boolean;
+        nftTokenInfo?: loopring_defs.NFTTokenInfo;
+      }
+    >;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_BALANCES,
-      queryParams: { ...request, statuses: request.tokens.join(",") },
+      queryParams: { ...request, statuses: request.tokens?.join(",") },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -264,8 +273,8 @@ export class LuckTokenAPI extends BaseAPI {
     }
     return {
       raw_data,
-      totalNum: raw_data?.totalNum,
-      tokenBalance: raw_data.list,
+      totalNum: raw_data?.length,
+      tokenBalance: raw_data,
     };
   }
   public async getLuckTokenClaimedLuckyTokens<R>(
@@ -384,14 +393,11 @@ export class LuckTokenAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
     let { transfer } = request;
-    transfer = {
-      ...transfer,
-      payeeId: 0,
-      memo: `LuckTokenWithdrawalBy${request.claimer}`,
-    };
-    request = {
-      ...request,
-      transfer,
+    transfer.payeeId = 0;
+    transfer.memo = `LuckTokenWithdrawalBy${request.claimer}`;
+    transfer.maxFee = {
+      volume: "0",
+      tokenId: transfer.token.tokenId,
     };
 
     const sigHW = async () => {
@@ -476,7 +482,7 @@ export class LuckTokenAPI extends BaseAPI {
       eddsaKey
     ).result;
     transfer.ecdsaSignature = ecdsaSignature;
-    // const dataToSig: Map<string, any> = new Map();
+
     const dataToSig: Map<string, any> = sortObjDictionary(request);
     dataToSig.set("transfer", request.transfer);
     const reqParams: ReqParams = {
@@ -556,107 +562,106 @@ export class LuckTokenAPI extends BaseAPI {
       );
       ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
     };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
+    try {
+      if (
+        walletType === ConnectorNames.MetaMask ||
+        walletType === ConnectorNames.Gamestop ||
+        walletType === ConnectorNames.OtherExtension
+      ) {
+        // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+        try {
+          if (isHWAddr) {
+            await sigHW();
+          } else {
+            // myLog("submitDeployNFT notHWAddr:", isHWAddr);
+            const result = await sign_tools.signTransferWithDataStructure(
               web3,
               transfer.payerAddr,
               transfer as loopring_defs.OriginTransferRequestV3,
               chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
+              walletType,
               accountId,
               counterFactualInfo
             );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
+            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+          }
+        } catch (err) {
+          throw {
+            ...this.genErr(err as any),
+          };
         }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
+      } else {
+        const isContractCheck = await isContract(web3, transfer.payerAddr);
+        try {
+          if (isContractCheck) {
+            const result =
+              await sign_tools.signTransferWithDataStructureForContract(
+                web3,
+                transfer.payerAddr,
+                transfer as loopring_defs.OriginTransferRequestV3,
+                chainId,
+                accountId
+              );
+            ecdsaSignature = result.ecdsaSig;
+          } else if (counterFactualInfo) {
+            const result =
+              await sign_tools.signTransferWithDataStructureForContract(
+                web3,
+                transfer.payerAddr,
+                transfer as loopring_defs.OriginTransferRequestV3,
+                chainId,
+                accountId,
+                counterFactualInfo
+              );
+            ecdsaSignature = result.ecdsaSig;
+            // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+          } else {
+            await sigHW();
+          }
+        } catch (err) {
+          throw {
+            ...this.genErr(err as any),
+          };
+        }
       }
-    }
 
-    if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
-    }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
+      if (counterFactualInfo) {
+        transfer.counterFactualInfo = counterFactualInfo;
+      }
+      transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+        transfer as loopring_defs.OriginTransferRequestV3,
+        eddsaKey
+      ).result;
 
-    request = {
-      ...request,
-      luckyToken: {
-        ...request.luckyToken,
-        payeeId: 0,
-        memo: `LuckTokenSendBy${accountId}`,
-        eddsaSig: sign_tools.get_EddsaSig_Transfer(
-          transfer as loopring_defs.OriginTransferRequestV3,
-          eddsaKey
-        ).result,
-      },
-    };
-    // ecdsaSig: ecdsaSignature,
-
-    // const dataToSig: Map<string, any> = sortObjDictionary(request);
-
-    const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_LUCK_TOKEN_SENDLUCKYTOKEN,
-      bodyParams: { ...request },
-      apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
+      request = {
+        ...request,
+        luckyToken: {
+          ...request.luckyToken,
+          payeeId: 0,
+          memo: `LuckTokenSendBy${accountId}`,
+          eddsaSig: sign_tools.get_EddsaSig_Transfer(
+            transfer as loopring_defs.OriginTransferRequestV3,
+            eddsaKey
+          ).result,
+        },
+      };
+      const reqParams: loopring_defs.ReqParams = {
+        url: LOOPRING_URLs.POST_LUCK_TOKEN_SENDLUCKYTOKEN,
+        bodyParams: { ...request },
+        apiKey,
+        method: ReqMethod.POST,
+        sigFlag: SIG_FLAG.NO_SIG,
+        ecdsaSignature,
+      };
+      let raw_data;
+      try {
+        raw_data = (await this.makeReq().request(reqParams)).data;
+      } catch (error) {
+        throw error as AxiosResponse;
+      }
+      return this.returnTxHash(raw_data);
     } catch (error) {
-      throw error as AxiosResponse;
+      throw error;
     }
-    return this.returnTxHash(raw_data);
   }
 }

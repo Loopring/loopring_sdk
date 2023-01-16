@@ -69,7 +69,12 @@ export class BaseAPI {
         };
       }
       return {
-        ...err,
+        ...(err instanceof Error
+          ? Reflect.ownKeys(err).reduce((prev, item) => {
+              // @ts-ignore
+              return { ...prev, [item]: err[item.toString()] };
+            }, {})
+          : err),
         code: LoopringErrorCode.SKD_UNKNOW,
       };
     }

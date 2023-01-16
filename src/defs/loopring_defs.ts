@@ -3614,7 +3614,7 @@ export type LuckTokenClaim = {
   hash: string;
   claimer: {
     accountId: number;
-    address: number;
+    address: string;
     ens: string;
   };
   referrer: {
@@ -3634,12 +3634,23 @@ export type LuckTokenClaim = {
 
 export type LuckyTokenSignerFlag = 0 | 1;
 export type LuckTokenHistory = {
+  champion: LuckyTokenChampion;
+  claimAmount: number;
+  claims: Array<
+    {
+      id: number;
+    } & LuckTokenClaim
+  >;
+  tokenId: number;
+  hash: string;
+  helpers: {
+    accountId: number;
+    address: number;
+    ens: number;
+  }[];
   luckyToken: {
     id: number;
   } & LuckyTokenItemForReceive;
-  claim: {
-    id: number;
-  } & LuckTokenClaim;
 };
 
 export type LuckTokenWithdraw = {
