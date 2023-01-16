@@ -1182,10 +1182,11 @@ export function calcDual(
 		// 	.times(info.strike).toFixed(buyToken.precision,BigNumber.ROUND_CEIL).toString(), greaterEarnVol.toString())
 		greaterEarnTokenSymbol = buyToken.symbol;
 		miniSellVol = BigNumber.max(dualMarket.baseLimitAmount, toBig(rule.baseMin).times("1e" + sellToken.decimals)); // rule.baseMin;
-		quota = BigNumber.min(100, balance ? balance[ base ]?.free : 0)
+		quota = BigNumber.min(info.baseSize, balance ? balance[ base ]?.free : 0)
+		// quota = BigNumber.min(100, balance ? balance[ base ]?.free : 0)
 		maxSellAmount = BigNumber.min(
 			rule.baseMax ? rule.baseMax : 0,
-			balance ? balance[ base ]?.free : 0
+			quota
 		);
 		feeTokenSymbol = buyToken.symbol;
 		maxFeeBips = 5;
@@ -1203,11 +1204,11 @@ export function calcDual(
 		greaterEarnTokenSymbol = sellToken.symbol;
 		miniSellVol = BigNumber.max(dualMarket.quoteLimitAmount, toBig(rule.currencyMin).times("1e" + sellToken.decimals)); // rule.baseMin;
 
-		quota = BigNumber.min(100,
+		quota = BigNumber.min(info.baseSize,
 			balance[ currency ].free);
 		maxSellAmount = BigNumber.min(
 			rule.currencyMax,
-			balance[ currency ].free
+			quota
 		);
 		/** calc current maxFeeBips **/
 		feeTokenSymbol = buyToken.symbol;

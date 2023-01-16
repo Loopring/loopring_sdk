@@ -3352,6 +3352,7 @@ export type DualProductAndPrice = {
   dualType: DUAL_TYPE;
   ratio: number;
   profit: string;
+  baseSize: string;
 };
 
 export type DualRulesCoinsInfo = {
