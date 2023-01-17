@@ -3632,6 +3632,23 @@ export type LuckyTokenSignerFlag = 0 | 1;
 export type LuckTokenHistory = {
   champion: LuckyTokenChampion;
   claimAmount: number;
+  claim: {
+    id: number;
+  } & LuckTokenClaim;
+  tokenId: number;
+  hash: string;
+  helpers: {
+    accountId: number;
+    address: number;
+    ens: number;
+  }[];
+  luckyToken: {
+    id: number;
+  } & LuckyTokenItemForReceive;
+};
+export type LuckTokenClaimDetail = {
+  champion: LuckyTokenChampion;
+  claimAmount: number;
   claims: Array<
     {
       id: number;

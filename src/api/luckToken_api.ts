@@ -173,7 +173,7 @@ export class LuckTokenAPI extends BaseAPI {
     apiKey: string
   ): Promise<{
     raw_data: R;
-    detail: loopring_defs.LuckTokenHistory;
+    detail: loopring_defs.LuckTokenClaimDetail;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_LUCKYTOKENDETAIL,
