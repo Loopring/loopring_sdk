@@ -6,7 +6,6 @@ import {
   SIG_FLAG,
   LOOPRING_URLs,
   RESULT_INFO,
-  ChainId,
   ConnectorNames,
   SigSuffix,
 } from "../defs";
@@ -45,15 +44,6 @@ export class LuckTokenAPI extends BaseAPI {
           memo: item.infos[3],
         };
         return prev;
-        // return {
-        //   ...item,
-        //   infos: {
-        //     signer: item[0],
-        //     signerUrl: item[1],
-        //     logoUrl: item[2],
-        //     memo: item[3],
-        //   },
-        // };
       },
       {} as { [key: string]: loopring_defs.LuckyTokenInfo }
     );
@@ -141,7 +131,7 @@ export class LuckTokenAPI extends BaseAPI {
       startTime: number;
       endTime: number;
       fromId: number;
-      limit?: number; // 默认50
+      limit?: number;
       official: boolean;
     },
     apiKey: string
@@ -175,8 +165,8 @@ export class LuckTokenAPI extends BaseAPI {
   }
   public async getLuckTokenDetail<R>(
     request: {
-      limit?: number; // 默认50
-      hash: string; // 必传，红包hash
+      limit?: number;
+      hash: string;
       fromId: number;
       showHelper: boolean;
     },
@@ -241,8 +231,8 @@ export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenBalances<R>(
     request: {
       accountId: number;
-      tokens?: number[]; // tokenId
-      isNft?: boolean; //非必填项;nft红包时传true
+      tokens?: number[];
+      isNft?: boolean;
       offset?: number;
       limit?: number;
     },
@@ -345,11 +335,8 @@ export class LuckTokenAPI extends BaseAPI {
       claimer: string;
       referrer: string;
     };
-    // chainId: ChainId;
-    // walletType: ConnectorNames;
     eddsaKey: string;
     apiKey: string;
-    // isHWAddr?: boolean;
   }): Promise<{
     raw_data: R;
   }> {
@@ -477,23 +464,32 @@ export class LuckTokenAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo;
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
+    let { maxFee, token, ..._transfer } = transfer;
+    // @ts-ignore
+    _transfer = {
+      ..._transfer,
+      maxFeeAmount: maxFee.volume,
+      feeToken: maxFee.tokenId,
+      amount: token.volume,
+      token: token.tokenId,
+      ecdsaAuth: ecdsaSignature,
+      eddsaSig: sign_tools.get_EddsaSig_Transfer(
+        transfer as loopring_defs.OriginTransferRequestV3,
+        eddsaKey
+      ).result,
+    } as any;
 
-    const dataToSig: Map<string, any> = sortObjDictionary(request);
-    dataToSig.set("transfer", request.transfer);
+    request = {
+      ...request,
+      transfer: JSON.stringify(_transfer) as any,
+    };
+
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_LUCK_TOKEN_WITHDRAWS,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
-      sigObj: {
-        dataToSig,
-        PrivateKey: eddsaKey,
-      },
+      bodyParams: { ...request },
+      sigFlag: SIG_FLAG.NO_SIG,
     };
     let raw_data;
     try {
@@ -508,7 +504,7 @@ export class LuckTokenAPI extends BaseAPI {
     R = {
       hash: string;
       status: string;
-      isIdempotent: boolean; // 幂等
+      isIdempotent: boolean;
       accountId: number;
       tokenId: number;
       storageId: number;
