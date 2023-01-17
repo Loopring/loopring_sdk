@@ -3351,8 +3351,7 @@ export type DualProductAndPrice = {
   expired: boolean;
   dualType: DUAL_TYPE;
   ratio: number;
-  profit: string;
-  baseSize: string;
+  dualPrice: DualPrice;
 };
 
 export type DualRulesCoinsInfo = {
@@ -3375,13 +3374,9 @@ export type DualBalance = {
 };
 
 export enum LABEL_INVESTMENT_STATUS {
-  // INVESTMENT_SUCCEEDED = "INVESTMENT_SUCCEEDED",
-  // INVESTMENT_FAILED = "INVESTMENT_FAILED",
-  // INVESTMENT_RECEIVED = "INVESTMENT_RECEIVED",
-  PROCESSED = "processed",
-  FAILED = "failed",
-  PROCESSING = "processing",
-  CANCELLED = "cancelled",
+  INVESTMENT_SUCCEEDED = "INVESTMENT_SUCCEEDED",
+  INVESTMENT_FAILED = "INVESTMENT_FAILED",
+  INVESTMENT_RECEIVED = "INVESTMENT_RECEIVED",
 }
 
 export enum SETTLEMENT_STATUS {
