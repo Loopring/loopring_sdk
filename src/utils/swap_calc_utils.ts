@@ -913,20 +913,47 @@ export function makeExitAmmPoolRatio(
   RatioDecimal = 10
 ) {
   const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp;
-  const burnedVol = fm
-    .toBig(rawVal)
-    .times("1e" + RatioDecimal)
-    .toFixed(0, 0);
-  const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume);
   const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]];
   const miniLpVol = fm //minLP Volume big number
     .toBig(lpTokenVol.volume)
     .div("1e" + RatioDecimal);
   return {
-    ratio,
+    // ratio,
     miniLpVol: miniLpVol.toString(),
     miniLpVal: fm
       .toBig(miniLpVol)
+      .div("1e" + lpToken.decimals)
+      .toNumber(),
+  };
+}
+export function makeExitAmmCoverFeeLP(
+  fees: LoopringMap<OffchainFeeInfo>,
+  ammPoolSnapshot: AmmPoolSnapshot,
+  tokenMap: LoopringMap<TokenInfo>,
+  idIdx: LoopringMap<string>,
+  slippageTolerance = "0.001"
+) {
+  const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp;
+  const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]];
+  const quote: TokenVolumeV3 = ammPoolSnapshot.pooled[1];
+  const quoteToken: TokenInfo = tokenMap[idIdx[quote.tokenId]];
+  const quoteVolume = quote.volume;
+
+  const maxFee =
+    fees && fees[quoteToken.symbol] ? fees[quoteToken.symbol].fee : "0";
+  // feeLp = fee /snap.quote*snap.lp
+  const feeLp = fm.toBig(maxFee).div(quoteVolume).times(lpTokenVol.volume);
+  // feeLp = feeLp / (1-slippageTolerance)  slippageTolerance default is 0.001
+  const feeLpWithSlippage = feeLp.div(BIG1.minus(fm.toBig(slippageTolerance)));
+  return {
+    feeLp,
+    feeLpWithSlippage,
+    miniFeeLpWithSlippageVal: fm
+      .toBig(feeLpWithSlippage)
+      .div("1e" + lpToken.decimals)
+      .toNumber(),
+    feeLpVal: fm
+      .toBig(feeLp)
       .div("1e" + lpToken.decimals)
       .toNumber(),
   };
@@ -949,12 +976,8 @@ export function makeExitAmmPoolRequest2(
     .toBig(rawVal)
     .times("1e" + lpToken.decimals)
     .toFixed(0, 0);
-  const { ratio } = makeExitAmmPoolRatio(
-    rawVal,
-    ammPoolSnapshot,
-    tokenMap,
-    idIdx
-  );
+
+  const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume);
 
   const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0];
   const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1];
