@@ -905,7 +905,7 @@ export function makeJoinAmmPoolRequest(
     request,
   };
 }
-export function makeExitAmmPoolRatio(
+export function makeExitAmmPoolMini(
   rawVal: string,
   ammPoolSnapshot: AmmPoolSnapshot,
   tokenMap: LoopringMap<TokenInfo>,
@@ -918,7 +918,6 @@ export function makeExitAmmPoolRatio(
     .toBig(lpTokenVol.volume)
     .div("1e" + RatioDecimal);
   return {
-    // ratio,
     miniLpVol: miniLpVol.toString(),
     miniLpVal: fm
       .toBig(miniLpVol)
@@ -946,8 +945,8 @@ export function makeExitAmmCoverFeeLP(
   // feeLp = feeLp / (1-slippageTolerance)  slippageTolerance default is 0.001
   const feeLpWithSlippage = feeLp.div(BIG1.minus(fm.toBig(slippageTolerance)));
   return {
-    feeLp,
-    feeLpWithSlippage,
+    feeLp: feeLp.toString(),
+    feeLpWithSlippage: feeLpWithSlippage.toString(),
     miniFeeLpWithSlippageVal: fm
       .toBig(feeLpWithSlippage)
       .div("1e" + lpToken.decimals)
