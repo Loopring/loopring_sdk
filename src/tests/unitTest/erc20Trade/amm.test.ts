@@ -5,7 +5,6 @@ import {
   TOKEN_INFO,
   signatureKeyPairMock,
 } from "../../MockData";
-import { eddsaSignWithDomain, getAmmExitEcdsaTypedData } from '../../../api';
 
 describe("AmmpoolAPI test", function () {
   it(
@@ -17,7 +16,6 @@ describe("AmmpoolAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
-
 
   it(
     "getAmmPoolUserRewards",
@@ -344,5 +342,4 @@ describe("AmmpoolAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
-
 });
