@@ -951,11 +951,11 @@ export function makeExitAmmCoverFeeLP(
     miniFeeLpWithSlippageVal: fm
       .toBig(feeLpWithSlippage)
       .div("1e" + lpToken.decimals)
-      .toNumber(),
+      .toString(),
     feeLpVal: fm
       .toBig(feeLp)
       .div("1e" + lpToken.decimals)
-      .toNumber(),
+      .toString(),
   };
 }
 
@@ -967,7 +967,8 @@ export function makeExitAmmPoolRequest2(
   ammPoolSnapshot: AmmPoolSnapshot,
   tokenMap: LoopringMap<TokenInfo>,
   idIdx: LoopringMap<string>,
-  offchainId = 0
+  offchainId = 0,
+  minDecimal = 10
 ) {
   const lpTokenVol: TokenVolumeV3 = ammPoolSnapshot.lp;
   const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]];
@@ -977,15 +978,28 @@ export function makeExitAmmPoolRequest2(
     .times("1e" + lpToken.decimals)
     .toFixed(0, 0);
 
-  const ratio = fm.toBig(burnedVol).div(lpTokenVol.volume);
+  const ratio = fm
+    .toBig(burnedVol)
+    .times("1e" + minDecimal)
+    .div(lpTokenVol.volume)
+    .toFixed(0, 1);
 
   const coinA: TokenVolumeV3 = ammPoolSnapshot.pooled[0];
   const coinB: TokenVolumeV3 = ammPoolSnapshot.pooled[1];
 
   const rest = BIG1.minus(fm.toBig(slippageTolerance));
 
-  const volA = ratio.times(coinA.volume).times(rest).toFixed(0, 0);
-  const volB = ratio.times(coinB.volume).times(rest).toFixed(0, 0);
+  const volA = toBig(ratio)
+    .times(coinA.volume)
+    .div("1e" + minDecimal)
+    .times(rest)
+    .toFixed(0, 0);
+
+  const volB = toBig(ratio)
+    .times(coinB.volume)
+    .div("1e" + minDecimal)
+    .times(rest)
+    .toFixed(0, 0);
 
   const baseToken: TokenInfo = tokenMap[idIdx[coinA.tokenId]];
   const quoteToken: TokenInfo = tokenMap[idIdx[coinB.tokenId]];
@@ -1014,11 +1028,11 @@ export function makeExitAmmPoolRequest2(
     volA_show: fm
       .toBig(volA)
       .div("1e" + baseToken.decimals)
-      .toNumber(),
+      .toString(),
     volB_show: fm
       .toBig(volB)
       .div("1e" + quoteToken.decimals)
-      .toNumber(),
+      .toString(),
     request,
   };
 }
