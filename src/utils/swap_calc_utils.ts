@@ -951,11 +951,11 @@ export function makeExitAmmCoverFeeLP(
     miniFeeLpWithSlippageVal: fm
       .toBig(feeLpWithSlippage)
       .div("1e" + lpToken.decimals)
-      .toNumber(),
+      .toString(),
     feeLpVal: fm
       .toBig(feeLp)
       .div("1e" + lpToken.decimals)
-      .toNumber(),
+      .toString(),
   };
 }
 
@@ -1014,11 +1014,11 @@ export function makeExitAmmPoolRequest2(
     volA_show: fm
       .toBig(volA)
       .div("1e" + baseToken.decimals)
-      .toNumber(),
+      .toString(),
     volB_show: fm
       .toBig(volB)
       .div("1e" + quoteToken.decimals)
-      .toNumber(),
+      .toString(),
     request,
   };
 }
