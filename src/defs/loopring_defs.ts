@@ -3298,6 +3298,7 @@ export interface GetUserNFTCollectionRequest {
   accountId: string;
   offset?: number;
   limit?: number;
+  collectionId?: number;
   tokenAddress?: string;
 }
 
