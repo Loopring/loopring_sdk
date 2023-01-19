@@ -916,13 +916,14 @@ export function makeExitAmmPoolMini(
   const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]];
   const miniLpVol = fm //minLP Volume big number
     .toBig(lpTokenVol.volume)
-    .div("1e" + RatioDecimal);
+    .div("1e" + RatioDecimal)
+    .plus(1);
   return {
     miniLpVol: miniLpVol.toString(),
     miniLpVal: fm
       .toBig(miniLpVol)
       .div("1e" + lpToken.decimals)
-      .toNumber(),
+      .toString(),
   };
 }
 export function makeExitAmmCoverFeeLP(
