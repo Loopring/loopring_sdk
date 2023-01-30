@@ -116,6 +116,8 @@ export enum UserTxTypes {
   OFFCHAIN_WITHDRAWAL = "offchain_withdrawal",
   FORCE_WITHDRAWAL = "force_withdrawal",
   DELEGATED_FORCE_WITHDRAW = "delegated_force_withdraw",
+  SEND_LUCKY_TOKEN = "send_lucky_token",
+  WITHDRAW_LUCKY_TOKEN = "withdraw_lucky_token",
 }
 
 export enum UserNFTTxTypes {

@@ -32,7 +32,6 @@ import { RESULT_INFO } from "./error_codes";
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
 import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
 import { NFTType } from "../api";
-import { convertExpression } from "typedoc/dist/lib/converter";
 
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
@@ -3611,6 +3610,8 @@ export type LuckyTokenItemForReceive = {
   info: LuckyTokenInfo;
   templateNo: number;
   createdAt: number;
+  nftTokenInfo?: NFTTokenInfo;
+  isNft?: boolean;
 };
 export type LuckTokenClaim = {
   hash: string;
@@ -3687,6 +3688,8 @@ export type LuckTokenWithdraw = {
   status: 0 | 1 | 2; // PENDING:0 SUCCESS:1  FAIL:2
   createdAt: number;
   updatedAt: number;
+  isNft: boolean;
+  nftTokenInfo: NFTTokenInfo;
 };
 
 export type TOKENMAPLIST = {
@@ -3722,6 +3725,7 @@ export interface OriginLuckTokenWithdrawsRequestV3 {
       tokenId: number | string;
     };
   };
+  nftData?: string;
 }
 
 export interface OriginLuckTokenWithdrawsRequestV3WithPatch {
