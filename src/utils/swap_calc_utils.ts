@@ -916,8 +916,8 @@ export function makeExitAmmPoolMini(
   const lpToken: TokenInfo = tokenMap[idIdx[lpTokenVol.tokenId]];
   const miniLpVol = fm //minLP Volume big number
     .toBig(lpTokenVol.volume)
-    .div("1e" + RatioDecimal)
-    .plus(1);
+    .times(2)
+    .div("1e" + RatioDecimal);
   return {
     miniLpVol: miniLpVol.toString(),
     miniLpVal: fm
@@ -942,7 +942,11 @@ export function makeExitAmmCoverFeeLP(
   const maxFee =
     fees && fees[quoteToken.symbol] ? fees[quoteToken.symbol].fee : "0";
   // feeLp = fee /snap.quote*snap.lp
-  const feeLp = fm.toBig(maxFee).div(quoteVolume).times(lpTokenVol.volume);
+  const feeLp = fm
+    .toBig(maxFee)
+    .times(lpTokenVol.volume)
+    .div(quoteVolume)
+    .plus(1);
   // feeLp = feeLp / (1-slippageTolerance)  slippageTolerance default is 0.001
   const feeLpWithSlippage = feeLp.div(BIG1.minus(fm.toBig(slippageTolerance)));
   return {
