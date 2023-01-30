@@ -1,9 +1,8 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.0.24-redPacket",
+  "version": "3.0.25",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
-  "private": false,
   "license": "SEE LICENSE IN LICENSE",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

@@ -1,4 +1,5 @@
 import * as fm from "./formatter";
+import { toBig } from "./formatter";
 
 import {
   ABInfo,
@@ -23,7 +24,6 @@ import {
 
 import { getExistedMarket, getTokenInfoBySymbol } from "./symbol_tools";
 import BigNumber from "bignumber.js";
-import { toBig } from "./formatter";
 import { myLog } from "./log_tools";
 
 const BIG0 = fm.toBig(0);
@@ -1186,6 +1186,7 @@ export function calcDual({
     .toBig(info.profit)
     .times(info.ratio)
     .toFixed(6, BigNumber.ROUND_DOWN);
+
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
     lessEarnVol = toBig(settleRatio).plus(1).times(sellVol); //dualViewInfo.strike);
     lessEarnTokenSymbol = sellToken.symbol;
