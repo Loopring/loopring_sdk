@@ -2,6 +2,16 @@
 
 ## JS SDK Version ChangeLog
 
+#### v3.1.0
+    1) dual API update (support for Partial order)
+    2) red Packet feature 
+    3) amm redeem mini order
+    
+#### v3.0.1 - v3.0.8
+    1) reformate Error throw code states 
+    2) new feature for collection group
+    3) method split for localStorage 
+
 #### v2.0.24
 
     1）collection feature
