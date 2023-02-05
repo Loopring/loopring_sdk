@@ -1,0 +1,2578 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Order · Loopring SDK</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 3.7.1">
+        <meta name="author" content="Loopring Dev Team">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../deposit/depositNFT.html" />
+    
+    
+    <link rel="prev" href="../withdraw/withdrawERC20.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://loopring.io" target="_blank" class="custom-link">Home</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        <li class="header">Overview</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../Changelog.html">
+            
+                <a href="../../Changelog.html">
+            
+                    
+                    Changelog
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <a target="_blank" href="https://github.com/Loopring/loopring_sdk">
+            
+                    
+                    GitHub
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">SDKs demo</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    JS SDK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="../exchange/exchange.html">
+            
+                <a href="../exchange/exchange.html">
+            
+                    
+                    Exchange
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1.1" data-path="../exchange/webSocket.html">
+            
+                <a href="../exchange/webSocket.html">
+            
+                    
+                    Web Socket
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.1.2" data-path="../exchange/ammpool_api.html">
+            
+                <a href="../exchange/ammpool_api.html">
+            
+                    
+                    Amm
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2" data-path="../">
+            
+                <a href="../#mock-account">
+            
+                    
+                    Account
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.2.1" data-path="../account/activeAccount.html">
+            
+                <a href="../account/activeAccount.html">
+            
+                    
+                    Active Account
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.2" data-path="../account/fee.html">
+            
+                <a href="../account/fee.html">
+            
+                    
+                    Fees
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.3" data-path="../account/signature.html">
+            
+                <a href="../account/signature.html">
+            
+                    
+                    Signature
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.4" data-path="../account/historyRecord.html">
+            
+                <a href="../account/historyRecord.html">
+            
+                    
+                    Transaction Recorder
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3" data-path="../">
+            
+                <a href="../#mock-erc20-token-map">
+            
+                    
+                    ERC20
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.3.1" data-path="../deposit/depositERC20.html">
+            
+                <a href="../deposit/depositERC20.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.2" data-path="../transfer/transferERC20.html">
+            
+                <a href="../transfer/transferERC20.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.3" data-path="../withdraw/withdrawERC20.html">
+            
+                <a href="../withdraw/withdrawERC20.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="2.1.3.4" data-path="orderERC20.html">
+            
+                <a href="orderERC20.html">
+            
+                    
+                    Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4" data-path="../">
+            
+                <a href="../#mock-account">
+            
+                    
+                    NFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.1" data-path="../deposit/depositNFT.html">
+            
+                <a href="../deposit/depositNFT.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.2" data-path="../transfer/transferNFT.html">
+            
+                <a href="../transfer/transferNFT.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.3" data-path="../withdraw/withdrawNFT.html">
+            
+                <a href="../withdraw/withdrawNFT.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.4" data-path="../NFTAction/metaNFT.html">
+            
+                <a href="../NFTAction/metaNFT.html">
+            
+                    
+                    Mint
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.5" data-path="../NFTAction/collectionNFT.html">
+            
+                <a href="../NFTAction/collectionNFT.html">
+            
+                    
+                    Collection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.6" data-path="../NFTAction/deployNFT.html">
+            
+                <a href="../NFTAction/deployNFT.html">
+            
+                    
+                    Deploy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.7" data-path="../NFTAction/tradeNFT.html">
+            
+                <a href="../NFTAction/tradeNFT.html">
+            
+                    
+                    Trade
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.7.1" data-path="../NFTAction/validateNFTOrder.html">
+            
+                <a href="../NFTAction/validateNFTOrder.html">
+            
+                    
+                    Validate Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Links</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" >
+            
+                <a target="_blank" href="https://github.com/Loopring/hello_loopring">
+            
+                    
+                    Python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" >
+            
+                <a target="_blank" href="https://docs.loopring.io/en/">
+            
+                    
+                    APIs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" >
+            
+                <a target="_blank" href="https://loopring.org/#/">
+            
+                    
+                    About us
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" >
+            
+                <a target="_blank" href="https://desk.zoho.com/portal/loopring/en/newticket">
+            
+                    
+                    Submit a Request
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Order</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="order-erc20">Order ERC20</h1>
+<hr>
+<blockquote>
+<h3 id="mini-order">mini-order</h3>
+<p>To support small quantity trading, we introduce an additional concept &quot;tradeCost&quot;, which is the minimum gas fee when a trade transaction is uplink to Ethereum.</p>
+</blockquote>
+<p>Let&apos;s take LRC-ETH trading as an example.</p>
+<p>Below are the steps -</p>
+<p><strong>1) Query  api/v3/exchange/tokens to get the dust value of orderAmounts for both LRC and ETH.</strong></p>
+<p>The dust value is the minimum value to pass Relayer check. Any amount less than &quot;dust&quot; can&apos;t be traded. In this case, we will get both minTOkenLRC and minTokenETH after getting dust value. If user wants to convert LRC to ETH, the set LRC amount can&apos;t be less than minTokenLRC and the converted ETH amount can&apos;t be less than minTokenETH.</p>
+<p><strong>2) Query api/v3/user/orderUserRateAmount to get the tradeCost value.</strong></p>
+<p>The parameters to call this interface are &quot;accountId&quot; and &quot;market=LRC-ETH&quot;. In this example, we will get two tradeCost values for LRC and ETH as tradeCostLRC and tradeCostETH.</p>
+<p><strong>3) Set maxAllowBips = 50% as the maxFeeBips can&apos;t exceed 50%</strong></p>
+<p><strong>4) Set slippage as the slippage value user configured in UI (for example 0.1%)</strong></p>
+<p><strong>5）Caculate minCostLRC and minCostETH as below</strong></p>
+<pre><code>minCostLRC = max(minTokenLRC, tradeCostLRC/maxAllowBips)
+minCostETH = max(minTokenETH, tradeCostETH/maxAllowBips)
+</code></pre><p><strong>6) Caculate the cost by considering slippage</strong></p>
+<pre><code>minCostLRCSlip = minCostLRC/(1-slippage)
+minCostETHSlip = minCostETH/(1-slippage)
+</code></pre><p><strong>7) Cacluate the minimum quantity user has to set</strong></p>
+<pre><code>tradeCostSellLRC = max(tradeCostSellLRC, minTokenLRC) * 1.1
+tradeCostSellETH = max(tradeCostSellETH, minTokenETH) * 1.1
+</code></pre><p>Here we add additonally 10% tolerance.</p>
+<p><strong>8) Caculate the previous minimum token amount per calling api/v3/user/orderUserRateAmount (existing logic)</strong></p>
+<p>This is the threshold to distinguish small quantity trading and normal trading<br>We will get two values (configSellLRC and configSellETH) which are used for previous trading quantity limit (Per USD 100) caculation</p>
+<p><strong>9）Caculate the new maxFeeBips and start trading</strong></p>
+<p>Let&apos;s take LRC-&gt;ETH as the example
+User inputs the amount of LRC to convert, amount = sellLRC</p>
+<pre><code>if sellLRC &gt;= configSellLRC then 
+    // Normal trading case, stay with previous logic
+    maxFeeBips=63 (the default value for maxFeeBips)
+    Trade 
+else if sellLRC &lt; tradeCostSellLRC then 
+    // Really too small to support
+    Prompt user the amount is too small to support
+    Exit
+else 
+    // This is what we call as small quantity 
+    costRate = Ceil(tradeCostETH/minbuyETH) 
+    maxFeeBips = max(costRate, takerRate)
+    Trade 
+End If 
+</code></pre><blockquote>
+<h3 id="price-impact-update">price impact update</h3>
+<ol>
+<li>sellTokenMinAmount  =  baseOrderInfo.minAmount from  LoopringAPI.userAPI.getMinimumTokenAmt({accountId,marke}, apiKey);</li>
+<li>{output} from  sdk.getOutputAmount(input: sellTokenMinAmount, isAtoB: isAtoB,…}).output</li>
+<li>PriceBase = output / sellTokenMinAmount</li>
+<li>tradePrice = calcTradeParams.minReceive / userInputSell</li>
+<li>priceImpact = 1 - tradePrice/PriceBase - 0.005</li>
+<li>If priceImpact &lt; 0 priceImpact = 0
+Else priceImpact</li>
+</ol>
+</blockquote>
+<h2 id="calculateswap-function">calculateSwap function</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> calculateSwap = <span class="hljs-function">(<span class="hljs-params">
+  sellSymbol = <span class="hljs-string">&quot;LRC&quot;</span>,
+  buySymbol = <span class="hljs-string">&quot;ETH&quot;</span>,
+  isInputSellToBuy: <span class="hljs-built_in">boolean</span>,
+  inputValue: <span class="hljs-built_in">number</span>, <span class="hljs-comment">// user Input value no decimal,</span>
+  _slippage = <span class="hljs-number">0.1</span>,
+  <span class="hljs-comment">// MOCK value</span>
+  amountMap: { [key: <span class="hljs-built_in">string</span>]: <span class="hljs-built_in">any</span> } = userAmount,
+  market: <span class="hljs-built_in">string</span> = deepMock.symbol,
+  <span class="hljs-comment">// close = ticker.tickers[7],</span>
+  depth: <span class="hljs-built_in">any</span> = deepMock,
+  ammPoolSnapshot: sdk.AmmPoolSnapshot = ammPoolSnapshotMock,
+  tokenMap: sdk.LoopringMap&lt;sdk.TokenInfo&gt; = TokenMapMockSwap,
+  ammMap: { [key: <span class="hljs-built_in">string</span>]: <span class="hljs-built_in">any</span> } = AMM_MAP
+</span>) =&gt;</span> {
+  <span class="hljs-keyword">let</span> calcFor100USDAmount, calcForMinCost, calcForPriceImpact;
+  <span class="hljs-keyword">if</span> (depth &amp;&amp; market &amp;&amp; tokenMap) {
+    <span class="hljs-keyword">const</span> sellToken = tokenMap[sellSymbol];
+    <span class="hljs-keyword">const</span> buyToken = tokenMap[buySymbol];
+    <span class="hljs-keyword">const</span> isInputSellOutputBuy = isInputSellToBuy;
+    <span class="hljs-keyword">let</span> input: <span class="hljs-built_in">any</span> = inputValue;
+
+    <span class="hljs-built_in">console</span>.log(
+      <span class="hljs-string">&quot;sellToken: Symbol &quot;</span>,
+      sellSymbol,
+      <span class="hljs-string">&quot;buyToken: Symbol&quot;</span>,
+      buySymbol,
+      <span class="hljs-string">&quot;is Input Sell Output Buy:&quot;</span>,
+      isInputSellOutputBuy,
+      <span class="hljs-string">&quot;input value&quot;</span>,
+      input
+    );
+    input = input === <span class="hljs-literal">undefined</span> || <span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">Number</span>(input)) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">Number</span>(input);
+    <span class="hljs-keyword">let</span> slippage = sdk.toBig(_slippage).times(<span class="hljs-number">100</span>).toString();
+    <span class="hljs-keyword">let</span> totalFee = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> feeTakerRate = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> feeBips = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> takerRate = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> buyMinAmtInfo = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> sellMinAmtInfo = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> tradeCost = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> basePrice = <span class="hljs-literal">undefined</span>;
+    <span class="hljs-keyword">let</span> maxFeeBips = MAPFEEBIPS;
+    <span class="hljs-keyword">let</span> minAmt = <span class="hljs-literal">undefined</span>;
+
+    <span class="hljs-keyword">if</span> (amountMap &amp;&amp; amountMap[market] &amp;&amp; ammMap) {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`amountMap[<span class="hljs-subst">${market}</span>]:`</span>, amountMap[market]);
+
+      <span class="hljs-keyword">const</span> ammMarket = <span class="hljs-string">`AMM-<span class="hljs-subst">${market}</span>`</span>;
+
+      <span class="hljs-keyword">const</span> amountMarket = amountMap[market]; <span class="hljs-comment">// userAmount from  LRC-ETH(Market)</span>
+
+      buyMinAmtInfo = amountMarket[buySymbol];
+      sellMinAmtInfo = amountMarket[sellSymbol];
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">`buyMinAmtInfo: <span class="hljs-subst">${market}</span>, <span class="hljs-subst">${buySymbol}</span>`</span>,
+        buyMinAmtInfo,
+        <span class="hljs-string">`sellMinAmtInfo: <span class="hljs-subst">${market}</span>, <span class="hljs-subst">${sellSymbol}</span>`</span>,
+        sellMinAmtInfo
+      );
+
+      feeBips = ammMap[ammMarket] ? ammMap[ammMarket].feeBips : <span class="hljs-number">1</span>;
+
+      feeTakerRate =
+        amountMarket[buySymbol] &amp;&amp;
+        amountMarket[buySymbol].userOrderInfo.takerRate;
+      tradeCost = amountMarket[buySymbol].tradeCost;
+
+      <span class="hljs-comment">/** <span class="hljs-doctag">@description </span>for charge fee calc, calcFor100USDAmount
+       *  Loopring market consider buyToken value small then  max(buyMinAmtInfo.userOrderInfo.minAmount,buyToken.orderAmounts.dust) is a small order,
+       * the fee will take the Max(tradeCost,userTakeRate)
+       * use the buyMinAmount Input calc the selltoken value,
+       * please read Line:321
+       * **/</span>
+      <span class="hljs-keyword">const</span> minAmountInput = BigNumber.max(
+        buyMinAmtInfo.userOrderInfo.minAmount,
+        buyToken.orderAmounts.dust
+      )
+        .div(sdk.toBig(<span class="hljs-number">1</span>).minus(sdk.toBig(slippage).div(<span class="hljs-number">10000</span>)))
+        .div(<span class="hljs-string">&quot;1e&quot;</span> + buyToken.decimals)
+        .toString();
+      calcFor100USDAmount = sdk.getOutputAmount({
+        <span class="hljs-attr">input</span>: minAmountInput,
+        <span class="hljs-attr">sell</span>: sellSymbol,
+        <span class="hljs-attr">buy</span>: buySymbol,
+        <span class="hljs-attr">isAtoB</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">marketArr</span>: marketArray <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>[],
+        <span class="hljs-attr">tokenMap</span>: tokenMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        <span class="hljs-attr">marketMap</span>: marketMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        depth,
+        <span class="hljs-attr">ammPoolSnapshot</span>: ammPoolSnapshot,
+        <span class="hljs-attr">feeBips</span>: feeBips ? feeBips.toString() : <span class="hljs-number">1</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-string">&quot;0&quot;</span>,
+        <span class="hljs-attr">slipBips</span>: slippage,
+      });
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">&quot;buyMinAmtInfo.userOrderInfo.minAmount:&quot;</span>,
+        buyMinAmtInfo.userOrderInfo.minAmount,
+        <span class="hljs-string">`buyMinAmtInfo.userOrderInfo.minAmount, with slippage:<span class="hljs-subst">${slippage}</span>`</span>,
+        sdk
+          .toBig(buyMinAmtInfo.userOrderInfo.minAmount)
+          .div(sdk.toBig(<span class="hljs-number">1</span>).minus(sdk.toBig(slippage).div(<span class="hljs-number">10000</span>)))
+          .toString()
+      );
+
+      <span class="hljs-comment">/*** calc for Price Impact ****/</span>
+      <span class="hljs-keyword">const</span> sellMinAmtInput = sdk
+        .toBig(sellMinAmtInfo.baseOrderInfo.minAmount)
+        .div(<span class="hljs-string">&quot;1e&quot;</span> + sellToken.decimals)
+        .toString();
+
+      calcForPriceImpact = sdk.getOutputAmount({
+        <span class="hljs-attr">input</span>: sellMinAmtInput,
+        <span class="hljs-attr">sell</span>: sellSymbol,
+        <span class="hljs-attr">buy</span>: buySymbol,
+        <span class="hljs-attr">isAtoB</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">marketArr</span>: marketArray <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>[],
+        <span class="hljs-attr">tokenMap</span>: tokenMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        <span class="hljs-attr">marketMap</span>: marketMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        depth,
+        <span class="hljs-attr">ammPoolSnapshot</span>: ammPoolSnapshot,
+        <span class="hljs-attr">feeBips</span>: feeBips ? feeBips.toString() : <span class="hljs-number">1</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-string">&quot;0&quot;</span>,
+        <span class="hljs-attr">slipBips</span>: <span class="hljs-string">&quot;10&quot;</span>,
+      });
+
+      basePrice = sdk.toBig(calcForPriceImpact?.output).div(sellMinAmtInput);
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">&quot;calcForPriceImpact input: &quot;</span>,
+        sellMinAmtInput,
+        <span class="hljs-string">&quot;, output: &quot;</span>,
+        sdk.toBig(calcForPriceImpact?.output).div(sellMinAmtInput).toNumber(),
+        <span class="hljs-string">&quot;, calcForPriceImpact:&quot;</span>,
+        calcForPriceImpact?.amountBOutSlip?.minReceivedVal,
+        <span class="hljs-string">&quot;, calcForPriceImpact basePrice: &quot;</span>,
+        basePrice.toNumber()
+      );
+
+      <span class="hljs-comment">/**** calc for mini Cost ****/</span>
+
+        <span class="hljs-comment">//minCostBuyToken = max(dustBuyToken, tradeCostETH/maxAllowBips)</span>
+      <span class="hljs-keyword">const</span> dustToken = buyToken;
+      <span class="hljs-keyword">let</span> minCostBuyTokenInput = BigNumber.max(
+        sdk.toBig(tradeCost).times(<span class="hljs-number">2</span>), <span class="hljs-comment">//maxAllowBips = 50% tradeCostETH/50%</span>
+        dustToken.orderAmounts.dust
+      );
+
+      <span class="hljs-keyword">const</span> tradeCostInput = sdk
+        .toBig(minCostBuyTokenInput)
+        .div(sdk.toBig(<span class="hljs-number">1</span>).minus(sdk.toBig(slippage).div(<span class="hljs-number">10000</span>)))
+        .div(<span class="hljs-string">&quot;1e&quot;</span> + dustToken.decimals)
+        .toString();
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">`tradeCost: <span class="hljs-subst">${tradeCost}</span>*2:`</span>,
+        sdk.toBig(tradeCost).times(<span class="hljs-number">2</span>).toString(),
+        <span class="hljs-string">&quot;buyToken.orderAmounts.dust&quot;</span>,
+        buyToken.orderAmounts.dust,
+        <span class="hljs-string">&quot;minCostBuyToken:&quot;</span>,
+        minCostBuyTokenInput.toString(),
+        <span class="hljs-string">`calcForMinCostInput, with slippage:<span class="hljs-subst">${slippage}</span>`</span>,
+        sdk
+          .toBig(minCostBuyTokenInput ?? <span class="hljs-number">0</span>)
+          .div(sdk.toBig(<span class="hljs-number">1</span>).minus(sdk.toBig(slippage).div(<span class="hljs-number">10000</span>)))
+          .toString(),
+        <span class="hljs-string">&quot;calcForMinCost, Input&quot;</span>,
+        tradeCostInput
+      );
+
+      calcForMinCost = sdk.getOutputAmount({
+        <span class="hljs-attr">input</span>: tradeCostInput,
+        <span class="hljs-attr">sell</span>: sellSymbol,
+        <span class="hljs-attr">buy</span>: buySymbol,
+        <span class="hljs-attr">isAtoB</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">marketArr</span>: marketArray <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>[],
+        <span class="hljs-attr">tokenMap</span>: tokenMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        <span class="hljs-attr">marketMap</span>: marketMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+        depth,
+        <span class="hljs-attr">ammPoolSnapshot</span>: ammPoolSnapshot,
+        <span class="hljs-attr">feeBips</span>: feeBips ? feeBips.toString() : <span class="hljs-number">1</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-string">&quot;0&quot;</span>,
+        <span class="hljs-attr">slipBips</span>: slippage,
+      });
+
+      <span class="hljs-comment">//add additionally 10% tolerance for minimum quantity user has to set on sell Token</span>
+      <span class="hljs-comment">/**
+       * <span class="hljs-doctag">@output</span>: minAmt for UI
+       * this value mini-order Sell token amount (show on the UI for available order check)
+       * setSellMinAmt(minAmt.toString());
+       */</span>
+      minAmt = BigNumber.max(
+        sellToken.orderAmounts.dust,
+        calcForMinCost?.amountS ?? <span class="hljs-number">0</span>
+      ).times(<span class="hljs-number">1.1</span>);
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">&quot;UI show mini-order Sell token amount:&quot;</span>,
+        minAmt.toString(),
+        sdk
+          .toBig(minAmt)
+          .div(<span class="hljs-string">&quot;1e&quot;</span> + sellToken.decimals)
+          .toString()
+      );
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">`calcFor100USDAmount.amountS`</span>,
+        sdk
+          .toBig(calcFor100USDAmount?.amountS ?? <span class="hljs-number">0</span>)
+          .div(<span class="hljs-string">&quot;1e&quot;</span> + sellToken.decimals)
+          .toString(),
+        <span class="hljs-string">&quot;calcForMinCost.amountS&quot;</span>,
+        sdk
+          .toBig(calcForMinCost?.amountS ?? <span class="hljs-number">0</span>)
+          .div(<span class="hljs-string">&quot;1e&quot;</span> + sellToken.decimals)
+          .toString()
+      );
+    }
+    <span class="hljs-keyword">const</span> calcTradeParams = sdk.getOutputAmount({
+      <span class="hljs-attr">input</span>: input.toString(),
+      <span class="hljs-attr">sell</span>: sellSymbol,
+      <span class="hljs-attr">buy</span>: buySymbol,
+      <span class="hljs-attr">isAtoB</span>: isInputSellOutputBuy,
+      <span class="hljs-attr">marketArr</span>: marketArray <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>[],
+      <span class="hljs-attr">tokenMap</span>: tokenMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+      <span class="hljs-attr">marketMap</span>: marketMap <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+      depth,
+      <span class="hljs-attr">ammPoolSnapshot</span>: ammPoolSnapshot,
+      <span class="hljs-attr">feeBips</span>: feeBips ? feeBips.toString() : <span class="hljs-number">1</span>,
+      <span class="hljs-attr">takerRate</span>: <span class="hljs-string">&quot;0&quot;</span>, <span class="hljs-comment">// for new calc miniReceive will minus fee, so takeRate can fix as 0</span>
+      <span class="hljs-attr">slipBips</span>: slippage,
+    });
+
+    <span class="hljs-keyword">const</span> minSymbol = buySymbol;
+    <span class="hljs-keyword">const</span> tradePrice = sdk
+      .toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? <span class="hljs-number">0</span>)
+      .div(isInputSellOutputBuy ? input.toString() : calcTradeParams?.output);
+    <span class="hljs-keyword">const</span> priceImpact = sdk
+      .toBig(<span class="hljs-number">1</span>)
+      .minus(sdk.toBig(tradePrice).div(basePrice ?? <span class="hljs-number">1</span>))
+      .minus(<span class="hljs-number">0.001</span>);
+    <span class="hljs-keyword">if</span> (calcTradeParams &amp;&amp; priceImpact.gte(<span class="hljs-number">0</span>)) {
+      calcTradeParams.priceImpact = priceImpact.toFixed(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> {
+      calcTradeParams &amp;&amp; (calcTradeParams.priceImpact = <span class="hljs-string">&quot;0&quot;</span>);
+    }
+
+    <span class="hljs-built_in">console</span>.log(
+      <span class="hljs-string">&quot;calcTradeParams input:&quot;</span>,
+      input.toString(),
+      <span class="hljs-string">&quot;, calcTradeParams Price: &quot;</span>,
+      sdk
+        .toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? <span class="hljs-number">0</span>)
+        .div(input.toString())
+        .toNumber(),
+      <span class="hljs-string">`isAtoB mean isInputSellOutputBuy:<span class="hljs-subst">${isInputSellOutputBuy}</span>, <span class="hljs-subst">${
+        isInputSellOutputBuy ? input.toString() : calcTradeParams?.output
+      }</span> tradePrice: `</span>,
+      tradePrice.toString(),
+      <span class="hljs-string">&quot;basePrice: &quot;</span>,
+      basePrice?.toString(),
+      <span class="hljs-string">&quot;toBig(tradePrice).div(basePrice)&quot;</span>,
+      sdk
+        .toBig(tradePrice)
+        .div(basePrice ?? <span class="hljs-number">1</span>)
+        .toNumber(),
+      <span class="hljs-string">&quot;priceImpact (1-tradePrice/basePrice) - 0.001&quot;</span>,
+      priceImpact.toNumber(),
+      <span class="hljs-string">&quot;priceImpact view&quot;</span>,
+      calcTradeParams?.priceImpact
+    );
+
+    <span class="hljs-keyword">if</span> (
+      tradeCost &amp;&amp;
+      calcTradeParams &amp;&amp;
+      calcTradeParams.amountBOutSlip?.minReceived &amp;&amp;
+      feeTakerRate
+    ) {
+      <span class="hljs-keyword">let</span> value = sdk
+        .toBig(calcTradeParams.amountBOutSlip?.minReceived)
+        .times(feeTakerRate)
+        .div(<span class="hljs-number">10000</span>);
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">&quot;input Accounts&quot;</span>,
+        calcTradeParams?.amountS,
+        <span class="hljs-string">&quot;100 U Amount Sell:&quot;</span>,
+        calcFor100USDAmount?.amountS
+      );
+
+      <span class="hljs-keyword">let</span> validAmt = !!(
+        calcTradeParams?.amountS &amp;&amp;
+        calcFor100USDAmount?.amountS &amp;&amp;
+        sdk.toBig(calcTradeParams?.amountS).gte(calcFor100USDAmount.amountS)
+      );
+      <span class="hljs-keyword">let</span> totalFeeRaw;
+
+      <span class="hljs-built_in">console</span>.log(
+        <span class="hljs-string">`<span class="hljs-subst">${minSymbol}</span> tradeCost:`</span>,
+        tradeCost,
+        <span class="hljs-string">&quot;useTakeRate Fee:&quot;</span>,
+        value.toString(),
+        <span class="hljs-string">&quot;calcFor100USDAmount?.amountS:&quot;</span>,
+        calcFor100USDAmount?.amountS,
+        <span class="hljs-string">`is setup minTrade amount, <span class="hljs-subst">${calcFor100USDAmount?.amountS}</span>:`</span>,
+        validAmt
+      );
+
+      <span class="hljs-keyword">if</span> (!validAmt) {
+        <span class="hljs-keyword">if</span> (sdk.toBig(tradeCost).gte(value)) {
+          totalFeeRaw = sdk.toBig(tradeCost);
+        } <span class="hljs-keyword">else</span> {
+          totalFeeRaw = value;
+        }
+        <span class="hljs-built_in">console</span>.log(
+          <span class="hljs-string">&quot;maxFeeBips update for tradeCost before value:&quot;</span>,
+          maxFeeBips,
+          <span class="hljs-string">&quot;totalFeeRaw&quot;</span>,
+          totalFeeRaw.toString()
+        );
+        maxFeeBips = <span class="hljs-built_in">Math</span>.ceil(
+          totalFeeRaw
+            .times(<span class="hljs-number">10000</span>)
+            .div(calcTradeParams.amountBOutSlip?.minReceived)
+            .toNumber()
+        );
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;maxFeeBips update for tradeCost after value:&quot;</span>, maxFeeBips);
+      } <span class="hljs-keyword">else</span> {
+        totalFeeRaw = sdk.toBig(value);
+      }
+
+      <span class="hljs-comment">/**
+       * totalFee
+       */</span>
+      totalFee = totalFeeRaw
+        .div(<span class="hljs-string">&quot;1e&quot;</span> + tokenMap[minSymbol].decimals)
+        .toString();
+      <span class="hljs-comment">/** <span class="hljs-doctag">@output</span>: UI
+       *   getValuePrecisionThousand(
+       *   totalFeeRaw.div(&quot;1e&quot; + tokenMap[minSymbol].decimals).toString(),
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   false,
+       *   { floor: true }
+       * );
+       */</span>
+
+      tradeCost = sdk
+        .toBig(tradeCost)
+        <span class="hljs-comment">// @ts-ignore</span>
+        .div(<span class="hljs-string">&quot;1e&quot;</span> + tokenMap[minSymbol].decimals)
+        .toString();
+
+      <span class="hljs-comment">/** <span class="hljs-doctag">@output</span>:  UI code with precision
+       *   getValuePrecisionThousand(
+       *   sdk
+       *     .toBig(tradeCost)
+       *     .div(&quot;1e&quot; + tokenMap[minSymbol].decimals)
+       *     .toString(),
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   tokenMap[minSymbol].precision,
+       *   false,
+       *   { floor: true }
+       * );
+       */</span>
+
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;totalFee view value:&quot;</span>, totalFee + <span class="hljs-string">&quot; &quot;</span> + minSymbol);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;tradeCost view value:&quot;</span>, tradeCost + <span class="hljs-string">&quot; &quot;</span> + minSymbol);
+    }
+
+    <span class="hljs-keyword">const</span> minimumReceived = sdk
+      .toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? <span class="hljs-number">0</span>)
+      .minus(totalFee ?? <span class="hljs-number">0</span>)
+      .toString();
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;minimumReceived:&quot;</span>, minimumReceived);
+
+    <span class="hljs-comment">/** <span class="hljs-doctag">@output</span>:   UI code with precision
+     *   getValuePrecisionThousand(
+     *   toBig(calcTradeParams?.amountBOutSlip?.minReceivedVal ?? 0)
+     *     .minus(totalFee)
+     *     .toString(),
+     *   tokenMap[minSymbol].precision,
+     *   tokenMap[minSymbol].precision,
+     *   tokenMap[minSymbol].precision,
+     *   false,
+     *   { floor: true }
+     * );
+     */</span>
+
+    <span class="hljs-keyword">let</span> priceImpactView: <span class="hljs-built_in">any</span> = calcTradeParams?.priceImpact
+      ? <span class="hljs-built_in">parseFloat</span>(calcTradeParams?.priceImpact) * <span class="hljs-number">100</span>
+      : <span class="hljs-literal">undefined</span>;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;priceImpact view:&quot;</span>, priceImpactView + <span class="hljs-string">&quot;%&quot;</span>);
+    <span class="hljs-comment">//  @output:   UI code with color alert</span>
+    <span class="hljs-comment">// const priceImpactObj = getPriceImpactInfo(calcTradeParams);</span>
+    <span class="hljs-comment">// const _tradeCalcData: Partial&lt;TradeCalcData&lt;C&gt;&gt; = {</span>
+    <span class="hljs-comment">//   priceImpact: priceImpactObj.value.toString(),</span>
+    <span class="hljs-comment">//   priceImpactColor: priceImpactObj.priceImpactColor,</span>
+    <span class="hljs-comment">//   minimumReceived: !minimumReceived?.toString().startsWith(&quot;-&quot;)</span>
+    <span class="hljs-comment">//     ? minimumReceived</span>
+    <span class="hljs-comment">//     : undefined,</span>
+    <span class="hljs-comment">//   fee: totalFee,</span>
+    <span class="hljs-comment">//   feeTakerRate,</span>
+    <span class="hljs-comment">//   tradeCost,</span>
+    <span class="hljs-comment">// };</span>
+
+    <span class="hljs-built_in">console</span>.log(
+      <span class="hljs-string">`isInputSellOutputBuy:<span class="hljs-subst">${isInputSellOutputBuy}</span>`</span>,
+      <span class="hljs-string">`output <span class="hljs-subst">${isInputSellOutputBuy ? <span class="hljs-string">&quot;Buy&quot;</span> : <span class="hljs-string">&quot;Sell&quot;</span>}</span>`</span>,
+      calcTradeParams?.output
+    );
+
+    <span class="hljs-keyword">return</span> {
+      market,
+      feeBips,
+      takerRate,
+      <span class="hljs-attr">sellMinAmtInfo</span>: sellMinAmtInfo <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+      <span class="hljs-attr">buyMinAmtInfo</span>: buyMinAmtInfo <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>,
+      totalFee,
+      maxFeeBips,
+      feeTakerRate,
+      tradeCost,
+      minimumReceived,
+      calcTradeParams,
+      minAmt,
+    };
+  }
+};
+</code></pre>
+<h3 id="step-1-get-apikey--eddsakey">Step 1. get apikey &amp; eddsaKey</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {accInfo} = <span class="hljs-keyword">await</span> LoopringAPI.exchangeAPI.getAccount({
+  <span class="hljs-attr">owner</span>: LOOPRING_EXPORTED_ACCOUNT.address,
+});
+<span class="hljs-keyword">const</span> eddsaKey = <span class="hljs-keyword">await</span> signatureKeyPairMock(accInfo);
+apiKey = (
+  <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getUserApiKey(
+    {
+      <span class="hljs-attr">accountId</span>: accInfo.accountId,
+    },
+    eddsaKey.sk
+  )
+).apiKey;
+</code></pre>
+<h3 id="step-step-2--storageid">Step Step 2 : storageId</h3>
+<pre><code class="lang-ts">
+<span class="hljs-keyword">const</span> storageId = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getNextStorageId(
+  {
+    <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+    <span class="hljs-attr">sellTokenId</span>: TOKEN_INFO.tokenMap[sell].tokenId,
+  },
+  apiKey
+);
+</code></pre>
+<h3 id="step-3-get-user-amountmap-which-decided-user-minimum-order">Step 3. get user AmountMap, which decided user minimum order</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> amountMap = {
+  [AMM_MARKET]: (
+    <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getMinimumTokenAmt(
+      {
+        <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        <span class="hljs-attr">market</span>: AMM_MAP[AMM_MARKET].market,
+      },
+      apiKey
+    )
+  ).amountMap,
+  [MARKET]: (
+    <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getMinimumTokenAmt(
+      {
+        <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        <span class="hljs-attr">market</span>: MARKET,
+      },
+      apiKey
+    )
+  ).amountMap,
+};
+</code></pre>
+<h3 id="step-4-depth-ammpoolsnapshot-tickmap">Step 4. depth, ammPoolSnapshot ,tickMap</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> [{depth}, {ammPoolSnapshot}] = <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.all([
+  LoopringAPI.exchangeAPI.getMixDepth({
+    <span class="hljs-attr">market</span>: AMM_MAP[<span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>].market,
+  }),
+  LoopringAPI.ammpoolAPI.getAmmPoolSnapshot({
+    <span class="hljs-attr">poolAddress</span>: AMM_MAP[<span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>].address,
+  }),
+]);
+</code></pre>
+<h3 id="step-5-check-minamt">Step 5. check MinAmt</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">let</span> buyMinAmtInfo = (amountMap[AMM_MARKET] ?? amountMap[MARKET])[buy];
+<span class="hljs-keyword">let</span> takerRate = buyMinAmtInfo
+  ? buyMinAmtInfo.userOrderInfo.takerRate
+  : <span class="hljs-number">0</span>;
+<span class="hljs-keyword">const</span> minAmountInput = buyMinAmtInfo.userOrderInfo.minAmount;
+</code></pre>
+<h3 id="step-6-calctradeparams">Step 6. calcTradeParams</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> calcTradeParams = sdk.getOutputAmount({
+  <span class="hljs-attr">input</span>: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+  sell,
+  buy,
+  isAtoB,
+  <span class="hljs-attr">marketArr</span>: [<span class="hljs-string">&quot;LRC-ETH&quot;</span>, <span class="hljs-string">&quot;ETH-USDT&quot;</span>, <span class="hljs-string">&quot;DAI-USDT&quot;</span>, <span class="hljs-string">&quot;USDC-ETH&quot;</span>],
+  <span class="hljs-attr">tokenMap</span>: TOKEN_INFO.tokenMap,
+  <span class="hljs-attr">marketMap</span>: TOKEN_INFO.marketMap,
+  depth,
+  <span class="hljs-attr">ammPoolSnapshot</span>: ammPoolSnapshot,
+  <span class="hljs-attr">feeBips</span>: AMM_MAP[<span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>].feeBips.toString(),
+  <span class="hljs-attr">takerRate</span>: takerRate ? takerRate.toString() : <span class="hljs-string">&quot;0&quot;</span>,
+  <span class="hljs-attr">slipBips</span>: slippage,
+});
+<span class="hljs-built_in">console</span>.log(
+  <span class="hljs-string">&quot;Buy&quot;</span>,
+  <span class="hljs-string">&quot;,LRC:&quot;</span>,
+  LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+  <span class="hljs-string">&quot;,minAmountInput LRC:&quot;</span>,
+  minAmountInput,
+  <span class="hljs-string">&quot;,ETH:&quot;</span>,
+  calcTradeParams?.amountBOutSlip?.minReceivedVal
+);
+
+<span class="hljs-keyword">const</span> response: { <span class="hljs-attr">hash</span>: <span class="hljs-built_in">string</span> } | <span class="hljs-built_in">any</span> =
+  <span class="hljs-keyword">await</span> LoopringAPI.userAPI.submitOrder(
+    {
+      <span class="hljs-attr">exchange</span>: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+      <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+      <span class="hljs-attr">storageId</span>: storageId.orderId,
+      <span class="hljs-attr">sellToken</span>: {
+        <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[sell].tokenId,
+        <span class="hljs-attr">volume</span>: calcTradeParams?.amountS <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>,
+      },
+      <span class="hljs-attr">buyToken</span>: {
+        <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[buy].tokenId,
+        <span class="hljs-attr">volume</span>: calcTradeParams?.amountBOutSlip.minReceived <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>,
+      },
+      <span class="hljs-attr">allOrNone</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">validUntil</span>: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+      <span class="hljs-attr">maxFeeBips</span>: <span class="hljs-number">63</span>,
+      <span class="hljs-attr">fillAmountBOrS</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// amm only false</span>
+      <span class="hljs-attr">tradeChannel</span>: calcTradeParams?.exceedDepth
+        ? sdk.TradeChannel.BLANK
+        : sdk.TradeChannel.MIXED,
+      <span class="hljs-attr">orderType</span>: calcTradeParams?.exceedDepth
+        ? sdk.OrderType.ClassAmm
+        : sdk.OrderType.TakerOnly,
+      <span class="hljs-attr">eddsaSignature</span>: <span class="hljs-string">&quot;&quot;</span>,
+    },
+    eddsaKey.sk,
+    apiKey
+  );
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;submitOrder&quot;</span>, response);
+</code></pre>
+<hr>
+<h2 id="eth-lrc--for-quote-to-base">ETH-LRC : for Quote to Base</h2>
+<h3 id="mock-data">MOCK Data</h3>
+<blockquote>
+<p>user should had apikey, please check get apikey</p>
+</blockquote>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> buy = <span class="hljs-string">&quot;ETH&quot;</span>,
+  sell = <span class="hljs-string">&quot;LRC&quot;</span>,
+  MARKET = <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
+  AMM_MARKET = <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>,
+  slippage = <span class="hljs-string">&quot;50&quot;</span>;
+<span class="hljs-keyword">const</span> isAtoB = <span class="hljs-literal">false</span>;
+</code></pre>
+<h3 id="step-1-get-apikey--eddsakey">Step 1. get apikey &amp; eddsaKey</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {accInfo} = <span class="hljs-keyword">await</span> LoopringAPI.exchangeAPI.getAccount({
+  <span class="hljs-attr">owner</span>: LOOPRING_EXPORTED_ACCOUNT.address,
+});
+<span class="hljs-keyword">const</span> eddsaKey = <span class="hljs-keyword">await</span> signatureKeyPairMock(accInfo);
+apiKey = (
+  <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getUserApiKey(
+    {
+      <span class="hljs-attr">accountId</span>: accInfo.accountId,
+    },
+    eddsaKey.sk
+  )
+).apiKey;
+</code></pre>
+<h3 id="step--2-storageid">Step  2. storageId</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> storageId = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getNextStorageId(
+  {
+    <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+    <span class="hljs-attr">sellTokenId</span>: TOKEN_INFO.tokenMap[sell].tokenId,
+  },
+  apiKey
+);
+</code></pre>
+<h3 id="step-3-get-user-amountmap-which-decided-user-minimum-order">Step 3. get user AmountMap, which decided user minimum order</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> amountMap = {
+  [AMM_MARKET]: (
+    <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getMinimumTokenAmt(
+      {
+        <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        <span class="hljs-attr">market</span>: AMM_MAP[AMM_MARKET].market,
+      },
+      apiKey
+    )
+  ).amountMap,
+  [MARKET]: (
+    <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getMinimumTokenAmt(
+      {
+        <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        <span class="hljs-attr">market</span>: MARKET,
+      },
+      apiKey
+    )
+  ).amountMap,
+};
+</code></pre>
+<h3 id="step-4-depth-ammpoolsnapshot-tickmap">Step 4. depth, ammPoolSnapshot ,tickMap</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> [{depth}, {ammPoolSnapshot}] = <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.all([
+  LoopringAPI.exchangeAPI.getMixDepth({
+    <span class="hljs-attr">market</span>: AMM_MAP[<span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>].market,
+  }),
+  LoopringAPI.ammpoolAPI.getAmmPoolSnapshot({
+    <span class="hljs-attr">poolAddress</span>: AMM_MAP[<span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>].address,
+  }),
+]);
+</code></pre>
+<h3 id="step--5-check-minamt-see-log-and-calc-mini-receive-and-ouput-value--maxfeebips--priceimpact">Step  5. check MinAmt see log and calc mini receive and ouput value &amp; maxfeeBips &amp; priceImpact</h3>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
+  sell,
+  buy,
+  isAtoB,
+  <span class="hljs-number">10</span>, <span class="hljs-comment">// user Input value no decimal 10 lrc,</span>
+  <span class="hljs-number">0.1</span>,
+  <span class="hljs-comment">//TODO MOCK value</span>
+  amountMap,
+  <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
+  <span class="hljs-comment">// close = ticker.tickers[7],</span>
+  depth,
+  ammPoolSnapshot,
+  TOKEN_INFO.tokenMap,
+  AMM_MAP
+);
+<span class="hljs-built_in">console</span>.log(
+  <span class="hljs-string">&quot;Buy&quot;</span>,
+  <span class="hljs-string">&quot;,ETH:&quot;</span>,
+  LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
+  <span class="hljs-string">&quot;,minAmountInput ETH:&quot;</span>,
+  minAmountInput,
+  <span class="hljs-string">&quot;,LRC:&quot;</span>,
+  calcTradeParams?.amountBOutSlip?.minReceivedVal
+);
+
+<span class="hljs-keyword">const</span> response: { <span class="hljs-attr">hash</span>: <span class="hljs-built_in">string</span> } | <span class="hljs-built_in">any</span> =
+  <span class="hljs-keyword">await</span> LoopringAPI.userAPI.submitOrder(
+    {
+      <span class="hljs-attr">exchange</span>: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+      <span class="hljs-attr">accountId</span>: LOOPRING_EXPORTED_ACCOUNT.accountId,
+      <span class="hljs-attr">storageId</span>: storageId.orderId,
+      <span class="hljs-attr">sellToken</span>: {
+        <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[sell].tokenId,
+        <span class="hljs-attr">volume</span>: calcTradeParams?.amountS <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>,
+      },
+      <span class="hljs-attr">buyToken</span>: {
+        <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[buy].tokenId,
+        <span class="hljs-attr">volume</span>: calcTradeParams?.amountBOutSlip.minReceived <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>,
+      },
+      <span class="hljs-attr">allOrNone</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">validUntil</span>: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+      <span class="hljs-attr">maxFeeBips</span>: <span class="hljs-number">63</span>,
+      <span class="hljs-attr">fillAmountBOrS</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// amm only false</span>
+      <span class="hljs-attr">tradeChannel</span>: calcTradeParams?.exceedDepth
+        ? sdk.TradeChannel.BLANK
+        : sdk.TradeChannel.MIXED,
+      <span class="hljs-attr">orderType</span>: calcTradeParams?.exceedDepth
+        ? sdk.OrderType.ClassAmm
+        : sdk.OrderType.TakerOnly,
+      <span class="hljs-attr">eddsaSignature</span>: <span class="hljs-string">&quot;&quot;</span>,
+    },
+    eddsaKey.sk,
+    apiKey
+  );
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;submitOrder&quot;</span>, response);
+</code></pre>
+<h3 id="mockswapdata">MockSwapData</h3>
+<pre><code class="lang-ts"><span class="hljs-comment">//Default config value from getTokens &amp; getMixMarkets</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> sdk <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../index&quot;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> marketArray = [<span class="hljs-string">&quot;LRC-ETH&quot;</span>];
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> marketMap = {
+  <span class="hljs-string">&quot;LRC-ETH&quot;</span>: {
+    <span class="hljs-attr">baseTokenId</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
+    <span class="hljs-attr">orderbookAggLevels</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">precisionForPrice</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">quoteTokenId</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">status</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">isSwapEnabled</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">createdAt</span>: <span class="hljs-number">1617967800000</span>,
+  },
+};
+<span class="hljs-comment">//v3/mix/depth?level=0&amp;limit=50&amp;market=LRC-ETH</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> deepMock = {
+  <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
+  <span class="hljs-attr">version</span>: <span class="hljs-number">23249677</span>,
+  <span class="hljs-attr">timestamp</span>: <span class="hljs-number">1655719492365</span>,
+  <span class="hljs-attr">mid_price</span>: <span class="hljs-number">0.00033248</span>,
+  <span class="hljs-attr">bids</span>: [
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00030689</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12041160324514792497908&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;618450503644320209925641&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;198539605794234049017&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00030752</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12016302126785109160251&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;606409343319805417427733&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;194844233461662963807&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00030816</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11991520826895479525387&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;594393041193020308267482&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;191148861129091878597&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00030881</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12329062048917727073625&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;582401520366124828742095&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;187453488796520793387&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00030945</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11941442525358097768419&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;570072458317207101668470&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;183646135484174826807&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003102</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;3223726000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;999999805200000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;558131015791849003900051&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;179950763151603741597&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003104</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11904963012947201084062&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;554907289791849003900051&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;178950763346403741597&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031072</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11892800074855146120151&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;543002326778901802815989&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;175255391013832656387&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031137</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12227667622887455762012&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;531109526704046656695838&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;171560018681261571177&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031202</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11843337524732768607817&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;518881859081159200933826&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;167752665368915604597&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031266</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11819088718260537718160&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;507038521556426432326009&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;164057293036344519387&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003133</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11794914308461194855590&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;495219432838165894607849&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;160361920703773434177&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031395</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12127129883064173669497&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;483424518529704699752259&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;156666548371202348967&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003146</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11746060536480763829870&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;471297388646640526082762&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;152859195058856382387&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031524</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11722109721002274877424&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;459551328110159762252892&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;149163822726285297177&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003159</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;12052351993023897680738&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;447829218389157487375468&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;145468450393714211967&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031655</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11673707113082743010268&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;435776866396133589694730&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;141661097081368245387&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031699</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;615000000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;194954999999999949&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;424103159283050846684462&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;137965724748797160177&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031719</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11649977142974837964110&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;423488159283050846684462&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;137770769748797160228&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031784</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11626319455782556517212&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;411838182140076008720352&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;134075397416226075018&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003185</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11953964321007990024755&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;400211862684293452203140&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;130380025083654989808&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031934</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11571837200722111826863&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;388257898363285462178385&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;126572671771309023228&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00031979</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11555429099390519988949&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;376686061162563350351522&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;122877299438737938018&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;300000000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;96000000000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;365130632063172830362573&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;119181927106166852808&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032044</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11532058329906875386268&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;364830632063172830362573&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;119085927106166852808&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003211</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11857145662584872212009&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;353298573733265954976305&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;115390554773595767598&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032176</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11484826169666631095087&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;341441428070681082764296&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;111583201461249801018&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032241</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11461669156035188891431&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;329956601901014451669209&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;107887829128678715808&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032294</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;22266286128259997368320&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;7190674442260284416&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;318494932744979262777778&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;104192456796107630598&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032307</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11784846142950476791130&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;296228646616719265409458&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;97001782353847346182&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032333</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;31042151210389998665728&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;10037169172367501312&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;284443800473768788618328&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;93194429041501379602&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032354</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;19082720347089998446592&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;6174214168300968960&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;253401649263378789952600&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;83157259869133878290&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032373</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11414868337793698506576&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;234318928916288791506008&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;76983045700832909330&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032438</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11391922481177051106050&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;222904060578495092999432&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;73287673368261824120&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032503</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11369045742792164433715&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;211512138097318041893382&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;69592301035690738910&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032512</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;7101984539779999465472&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;2308997213573273600&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;200143092354525877459667&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;65896928703119653700&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003257</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11689707913498419991686&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;193041107814745877994195&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;63587931489546380100&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032636</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11322810509578528739940&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;181351399901247458002509&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;59780578177200413520&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032702</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11300141532643741902081&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;170028589391668929262569&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;56085205844629328310&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032709</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;1511898000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;494541835799999898&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;158728447859025187360488&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;52389833512058243100&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032767</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11277540564700637960582&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;157216549859025187360488&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;51895291676258243202&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032838</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11594014901713773553177&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;145939009294324549399906&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;48199919343687157992&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032899</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11232203228917728004878&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;134344994392610775846729&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;44392566031341191412&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032959</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;31100749000000000753664&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;10250806870400000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;123112791163693047841851&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;40697193698770106202&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00032965</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11209805337410429375102&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;92012042163693047088187&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;30446386828370106202&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033031</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11187474373893810850495&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3695372332571085210&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;80802236826282617713085&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;26751014495799020992&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033098</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11503202913004006553102&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3807353312345966580&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;69614762452388806862590&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;23055642163227935782&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033099</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;26515451000000002129920&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;8776614281000000512&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;58111559539384800309488&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;19248288850881969202&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003313</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;20499506300000000802816&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;6791486437190000640&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;31596108539384798179568&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;10471674569881968690&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033165</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11096602239384797376752&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3680188132691968050&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;11096602239384797376752&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;3680188132691968050&quot;</span>,
+    },
+  ],
+  <span class="hljs-attr">bids_prices</span>: [
+    <span class="hljs-number">0.00030689</span>, <span class="hljs-number">0.00030752</span>, <span class="hljs-number">0.00030816</span>, <span class="hljs-number">0.00030881</span>, <span class="hljs-number">0.00030945</span>, <span class="hljs-number">0.0003102</span>,
+    <span class="hljs-number">0.0003104</span>, <span class="hljs-number">0.00031072</span>, <span class="hljs-number">0.00031137</span>, <span class="hljs-number">0.00031202</span>, <span class="hljs-number">0.00031266</span>, <span class="hljs-number">0.0003133</span>,
+    <span class="hljs-number">0.00031395</span>, <span class="hljs-number">0.0003146</span>, <span class="hljs-number">0.00031524</span>, <span class="hljs-number">0.0003159</span>, <span class="hljs-number">0.00031655</span>, <span class="hljs-number">0.00031699</span>,
+    <span class="hljs-number">0.00031719</span>, <span class="hljs-number">0.00031784</span>, <span class="hljs-number">0.0003185</span>, <span class="hljs-number">0.00031934</span>, <span class="hljs-number">0.00031979</span>, <span class="hljs-number">0.00032</span>,
+    <span class="hljs-number">0.00032044</span>, <span class="hljs-number">0.0003211</span>, <span class="hljs-number">0.00032176</span>, <span class="hljs-number">0.00032241</span>, <span class="hljs-number">0.00032294</span>, <span class="hljs-number">0.00032307</span>,
+    <span class="hljs-number">0.00032333</span>, <span class="hljs-number">0.00032354</span>, <span class="hljs-number">0.00032373</span>, <span class="hljs-number">0.00032438</span>, <span class="hljs-number">0.00032503</span>, <span class="hljs-number">0.00032512</span>,
+    <span class="hljs-number">0.0003257</span>, <span class="hljs-number">0.00032636</span>, <span class="hljs-number">0.00032702</span>, <span class="hljs-number">0.00032709</span>, <span class="hljs-number">0.00032767</span>, <span class="hljs-number">0.00032838</span>,
+    <span class="hljs-number">0.00032899</span>, <span class="hljs-number">0.00032959</span>, <span class="hljs-number">0.00032965</span>, <span class="hljs-number">0.00033031</span>, <span class="hljs-number">0.00033098</span>, <span class="hljs-number">0.00033099</span>,
+    <span class="hljs-number">0.0003313</span>, <span class="hljs-number">0.00033165</span>,
+  ],
+  <span class="hljs-attr">bids_amtTotals</span>: [
+    <span class="hljs-string">&quot;618450503644320209925641&quot;</span>,
+    <span class="hljs-string">&quot;606409343319805417427733&quot;</span>,
+    <span class="hljs-string">&quot;594393041193020308267482&quot;</span>,
+    <span class="hljs-string">&quot;582401520366124828742095&quot;</span>,
+    <span class="hljs-string">&quot;570072458317207101668470&quot;</span>,
+    <span class="hljs-string">&quot;558131015791849003900051&quot;</span>,
+    <span class="hljs-string">&quot;554907289791849003900051&quot;</span>,
+    <span class="hljs-string">&quot;543002326778901802815989&quot;</span>,
+    <span class="hljs-string">&quot;531109526704046656695838&quot;</span>,
+    <span class="hljs-string">&quot;518881859081159200933826&quot;</span>,
+    <span class="hljs-string">&quot;507038521556426432326009&quot;</span>,
+    <span class="hljs-string">&quot;495219432838165894607849&quot;</span>,
+    <span class="hljs-string">&quot;483424518529704699752259&quot;</span>,
+    <span class="hljs-string">&quot;471297388646640526082762&quot;</span>,
+    <span class="hljs-string">&quot;459551328110159762252892&quot;</span>,
+    <span class="hljs-string">&quot;447829218389157487375468&quot;</span>,
+    <span class="hljs-string">&quot;435776866396133589694730&quot;</span>,
+    <span class="hljs-string">&quot;424103159283050846684462&quot;</span>,
+    <span class="hljs-string">&quot;423488159283050846684462&quot;</span>,
+    <span class="hljs-string">&quot;411838182140076008720352&quot;</span>,
+    <span class="hljs-string">&quot;400211862684293452203140&quot;</span>,
+    <span class="hljs-string">&quot;388257898363285462178385&quot;</span>,
+    <span class="hljs-string">&quot;376686061162563350351522&quot;</span>,
+    <span class="hljs-string">&quot;365130632063172830362573&quot;</span>,
+    <span class="hljs-string">&quot;364830632063172830362573&quot;</span>,
+    <span class="hljs-string">&quot;353298573733265954976305&quot;</span>,
+    <span class="hljs-string">&quot;341441428070681082764296&quot;</span>,
+    <span class="hljs-string">&quot;329956601901014451669209&quot;</span>,
+    <span class="hljs-string">&quot;318494932744979262777778&quot;</span>,
+    <span class="hljs-string">&quot;296228646616719265409458&quot;</span>,
+    <span class="hljs-string">&quot;284443800473768788618328&quot;</span>,
+    <span class="hljs-string">&quot;253401649263378789952600&quot;</span>,
+    <span class="hljs-string">&quot;234318928916288791506008&quot;</span>,
+    <span class="hljs-string">&quot;222904060578495092999432&quot;</span>,
+    <span class="hljs-string">&quot;211512138097318041893382&quot;</span>,
+    <span class="hljs-string">&quot;200143092354525877459667&quot;</span>,
+    <span class="hljs-string">&quot;193041107814745877994195&quot;</span>,
+    <span class="hljs-string">&quot;181351399901247458002509&quot;</span>,
+    <span class="hljs-string">&quot;170028589391668929262569&quot;</span>,
+    <span class="hljs-string">&quot;158728447859025187360488&quot;</span>,
+    <span class="hljs-string">&quot;157216549859025187360488&quot;</span>,
+    <span class="hljs-string">&quot;145939009294324549399906&quot;</span>,
+    <span class="hljs-string">&quot;134344994392610775846729&quot;</span>,
+    <span class="hljs-string">&quot;123112791163693047841851&quot;</span>,
+    <span class="hljs-string">&quot;92012042163693047088187&quot;</span>,
+    <span class="hljs-string">&quot;80802236826282617713085&quot;</span>,
+    <span class="hljs-string">&quot;69614762452388806862590&quot;</span>,
+    <span class="hljs-string">&quot;58111559539384800309488&quot;</span>,
+    <span class="hljs-string">&quot;31596108539384798179568&quot;</span>,
+    <span class="hljs-string">&quot;11096602239384797376752&quot;</span>,
+  ],
+  <span class="hljs-attr">bids_volTotals</span>: [
+    <span class="hljs-string">&quot;198539605794234049017&quot;</span>,
+    <span class="hljs-string">&quot;194844233461662963807&quot;</span>,
+    <span class="hljs-string">&quot;191148861129091878597&quot;</span>,
+    <span class="hljs-string">&quot;187453488796520793387&quot;</span>,
+    <span class="hljs-string">&quot;183646135484174826807&quot;</span>,
+    <span class="hljs-string">&quot;179950763151603741597&quot;</span>,
+    <span class="hljs-string">&quot;178950763346403741597&quot;</span>,
+    <span class="hljs-string">&quot;175255391013832656387&quot;</span>,
+    <span class="hljs-string">&quot;171560018681261571177&quot;</span>,
+    <span class="hljs-string">&quot;167752665368915604597&quot;</span>,
+    <span class="hljs-string">&quot;164057293036344519387&quot;</span>,
+    <span class="hljs-string">&quot;160361920703773434177&quot;</span>,
+    <span class="hljs-string">&quot;156666548371202348967&quot;</span>,
+    <span class="hljs-string">&quot;152859195058856382387&quot;</span>,
+    <span class="hljs-string">&quot;149163822726285297177&quot;</span>,
+    <span class="hljs-string">&quot;145468450393714211967&quot;</span>,
+    <span class="hljs-string">&quot;141661097081368245387&quot;</span>,
+    <span class="hljs-string">&quot;137965724748797160177&quot;</span>,
+    <span class="hljs-string">&quot;137770769748797160228&quot;</span>,
+    <span class="hljs-string">&quot;134075397416226075018&quot;</span>,
+    <span class="hljs-string">&quot;130380025083654989808&quot;</span>,
+    <span class="hljs-string">&quot;126572671771309023228&quot;</span>,
+    <span class="hljs-string">&quot;122877299438737938018&quot;</span>,
+    <span class="hljs-string">&quot;119181927106166852808&quot;</span>,
+    <span class="hljs-string">&quot;119085927106166852808&quot;</span>,
+    <span class="hljs-string">&quot;115390554773595767598&quot;</span>,
+    <span class="hljs-string">&quot;111583201461249801018&quot;</span>,
+    <span class="hljs-string">&quot;107887829128678715808&quot;</span>,
+    <span class="hljs-string">&quot;104192456796107630598&quot;</span>,
+    <span class="hljs-string">&quot;97001782353847346182&quot;</span>,
+    <span class="hljs-string">&quot;93194429041501379602&quot;</span>,
+    <span class="hljs-string">&quot;83157259869133878290&quot;</span>,
+    <span class="hljs-string">&quot;76983045700832909330&quot;</span>,
+    <span class="hljs-string">&quot;73287673368261824120&quot;</span>,
+    <span class="hljs-string">&quot;69592301035690738910&quot;</span>,
+    <span class="hljs-string">&quot;65896928703119653700&quot;</span>,
+    <span class="hljs-string">&quot;63587931489546380100&quot;</span>,
+    <span class="hljs-string">&quot;59780578177200413520&quot;</span>,
+    <span class="hljs-string">&quot;56085205844629328310&quot;</span>,
+    <span class="hljs-string">&quot;52389833512058243100&quot;</span>,
+    <span class="hljs-string">&quot;51895291676258243202&quot;</span>,
+    <span class="hljs-string">&quot;48199919343687157992&quot;</span>,
+    <span class="hljs-string">&quot;44392566031341191412&quot;</span>,
+    <span class="hljs-string">&quot;40697193698770106202&quot;</span>,
+    <span class="hljs-string">&quot;30446386828370106202&quot;</span>,
+    <span class="hljs-string">&quot;26751014495799020992&quot;</span>,
+    <span class="hljs-string">&quot;23055642163227935782&quot;</span>,
+    <span class="hljs-string">&quot;19248288850881969202&quot;</span>,
+    <span class="hljs-string">&quot;10471674569881968690&quot;</span>,
+    <span class="hljs-string">&quot;3680188132691968050&quot;</span>,
+  ],
+  <span class="hljs-attr">bids_amtTotal</span>: <span class="hljs-string">&quot;618450503644320209925641&quot;</span>,
+  <span class="hljs-attr">bids_volTotal</span>: <span class="hljs-string">&quot;198539605794234049017&quot;</span>,
+  <span class="hljs-attr">asks</span>: [
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033331</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;26466599999999999737856&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;8821317780000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;26466599999999999737856&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;8821317780000000000&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003336</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;33880800000000001048576&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;11302634880000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;60347400000000000786432&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;20123952660000000000&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033371</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11142477800817399987988&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3718356266910774549&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;71489877800817400774420&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;23842308926910774549&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033439</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11410124103475892197402&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815340399218399705&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;82900001904293292971822&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;27657649326129174254&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033501</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;39334199999999992922112&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;13176957000000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;122234201904293285893934&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;40834606326129174254&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033506</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11052295534472154230337&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703108939445215718&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;133286497438765440124271&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;44537715265574389972&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033572</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11030456322913363709718&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703093651997124565&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;144316953761678803833989&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;48240808917571514537&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033638</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11008681778518069039476&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703078409816047858&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;155325635540196872873465&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;51943887327387562395&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.000337</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;7188173683760000139264&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;2422342649690282496&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;162513809223956873012729&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;54366229977077844891&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033706</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11319571950108460741855&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815277012711042502&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;173833381174065333754584&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;58181506989788887393&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033773</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10964670732513311387215&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703047602083844528&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;184798051906578645141799&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;61884554591872731921&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033848</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10943090596879450870975&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703921209677097807&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;195741142503458096012774&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;65588475801549829728&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033893</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;31086310012520000126976&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;10535772189443278848&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;226827452515978096139750&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;76124247990993108576&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033907</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10921574108084085072499&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703126650187824910&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;237749026624062181212249&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;79827374641180933486&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033934</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;22061773569720001232896&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;7486221625413088256&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;259810800193782182445145&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;87313596266594021742&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00033975</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11230093484570461106334&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815326678720011608&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;271040893678352643551479&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;91128922945314033350&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034042</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10878083875111520592396&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703095772122414389&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;281918977553464164143875&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;94832018717436447739&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034061</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;19029641944770000453632&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;6481686342808109056&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;300948619498234164597507&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;101313705060244556795&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034109</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10856758733704286197912&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703080631272015254&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;311805378231938450795419&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;105016785691516572049&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034176</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10835496238854895014260&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703065534900672185&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;322640874470793345809679&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;108719851226417244234&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034244</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11141671799245742102774&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815263899323431057&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;333782546270039087912453&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;112535115125740675291&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034312</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10792518633700140402041&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703035020801012310&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;344575064903739228314494&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;116238150146541687601&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034379</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10771444484888773263977&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703020058155356239&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;355346509388628001578471&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;119941170204697043840&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034447</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;11075875299655656611658&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815217183808722096&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;366422384688283658190129&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;123756387388505765936&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034515</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10728847020295584791583&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702989813955495075&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;377151231708579242981712&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;127459377202461261011&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034582</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10707958999548106661900&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702974983460764366&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;387859190708127349643612&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;131162352185922025377&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034649</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10687131919892014508549&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702960196234208540&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;398546322628019364152161&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;134865312382156233917&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034718</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10989265205593964126102&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815155690641938295&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;409535587833613328278263&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;138680468072798172212&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034809</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10645033127428079147754&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3705341637309061860&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;420180620961041407426017&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;142385809710107234072&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034854</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10624389276271547157517&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703021892850000724&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;430805010237312954583534&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;146088831602957234796&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034922</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10603805418694082174472&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3703007072472544949&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;441408815656007036758006&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;149791838675429779745&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00034991</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10903667052066234563130&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815203952623454269&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;452312482708073271321136&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;153607042628053234014&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035059</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10562197544947631702552&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702977114803447505&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;462874680253020903023688&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;157310019742856681519&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035127</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10541794072549149477757&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702962424303320597&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;473416474325570052501445&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;161012982167160002116&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035196</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10839964505283434387937&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815158086789770653&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;484256438830853486889382&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;164828140253949772769&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035265</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10500550295026604907238&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702932728783504366&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;494756989125880091796620&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;168531072982733277135&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035333</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10480325106225117837726&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702918166647567295&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;505237314232105209634346&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;172233991149380844430&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035401</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10460158295034970667917&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702903646543510388&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;515697472527140180302263&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;175936894795924354818&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.0003547</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10756101480844670483856&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815097705412174743&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;526453574007984850786119&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;179751992501336529561&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.000355</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;2879934000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;1022376570000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;529333508007984850786119&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;180774369071336529561&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035539</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10419392212908119384882&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702874294964379056&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;539752900220892970171001&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;184477243366300908617&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035607</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10399400937404414745812&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702859901246016389&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;550152301158297384916813&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;188180103267546925006&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035675</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10379467141462596339294&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702845548912938279&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;560531768299759981256107&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;191882948816459863285&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035781</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10673207910450037674513&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3818930797471485007&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;571204976210210018930620&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;195701879613931348292&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035815</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10339171406073422424770&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702919927697518809&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;581544147616283441355390&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;199404799541628867101&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035883</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10319410450646547471681&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702905502200057190&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;591863558066929988827071&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;203107705043828924291&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035887</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;1253970999999999795200&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;449999996860000051&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;593117529066929988622271&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;203557705040688924342&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00035952</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10299706093934767574874&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3702891118019657590&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;603417235160864756197145&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;207260596158708581932&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00036</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;491031000000000000000&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;176771040000000000&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;603908266160864756197145&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;207437367198708581932&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">0.00036022</span>,
+      <span class="hljs-attr">amt</span>: <span class="hljs-string">&quot;10591268908994289896668&quot;</span>,
+      <span class="hljs-attr">vol</span>: <span class="hljs-string">&quot;3815084938649532411&quot;</span>,
+      <span class="hljs-attr">amtTotal</span>: <span class="hljs-string">&quot;614499535069859046093813&quot;</span>,
+      <span class="hljs-attr">volTotal</span>: <span class="hljs-string">&quot;211252452137358114343&quot;</span>,
+    },
+  ],
+  <span class="hljs-attr">asks_prices</span>: [
+    <span class="hljs-number">0.00033331</span>, <span class="hljs-number">0.0003336</span>, <span class="hljs-number">0.00033371</span>, <span class="hljs-number">0.00033439</span>, <span class="hljs-number">0.00033501</span>, <span class="hljs-number">0.00033506</span>,
+    <span class="hljs-number">0.00033572</span>, <span class="hljs-number">0.00033638</span>, <span class="hljs-number">0.000337</span>, <span class="hljs-number">0.00033706</span>, <span class="hljs-number">0.00033773</span>, <span class="hljs-number">0.00033848</span>,
+    <span class="hljs-number">0.00033893</span>, <span class="hljs-number">0.00033907</span>, <span class="hljs-number">0.00033934</span>, <span class="hljs-number">0.00033975</span>, <span class="hljs-number">0.00034042</span>, <span class="hljs-number">0.00034061</span>,
+    <span class="hljs-number">0.00034109</span>, <span class="hljs-number">0.00034176</span>, <span class="hljs-number">0.00034244</span>, <span class="hljs-number">0.00034312</span>, <span class="hljs-number">0.00034379</span>, <span class="hljs-number">0.00034447</span>,
+    <span class="hljs-number">0.00034515</span>, <span class="hljs-number">0.00034582</span>, <span class="hljs-number">0.00034649</span>, <span class="hljs-number">0.00034718</span>, <span class="hljs-number">0.00034809</span>, <span class="hljs-number">0.00034854</span>,
+    <span class="hljs-number">0.00034922</span>, <span class="hljs-number">0.00034991</span>, <span class="hljs-number">0.00035059</span>, <span class="hljs-number">0.00035127</span>, <span class="hljs-number">0.00035196</span>, <span class="hljs-number">0.00035265</span>,
+    <span class="hljs-number">0.00035333</span>, <span class="hljs-number">0.00035401</span>, <span class="hljs-number">0.0003547</span>, <span class="hljs-number">0.000355</span>, <span class="hljs-number">0.00035539</span>, <span class="hljs-number">0.00035607</span>,
+    <span class="hljs-number">0.00035675</span>, <span class="hljs-number">0.00035781</span>, <span class="hljs-number">0.00035815</span>, <span class="hljs-number">0.00035883</span>, <span class="hljs-number">0.00035887</span>, <span class="hljs-number">0.00035952</span>,
+    <span class="hljs-number">0.00036</span>, <span class="hljs-number">0.00036022</span>,
+  ],
+  <span class="hljs-attr">asks_amtTotals</span>: [
+    <span class="hljs-string">&quot;26466599999999999737856&quot;</span>,
+    <span class="hljs-string">&quot;60347400000000000786432&quot;</span>,
+    <span class="hljs-string">&quot;71489877800817400774420&quot;</span>,
+    <span class="hljs-string">&quot;82900001904293292971822&quot;</span>,
+    <span class="hljs-string">&quot;122234201904293285893934&quot;</span>,
+    <span class="hljs-string">&quot;133286497438765440124271&quot;</span>,
+    <span class="hljs-string">&quot;144316953761678803833989&quot;</span>,
+    <span class="hljs-string">&quot;155325635540196872873465&quot;</span>,
+    <span class="hljs-string">&quot;162513809223956873012729&quot;</span>,
+    <span class="hljs-string">&quot;173833381174065333754584&quot;</span>,
+    <span class="hljs-string">&quot;184798051906578645141799&quot;</span>,
+    <span class="hljs-string">&quot;195741142503458096012774&quot;</span>,
+    <span class="hljs-string">&quot;226827452515978096139750&quot;</span>,
+    <span class="hljs-string">&quot;237749026624062181212249&quot;</span>,
+    <span class="hljs-string">&quot;259810800193782182445145&quot;</span>,
+    <span class="hljs-string">&quot;271040893678352643551479&quot;</span>,
+    <span class="hljs-string">&quot;281918977553464164143875&quot;</span>,
+    <span class="hljs-string">&quot;300948619498234164597507&quot;</span>,
+    <span class="hljs-string">&quot;311805378231938450795419&quot;</span>,
+    <span class="hljs-string">&quot;322640874470793345809679&quot;</span>,
+    <span class="hljs-string">&quot;333782546270039087912453&quot;</span>,
+    <span class="hljs-string">&quot;344575064903739228314494&quot;</span>,
+    <span class="hljs-string">&quot;355346509388628001578471&quot;</span>,
+    <span class="hljs-string">&quot;366422384688283658190129&quot;</span>,
+    <span class="hljs-string">&quot;377151231708579242981712&quot;</span>,
+    <span class="hljs-string">&quot;387859190708127349643612&quot;</span>,
+    <span class="hljs-string">&quot;398546322628019364152161&quot;</span>,
+    <span class="hljs-string">&quot;409535587833613328278263&quot;</span>,
+    <span class="hljs-string">&quot;420180620961041407426017&quot;</span>,
+    <span class="hljs-string">&quot;430805010237312954583534&quot;</span>,
+    <span class="hljs-string">&quot;441408815656007036758006&quot;</span>,
+    <span class="hljs-string">&quot;452312482708073271321136&quot;</span>,
+    <span class="hljs-string">&quot;462874680253020903023688&quot;</span>,
+    <span class="hljs-string">&quot;473416474325570052501445&quot;</span>,
+    <span class="hljs-string">&quot;484256438830853486889382&quot;</span>,
+    <span class="hljs-string">&quot;494756989125880091796620&quot;</span>,
+    <span class="hljs-string">&quot;505237314232105209634346&quot;</span>,
+    <span class="hljs-string">&quot;515697472527140180302263&quot;</span>,
+    <span class="hljs-string">&quot;526453574007984850786119&quot;</span>,
+    <span class="hljs-string">&quot;529333508007984850786119&quot;</span>,
+    <span class="hljs-string">&quot;539752900220892970171001&quot;</span>,
+    <span class="hljs-string">&quot;550152301158297384916813&quot;</span>,
+    <span class="hljs-string">&quot;560531768299759981256107&quot;</span>,
+    <span class="hljs-string">&quot;571204976210210018930620&quot;</span>,
+    <span class="hljs-string">&quot;581544147616283441355390&quot;</span>,
+    <span class="hljs-string">&quot;591863558066929988827071&quot;</span>,
+    <span class="hljs-string">&quot;593117529066929988622271&quot;</span>,
+    <span class="hljs-string">&quot;603417235160864756197145&quot;</span>,
+    <span class="hljs-string">&quot;603908266160864756197145&quot;</span>,
+    <span class="hljs-string">&quot;614499535069859046093813&quot;</span>,
+  ],
+  <span class="hljs-attr">asks_volTotals</span>: [
+    <span class="hljs-string">&quot;8821317780000000000&quot;</span>,
+    <span class="hljs-string">&quot;20123952660000000000&quot;</span>,
+    <span class="hljs-string">&quot;23842308926910774549&quot;</span>,
+    <span class="hljs-string">&quot;27657649326129174254&quot;</span>,
+    <span class="hljs-string">&quot;40834606326129174254&quot;</span>,
+    <span class="hljs-string">&quot;44537715265574389972&quot;</span>,
+    <span class="hljs-string">&quot;48240808917571514537&quot;</span>,
+    <span class="hljs-string">&quot;51943887327387562395&quot;</span>,
+    <span class="hljs-string">&quot;54366229977077844891&quot;</span>,
+    <span class="hljs-string">&quot;58181506989788887393&quot;</span>,
+    <span class="hljs-string">&quot;61884554591872731921&quot;</span>,
+    <span class="hljs-string">&quot;65588475801549829728&quot;</span>,
+    <span class="hljs-string">&quot;76124247990993108576&quot;</span>,
+    <span class="hljs-string">&quot;79827374641180933486&quot;</span>,
+    <span class="hljs-string">&quot;87313596266594021742&quot;</span>,
+    <span class="hljs-string">&quot;91128922945314033350&quot;</span>,
+    <span class="hljs-string">&quot;94832018717436447739&quot;</span>,
+    <span class="hljs-string">&quot;101313705060244556795&quot;</span>,
+    <span class="hljs-string">&quot;105016785691516572049&quot;</span>,
+    <span class="hljs-string">&quot;108719851226417244234&quot;</span>,
+    <span class="hljs-string">&quot;112535115125740675291&quot;</span>,
+    <span class="hljs-string">&quot;116238150146541687601&quot;</span>,
+    <span class="hljs-string">&quot;119941170204697043840&quot;</span>,
+    <span class="hljs-string">&quot;123756387388505765936&quot;</span>,
+    <span class="hljs-string">&quot;127459377202461261011&quot;</span>,
+    <span class="hljs-string">&quot;131162352185922025377&quot;</span>,
+    <span class="hljs-string">&quot;134865312382156233917&quot;</span>,
+    <span class="hljs-string">&quot;138680468072798172212&quot;</span>,
+    <span class="hljs-string">&quot;142385809710107234072&quot;</span>,
+    <span class="hljs-string">&quot;146088831602957234796&quot;</span>,
+    <span class="hljs-string">&quot;149791838675429779745&quot;</span>,
+    <span class="hljs-string">&quot;153607042628053234014&quot;</span>,
+    <span class="hljs-string">&quot;157310019742856681519&quot;</span>,
+    <span class="hljs-string">&quot;161012982167160002116&quot;</span>,
+    <span class="hljs-string">&quot;164828140253949772769&quot;</span>,
+    <span class="hljs-string">&quot;168531072982733277135&quot;</span>,
+    <span class="hljs-string">&quot;172233991149380844430&quot;</span>,
+    <span class="hljs-string">&quot;175936894795924354818&quot;</span>,
+    <span class="hljs-string">&quot;179751992501336529561&quot;</span>,
+    <span class="hljs-string">&quot;180774369071336529561&quot;</span>,
+    <span class="hljs-string">&quot;184477243366300908617&quot;</span>,
+    <span class="hljs-string">&quot;188180103267546925006&quot;</span>,
+    <span class="hljs-string">&quot;191882948816459863285&quot;</span>,
+    <span class="hljs-string">&quot;195701879613931348292&quot;</span>,
+    <span class="hljs-string">&quot;199404799541628867101&quot;</span>,
+    <span class="hljs-string">&quot;203107705043828924291&quot;</span>,
+    <span class="hljs-string">&quot;203557705040688924342&quot;</span>,
+    <span class="hljs-string">&quot;207260596158708581932&quot;</span>,
+    <span class="hljs-string">&quot;207437367198708581932&quot;</span>,
+    <span class="hljs-string">&quot;211252452137358114343&quot;</span>,
+  ],
+  <span class="hljs-attr">asks_amtTotal</span>: <span class="hljs-string">&quot;614499535069859046093813&quot;</span>,
+  <span class="hljs-attr">asks_volTotal</span>: <span class="hljs-string">&quot;211252452137358114343&quot;</span>,
+};
+<span class="hljs-comment">//v3/amm/balance?poolAddress=0xfEB069407df0e1e4B365C10992F1bc16c078E34b</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> ammPoolSnapshot: sdk.AmmPoolSnapshot = {
+  <span class="hljs-attr">poolName</span>: <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>,
+  <span class="hljs-attr">poolAddress</span>: <span class="hljs-string">&quot;0x18920d6e6fb7ebe057a4dd9260d6d95845c95036&quot;</span>,
+  <span class="hljs-attr">pooled</span>: [
+    {
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;11198097977488137000000000&quot;</span>,
+    },
+    {
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;3725368050950874300000&quot;</span>,
+    },
+  ],
+  <span class="hljs-attr">lp</span>: {
+    <span class="hljs-attr">tokenId</span>: <span class="hljs-number">83</span>,
+    <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;34138981282200&quot;</span>,
+  },
+  <span class="hljs-attr">risky</span>: <span class="hljs-literal">false</span>,
+};
+<span class="hljs-comment">//v3/amm/balance?poolAddress=0xfEB069407df0e1e4B365C10992F1bc16c078E34b</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> ammPool = {
+  <span class="hljs-attr">poolName</span>: <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>,
+  <span class="hljs-attr">poolAddress</span>: <span class="hljs-string">&quot;0x18920d6e6fb7ebe057a4dd9260d6d95845c95036&quot;</span>,
+  <span class="hljs-attr">pooled</span>: [
+    { <span class="hljs-attr">tokenId</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;11215027899488137000000000&quot;</span> },
+    { <span class="hljs-attr">tokenId</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;3720052711450874300000&quot;</span> },
+  ],
+  <span class="hljs-attr">lp</span>: { <span class="hljs-attr">tokenId</span>: <span class="hljs-number">83</span>, <span class="hljs-attr">volume</span>: <span class="hljs-string">&quot;34141365482200&quot;</span> },
+  <span class="hljs-attr">risky</span>: <span class="hljs-literal">false</span>,
+};
+
+<span class="hljs-comment">//v3/mix/ticker?market=LRC-ETH</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> ticker = {
+  <span class="hljs-attr">tickers</span>: [
+    [
+      <span class="hljs-string">&quot;COMBINE-LRC-ETH&quot;</span>,
+      <span class="hljs-string">&quot;1655625077879&quot;</span>,
+      <span class="hljs-string">&quot;2429371927000000000000000&quot;</span>,
+      <span class="hljs-string">&quot;814655525450000000000&quot;</span>,
+      <span class="hljs-string">&quot;0.00035052&quot;</span>,
+      <span class="hljs-string">&quot;0.00035222&quot;</span>,
+      <span class="hljs-string">&quot;0.00032201&quot;</span>,
+      <span class="hljs-string">&quot;0.00033367&quot;</span>,
+      <span class="hljs-string">&quot;772&quot;</span>,
+      <span class="hljs-string">&quot;&quot;</span>,
+      <span class="hljs-string">&quot;&quot;</span>,
+      <span class="hljs-string">&quot;&quot;</span>,
+      <span class="hljs-string">&quot;&quot;</span>,
+    ],
+  ],
+};
+
+<span class="hljs-comment">//v3/user/orderUserRateAmount?accountId=10427&amp;market=LRC-ETH</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> userAmount = {
+  <span class="hljs-string">&quot;LRC-ETH&quot;</span>: {
+    <span class="hljs-attr">LRC</span>: {
+      <span class="hljs-attr">tokenSymbol</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+      <span class="hljs-attr">baseOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;266240681576144834931&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">userOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;266240681576144834931&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">tradeCost</span>: <span class="hljs-string">&quot;231046501539337141&quot;</span>,
+    },
+    <span class="hljs-attr">ETH</span>: {
+      <span class="hljs-attr">tokenSymbol</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+      <span class="hljs-attr">baseOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;86598080986525339&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">userOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;86598080986525339&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">tradeCost</span>: <span class="hljs-string">&quot;75150737796750&quot;</span>,
+    },
+  },
+  <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>: {
+    <span class="hljs-attr">LRC</span>: {
+      <span class="hljs-attr">tokenSymbol</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+      <span class="hljs-attr">baseOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;266240681576144834931&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">userOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;266240681576144834931&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">tradeCost</span>: <span class="hljs-string">&quot;231046501539337141&quot;</span>,
+    },
+    <span class="hljs-attr">ETH</span>: {
+      <span class="hljs-attr">tokenSymbol</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+      <span class="hljs-attr">baseOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;86598080986525339&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">userOrderInfo</span>: {
+        <span class="hljs-attr">minAmount</span>: <span class="hljs-string">&quot;86598080986525339&quot;</span>,
+        <span class="hljs-attr">makerRate</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">takerRate</span>: <span class="hljs-number">10</span>,
+      },
+      <span class="hljs-attr">tradeCost</span>: <span class="hljs-string">&quot;75150737796750&quot;</span>,
+    },
+  },
+};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> TokenMapMockSwap = {
+  <span class="hljs-attr">ETH</span>: {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+    <span class="hljs-attr">tokenId</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Ethereum&quot;</span>,
+    <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
+    <span class="hljs-attr">decimals</span>: <span class="hljs-number">18</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">7</span>,
+    <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">orderAmounts</span>: {
+      <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;1700000000000000&quot;</span>,
+      <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;1000000000000000000000&quot;</span>,
+      <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;200000000000000&quot;</span>,
+    },
+    <span class="hljs-attr">luckyTokenAmounts</span>: {
+      <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;50000000000000&quot;</span>,
+      <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;1000000000000000000000&quot;</span>,
+      <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;50000000000000&quot;</span>,
+    },
+    <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;100000000000000000000&quot;</span>,
+    <span class="hljs-attr">gasAmounts</span>: {
+      <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;85000&quot;</span>,
+      <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;110000&quot;</span>,
+    },
+    <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;LRC&quot;</span>],
+  },
+  <span class="hljs-attr">LRC</span>: {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;ERC20&quot;</span>,
+    <span class="hljs-attr">tokenId</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Loopring&quot;</span>,
+    <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xbbbbca6a901c926f240b89eacb641d8aec7aeafd&quot;</span>,
+    <span class="hljs-attr">decimals</span>: <span class="hljs-number">18</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">orderAmounts</span>: {
+      <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;5000000000000000000&quot;</span>,
+      <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;5000000000000000000000000&quot;</span>,
+      <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;5000000000000000000&quot;</span>,
+    },
+    <span class="hljs-attr">luckyTokenAmounts</span>: {
+      <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;50000000000000000&quot;</span>,
+      <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;5000000000000000000000000&quot;</span>,
+      <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;50000000000000000&quot;</span>,
+    },
+    <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;750000000000000000000000&quot;</span>,
+    <span class="hljs-attr">gasAmounts</span>: {
+      <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;101827&quot;</span>,
+      <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+    },
+    <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;ETH&quot;</span>],
+  },
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> MAPFEEBIPS = <span class="hljs-number">63</span>;
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../withdraw/withdrawERC20.html" class="navigation navigation-prev " aria-label="Previous page: Withdraw">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../deposit/depositNFT.html" class="navigation navigation-next " aria-label="Next page: Deposit">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Order","level":"2.1.3.4","depth":3,"next":{"title":"Deposit","level":"2.1.4.1","depth":3,"path":"js_sdk/deposit/depositNFT.md","ref":"./js_sdk/deposit/depositNFT.md","articles":[]},"previous":{"title":"Withdraw","level":"2.1.3.3","depth":3,"path":"js_sdk/withdraw/withdrawERC20.md","ref":"./js_sdk/withdraw/withdrawERC20.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Loopring Dev Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/erc20Trade/orderERC20.md","mtime":"2022-06-23T16:42:13.340Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2023-02-05T11:26:41.753Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

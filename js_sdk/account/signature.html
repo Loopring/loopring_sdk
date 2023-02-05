@@ -1,0 +1,951 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Signature · Loopring SDK</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 3.7.1">
+        <meta name="author" content="Loopring Dev Team">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="historyRecord.html" />
+    
+    
+    <link rel="prev" href="fee.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://loopring.io" target="_blank" class="custom-link">Home</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        <li class="header">Overview</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../Changelog.html">
+            
+                <a href="../../Changelog.html">
+            
+                    
+                    Changelog
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <a target="_blank" href="https://github.com/Loopring/loopring_sdk">
+            
+                    
+                    GitHub
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">SDKs demo</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    JS SDK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="../exchange/exchange.html">
+            
+                <a href="../exchange/exchange.html">
+            
+                    
+                    Exchange
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1.1" data-path="../exchange/webSocket.html">
+            
+                <a href="../exchange/webSocket.html">
+            
+                    
+                    Web Socket
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.1.2" data-path="../exchange/ammpool_api.html">
+            
+                <a href="../exchange/ammpool_api.html">
+            
+                    
+                    Amm
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2" data-path="../">
+            
+                <a href="../#mock-account">
+            
+                    
+                    Account
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.2.1" data-path="activeAccount.html">
+            
+                <a href="activeAccount.html">
+            
+                    
+                    Active Account
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.2" data-path="fee.html">
+            
+                <a href="fee.html">
+            
+                    
+                    Fees
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="2.1.2.3" data-path="signature.html">
+            
+                <a href="signature.html">
+            
+                    
+                    Signature
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.4" data-path="historyRecord.html">
+            
+                <a href="historyRecord.html">
+            
+                    
+                    Transaction Recorder
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3" data-path="../">
+            
+                <a href="../#mock-erc20-token-map">
+            
+                    
+                    ERC20
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.3.1" data-path="../deposit/depositERC20.html">
+            
+                <a href="../deposit/depositERC20.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.2" data-path="../transfer/transferERC20.html">
+            
+                <a href="../transfer/transferERC20.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.3" data-path="../withdraw/withdrawERC20.html">
+            
+                <a href="../withdraw/withdrawERC20.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.4" data-path="../erc20Trade/orderERC20.html">
+            
+                <a href="../erc20Trade/orderERC20.html">
+            
+                    
+                    Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4" data-path="../">
+            
+                <a href="../#mock-account">
+            
+                    
+                    NFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.1" data-path="../deposit/depositNFT.html">
+            
+                <a href="../deposit/depositNFT.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.2" data-path="../transfer/transferNFT.html">
+            
+                <a href="../transfer/transferNFT.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.3" data-path="../withdraw/withdrawNFT.html">
+            
+                <a href="../withdraw/withdrawNFT.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.4" data-path="../NFTAction/metaNFT.html">
+            
+                <a href="../NFTAction/metaNFT.html">
+            
+                    
+                    Mint
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.5" data-path="../NFTAction/collectionNFT.html">
+            
+                <a href="../NFTAction/collectionNFT.html">
+            
+                    
+                    Collection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.6" data-path="../NFTAction/deployNFT.html">
+            
+                <a href="../NFTAction/deployNFT.html">
+            
+                    
+                    Deploy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.7" data-path="../NFTAction/tradeNFT.html">
+            
+                <a href="../NFTAction/tradeNFT.html">
+            
+                    
+                    Trade
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.7.1" data-path="../NFTAction/validateNFTOrder.html">
+            
+                <a href="../NFTAction/validateNFTOrder.html">
+            
+                    
+                    Validate Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Links</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" >
+            
+                <a target="_blank" href="https://github.com/Loopring/hello_loopring">
+            
+                    
+                    Python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" >
+            
+                <a target="_blank" href="https://docs.loopring.io/en/">
+            
+                    
+                    APIs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" >
+            
+                <a target="_blank" href="https://loopring.org/#/">
+            
+                    
+                    About us
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" >
+            
+                <a target="_blank" href="https://desk.zoho.com/portal/loopring/en/newticket">
+            
+                    
+                    Submit a Request
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Signature</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="signature">Signature</h1>
+<p>Loopring SDK support EOA (EOA hardware wallet) &amp; Loopring Smart wallet Signature</p>
+<ul>
+<li>For Browser extension, Dapp, Hardware wallet we only support for EOA</li>
+<li>For Loopring Smart wallet (App), Provider gateway only can be walletConnect</li>
+</ul>
+<h2 id="follow-is-the-provider-gateway-we-inject--test">Follow is the provider gateway we inject &amp; test:</h2>
+<ul>
+<li>MetaMask  (Ledger, Trezor)</li>
+<li>WalletConnect (Authereum, Loopring Smart wallet )</li>
+<li>Coinbase</li>
+<li><a href="https://desk.zoho.com/portal/loopring/en/newticket" target="_blank">Coming soon...</a></li>
+</ul>
+<h2 id="for-signature">For signature:</h2>
+<p>For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)</p>
+<h3 id="eoa">EOA:</h3>
+<ul>
+<li>For Browser
+extension (<a href="https://docs.metamask.io/guide/signing-data.html#a-brief-history" target="_blank">More information: signing-data</a>)<ul>
+<li>common EOA we use the <code>v4</code> signature and <code>web3.eth.personal.ecRecover</code> validate signature</li>
+<li>when <code>v4</code> signature is failed for any step, we will try <code>personal_sign</code> and <code>web3.eth.personal.ecRecover</code> validate
+signature</li>
+</ul>
+</li>
+<li>For Dapp<ul>
+<li>when loopring Dex is inside Dapp Webview &amp; connect by <code>window.ethereum</code>, we remove the <code>web3.eth.personal.ecRecover</code>
+validate</li>
+</ul>
+</li>
+</ul>
+<h3 id="loopring-smart-wallet">Loopring Smart wallet:</h3>
+<ul>
+<li>For Smart wallet we send <code>eth_signTypedData</code> by walletConnect &amp; validate
+ABI.Contracts.ContractWallet.encodeInputs <code>isValidSignature(bytes32,bytes)</code></li>
+</ul>
+<h3 id="loopring-counterfactual-wallet">Loopring Counterfactual wallet:</h3>
+<ul>
+<li>signature is same as Smart wallet</li>
+<li>But ecRecover is by
+walletOwner, <code>const {walletOwner} = await LoopringAPI.exchangeAPI.getCounterFactualInfo({ accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF, });</code></li>
+</ul>
+<blockquote>
+<p>❗ when add <code>SigSuffix</code> <code>02|03</code> ( follow EIP712 + <code>02</code>, personal_sign + <code>03</code>)</p>
+<ul>
+<li>for <code>v4</code> ecdsaSignature the result signature should + <code>SigSuffix.Suffix02</code>;</li>
+<li>for <code>personal_sign</code> ecdsaSignature the result signature should + <code>SigSuffix.Suffix03</code>;</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="generatekeypair">generateKeyPair</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {accInfo} = <span class="hljs-keyword">await</span> LoopringAPI.exchangeAPI.getAccount({
+  <span class="hljs-attr">owner</span>: LOOPRING_EXPORTED_ACCOUNT.address,
+});
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> signatureKeyPairMock(accInfo);
+<span class="hljs-built_in">console</span>.log(result.sk);
+</code></pre>
+<hr>
+<h2 id="getecdsasig-ethsigntypeddatav4">getEcDSASig: eth_signTypedData_v4</h2>
+<pre><code class="lang-ts"><span class="hljs-comment">// test case is not allow brock by Mock provider</span>
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.HasDataStruct,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  <span class="hljs-string">&quot;&quot;</span>,
+  sdk.ConnectorNames.Unknown
+);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;getEcDSASig:eth_signTypedData_v4&quot;</span>,
+  result,
+  <span class="hljs-string">&quot;ecdsaSig+sdk.SigSuffix.Suffix02&quot;</span>,
+  result.ecdsaSig + sdk.SigSuffix.Suffix02
+);
+</code></pre>
+<hr>
+<h2 id="getecdsasig-personalsignwithoutdatastruct--hardware-wallet">getEcDSASig: personalSign(WithoutDataStruct--Hardware wallet)</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.WithoutDataStruct,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  <span class="hljs-string">&quot;&quot;</span>,
+  sdk.ConnectorNames.Unknown
+);
+<span class="hljs-built_in">console</span>.log(
+  <span class="hljs-string">&quot;getEcDSASig:WithoutDataStruct(personalSign)&quot;</span>,
+  result,
+  <span class="hljs-string">&quot;ecdsaSig+sdk.SigSuffix.Suffix03&quot;</span>,
+  result.ecdsaSig + sdk.SigSuffix.Suffix03
+);
+</code></pre>
+<hr>
+<h2 id="getecdsasig-personalsigncontract">getEcDSASig: personalSign(Contract)</h2>
+<pre><code class="lang-ts"><span class="hljs-comment">// test case is not allow brock by Mock provider</span>
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> sdk.getEcDSASig(
+  web3,
+  testTypedData,
+  LOOPRING_EXPORTED_ACCOUNT.address,
+  sdk.GetEcDSASigType.Contract,
+  sdk.ChainId.GOERLI,
+  LOOPRING_EXPORTED_ACCOUNT.accountId,
+  <span class="hljs-string">&quot;&quot;</span>,
+  sdk.ConnectorNames.Unknown
+);
+<span class="hljs-built_in">console</span>.log(
+  <span class="hljs-string">&quot;getEcDSASig:personalSign(Contract)&quot;</span>,
+  result
+);
+</code></pre>
+<h2 id="validate-signature">Validate signature</h2>
+<p><a href="https://github.com/Loopring/loopring_sdk/blob/2c79c1837114f4f383e2d292de3da4b2dac02252/src/api/base_api.ts#L549" target="_blank">github: src/api/base_api.ts#personalSign</a></p>
+<pre><code> export async function personalSign(
+  web3: any,
+  account: string | undefined,
+  pwd: string,
+  msg: string,
+  walletType: ConnectorNames,
+  chainId: ChainId,
+  accountId?: number,
+  counterFactualInfo?: CounterFactualInfo,
+  isMobile?: boolean
+) {
+  if (!account) {
+    return { error: &quot;personalSign got no account&quot; };
+  }
+
+  return new Promise((resolve) =&gt; {
+    try {
+      web3.eth.personal.sign(
+        msg,
+        account,
+        pwd,
+        async function (err: any, result: any) {
+          if (!err) {
+            // Valid:1. counter Factual signature Valid
+            if (counterFactualInfo &amp;&amp; accountId) {
+              myLog(&quot;fcWalletValid counterFactualInfo accountId:&quot;);
+              const fcValid = await fcWalletValid(
+                web3,
+                account,
+                msg,
+                result,
+                accountId,
+                chainId,
+                counterFactualInfo
+              );
+              if (fcValid.result) {
+                resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+                return;
+              }
+            }
+
+            // Valid: 2. webview directory signature Valid
+            if (
+              (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &amp;&amp;
+              isMobile &amp;&amp;
+              // Mobile directory connect will sign ConnectorNames as MetaMask only
+              walletType === ConnectorNames.MetaMask
+            ) {
+              const address: string[] = await window.ethereum?.request({
+                method: &quot;eth_requestAccounts&quot;,
+              });
+              if (
+                address?.find(
+                  (item) =&gt; item.toLowerCase() === account.toLowerCase()
+                )
+              ) {
+                return resolve({ sig: result });
+              }
+            }
+
+            // Valid: 3. EOA signature Valid by ecRecover
+            const valid: any = await ecRecover(web3, account, msg, result);
+            if (valid.result) {
+              return resolve({ sig: result });
+            }
+
+            // Valid: 4. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            const walletValid2: any = await contractWalletValidate32(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (walletValid2.result) {
+              return resolve({ sig: result });
+            }
+
+            // Valid: 5. counter Factual signature Valid when no counterFactualInfo
+            if (accountId) {
+              const fcValid = await fcWalletValid(
+                web3,
+                account,
+                msg,
+                result,
+                accountId,
+                chainId
+              );
+              if (fcValid.result) {
+                return resolve({
+                  sig: result,
+                  counterFactualInfo: fcValid.counterFactualInfo,
+                });
+              }
+            }
+
+            // Valid: 6. myKeyValid Valid again
+            const myKeyValid: any = await mykeyWalletValid(
+              web3,
+              account,
+              msg,
+              result
+            );
+
+            if (myKeyValid.result) {
+              return resolve({ sig: result });
+            }
+
+            // Valid: Error cannot pass personalSign Valid
+            // eslint-disable-next-line no-console
+            console.log(
+              &quot;web3.eth.personal.sign Valid, valid 5 ways, all failed!&quot;
+            );
+            return resolve({
+              error: &quot;web3.eth.personal.sign Valid, valid 5 ways, all failed!&quot;,
+            });
+          } else {
+            return resolve({
+              error: &quot;personalSign err before Validate:&quot; + err,
+            });
+          }
+        }
+      );
+    } catch (reason) {
+      resolve({ error: reason });
+    }
+  });
+}
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="fee.html" class="navigation navigation-prev " aria-label="Previous page: Fees">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="historyRecord.html" class="navigation navigation-next " aria-label="Next page: Transaction Recorder">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Signature","level":"2.1.2.3","depth":3,"next":{"title":"Transaction Recorder","level":"2.1.2.4","depth":3,"path":"js_sdk/account/historyRecord.md","ref":"./js_sdk/account/historyRecord.md","articles":[]},"previous":{"title":"Fees","level":"2.1.2.2","depth":3,"path":"js_sdk/account/fee.md","ref":"./js_sdk/account/fee.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Loopring Dev Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/account/signature.md","mtime":"2022-04-22T06:37:52.714Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2023-02-05T11:26:41.753Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

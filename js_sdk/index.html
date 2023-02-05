@@ -1,0 +1,1192 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>JS SDK · Loopring SDK</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 3.7.1">
+        <meta name="author" content="Loopring Dev Team">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="exchange/exchange.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://loopring.io" target="_blank" class="custom-link">Home</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        <li class="header">Overview</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../Changelog.html">
+            
+                <a href="../Changelog.html">
+            
+                    
+                    Changelog
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <a target="_blank" href="https://github.com/Loopring/loopring_sdk">
+            
+                    
+                    GitHub
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">SDKs demo</li>
+        
+        
+    
+        <li class="chapter active" data-level="2.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    JS SDK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="exchange/exchange.html">
+            
+                <a href="exchange/exchange.html">
+            
+                    
+                    Exchange
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1.1" data-path="exchange/webSocket.html">
+            
+                <a href="exchange/webSocket.html">
+            
+                    
+                    Web Socket
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.1.2" data-path="exchange/ammpool_api.html">
+            
+                <a href="exchange/ammpool_api.html">
+            
+                    
+                    Amm
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2" data-path="./">
+            
+                <a href="./#mock-account">
+            
+                    
+                    Account
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.2.1" data-path="account/activeAccount.html">
+            
+                <a href="account/activeAccount.html">
+            
+                    
+                    Active Account
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.2" data-path="account/fee.html">
+            
+                <a href="account/fee.html">
+            
+                    
+                    Fees
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.3" data-path="account/signature.html">
+            
+                <a href="account/signature.html">
+            
+                    
+                    Signature
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2.4" data-path="account/historyRecord.html">
+            
+                <a href="account/historyRecord.html">
+            
+                    
+                    Transaction Recorder
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3" data-path="./">
+            
+                <a href="./#mock-erc20-token-map">
+            
+                    
+                    ERC20
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.3.1" data-path="deposit/depositERC20.html">
+            
+                <a href="deposit/depositERC20.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.2" data-path="transfer/transferERC20.html">
+            
+                <a href="transfer/transferERC20.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.3" data-path="withdraw/withdrawERC20.html">
+            
+                <a href="withdraw/withdrawERC20.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3.4" data-path="erc20Trade/orderERC20.html">
+            
+                <a href="erc20Trade/orderERC20.html">
+            
+                    
+                    Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4" data-path="./">
+            
+                <a href="./#mock-account">
+            
+                    
+                    NFT
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.1" data-path="deposit/depositNFT.html">
+            
+                <a href="deposit/depositNFT.html">
+            
+                    
+                    Deposit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.2" data-path="transfer/transferNFT.html">
+            
+                <a href="transfer/transferNFT.html">
+            
+                    
+                    Transfer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.3" data-path="withdraw/withdrawNFT.html">
+            
+                <a href="withdraw/withdrawNFT.html">
+            
+                    
+                    Withdraw
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.4" data-path="NFTAction/metaNFT.html">
+            
+                <a href="NFTAction/metaNFT.html">
+            
+                    
+                    Mint
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.5" data-path="NFTAction/collectionNFT.html">
+            
+                <a href="NFTAction/collectionNFT.html">
+            
+                    
+                    Collection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.6" data-path="NFTAction/deployNFT.html">
+            
+                <a href="NFTAction/deployNFT.html">
+            
+                    
+                    Deploy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4.7" data-path="NFTAction/tradeNFT.html">
+            
+                <a href="NFTAction/tradeNFT.html">
+            
+                    
+                    Trade
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.4.7.1" data-path="NFTAction/validateNFTOrder.html">
+            
+                <a href="NFTAction/validateNFTOrder.html">
+            
+                    
+                    Validate Order
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+        
+        <li class="header">Links</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" >
+            
+                <a target="_blank" href="https://github.com/Loopring/hello_loopring">
+            
+                    
+                    Python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" >
+            
+                <a target="_blank" href="https://docs.loopring.io/en/">
+            
+                    
+                    APIs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" >
+            
+                <a target="_blank" href="https://loopring.org/#/">
+            
+                    
+                    About us
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" >
+            
+                <a target="_blank" href="https://desk.zoho.com/portal/loopring/en/newticket">
+            
+                    
+                    Submit a Request
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >JS SDK</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="loopring-sdk">Loopring SDK</h1>
+<p>Loopring SDK Initialize and Mock Data structure</p>
+<hr>
+<h2 id="sdk-initialize">SDK Initialize</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> sdk <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../index&quot;</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LoopringAPIClass</span> </span>{
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> userAPI: UserAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> exchangeAPI: ExchangeAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ammpoolAPI: AmmpoolAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> walletAPI: WalletAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> wsAPI: WsAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> nftAPI: NFTAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> delegate: DelegateAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> globalAPI: GlobalAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> contractAPI: <span class="hljs-keyword">typeof</span> ContractAPI;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> __chainId__: sdk.ChainId;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> InitApi = <span class="hljs-function">(<span class="hljs-params">chainId: sdk.ChainId</span>) =&gt;</span> {
+    LoopringAPI.userAPI = <span class="hljs-keyword">new</span> UserAPI({ chainId });
+    LoopringAPI.exchangeAPI = <span class="hljs-keyword">new</span> ExchangeAPI({ chainId });
+    LoopringAPI.globalAPI = <span class="hljs-keyword">new</span> GlobalAPI({ chainId });
+    LoopringAPI.ammpoolAPI = <span class="hljs-keyword">new</span> AmmpoolAPI({ chainId });
+    LoopringAPI.walletAPI = <span class="hljs-keyword">new</span> WalletAPI({ chainId });
+    LoopringAPI.wsAPI = <span class="hljs-keyword">new</span> WsAPI({ chainId });
+    LoopringAPI.nftAPI = <span class="hljs-keyword">new</span> NFTAPI({ chainId });
+    LoopringAPI.delegate = <span class="hljs-keyword">new</span> DelegateAPI({ chainId });
+    LoopringAPI.__chainId__ = chainId;
+    LoopringAPI.contractAPI = ContractAPI;
+  };
+}
+<span class="hljs-comment">/* env:
+ * test:  sdk.ChainId.GOERLI 
+ * eth:  sdk.ChainId.MAINNET 
+ */</span>
+LoopringAPIClass.InitApi({sdk.ChainId.MAINNET});
+</code></pre>
+<hr>
+<h2 id="connect-wallet">Connect Wallet</h2>
+<p>Suggestion web3 provider</p>
+<pre><code class="lang-shell"><span class="hljs-meta">#</span><span class="bash"> Using npm</span>
+npm i @loopring-web/web3-provider --save
+<span class="hljs-meta">#</span><span class="bash"> Using yarn</span>
+yarn add @loopring-web/web3-provider
+</code></pre>
+<ul>
+<li><a href="https://codesandbox.io/s/vue-8nco78" target="_blank">Demo Vue</a></li>
+<li><a href="https://codesandbox.io/s/react-4v50ft" target="_blank">Demo React</a></li>
+</ul>
+<p><a href="#mock-provider">Mock Provider</a></p>
+<hr>
+<h2 id="loopring-erc20-data-structure">Loopring ERC20 Data Structure</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {tokensMap, idIndex, addressIndex} = LoopringAPI.exchangeAPI.getTokens();
+</code></pre>
+<p><a href="#mock-erc20-token-map">Mock ERC20</a></p>
+<hr>
+<h2 id="token-decimal">Token Decimal</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> uiValue = <span class="hljs-number">100</span>;
+<span class="hljs-keyword">const</span> tradeValue = sdk.toBig(uiValue).times(<span class="hljs-string">&quot;1e&quot;</span> + TOKEN_INFO.tokenMap.LRC.decimals);
+</code></pre>
+<hr>
+<h2 id="test-mock-data">Test Mock Data</h2>
+<h5 id="mock-account">Mock Account</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> LOOPRING_EXPORTED_ACCOUNT = {
+  <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x727e0fa09389156fc803eaf9c7017338efd76e7f&quot;</span>,
+  <span class="hljs-attr">privateKey</span>:
+    <span class="hljs-string">&quot;491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c&quot;</span>,
+  <span class="hljs-attr">accountId</span>: <span class="hljs-number">12454</span>,
+  <span class="hljs-attr">address2</span>: <span class="hljs-string">&quot;0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079&quot;</span>,
+  <span class="hljs-attr">privateKey2</span>:
+    <span class="hljs-string">&quot;e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263&quot;</span>,
+  <span class="hljs-attr">accountId2</span>: <span class="hljs-number">10488</span>,
+  <span class="hljs-attr">addressCF</span>: <span class="hljs-string">&quot;0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15&quot;</span>,
+  <span class="hljs-attr">accountIdCF</span>: <span class="hljs-number">11632</span>,
+  <span class="hljs-attr">addressContractWallet</span>: <span class="hljs-string">&quot;0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd&quot;</span>,
+  <span class="hljs-attr">depositAddress</span>: <span class="hljs-string">&quot;0xb684B265f650a77afd27Ce0D95252a7329B5bD72&quot;</span>,
+  <span class="hljs-attr">exchangeAddress</span>: <span class="hljs-string">&quot;0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e&quot;</span>,
+  <span class="hljs-attr">whitelistedAddress</span>: <span class="hljs-string">&quot;0x35405E1349658BcA12810d0f879Bf6c5d89B512C&quot;</span>,
+  <span class="hljs-attr">whitelistedEddkey</span>:
+    <span class="hljs-string">&quot;0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33&quot;</span>,
+  <span class="hljs-comment">// const eddkeyWhitelisted =</span>
+  <span class="hljs-comment">//   &quot;0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33&quot;;</span>
+  <span class="hljs-comment">//   apiKey: &quot;2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX&quot;,</span>
+  <span class="hljs-attr">chainId</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attr">nftTokenAddress</span>: <span class="hljs-string">&quot;0x8394cB7e768070217592572582228f62CdDE4FCE&quot;</span>,
+  <span class="hljs-attr">nftTokenId</span>: <span class="hljs-number">32768</span>,
+  <span class="hljs-attr">nftId</span>: <span class="hljs-string">&quot;0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6&quot;</span>,
+  <span class="hljs-attr">nftData</span>: <span class="hljs-string">&quot;0x1a2001aac7a1fd00cef07889cdb67b1355f86e5bc9df71cfa44fa1c7b49f598f&quot;</span>,
+  <span class="hljs-attr">testNotOx</span>: <span class="hljs-string">&quot;727e0fa09389156fc803eaf9c7017338efd76e7f&quot;</span>,
+  <span class="hljs-attr">tradeLRCValue</span>: <span class="hljs-number">1000000000000000000</span>,
+  <span class="hljs-attr">tradeETHValue</span>: <span class="hljs-number">0.0001</span>, <span class="hljs-comment">//same as UI</span>
+  <span class="hljs-attr">gasPrice</span>: <span class="hljs-number">20</span>, <span class="hljs-comment">// for test</span>
+  <span class="hljs-attr">gasLimit</span>: <span class="hljs-number">200000</span>, <span class="hljs-comment">// for test</span>
+  <span class="hljs-attr">validUntil</span>: <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">Date</span>.now() / <span class="hljs-number">1000</span>) + <span class="hljs-number">30</span> * <span class="hljs-number">86400</span>,
+};
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> CUSTOMER_KEY_SEED = <span class="hljs-string">&quot;XXXXXX&quot;</span> + <span class="hljs-string">&quot; with key nonce: &quot;</span> + <span class="hljs-string">&quot;${nonce}&quot;</span>;
+</code></pre>
+<h5 id="mock-provider">Mock provider</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> provider = <span class="hljs-keyword">new</span> PrivateKeyProvider(
+LOOPRING_EXPORTED_ACCOUNT.privateKey,
+<span class="hljs-string">&quot;https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3&quot;</span>
+);
+<span class="hljs-keyword">const</span> provider2 = <span class="hljs-keyword">new</span> PrivateKeyProvider(
+LOOPRING_EXPORTED_ACCOUNT.privateKey2,
+<span class="hljs-string">&quot;https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3&quot;</span>
+);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> web3 = <span class="hljs-keyword">new</span> Web3(provider);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> web3_2 = <span class="hljs-keyword">new</span> Web3(provider2);
+</code></pre>
+<h5 id="mock-erc20-token-map">Mock ERC20 Token Map</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> TOKEN_INFO = {
+  <span class="hljs-attr">addressIndex</span>: {
+    <span class="hljs-string">&quot;0x0000000000000000000000000000000000000000&quot;</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+    <span class="hljs-string">&quot;0xfc28028d9b1f6966fe74710653232972f50673be&quot;</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+    <span class="hljs-string">&quot;0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a&quot;</span>: <span class="hljs-string">&quot;USDT&quot;</span>,
+    <span class="hljs-string">&quot;0xfeb069407df0e1e4b365c10992f1bc16c078e34b&quot;</span>: <span class="hljs-string">&quot;LP-LRC-ETH&quot;</span>,
+    <span class="hljs-string">&quot;0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e&quot;</span>: <span class="hljs-string">&quot;LP-ETH-USDT&quot;</span>,
+    <span class="hljs-string">&quot;0xcd2c81b322a5b530b5fa3432e57da6803b0317f7&quot;</span>: <span class="hljs-string">&quot;DAI&quot;</span>,
+    <span class="hljs-string">&quot;0x47525e6a5def04c9a56706e93f54cc70c2e8f165&quot;</span>: <span class="hljs-string">&quot;USDC&quot;</span>,
+    <span class="hljs-string">&quot;0xf37cf4ced77b985708d591acc6bfd08586ab3409&quot;</span>: <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>,
+  },
+  <span class="hljs-attr">tokenMap</span>: {
+    <span class="hljs-attr">ETH</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Ethereum&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x0000000000000000000000000000000000000000&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">18</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">7</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;5000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;1000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;200000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;50000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;1000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;50000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;100000000000000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;85000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;100000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;LRC&quot;</span>, <span class="hljs-string">&quot;USDT&quot;</span>, <span class="hljs-string">&quot;USDC&quot;</span>],
+    },
+    <span class="hljs-attr">LRC</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;erc20Trade&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Loopring&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xfc28028d9b1f6966fe74710653232972f50673be&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">18</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;5000000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;5000000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;5000000000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;50000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;5000000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;50000000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;750000000000000000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;101827&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;ETH&quot;</span>],
+    },
+    <span class="hljs-attr">USDT</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;erc20Trade&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;USDT&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;USDT&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;5000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;2000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;250000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;50000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;200000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;50000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;250000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;106233&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;ETH&quot;</span>, <span class="hljs-string">&quot;DAI&quot;</span>],
+    },
+    <span class="hljs-string">&quot;LP-LRC-ETH&quot;</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;erc20Trade&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LP-LRC-ETH&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xfeb069407df0e1e4b365c10992f1bc16c078e34b&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">8</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;20000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">true</span>,
+    },
+    <span class="hljs-string">&quot;LP-ETH-USDT&quot;</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;erc20Trade&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">7</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LP-ETH-USDT&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;LP-ETH-USDT&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">8</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;100000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;20000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">true</span>,
+    },
+    <span class="hljs-attr">DAI</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;erc20Trade&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;DAI&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;dai&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xcd2c81b322a5b530b5fa3432e57da6803b0317f7&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">18</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;100000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;10000000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;100000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;10000000000000000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;USDT&quot;</span>],
+    },
+    <span class="hljs-attr">USDC</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;USDC&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">8</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;USDC&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;USDC&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x47525e6a5def04c9a56706e93f54cc70c2e8f165&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;1000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;100&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;1000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;1000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;20000000000000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">tradePairs</span>: [<span class="hljs-string">&quot;ETH&quot;</span>],
+    },
+    <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>: {
+      <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>,
+      <span class="hljs-attr">tokenId</span>: <span class="hljs-number">9</span>,
+      <span class="hljs-attr">symbol</span>: <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>,
+      <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xf37cf4ced77b985708d591acc6bfd08586ab3409&quot;</span>,
+      <span class="hljs-attr">decimals</span>: <span class="hljs-number">8</span>,
+      <span class="hljs-attr">precision</span>: <span class="hljs-number">7</span>,
+      <span class="hljs-attr">precisionForOrder</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">orderAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;100000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;1000000000000000000000000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;10000&quot;</span>,
+      },
+      <span class="hljs-attr">luckyTokenAmounts</span>: {
+        <span class="hljs-attr">minimum</span>: <span class="hljs-string">&quot;1000000000000000&quot;</span>,
+        <span class="hljs-attr">maximum</span>: <span class="hljs-string">&quot;10000000000000000000&quot;</span>,
+        <span class="hljs-attr">dust</span>: <span class="hljs-string">&quot;1000000000000000&quot;</span>,
+      },
+      <span class="hljs-attr">fastWithdrawLimit</span>: <span class="hljs-string">&quot;20000000000000000000&quot;</span>,
+      <span class="hljs-attr">gasAmounts</span>: {
+        <span class="hljs-attr">distribution</span>: <span class="hljs-string">&quot;150000&quot;</span>,
+        <span class="hljs-attr">deposit</span>: <span class="hljs-string">&quot;200000&quot;</span>,
+      },
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">isLpToken</span>: <span class="hljs-literal">true</span>,
+    },
+  },
+  <span class="hljs-attr">idIndex</span>: {
+    <span class="hljs-string">&quot;0&quot;</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+    <span class="hljs-string">&quot;1&quot;</span>: <span class="hljs-string">&quot;LRC&quot;</span>,
+    <span class="hljs-string">&quot;2&quot;</span>: <span class="hljs-string">&quot;USDT&quot;</span>,
+    <span class="hljs-string">&quot;4&quot;</span>: <span class="hljs-string">&quot;LP-LRC-ETH&quot;</span>,
+    <span class="hljs-string">&quot;6&quot;</span>: <span class="hljs-string">&quot;DAI&quot;</span>,
+    <span class="hljs-string">&quot;7&quot;</span>: <span class="hljs-string">&quot;LP-ETH-USDT&quot;</span>,
+    <span class="hljs-string">&quot;8&quot;</span>: <span class="hljs-string">&quot;USDC&quot;</span>,
+    <span class="hljs-string">&quot;9&quot;</span>: <span class="hljs-string">&quot;LP-USDC-ETH&quot;</span>,
+  },
+  <span class="hljs-attr">marketMap</span>: {
+    <span class="hljs-string">&quot;LRC-ETH&quot;</span>: {
+      <span class="hljs-attr">baseTokenId</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
+      <span class="hljs-attr">orderbookAggLevels</span>: <span class="hljs-number">5</span>,
+      <span class="hljs-attr">precisionForPrice</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">quoteTokenId</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">status</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">isSwapEnabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">createdAt</span>: <span class="hljs-number">1617967800000</span>,
+    },
+    <span class="hljs-string">&quot;ETH-USDT&quot;</span>: {
+      <span class="hljs-attr">baseTokenId</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;ETH-USDT&quot;</span>,
+      <span class="hljs-attr">orderbookAggLevels</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">precisionForPrice</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">quoteTokenId</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">status</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">isSwapEnabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">createdAt</span>: <span class="hljs-number">1617972300000</span>,
+    },
+    <span class="hljs-string">&quot;DAI-USDT&quot;</span>: {
+      <span class="hljs-attr">baseTokenId</span>: <span class="hljs-number">6</span>,
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;DAI-USDT&quot;</span>,
+      <span class="hljs-attr">orderbookAggLevels</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">precisionForPrice</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-attr">quoteTokenId</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">status</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">isSwapEnabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">createdAt</span>: <span class="hljs-number">0</span>,
+    },
+    <span class="hljs-string">&quot;USDC-ETH&quot;</span>: {
+      <span class="hljs-attr">baseTokenId</span>: <span class="hljs-number">8</span>,
+      <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;USDC-ETH&quot;</span>,
+      <span class="hljs-attr">orderbookAggLevels</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">precisionForPrice</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">quoteTokenId</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">status</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">isSwapEnabled</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">createdAt</span>: <span class="hljs-number">1636974420000</span>,
+    },
+  },
+};
+</code></pre>
+<h5 id="mock-amm-map">Mock AMM MAP</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> AMM_MAP = {
+  <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;LRCETH-Pool&quot;</span>,
+    <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;AMM-LRC-ETH&quot;</span>,
+    <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xfEB069407df0e1e4B365C10992F1bc16c078E34b&quot;</span>,
+    <span class="hljs-attr">version</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+    <span class="hljs-attr">tokens</span>: { <span class="hljs-attr">pooled</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], <span class="hljs-attr">lp</span>: <span class="hljs-number">4</span> },
+    <span class="hljs-attr">feeBips</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">precisions</span>: { <span class="hljs-attr">price</span>: <span class="hljs-number">6</span>, <span class="hljs-attr">amount</span>: <span class="hljs-number">5</span> },
+    <span class="hljs-attr">createdAt</span>: <span class="hljs-string">&quot;1617967800000&quot;</span>,
+    <span class="hljs-attr">status</span>: <span class="hljs-number">31</span>,
+  },
+  <span class="hljs-string">&quot;AMM-ETH-USDT&quot;</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AMM-ETH-USDT&quot;</span>,
+    <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;AMM-ETH-USDT&quot;</span>,
+    <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0x049a02FA9bc6bd54a2937E67D174cc69a9194f8e&quot;</span>,
+    <span class="hljs-attr">version</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+    <span class="hljs-attr">tokens</span>: { <span class="hljs-attr">pooled</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">2</span>], <span class="hljs-attr">lp</span>: <span class="hljs-number">7</span> },
+    <span class="hljs-attr">feeBips</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">precisions</span>: { <span class="hljs-attr">price</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">amount</span>: <span class="hljs-number">3</span> },
+    <span class="hljs-attr">createdAt</span>: <span class="hljs-string">&quot;1617972300000&quot;</span>,
+    <span class="hljs-attr">status</span>: <span class="hljs-number">31</span>,
+  },
+  <span class="hljs-string">&quot;AMM-USDC-ETH&quot;</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;AMM-USDC-ETH&quot;</span>,
+    <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;AMM-USDC-ETH&quot;</span>,
+    <span class="hljs-attr">address</span>: <span class="hljs-string">&quot;0xf37cf4CEd77b985708D591AcC6BfD08586Ab3409&quot;</span>,
+    <span class="hljs-attr">version</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+    <span class="hljs-attr">tokens</span>: {
+      <span class="hljs-attr">pooled</span>: [<span class="hljs-number">8</span>, <span class="hljs-number">0</span>],
+      <span class="hljs-attr">lp</span>: <span class="hljs-number">9</span>,
+    },
+    <span class="hljs-attr">feeBips</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">precisions</span>: {
+      <span class="hljs-attr">price</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">amount</span>: <span class="hljs-number">4</span>,
+    },
+    <span class="hljs-attr">createdAt</span>: <span class="hljs-string">&quot;1636974420000&quot;</span>,
+    <span class="hljs-attr">status</span>: <span class="hljs-number">0</span>,
+  },
+};
+</code></pre>
+<h5 id="mock-eip712-typed-data">Mock EIP712 Typed Data</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> testTypedData: EIP712TypedData = {
+  <span class="hljs-attr">types</span>: {
+    <span class="hljs-attr">EIP712Domain</span>: [
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;string&quot;</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;version&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;string&quot;</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;chainId&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;uint256&quot;</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;verifyingContract&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;address&quot;</span> },
+    ],
+    <span class="hljs-attr">TestTypedData</span>: [
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;from&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;address&quot;</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;to&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;address&quot;</span> },
+      { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;tokenID&quot;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;uint16&quot;</span> },
+    ],
+  },
+  <span class="hljs-attr">primaryType</span>: <span class="hljs-string">&quot;TestTypedData&quot;</span>,
+  <span class="hljs-attr">domain</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Loopring Protocol&quot;</span>,
+    <span class="hljs-attr">version</span>: <span class="hljs-string">&quot;3.6.0&quot;</span>,
+    <span class="hljs-attr">chainId</span>: sdk.ChainId.GOERLI,
+    <span class="hljs-attr">verifyingContract</span>: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+  },
+  <span class="hljs-attr">message</span>: {
+    <span class="hljs-attr">from</span>: LOOPRING_EXPORTED_ACCOUNT.address,
+    <span class="hljs-attr">to</span>: LOOPRING_EXPORTED_ACCOUNT.address2,
+    <span class="hljs-attr">tokenID</span>: TOKEN_INFO.tokenMap.LRC.tokenId,
+  },
+};
+</code></pre>
+<h5 id="mock-generate-eddsakey">Mock generate eddsaKey</h5>
+<pre><code class="lang-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">signatureKeyPairMock</span>(<span class="hljs-params">
+  accInfo: sdk.AccountInfo,
+  _web3: Web3 = web3
+</span>) </span>{
+  <span class="hljs-keyword">const</span> eddsaKey = <span class="hljs-keyword">await</span> sdk.generateKeyPair({
+    <span class="hljs-attr">web3</span>: _web3,
+    <span class="hljs-attr">address</span>: accInfo.owner,
+    <span class="hljs-attr">keySeed</span>:
+      accInfo.keySeed ??
+      sdk.GlobalAPI.KEY_MESSAGE.replace(
+        <span class="hljs-string">&quot;${exchangeAddress}&quot;</span>,
+        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
+      ).replace(<span class="hljs-string">&quot;${nonce}&quot;</span>, (accInfo.nonce - <span class="hljs-number">1</span>).toString()),
+    <span class="hljs-attr">walletType</span>: sdk.ConnectorNames.MetaMask,
+    <span class="hljs-attr">chainId</span>: sdk.ChainId.GOERLI,
+  });
+  <span class="hljs-keyword">return</span> eddsaKey;
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="exchange/exchange.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Exchange">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"JS SDK","level":"2.1","depth":1,"next":{"title":"Exchange","level":"2.1.1","depth":2,"path":"js_sdk/exchange/exchange.md","ref":"./js_sdk/exchange/exchange.md","articles":[{"title":"Web Socket","level":"2.1.1.1","depth":3,"path":"js_sdk/exchange/webSocket.md","ref":"./js_sdk/exchange/webSocket.md","articles":[]},{"title":"Amm","level":"2.1.1.2","depth":3,"path":"js_sdk/exchange/ammpool_api.md","ref":"./js_sdk/exchange/ammpool_api.md","articles":[]}]},"previous":{"title":"GitHub","level":"1.3","depth":1,"url":"https://github.com/Loopring/loopring_sdk","ref":"https://github.com/Loopring/loopring_sdk","articles":[]},"articles":[{"title":"Exchange","level":"2.1.1","depth":2,"path":"js_sdk/exchange/exchange.md","ref":"./js_sdk/exchange/exchange.md","articles":[{"title":"Web Socket","level":"2.1.1.1","depth":3,"path":"js_sdk/exchange/webSocket.md","ref":"./js_sdk/exchange/webSocket.md","articles":[]},{"title":"Amm","level":"2.1.1.2","depth":3,"path":"js_sdk/exchange/ammpool_api.md","ref":"./js_sdk/exchange/ammpool_api.md","articles":[]}]},{"title":"Account","level":"2.1.2","depth":2,"anchor":"#mock-account","path":"js_sdk/README.md","ref":"./js_sdk/README.md#mock-account","articles":[{"title":"Active Account","level":"2.1.2.1","depth":3,"path":"js_sdk/account/activeAccount.md","ref":"./js_sdk/account/activeAccount.md","articles":[]},{"title":"Fees","level":"2.1.2.2","depth":3,"path":"js_sdk/account/fee.md","ref":"./js_sdk/account/fee.md","articles":[]},{"title":"Signature","level":"2.1.2.3","depth":3,"path":"js_sdk/account/signature.md","ref":"./js_sdk/account/signature.md","articles":[]},{"title":"Transaction Recorder","level":"2.1.2.4","depth":3,"path":"js_sdk/account/historyRecord.md","ref":"./js_sdk/account/historyRecord.md","articles":[]}]},{"title":"ERC20","level":"2.1.3","depth":2,"anchor":"#mock-erc20-token-map","path":"js_sdk/README.md","ref":"./js_sdk/README.md#mock-erc20-token-map","articles":[{"title":"Deposit","level":"2.1.3.1","depth":3,"path":"js_sdk/deposit/depositERC20.md","ref":"./js_sdk/deposit/depositERC20.md","articles":[]},{"title":"Transfer","level":"2.1.3.2","depth":3,"path":"js_sdk/transfer/transferERC20.md","ref":"./js_sdk/transfer/transferERC20.md","articles":[]},{"title":"Withdraw","level":"2.1.3.3","depth":3,"path":"js_sdk/withdraw/withdrawERC20.md","ref":"./js_sdk/withdraw/withdrawERC20.md","articles":[]},{"title":"Order","level":"2.1.3.4","depth":3,"path":"js_sdk/erc20Trade/orderERC20.md","ref":"./js_sdk/erc20Trade/orderERC20.md","articles":[]}]},{"title":"NFT","level":"2.1.4","depth":2,"anchor":"#mock-account","path":"js_sdk/README.md","ref":"./js_sdk/README.md#mock-account","articles":[{"title":"Deposit","level":"2.1.4.1","depth":3,"path":"js_sdk/deposit/depositNFT.md","ref":"./js_sdk/deposit/depositNFT.md","articles":[]},{"title":"Transfer","level":"2.1.4.2","depth":3,"path":"js_sdk/transfer/transferNFT.md","ref":"./js_sdk/transfer/transferNFT.md","articles":[]},{"title":"Withdraw","level":"2.1.4.3","depth":3,"path":"js_sdk/withdraw/withdrawNFT.md","ref":"./js_sdk/withdraw/withdrawNFT.md","articles":[]},{"title":"Mint","level":"2.1.4.4","depth":3,"path":"js_sdk/NFTAction/metaNFT.md","ref":"./js_sdk/NFTAction/metaNFT.md","articles":[]},{"title":"Collection","level":"2.1.4.5","depth":3,"path":"js_sdk/NFTAction/collectionNFT.md","ref":"./js_sdk/NFTAction/collectionNFT.md","articles":[]},{"title":"Deploy","level":"2.1.4.6","depth":3,"path":"js_sdk/NFTAction/deployNFT.md","ref":"./js_sdk/NFTAction/deployNFT.md","articles":[]},{"title":"Trade","level":"2.1.4.7","depth":3,"path":"js_sdk/NFTAction/tradeNFT.md","ref":"./js_sdk/NFTAction/tradeNFT.md","articles":[{"title":"Validate Order","level":"2.1.4.7.1","depth":4,"path":"js_sdk/NFTAction/validateNFTOrder.md","ref":"./js_sdk/NFTAction/validateNFTOrder.md","articles":[]}]}]}],"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Loopring Dev Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/README.md","mtime":"2022-04-22T06:37:52.710Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2023-02-05T11:26:41.753Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
