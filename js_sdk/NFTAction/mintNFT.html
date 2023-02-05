@@ -3,7 +3,7 @@
 <html lang="" >
     <head>
         <meta charset="UTF-8">
-        <title>Web Socket · Loopring SDK</title>
+        <title>Mint · Loopring SDK</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 3.7.1">
@@ -56,10 +56,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="ammpool_api.html" />
+    <link rel="next" href="metaNFT.html" />
     
     
-    <link rel="prev" href="exchange.html" />
+    <link rel="prev" href="../withdraw/withdrawNFT.html" />
     
 
     </head>
@@ -159,9 +159,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="2.1.1" data-path="exchange.html">
+        <li class="chapter " data-level="2.1.1" data-path="../exchange/exchange.html">
             
-                <a href="exchange.html">
+                <a href="../exchange/exchange.html">
             
                     
                     Exchange
@@ -173,9 +173,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="2.1.1.1" data-path="webSocket.html">
+        <li class="chapter " data-level="2.1.1.1" data-path="../exchange/webSocket.html">
             
-                <a href="webSocket.html">
+                <a href="../exchange/webSocket.html">
             
                     
                     Web Socket
@@ -186,9 +186,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.1.2" data-path="ammpool_api.html">
+        <li class="chapter " data-level="2.1.1.2" data-path="../exchange/ammpool_api.html">
             
-                <a href="ammpool_api.html">
+                <a href="../exchange/ammpool_api.html">
             
                     
                     Amm
@@ -399,9 +399,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.4.4" data-path="../NFTAction/mintNFT.html">
+        <li class="chapter active" data-level="2.1.4.4" data-path="mintNFT.html">
             
-                <a href="../NFTAction/mintNFT.html">
+                <a href="mintNFT.html">
             
                     
                     Mint
@@ -412,9 +412,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.4.5" data-path="../NFTAction/metaNFT.html">
+        <li class="chapter " data-level="2.1.4.5" data-path="metaNFT.html">
             
-                <a href="../NFTAction/metaNFT.html">
+                <a href="metaNFT.html">
             
                     
                     MetaData
@@ -425,9 +425,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.4.6" data-path="../NFTAction/collectionNFT.html">
+        <li class="chapter " data-level="2.1.4.6" data-path="collectionNFT.html">
             
-                <a href="../NFTAction/collectionNFT.html">
+                <a href="collectionNFT.html">
             
                     
                     Collection
@@ -438,9 +438,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.4.7" data-path="../NFTAction/deployNFT.html">
+        <li class="chapter " data-level="2.1.4.7" data-path="deployNFT.html">
             
-                <a href="../NFTAction/deployNFT.html">
+                <a href="deployNFT.html">
             
                     
                     Deploy
@@ -451,9 +451,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.4.8" data-path="../NFTAction/tradeNFT.html">
+        <li class="chapter " data-level="2.1.4.8" data-path="tradeNFT.html">
             
-                <a href="../NFTAction/tradeNFT.html">
+                <a href="tradeNFT.html">
             
                     
                     Trade
@@ -465,9 +465,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="2.1.4.8.1" data-path="../NFTAction/validateNFTOrder.html">
+        <li class="chapter " data-level="2.1.4.8.1" data-path="validateNFTOrder.html">
             
-                <a href="../NFTAction/validateNFTOrder.html">
+                <a href="validateNFTOrder.html">
             
                     
                     Validate Order
@@ -582,7 +582,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Web Socket</a>
+        <a href="../.." >Mint</a>
     </h1>
 </div>
 
@@ -597,34 +597,182 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="websocket-command">WebSocket Command</h1>
-<p>Definition: Loopring L2 websocket</p>
-<h3 id="loopring-l2-websocket-topic-type">Loopring L2 websocket topic type:</h3>
-<p>WsTopicType</p>
-<ul>
-<li><code>account</code></li>
-<li><code>orderbook</code></li>
-<li><code>mixorder</code></li>
-<li><code>mixtrade</code></li>
-<li><code>ticker</code></li>
-<li><code>candlestick</code></li>
-<li><code>ammpool</code></li>
-</ul>
-<h2 id="getwskey-required-by-account-related-socket">getWsKey (required by account related socket)</h2>
-<pre><code class="lang-ts"><span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> LoopringAPI.wsAPI.getWsKey();
-<span class="hljs-built_in">console</span>.log(response);
-</code></pre>
-<h2 id="getorderbookarg">getOrderBookArg</h2>
-<pre><code class="lang-ts"><span class="hljs-keyword">const</span> arg1 = sdk.getMixOrderArg({ <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;LRC-ETH&quot;</span>, <span class="hljs-attr">level</span>: <span class="hljs-number">50</span> });
-<span class="hljs-built_in">console</span>.log(arg1);
+                                <h1 id="mint-nft">Mint NFT</h1>
+<p>Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will convert to nftId, please view MetaNFT.md</p>
+<blockquote>
+   <p style="{color:&quot;red&quot;}">!!! important  describe</p><p>
+   </p><p>Follow mehod is the simple way for mint NTF, but this kind of NFT will using the same contact &amp; with   no Contract metadata forever on L1</p> 
+   <p>New Version of NFT will has it isolate Contract/colletion with metadata inforamtion</p> 
+   <p>From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT</p>
 
-<span class="hljs-keyword">const</span> arg2 = sdk.getOrderBookArg({
-  <span class="hljs-attr">market</span>: <span class="hljs-string">&quot;LRC-ETH&quot;</span>,
-  <span class="hljs-attr">level</span>: <span class="hljs-number">50</span>,
-  <span class="hljs-attr">count</span>: <span class="hljs-number">40</span>,
-  <span class="hljs-attr">snapshot</span>: <span class="hljs-literal">false</span>,
+<pre><code class="lang-ts">tokenAddress: collectionMeta.contractAddress
+<span class="hljs-attr">counterFactualNftInfo</span>: {
+    <span class="hljs-attr">nftOwner</span>: ccInfo.owner,
+    <span class="hljs-attr">nftFactory</span>: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],
+    <span class="hljs-attr">nftBaseUri</span>: collectionMeta?.baseUri ?? <span class="hljs-string">&quot;&quot;</span>,
+},
+</code></pre>
+</blockquote>
+<h2 id="step-1-get-account">Step 1. get Account</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {accInfo} = <span class="hljs-keyword">await</span> LoopringAPI.exchangeAPI.getAccount({
+    <span class="hljs-attr">owner</span>: LOOPRING_EXPORTED_ACCOUNT.address,
 });
-<span class="hljs-built_in">console</span>.log(arg2);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;accInfo:&quot;</span>, accInfo);
+</code></pre>
+<hr>
+<h2 id="step-2-get-eddsakey">Step 2. get eddsaKey</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> eddsaKey = <span class="hljs-keyword">await</span> signatureKeyPairMock(accInfo);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;eddsaKey:&quot;</span>, eddsaKey.sk);
+</code></pre>
+<hr>
+<h2 id="step-3-get-apikey">Step 3. get apiKey</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> {apiKey} = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getUserApiKey({
+   <span class="hljs-attr">accountId</span>: accInfo.accountId,
+ },
+ eddsaKey.sk
+);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;apiKey:&quot;</span>, apiKey);
+</code></pre>
+<hr>
+<h2 id="step-4-get-storageid">Step 4. get storageId</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> storageId = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getNextStorageId(
+{
+    <span class="hljs-attr">accountId</span>: accInfo.accountId,
+    <span class="hljs-attr">sellTokenId</span>: TOKEN_INFO.tokenMap[ <span class="hljs-string">&quot;LRC&quot;</span> ].tokenId, <span class="hljs-comment">// same as maxFee tokenId</span>
+},
+apiKey
+);
+</code></pre>
+<hr>
+<h2 id="step-5-get-collection-informationtokenaddress">Step 5. get collection Information(tokenAddress)</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> collectionRes = <span class="hljs-keyword">await</span> LoopringAPI.userAPI
+    .getUserOwenCollection({
+            <span class="hljs-attr">owner</span>: accInfo.owner,
+            <span class="hljs-attr">tokenAddress</span>: mockData.nftTokenAddress,
+            <span class="hljs-attr">isMintable</span>: <span class="hljs-literal">true</span>
+        },
+        apiKey
+    )
+<span class="hljs-keyword">if</span> ((collectionRes &amp;&amp;
+    ((collectionRes <span class="hljs-keyword">as</span> sdk.RESULT_INFO).code ||
+        (collectionRes <span class="hljs-keyword">as</span> sdk.RESULT_INFO).message)) || !collectionRes.collections.length
+) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Collection is disable to mint &quot;</span>);
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">&quot;Collection is disable to mint &quot;</span>;
+}
+
+<span class="hljs-keyword">const</span> collectionMeta = (collectionRes <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>).collections[ <span class="hljs-number">0</span> ] <span class="hljs-keyword">as</span> CollectionMeta;
+
+<span class="hljs-keyword">const</span> counterFactualNftInfo: NFTCounterFactualInfo = {
+    <span class="hljs-attr">nftOwner</span>: accInfo.owner,
+    <span class="hljs-attr">nftFactory</span>: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[ sdk.ChainId.GOERLI ],
+    <span class="hljs-attr">nftBaseUri</span>: collectionMeta.baseUri,
+};
+</code></pre>
+<hr>
+<h2 id="step-6-fee">Step 6. fee</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> fee = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+    {
+        <span class="hljs-attr">accountId</span>: accInfo.accountId,
+        <span class="hljs-attr">tokenAddress</span>: collectionMeta.contractAddress,
+        <span class="hljs-attr">requestType</span>: sdk.OffchainNFTFeeReqType.NFT_MINT,
+    },
+    apiKey
+);
+</code></pre>
+<hr>
+<h2 id="step7-mint">Step7. Mint</h2>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.submitNFTMint({
+  <span class="hljs-attr">request</span>: {
+    <span class="hljs-attr">exchange</span>: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+    <span class="hljs-attr">minterId</span>: accInfo.accountId,
+    <span class="hljs-attr">minterAddress</span>: accInfo.owner,
+    <span class="hljs-attr">toAccountId</span>: accInfo.accountId,
+    <span class="hljs-attr">toAddress</span>: accInfo.owner,
+    <span class="hljs-attr">nftType</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">tokenAddress</span>: nftTokenAddress, <span class="hljs-comment">// please read the description -&gt; tokenAddress: collectionMeta.contractAddress,</span>
+    <span class="hljs-attr">nftId</span>: LOOPRING_EXPORTED_ACCOUNT.nftId, <span class="hljs-comment">//nftId.toString(16),</span>
+    <span class="hljs-attr">amount</span>: <span class="hljs-string">&quot;1&quot;</span>,
+    <span class="hljs-attr">validUntil</span>: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+    <span class="hljs-attr">storageId</span>: storageId.offchainId ?? <span class="hljs-number">9</span>,
+    <span class="hljs-attr">maxFee</span>: {
+      <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[ <span class="hljs-string">&quot;LRC&quot;</span> ].tokenId,
+      <span class="hljs-attr">amount</span>: fee.fees[ <span class="hljs-string">&quot;LRC&quot;</span> ].fee ?? <span class="hljs-string">&quot;9400000000000000000&quot;</span>,
+    },
+    counterFactualNftInfo,
+    <span class="hljs-attr">royaltyPercentage</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">forceToMint</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// suggest use as false, for here is just for run test</span>
+    <span class="hljs-comment">// please read the description</span>
+    <span class="hljs-comment">// counterFactualNftInfo: {</span>
+    <span class="hljs-comment">//  nftOwner: ccInfo.owner,</span>
+    <span class="hljs-comment">//  nftFactory: collectionMeta.nftFactory ?? sdk.NFTFactory_Collection[chainId],</span>
+    <span class="hljs-comment">//  nftBaseUri: collectionMeta?.baseUri ?? &quot;&quot;,</span>
+    <span class="hljs-comment">// },</span>
+  },
+  web3,
+  <span class="hljs-attr">chainId</span>: sdk.ChainId.GOERLI,
+  <span class="hljs-attr">walletType</span>: sdk.ConnectorNames.Unknown,
+  <span class="hljs-attr">eddsaKey</span>: eddsaKey.sk,
+  <span class="hljs-attr">apiKey</span>: apiKey,
+});
+</code></pre>
+<hr>
+<h3 id="ps-mint-with-legacy-nftfactory">ps: Mint with legacy nftFactory</h3>
+<p><font color="red">! Mint NFT from this way has no collection information at deploy contract(tokenAdress is
+unique)</font></p>
+<hr>
+<h4 id="step-1234-is-same-logic">Step 1,2,3,4 is same logic</h4>
+<h4 id="step-5-get-tokenaddress">Step 5. get tokenAddress</h4>
+<pre><code class="lang-ts"><span class="hljs-keyword">const</span> counterFactualNftInfo = {
+  <span class="hljs-attr">nftOwner</span>: accInfo.owner,
+  <span class="hljs-attr">nftFactory</span>: sdk.NFTFactory[ sdk.ChainId.GOERLI ],
+  <span class="hljs-attr">nftBaseUri</span>: <span class="hljs-string">&quot;&quot;</span>,
+};
+<span class="hljs-keyword">const</span> nftTokenAddress =
+  LoopringAPI.nftAPI.computeNFTAddress(counterFactualNftInfo)
+    .tokenAddress || <span class="hljs-string">&quot;&quot;</span>;
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;nftTokenAddress&quot;</span>, nftTokenAddress);
+</code></pre>
+<hr>
+<h4 id="step-6-get-fee">Step 6. get fee</h4>
+<pre><code class="lang-ts"> <span class="hljs-keyword">const</span> fee = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.getNFTOffchainFeeAmt(
+  {
+    <span class="hljs-attr">accountId</span>: accInfo.accountId,
+    <span class="hljs-attr">tokenAddress</span>: nftTokenAddress,
+    <span class="hljs-attr">requestType</span>: sdk.OffchainNFTFeeReqType.NFT_MINT,
+  },
+  apiKey
+);
+</code></pre>
+<h4 id="step-7-mint">Step 7. Mint</h4>
+<pre><code class="lang-ts">
+<span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> LoopringAPI.userAPI.submitNFTMint({
+  <span class="hljs-attr">request</span>: {
+    <span class="hljs-attr">exchange</span>: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+    <span class="hljs-attr">minterId</span>: accInfo.accountId,
+    <span class="hljs-attr">minterAddress</span>: accInfo.owner,
+    <span class="hljs-attr">toAccountId</span>: accInfo.accountId,
+    <span class="hljs-attr">toAddress</span>: accInfo.owner,
+    <span class="hljs-attr">nftType</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">tokenAddress</span>: nftTokenAddress,
+    <span class="hljs-attr">nftId</span>: LOOPRING_EXPORTED_ACCOUNT.nftId, <span class="hljs-comment">//nftId.toString(16),</span>
+    <span class="hljs-attr">amount</span>: <span class="hljs-string">&quot;1&quot;</span>,
+    <span class="hljs-attr">validUntil</span>: LOOPRING_EXPORTED_ACCOUNT.validUntil,
+    <span class="hljs-attr">storageId</span>: storageId.offchainId ?? <span class="hljs-number">9</span>,
+    <span class="hljs-attr">maxFee</span>: {
+      <span class="hljs-attr">tokenId</span>: TOKEN_INFO.tokenMap[ <span class="hljs-string">&quot;LRC&quot;</span> ].tokenId,
+      <span class="hljs-attr">amount</span>: fee.fees[ <span class="hljs-string">&quot;LRC&quot;</span> ].fee ?? <span class="hljs-string">&quot;9400000000000000000&quot;</span>,
+    },
+    <span class="hljs-attr">royaltyPercentage</span>: <span class="hljs-number">5</span>,
+    counterFactualNftInfo,
+    <span class="hljs-attr">forceToMint</span>: <span class="hljs-literal">true</span>, <span class="hljs-comment">// suggest use as false, for here is just for run test</span>
+  },
+  web3,
+  <span class="hljs-attr">chainId</span>: sdk.ChainId.GOERLI,
+  <span class="hljs-attr">walletType</span>: sdk.ConnectorNames.Unknown,
+  <span class="hljs-attr">eddsaKey</span>: eddsaKey.sk,
+  <span class="hljs-attr">apiKey</span>: apiKey,
+});
 </code></pre>
 
                                 
@@ -653,12 +801,12 @@
 
             
                 
-                <a href="exchange.html" class="navigation navigation-prev " aria-label="Previous page: Exchange">
+                <a href="../withdraw/withdrawNFT.html" class="navigation navigation-prev " aria-label="Previous page: Withdraw">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="ammpool_api.html" class="navigation navigation-next " aria-label="Next page: Amm">
+                <a href="metaNFT.html" class="navigation navigation-next " aria-label="Next page: MetaData">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -669,7 +817,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Web Socket","level":"2.1.1.1","depth":3,"next":{"title":"Amm","level":"2.1.1.2","depth":3,"path":"js_sdk/exchange/ammpool_api.md","ref":"./js_sdk/exchange/ammpool_api.md","articles":[]},"previous":{"title":"Exchange","level":"2.1.1","depth":2,"path":"js_sdk/exchange/exchange.md","ref":"./js_sdk/exchange/exchange.md","articles":[{"title":"Web Socket","level":"2.1.1.1","depth":3,"path":"js_sdk/exchange/webSocket.md","ref":"./js_sdk/exchange/webSocket.md","articles":[]},{"title":"Amm","level":"2.1.1.2","depth":3,"path":"js_sdk/exchange/ammpool_api.md","ref":"./js_sdk/exchange/ammpool_api.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Loopring Dev Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/exchange/webSocket.md","mtime":"2022-04-22T06:37:52.719Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2023-02-05T12:22:47.915Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Mint","level":"2.1.4.4","depth":3,"next":{"title":"MetaData","level":"2.1.4.5","depth":3,"path":"js_sdk/NFTAction/metaNFT.md","ref":"./js_sdk/NFTAction/metaNFT.md","articles":[]},"previous":{"title":"Withdraw","level":"2.1.4.3","depth":3,"path":"js_sdk/withdraw/withdrawNFT.md","ref":"./js_sdk/withdraw/withdrawNFT.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Loopring Dev Team","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Loopring SDK","links":{"sidebar":{"Home":"https://loopring.io"}},"gitbook":">=3.0.0","description":"loopring sdk"},"file":{"path":"js_sdk/NFTAction/mintNFT.md","mtime":"2023-02-05T12:18:13.172Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2023-02-05T12:22:47.915Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

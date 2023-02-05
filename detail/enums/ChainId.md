@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[defs/web3_defs.ts:3](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/web3_defs.ts#L3)
+[defs/web3_defs.ts:3](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/web3_defs.ts#L3)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[defs/web3_defs.ts:2](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/web3_defs.ts#L2)
+[defs/web3_defs.ts:2](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/web3_defs.ts#L2)

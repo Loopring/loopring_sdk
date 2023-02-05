@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[defs/loopring_defs.ts:1710](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1710)
+[defs/loopring_defs.ts:1710](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1710)
 
 ___
 
@@ -35,7 +35,7 @@ nftBaseUri
 
 #### Defined in
 
-[defs/loopring_defs.ts:1697](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1697)
+[defs/loopring_defs.ts:1697](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1697)
 
 ___
 
@@ -49,7 +49,7 @@ nftFactory
 
 #### Defined in
 
-[defs/loopring_defs.ts:1703](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1703)
+[defs/loopring_defs.ts:1703](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1703)
 
 ___
 
@@ -63,7 +63,7 @@ nftOwner
 
 #### Defined in
 
-[defs/loopring_defs.ts:1691](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1691)
+[defs/loopring_defs.ts:1691](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1691)
 
 ___
 
@@ -77,7 +77,7 @@ tokenAddress
 
 #### Defined in
 
-[defs/loopring_defs.ts:1709](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1709)
+[defs/loopring_defs.ts:1709](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1709)
 
 ___
 
@@ -91,4 +91,4 @@ Transfer
 
 #### Defined in
 
-[defs/loopring_defs.ts:1678](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1678)
+[defs/loopring_defs.ts:1678](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L1678)

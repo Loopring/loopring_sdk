@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[api/nft_api.ts:63](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L63)
+[api/nft_api.ts:63](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L63)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:62](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L62)
+[api/nft_api.ts:62](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L62)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:59](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L59)
+[api/nft_api.ts:59](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L59)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:64](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L64)
+[api/nft_api.ts:64](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L64)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:58](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L58)
+[api/nft_api.ts:58](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L58)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:61](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L61)
+[api/nft_api.ts:61](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L61)
 
 ___
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[api/nft_api.ts:60](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/nft_api.ts#L60)
+[api/nft_api.ts:60](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/nft_api.ts#L60)

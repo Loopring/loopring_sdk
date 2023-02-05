@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[api/sign/sign_tools.ts:67](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L67)
+[api/sign/sign_tools.ts:67](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L67)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:63](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L63)
+[api/sign/sign_tools.ts:63](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L63)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:66](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L66)
+[api/sign/sign_tools.ts:66](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L66)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:68](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L68)
+[api/sign/sign_tools.ts:68](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L68)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:69](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L69)
+[api/sign/sign_tools.ts:69](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L69)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:65](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L65)
+[api/sign/sign_tools.ts:65](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L65)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:64](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L64)
+[api/sign/sign_tools.ts:64](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L64)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[api/sign/sign_tools.ts:62](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/sign/sign_tools.ts#L62)
+[api/sign/sign_tools.ts:62](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/sign/sign_tools.ts#L62)
