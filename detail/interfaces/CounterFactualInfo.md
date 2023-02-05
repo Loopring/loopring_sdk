@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[defs/account_defs.ts:29](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/account_defs.ts#L29)
+[defs/account_defs.ts:29](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/account_defs.ts#L29)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:30](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/account_defs.ts#L30)
+[defs/account_defs.ts:30](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/account_defs.ts#L30)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:31](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/account_defs.ts#L31)
+[defs/account_defs.ts:31](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/account_defs.ts#L31)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:33](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/account_defs.ts#L33)
+[defs/account_defs.ts:33](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/account_defs.ts#L33)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[defs/account_defs.ts:32](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/account_defs.ts#L32)
+[defs/account_defs.ts:32](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/account_defs.ts#L32)

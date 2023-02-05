@@ -29,7 +29,7 @@ requesterAddress account address
 
 #### Defined in
 
-[defs/loopring_defs.ts:1610](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/loopring_defs.ts#L1610)
+[defs/loopring_defs.ts:1610](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1610)
 
 ___
 
@@ -43,7 +43,7 @@ requester withdrawls tokenId
 
 #### Defined in
 
-[defs/loopring_defs.ts:1616](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/loopring_defs.ts#L1616)
+[defs/loopring_defs.ts:1616](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1616)
 
 ___
 
@@ -57,7 +57,7 @@ Transfer Request
 
 #### Defined in
 
-[defs/loopring_defs.ts:1628](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/loopring_defs.ts#L1628)
+[defs/loopring_defs.ts:1628](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1628)
 
 ___
 
@@ -71,4 +71,4 @@ withdrawAddress account address
 
 #### Defined in
 
-[defs/loopring_defs.ts:1622](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/loopring_defs.ts#L1622)
+[defs/loopring_defs.ts:1622](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/loopring_defs.ts#L1622)

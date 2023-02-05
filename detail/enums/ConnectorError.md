@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[defs/error_codes.ts:63](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L63)
+[defs/error_codes.ts:63](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L63)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:64](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L64)
+[defs/error_codes.ts:64](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L64)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:65](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L65)
+[defs/error_codes.ts:65](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L65)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:62](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L62)
+[defs/error_codes.ts:62](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L62)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:67](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L67)
+[defs/error_codes.ts:67](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L67)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:59](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L59)
+[defs/error_codes.ts:59](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L59)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:66](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L66)
+[defs/error_codes.ts:66](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L66)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:60](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L60)
+[defs/error_codes.ts:60](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L60)
 
 ___
 
@@ -104,4 +104,4 @@ ___
 
 #### Defined in
 
-[defs/error_codes.ts:61](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/defs/error_codes.ts#L61)
+[defs/error_codes.ts:61](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/defs/error_codes.ts#L61)

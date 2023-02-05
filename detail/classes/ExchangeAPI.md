@@ -81,7 +81,7 @@
 
 #### Defined in
 
-[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L104)
+[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L104)
 
 ## Properties
 
@@ -95,7 +95,7 @@
 
 #### Defined in
 
-[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L39)
+[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L39)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L40)
+[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L40)
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L38)
+[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L38)
 
 ## Methods
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1009](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1009)
+[api/exchange_api.ts:1009](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1009)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L41)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1083](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1083)
+[api/exchange_api.ts:1083](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1083)
 
 ___
 
@@ -219,7 +219,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1184](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1184)
+[api/exchange_api.ts:1184](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1184)
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:792](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L792)
+[api/exchange_api.ts:792](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L792)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:812](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L812)
+[api/exchange_api.ts:812](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L812)
 
 ___
 
@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:538](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L538)
+[api/exchange_api.ts:538](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L538)
 
 ___
 
@@ -313,7 +313,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:566](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L566)
+[api/exchange_api.ts:566](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L566)
 
 ___
 
@@ -337,7 +337,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L123)
+[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L123)
 
 ___
 
@@ -364,7 +364,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:842](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L842)
+[api/exchange_api.ts:842](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L842)
 
 ___
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L136)
+[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L136)
 
 ___
 
@@ -421,7 +421,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:648](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L648)
+[api/exchange_api.ts:648](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L648)
 
 ___
 
@@ -447,7 +447,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:477](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L477)
+[api/exchange_api.ts:477](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L477)
 
 ___
 
@@ -473,7 +473,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1109](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1109)
+[api/exchange_api.ts:1109](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1109)
 
 ___
 
@@ -493,7 +493,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:214](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L214)
+[api/exchange_api.ts:214](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L214)
 
 ___
 
@@ -513,7 +513,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:606](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L606)
+[api/exchange_api.ts:606](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L606)
 
 ___
 
@@ -539,7 +539,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:978](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L978)
+[api/exchange_api.ts:978](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L978)
 
 ___
 
@@ -559,7 +559,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1133](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1133)
+[api/exchange_api.ts:1133](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1133)
 
 ___
 
@@ -579,7 +579,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1160](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1160)
+[api/exchange_api.ts:1160](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1160)
 
 ___
 
@@ -605,7 +605,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:1035](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L1035)
+[api/exchange_api.ts:1035](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L1035)
 
 ___
 
@@ -631,7 +631,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:318](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L318)
+[api/exchange_api.ts:318](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L318)
 
 ___
 
@@ -657,7 +657,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:832](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L832)
+[api/exchange_api.ts:832](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L832)
 
 ___
 
@@ -683,7 +683,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:641](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L641)
+[api/exchange_api.ts:641](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L641)
 
 ___
 
@@ -703,7 +703,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:358](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L358)
+[api/exchange_api.ts:358](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L358)
 
 ___
 
@@ -729,7 +729,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:708](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L708)
+[api/exchange_api.ts:708](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L708)
 
 ___
 
@@ -749,7 +749,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:188](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L188)
+[api/exchange_api.ts:188](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L188)
 
 ___
 
@@ -769,7 +769,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:283](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L283)
+[api/exchange_api.ts:283](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L283)
 
 ___
 
@@ -789,7 +789,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:162](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L162)
+[api/exchange_api.ts:162](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L162)
 
 ___
 
@@ -816,7 +816,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:720](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L720)
+[api/exchange_api.ts:720](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L720)
 
 ___
 
@@ -843,7 +843,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:505](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L505)
+[api/exchange_api.ts:505](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L505)
 
 ___
 
@@ -863,7 +863,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:373](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L373)
+[api/exchange_api.ts:373](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L373)
 
 ___
 
@@ -889,7 +889,7 @@ ___
 
 #### Defined in
 
-[api/exchange_api.ts:248](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/exchange_api.ts#L248)
+[api/exchange_api.ts:248](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/exchange_api.ts#L248)
 
 ___
 
@@ -907,7 +907,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L182)
+[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L182)
 
 ___
 
@@ -937,7 +937,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L82)
+[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L82)
 
 ___
 
@@ -961,7 +961,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L178)
+[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L178)
 
 ___
 
@@ -985,4 +985,4 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/427d9da/src/api/base_api.ts#L170)
+[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/6d0be7c/src/api/base_api.ts#L170)
