@@ -166,7 +166,7 @@ export enum LOOPRING_URLs {
   GET_LUCK_TOKEN_SUMMARY = "/api/v3/luckyToken/user/summary",
   POST_LUCK_TOKEN_SENDLUCKYTOKEN = "/api/v3/luckyToken/sendLuckyToken",
   POST_LUCK_TOKEN_CLAIMLUCKYTOKEN = "/api/v3/luckyToken/claimLuckyToken",
-  POST_LUCK_TOKEN_WIGET_DUAL_PRODUCTSTHDRAWS = "/api/v3/luckyToken/user/withdrawals",
+  POST_LUCK_TOKEN_WITHDRAWALS = "/api/v3/luckyToken/user/withdrawals",
   GET_BANXA_API_KEY = "/api/v3/hmacAuthentication",
   GET_STAKE_PRODUCTS = "api/v3/stake/products",
   POST_STAKE_CLAIM = "api/v3/stake/claim",
