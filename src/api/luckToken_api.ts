@@ -595,7 +595,7 @@ export class LuckTokenAPI extends BaseAPI {
     };
 
     const reqParams: ReqParams = {
-      url: LOOPRING_URLs.POST_LUCK_TOKEN_WITHDRAWS,
+      url: LOOPRING_URLs.POST_LUCK_TOKEN_WITHDRAWALS,
       apiKey,
       method: ReqMethod.POST,
       bodyParams: { ...request },
