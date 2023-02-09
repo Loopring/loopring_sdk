@@ -1,22 +1,30 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from "./base_api";
+
+import * as loopring_defs from "../defs/loopring_defs";
 import {
-  DefiMarketInfo,
-  LoopringMap,
-  ReqParams,
-  SEP,
-  SoursURL,
-  TokenAddress,
-  TokenInfo,
-  TokenRelatedInfo,
+  LOOPRING_URLs,
   ReqMethod,
   SIG_FLAG,
-  LOOPRING_URLs,
+  SoursURL,
+  ReqParams,
   SigPatchField,
   RESULT_INFO,
-  DUAL_TYPE,
+  ChainId,
+  ConnectorNames,
+  SigSuffix,
 } from "../defs";
-import * as loopring_defs from "../defs/loopring_defs";
+import { OriginTransferRequestV3 } from "../../dist";
+import {
+  OriginForcesWithdrawalsV3,
+  OriginStakeClaimRequestV3WithPatch,
+  SEP,
+} from "../defs/loopring_defs";
+import { sortObjDictionary } from "../utils";
+import Web3 from "web3";
+import * as sign_tools from "./sign/sign_tools";
+import { isContract } from "./contract_api";
+import { AxiosResponse } from "axios";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -24,9 +32,9 @@ export class DefiAPI extends BaseAPI {
    */
   public async getDefiToken<R>(): Promise<{
     raw_data: R;
-    tokensMap: LoopringMap<TokenInfo>;
-    idIndex: LoopringMap<string>;
-    addressIndex: LoopringMap<TokenAddress>;
+    tokensMap: loopring_defs.LoopringMap<loopring_defs.TokenInfo>;
+    idIndex: loopring_defs.LoopringMap<string>;
+    addressIndex: loopring_defs.LoopringMap<loopring_defs.TokenAddress>;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_DEFI_TOKENS,
@@ -41,11 +49,12 @@ export class DefiAPI extends BaseAPI {
       };
     }
 
-    const tokensMap: LoopringMap<TokenInfo> = {};
-    const addressIndex: LoopringMap<TokenAddress> = {};
-    const idIndex: LoopringMap<string> = {};
+    const tokensMap: loopring_defs.LoopringMap<loopring_defs.TokenInfo> = {};
+    const addressIndex: loopring_defs.LoopringMap<loopring_defs.TokenAddress> =
+      {};
+    const idIndex: loopring_defs.LoopringMap<string> = {};
     if (raw_data instanceof Array) {
-      raw_data.forEach((item: TokenInfo) => {
+      raw_data.forEach((item: loopring_defs.TokenInfo) => {
         if (item.symbol.startsWith("LP-")) {
           item.isLpToken = true;
         } else {
@@ -78,8 +87,8 @@ export class DefiAPI extends BaseAPI {
     request: loopring_defs.GetDefiMarketRequest,
     url: string = LOOPRING_URLs.GET_DEFI_MARKETS
   ): Promise<{
-    markets: LoopringMap<DefiMarketInfo>;
-    pairs: LoopringMap<TokenRelatedInfo>;
+    markets: loopring_defs.LoopringMap<loopring_defs.DefiMarketInfo>;
+    pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo>;
     tokenArr: string[];
     tokenArrStr: string;
     marketArr: string[];
@@ -99,9 +108,9 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const markets: LoopringMap<DefiMarketInfo> = {};
+    const markets: loopring_defs.LoopringMap<loopring_defs.DefiMarketInfo> = {};
 
-    const pairs: LoopringMap<TokenRelatedInfo> = {};
+    const pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo> = {};
 
     // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
 
@@ -109,14 +118,15 @@ export class DefiAPI extends BaseAPI {
       const types = request?.defiType?.split(",");
       let _markets = [];
       if (types) {
-        _markets = raw_data.markets.filter((item: DefiMarketInfo) =>
-          types.includes(item.type?.toUpperCase())
+        _markets = raw_data.markets.filter(
+          (item: loopring_defs.DefiMarketInfo) =>
+            types.includes(item.type?.toUpperCase())
         );
       } else {
         _markets = raw_data.markets;
       }
       _markets.forEach((item: any) => {
-        const marketInfo: DefiMarketInfo = {
+        const marketInfo: loopring_defs.DefiMarketInfo = {
           ...item,
         };
 
@@ -364,7 +374,7 @@ export class DefiAPI extends BaseAPI {
   // 		raw_data,
   // 		dualBalanceMap: [...raw_data].reduce((item, prev) => {
   // 			return {...prev, [ item.coin ]: item};
-  // 		}, {} as loopring_defs.LoopringMap<loopring_defs.DualBalance>)
+  // 		}, {} as loopring_defs.loopring_defs.LoopringMap<loopring_defs.DualBalance>)
   // 	}
   // }
 
@@ -476,7 +486,10 @@ export class DefiAPI extends BaseAPI {
 
   public async getDualUserLocked(
     {
-      lockTag = [DUAL_TYPE.DUAL_BASE, DUAL_TYPE.DUAL_CURRENCY],
+      lockTag = [
+        loopring_defs.DUAL_TYPE.DUAL_BASE,
+        loopring_defs.DUAL_TYPE.DUAL_CURRENCY,
+      ],
       ...request
     }: loopring_defs.DualUserLockedRequest,
     apiKey: string
@@ -500,5 +513,231 @@ export class DefiAPI extends BaseAPI {
       raw_data,
     };
     return;
+  }
+
+  public async sendStakeClaim(
+    req: loopring_defs.OriginStakeClaimRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ) {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `STAKE-CLAIM->${request.accountId}`;
+
+    const sigHW = async () => {
+      const result = await sign_tools.signTransferWithoutDataStructure(
+        web3,
+        transfer.payerAddr,
+        transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        walletType,
+        accountId,
+        counterFactualInfo
+      );
+      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
+    };
+    if (
+      walletType === ConnectorNames.MetaMask ||
+      walletType === ConnectorNames.Gamestop ||
+      walletType === ConnectorNames.OtherExtension
+    ) {
+      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
+      try {
+        if (isHWAddr) {
+          await sigHW();
+        } else {
+          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
+          const result = await sign_tools.signTransferWithDataStructure(
+            web3,
+            transfer.payerAddr,
+            transfer as loopring_defs.OriginTransferRequestV3,
+            chainId,
+            walletType,
+            accountId,
+            counterFactualInfo
+          );
+          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    } else {
+      const isContractCheck = await isContract(web3, transfer.payerAddr);
+      try {
+        if (isContractCheck) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId
+            );
+          ecdsaSignature = result.ecdsaSig;
+        } else if (counterFactualInfo) {
+          const result =
+            await sign_tools.signTransferWithDataStructureForContract(
+              web3,
+              transfer.payerAddr,
+              transfer as loopring_defs.OriginTransferRequestV3,
+              chainId,
+              accountId,
+              counterFactualInfo
+            );
+          ecdsaSignature = result.ecdsaSig;
+          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
+        } else {
+          await sigHW();
+        }
+      } catch (err) {
+        throw {
+          ...this.genErr(err as any),
+        };
+      }
+    }
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey
+    ).result;
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_STAKE_CLAIM,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+    // return this.returnTxHash(raw_data);
+    // const raw_data = (await this.makeReq().request(reqParams)).data;
+    return { raw_data, ...raw_data };
+  }
+  public async sendStakeRedeem(
+    request: {
+      accountId: number;
+      hash: string;
+      token: loopring_defs.TokenVolumeV3;
+    },
+    privateKey: string,
+    apiKey: string
+  ) {
+    const dataToSig = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_STAKE_REDEEM,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigObj: {
+        dataToSig,
+        sigPatch: SigPatchField.EddsaSignature,
+        PrivateKey: privateKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    return { raw_data, ...raw_data };
+  }
+
+  public async getStakeProducts<R>(): Promise<{
+    products: loopring_defs.STACKING_PRODUCT[];
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_STAKE_PRODUCTS,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    return { products: raw_data, raw_data };
+  }
+  public async getStakeSummary<R>(
+    request: {
+      accountId: number;
+      tokenId: number;
+      start?: number;
+      end?: number;
+      limit?: number;
+      offset?: number;
+      hashes?: string;
+      statuses?: string;
+    },
+    apiKey: string
+  ): Promise<{
+    list: loopring_defs.STACKING_SUMMARY;
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_STAKE_SUMMARY,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    return { list: raw_data, raw_data };
+  }
+  public async getStakeTransactions<R>(
+    request: {
+      accountId: number;
+      tokenId: number;
+      start?: number;
+      end?: number;
+      limit?: number;
+      offset?: number;
+      hashes?: string;
+      types?: string;
+    },
+    apiKey: string
+  ): Promise<{
+    list: loopring_defs.STACKING_TRANSACTIONS;
+    totalNum: number;
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_STAKE_TRANSACTIONS,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    return {
+      list: raw_data.transactions,
+      totalNum: raw_data.totalNum,
+      raw_data,
+    };
   }
 }

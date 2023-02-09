@@ -3856,3 +3856,65 @@ export interface OriginTransfer3RequestV3 {
    */
   counterFactualInfo?: CounterFactualInfo;
 }
+
+export type STACKING_PRODUCT = {
+  tokenId: number;
+  symbol: string;
+  address: string;
+  decimals: number;
+  status: number;
+  apr: string;
+  precision: number;
+  staked: string;
+  rewardPeriod: string;
+  minAmount: string;
+  maxAmount: string;
+};
+export type STACKING_SUMMARY = {
+  totalStaked: string;
+  totalLastDayPendingRewards: string;
+  totalStakedRewards: string;
+  totalClaimableRewards: string;
+  staking: {
+    accountId: number;
+    tokenId: number;
+    stakeAt: number;
+    createdAt: number;
+    updatedAt: number;
+    claimableTime: number;
+    apr: string;
+    lastDayPendingRewards: string;
+    initialAmount: string;
+    remainAmount: string;
+    totalRewards: string;
+    productId: string;
+    hash: string;
+    status: string;
+  }[];
+};
+export type STACKING_TRANSACTIONS = {
+  accountId: number;
+  tokenId: number;
+  amount: string;
+  productId: string;
+  hash: string;
+  type: string;
+  createdAt: number;
+  updatedAt: number;
+};
+export interface OriginStakeClaimRequestV3WithPatch {
+  request: {
+    accountId: number;
+    token: TokenVolumeV3;
+    transfer: Omit<OriginTransferRequestV3, "payeeId" | "memo"> & {
+      payeeId?: 0;
+      memo?: string;
+    };
+  };
+  web3: Web3;
+  chainId: ChainId;
+  walletType: ConnectorNames;
+  eddsaKey: string;
+  apiKey: string;
+  isHWAddr?: boolean;
+}
