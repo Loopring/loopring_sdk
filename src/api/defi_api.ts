@@ -2,26 +2,19 @@
 import { BaseAPI } from "./base_api";
 
 import * as loopring_defs from "../defs/loopring_defs";
+import { SEP } from "../defs";
 import {
+  ConnectorNames,
   LOOPRING_URLs,
   ReqMethod,
-  SIG_FLAG,
-  SoursURL,
   ReqParams,
-  SigPatchField,
   RESULT_INFO,
-  ChainId,
-  ConnectorNames,
+  SIG_FLAG,
+  SigPatchField,
   SigSuffix,
+  SoursURL,
 } from "../defs";
-import { OriginTransferRequestV3 } from "../../dist";
-import {
-  OriginForcesWithdrawalsV3,
-  OriginStakeClaimRequestV3WithPatch,
-  SEP,
-} from "../defs/loopring_defs";
 import { sortObjDictionary } from "../utils";
-import Web3 from "web3";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
@@ -643,6 +636,7 @@ export class DefiAPI extends BaseAPI {
     // const raw_data = (await this.makeReq().request(reqParams)).data;
     return { raw_data, ...raw_data };
   }
+
   public async sendStakeRedeem(
     request: {
       accountId: number;
@@ -683,6 +677,7 @@ export class DefiAPI extends BaseAPI {
     const raw_data = (await this.makeReq().request(reqParams)).data;
     return { products: raw_data, raw_data };
   }
+
   public async getStakeSummary<R>(
     request: {
       accountId: number;
@@ -709,6 +704,7 @@ export class DefiAPI extends BaseAPI {
     const raw_data = (await this.makeReq().request(reqParams)).data;
     return { list: raw_data, raw_data };
   }
+
   public async getStakeTransactions<R>(
     request: {
       accountId: number;
