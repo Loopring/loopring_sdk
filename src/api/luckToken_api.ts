@@ -9,6 +9,7 @@ import {
   ConnectorNames,
   SigSuffix,
   NFTTokenInfo,
+  UserNFTBalanceInfo,
 } from "../defs";
 import * as loopring_defs from "../defs/loopring_defs";
 import { sortObjDictionary } from "../utils";
@@ -314,7 +315,7 @@ export class LuckTokenAPI extends BaseAPI {
       tokenId: number;
       amount: string;
       isNft?: Boolean;
-      nftTokenInfo?: NFTTokenInfo;
+      nftTokenInfo?: NFTTokenInfo & Partial<UserNFTBalanceInfo>;
     }[];
     totalNum: number;
   }> {
@@ -651,7 +652,7 @@ export class LuckTokenAPI extends BaseAPI {
           ...rest,
           fromAccountId: rest.payerId,
           fromAddress: rest.payerAddr,
-          toAccountId: rest.payeeId, // toAccountId is not required, input 0 as default
+          toAccountId: 0,
           toAddress: rest.payeeAddr,
           maxFee: {
             tokenId: feeToken,

@@ -2666,12 +2666,9 @@ export type IPFS_METADATA = {
   tokenId: string;
 };
 
-export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> {
+export interface UserNFTBalanceInfo<I = NFT_IMAGE_SIZES> extends NFTTokenInfo {
   accountId: number;
   tokenId: number;
-  nftData?: string;
-  tokenAddress?: string;
-  nftId?: string;
   total?: string;
   locked?: string;
   pending: {
@@ -3610,7 +3607,7 @@ export type LuckyTokenItemForReceive = {
   info: LuckyTokenInfo;
   templateNo: number;
   createdAt: number;
-  nftTokenInfo?: NFTTokenInfo;
+  nftTokenInfo?: UserNFTBalanceInfo;
   isNft?: boolean;
 };
 export type LuckTokenClaim = {
@@ -3667,6 +3664,7 @@ export type LuckTokenClaimDetail = {
     accountId: number;
     address: number;
     ens: number;
+    amount: number;
   }[];
   luckyToken: {
     id: number;
@@ -3689,7 +3687,7 @@ export type LuckTokenWithdraw = {
   createdAt: number;
   updatedAt: number;
   isNft: boolean;
-  nftTokenInfo: NFTTokenInfo;
+  nftTokenInfo?: UserNFTBalanceInfo;
 };
 
 export type TOKENMAPLIST = {
