@@ -173,4 +173,8 @@ export enum LOOPRING_URLs {
   POST_STAKE_REDEEM = "api/v3/stake/redeem",
   GET_STAKE_SUMMARY = "/api/v3/stake/user/summary",
   GET_STAKE_TRANSACTIONS = "/api/v3/stake/user/transactions",
+
+  // Contacts
+  GET_CONTACTS = "/api/v3/user/contact"
+
 }

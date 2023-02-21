@@ -12,3 +12,4 @@ export * from "./delegate_api";
 export * from "./base_api";
 export * from "./defi_api";
 export * from "./luckToken_api";
+export * from "./contacts_api";
