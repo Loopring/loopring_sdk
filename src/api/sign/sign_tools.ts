@@ -44,6 +44,7 @@ import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
 import { keccak } from "ethereumjs-util";
 import { lte } from "lodash";
+import any = jasmine.any;
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -68,29 +69,11 @@ export interface KeyPairParams {
   counterFactualInfo?: CounterFactualInfo;
   isMobile?: boolean;
 }
-
-export async function generateKeyPair({
-  web3,
-  address,
-  walletType,
-  keySeed,
-  chainId,
-  accountId,
-  counterFactualInfo,
-  isMobile,
-}: KeyPairParams) {
-  const result: any = await personalSign(
-    web3,
-    address,
-    "",
-    keySeed,
-    walletType,
-    chainId,
-    accountId,
-    counterFactualInfo,
-    isMobile === undefined ? IsMobile.any() : isMobile
-  );
-
+export function generatePrivateKey(result: {
+  sig: string;
+  counterFactualInfo: any;
+  error: any;
+}) {
   if (!result.error) {
     // myLog("sig:", result.sig);
     const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig));
@@ -120,6 +103,52 @@ export async function generateKeyPair({
   } else {
     console.log("generateKeyPair personalSign error", result.error);
     throw Error(result.error);
+  }
+}
+export async function generateKeyPair(
+  {
+    web3,
+    address,
+    walletType,
+    keySeed,
+    chainId,
+    accountId,
+    counterFactualInfo,
+    isMobile,
+  }: KeyPairParams,
+  publicKey: { x: string; y: string } | undefined = undefined
+) {
+  const result: any = await personalSign(
+    web3,
+    address,
+    "",
+    keySeed,
+    walletType,
+    chainId,
+    accountId,
+    counterFactualInfo,
+    isMobile === undefined ? IsMobile.any() : isMobile
+  );
+  try {
+    let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
+      generatePrivateKey(result);
+    if (
+      publicKey &&
+      result.sig.length > 3 &&
+      (formatedPx.toLowerCase() !== publicKey.x.toLowerCase() ||
+        formatedPy.toLowerCase() !== publicKey.y.toLowerCase())
+    ) {
+      let value = result.sig.split("");
+      let end = value.splice(result.sig.length - 2, 2).join("");
+      end = end == "1c" ? "01" : "1c";
+      result.sig = value.concat(end.split("")).join("");
+      console.log("generateKeyPair end bit changed", end);
+      return generatePrivateKey(result);
+    } else {
+      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
+    }
+  } catch (error) {
+    throw Error(error as any);
   }
 }
 

@@ -1554,13 +1554,16 @@ export class UserAPI extends BaseAPI {
     };
   }
 
-  public async unLockAccount<R>({
-    keyPair,
-    request,
-  }: {
-    keyPair: KeyPairParams;
-    request: loopring_defs.GetUserApiKeyRequest;
-  }): Promise<
+  public async unLockAccount<R>(
+    {
+      keyPair,
+      request,
+    }: {
+      keyPair: KeyPairParams;
+      request: loopring_defs.GetUserApiKeyRequest;
+    },
+    publicKey: { x: string; y: string } | undefined = undefined
+  ): Promise<
     | AxiosResponse
     | RESULT_INFO
     | {
@@ -1577,7 +1580,7 @@ export class UserAPI extends BaseAPI {
   > {
     let eddsaKey;
     try {
-      eddsaKey = await generateKeyPair(keyPair);
+      eddsaKey = await generateKeyPair(keyPair, publicKey);
     } catch (error) {
       throw error;
     }
