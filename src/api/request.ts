@@ -164,7 +164,18 @@ export class Request {
 
     // myLog(optInOne);
     // myLog("headers config", optInOne);
-    return await this._axios.request(optInOne);
+    return await this._axios.request({
+      ...optInOne,
+      proxy: {
+        host: '127.0.0.1',
+        port: 7890,
+          // auth?: {
+          //   username: string;
+          //   password:string;
+          // };
+          // protocol?: string;
+      }
+    });
   }
 
   public updateOpt(reqOpt: ReqOptions) {

@@ -3916,3 +3916,46 @@ export interface OriginStakeClaimRequestV3WithPatch {
   apiKey: string;
   isHWAddr?: boolean;
 }
+
+export interface GetContactsRequest {
+  isHebao: boolean;
+  accountId: number;
+}
+
+export interface GetContactsResponse {
+  contacts: {
+    addressType: number;
+    contactAddress: string;
+    contactMemo: string;
+    contactName: string;
+    isFavourite: boolean;
+    network: string;
+    ownerAccountId: number;
+  }[], 
+  total: number
+}
+
+export interface CreateContactRequest {
+  accountId: number;
+  isHebao: boolean;
+  contactAddress: string;
+  contactName: string;
+  contactMemo?: string;
+}
+
+export interface UpdateContactRequest {
+  contactAddress: string;
+  isHebao: boolean;
+  accountId: number;
+  contactName?: string;
+  contactMemo?: string;
+  addressType?: number;
+}
+
+export interface DeleteContactRequest {
+  contactAddress: string;
+  isHebao: boolean;
+  accountId: number;
+  contactName?: string;
+  contactMemo?: string;
+}
