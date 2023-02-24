@@ -482,6 +482,7 @@ export async function signatureKeyPairMock(
   accInfo: sdk.AccountInfo,
   _web3: Web3 = web3
 ) {
+  //
   const eddsaKey = await sdk.generateKeyPair({
     web3: _web3,
     address: accInfo.owner,

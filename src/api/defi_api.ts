@@ -629,12 +629,17 @@ export class DefiAPI extends BaseAPI {
     let raw_data;
     try {
       raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      return { raw_data, ...raw_data };
     } catch (error) {
       throw error as AxiosResponse;
     }
     // return this.returnTxHash(raw_data);
     // const raw_data = (await this.makeReq().request(reqParams)).data;
-    return { raw_data, ...raw_data };
   }
 
   public async sendStakeRedeem(
@@ -661,6 +666,11 @@ export class DefiAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return { raw_data, ...raw_data };
   }
 
@@ -675,6 +685,11 @@ export class DefiAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return { products: raw_data, raw_data };
   }
 
@@ -702,6 +717,11 @@ export class DefiAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return { list: raw_data, raw_data };
   }
 
@@ -730,6 +750,11 @@ export class DefiAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       list: raw_data.transactions,
       totalNum: raw_data.totalNum,
