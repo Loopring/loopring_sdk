@@ -738,7 +738,7 @@ export class DefiAPI extends BaseAPI {
     },
     apiKey: string
   ): Promise<{
-    list: loopring_defs.STACKING_TRANSACTIONS;
+    list: loopring_defs.STACKING_TRANSACTIONS[];
     totalNum: number;
     raw_data: R;
   }> {

@@ -3868,27 +3868,28 @@ export type STACKING_PRODUCT = {
   minAmount: string;
   maxAmount: string;
 };
+export type StakeInfoOrigin = {
+  accountId: number;
+  tokenId: number;
+  stakeAt: number;
+  createdAt: number;
+  updatedAt: number;
+  claimableTime: number;
+  apr: string;
+  lastDayPendingRewards: string;
+  initialAmount: string;
+  remainAmount: string;
+  totalRewards: string;
+  productId: string;
+  hash: string;
+  status: string;
+};
 export type STACKING_SUMMARY = {
   totalStaked: string;
   totalLastDayPendingRewards: string;
   totalStakedRewards: string;
   totalClaimableRewards: string;
-  staking: {
-    accountId: number;
-    tokenId: number;
-    stakeAt: number;
-    createdAt: number;
-    updatedAt: number;
-    claimableTime: number;
-    apr: string;
-    lastDayPendingRewards: string;
-    initialAmount: string;
-    remainAmount: string;
-    totalRewards: string;
-    productId: string;
-    hash: string;
-    status: string;
-  }[];
+  staking: StakeInfoOrigin[];
 };
 export type STACKING_TRANSACTIONS = {
   accountId: number;
