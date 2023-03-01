@@ -682,6 +682,7 @@ export class DefiAPI extends BaseAPI {
     request: {
       accountId: number;
       token: loopring_defs.TokenVolumeV3;
+      timestamp: string;
     },
     privateKey: string,
     apiKey: string
@@ -689,6 +690,7 @@ export class DefiAPI extends BaseAPI {
     // const dataToSig = sortObjDictionary(request);
     const dataToSig = [
       request.accountId,
+      request.timestamp,
       request.token.tokenId,
       request.token.volume,
     ];
