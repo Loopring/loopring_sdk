@@ -651,9 +651,49 @@ export class DefiAPI extends BaseAPI {
     privateKey: string,
     apiKey: string
   ) {
-    const dataToSig = sortObjDictionary(request);
+    const dataToSig = [
+      request.accountId,
+      request.hash,
+      request.token.tokenId,
+      request.token.volume,
+    ];
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_STAKE_REDEEM,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigObj: {
+        dataToSig,
+        sigPatch: SigPatchField.EddsaSignature,
+        PrivateKey: privateKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { raw_data, ...raw_data };
+  }
+  public async sendStake(
+    request: {
+      accountId: number;
+      token: loopring_defs.TokenVolumeV3;
+    },
+    privateKey: string,
+    apiKey: string
+  ) {
+    // const dataToSig = sortObjDictionary(request);
+    const dataToSig = [
+      request.accountId,
+      request.token.tokenId,
+      request.token.volume,
+    ];
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_STAKE,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
