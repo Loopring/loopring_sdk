@@ -166,17 +166,17 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split("")).join("");
       // LOG: for signature
       console.log("generateKeyPair end bit changed", end);
+      console.log(
+        "personalSign again->",
+        "publicKey calc by sign",
+        "x",
+        formatedPx,
+        "y",
+        formatedPy,
+        publicKey
+      );
       return generatePrivateKey(result);
     } else {
-      // LOG: for signature
-      // console.log(
-      //   "personalSign ->",
-      //   "publicKey calc by sign",
-      //   "x",
-      //   formatedPx,
-      //   "y",
-      //   formatedPy
-      // );
       return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
     }
   } catch (error) {
