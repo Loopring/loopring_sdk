@@ -316,7 +316,6 @@ export class NFTAPI extends BaseAPI {
         approved,
       });
     } else if (nftType === NFTType.ERC721) {
-      //TODO list not support now
       data = this._genERC721Data(NFTMethod.setApprovalForAll, {
         operator: depositAddress,
         approved,

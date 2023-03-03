@@ -3868,6 +3868,13 @@ export type STACKING_PRODUCT = {
   minAmount: string;
   maxAmount: string;
 };
+export enum StakeStatus {
+  received = "received",
+  locked = "locked",
+  partial_unlocked = "partial_unlocked",
+  completely_unlocked = "completely_unlocked",
+  failed = "failed",
+}
 export type StakeInfoOrigin = {
   accountId: number;
   tokenId: number;
@@ -3882,7 +3889,7 @@ export type StakeInfoOrigin = {
   totalRewards: string;
   productId: string;
   hash: string;
-  status: string;
+  status: StakeStatus;
 };
 export type STACKING_SUMMARY = {
   totalStaked: string;
@@ -3891,25 +3898,31 @@ export type STACKING_SUMMARY = {
   totalClaimableRewards: string;
   staking: StakeInfoOrigin[];
 };
+export enum StakeTransactionType {
+  subscribe = "subscribe",
+  redeem = "redeem",
+  claim = "claim",
+}
 export type STACKING_TRANSACTIONS = {
   accountId: number;
   tokenId: number;
   amount: string;
   productId: string;
   hash: string;
-  type: string;
+  type: StakeTransactionType;
   createdAt: number;
   updatedAt: number;
 };
-export interface OriginStakeClaimRequestV3WithPatch {
-  request: {
-    accountId: number;
-    token: TokenVolumeV3;
-    transfer: Omit<OriginTransferRequestV3, "payeeId" | "memo"> & {
-      payeeId?: 0;
-      memo?: string;
-    };
+export interface OriginStakeClaimRequestV3 {
+  accountId: number;
+  token: TokenVolumeV3;
+  transfer: Omit<OriginTransferRequestV3, "payeeId" | "memo"> & {
+    payeeId?: 0;
+    memo?: string;
   };
+}
+export interface OriginStakeClaimRequestV3WithPatch {
+  request: OriginStakeClaimRequestV3;
   web3: Web3;
   chainId: ChainId;
   walletType: ConnectorNames;

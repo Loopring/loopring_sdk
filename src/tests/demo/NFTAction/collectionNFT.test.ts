@@ -3,13 +3,8 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   signatureKeyPairMock,
-  TOKEN_INFO,
-  web3,
-  web3_2,
 } from "../../MockData";
-import * as sdk from "../../../index";
 import { AccountInfo, ChainId, NFTFactory_Collection } from "../../../index";
-import { myLog } from "../../../utils/log_tools";
 
 let mockData:
   | {

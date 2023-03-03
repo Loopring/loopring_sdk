@@ -118,6 +118,18 @@ export async function generateKeyPair(
   }: KeyPairParams,
   publicKey: { x: string; y: string } | undefined = undefined
 ) {
+  // LOG: for signature
+  // console.log(
+  //   "personalSign ->",
+  //   "counterFactualInfo",
+  //   counterFactualInfo,
+  //   "keySeed",
+  //   keySeed,
+  //   "walletType",
+  //   walletType,
+  //   "publicKey from sever side ",
+  //   publicKey
+  // );
   const result: any = await personalSign(
     web3,
     address,
@@ -132,19 +144,39 @@ export async function generateKeyPair(
   try {
     let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
       generatePrivateKey(result);
+    // LOG: for signature
+    console.log(
+      "personalSign ->",
+      "publicKey calc by sign",
+      "x",
+      formatedPx,
+      "y",
+      formatedPy,
+      publicKey
+    );
     if (
       publicKey &&
       result.sig.length > 3 &&
-      (formatedPx.toLowerCase() !== publicKey.x.toLowerCase() ||
-        formatedPy.toLowerCase() !== publicKey.y.toLowerCase())
+      (formatedPx.toLowerCase() != publicKey.x.toLowerCase() ||
+        formatedPy.toLowerCase() != publicKey.y.toLowerCase())
     ) {
       let value = result.sig.split("");
       let end = value.splice(result.sig.length - 2, 2).join("");
       end = end == "1c" ? "01" : "1c";
       result.sig = value.concat(end.split("")).join("");
+      // LOG: for signature
       console.log("generateKeyPair end bit changed", end);
       return generatePrivateKey(result);
     } else {
+      // LOG: for signature
+      // console.log(
+      //   "personalSign ->",
+      //   "publicKey calc by sign",
+      //   "x",
+      //   formatedPx,
+      //   "y",
+      //   formatedPy
+      // );
       return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
     }
   } catch (error) {
@@ -229,10 +261,12 @@ export function getEdDSASig(
   const uri = encodeURIComponent(`${basePath}${api_url}`);
 
   const message = `${method}&${uri}&${params}`;
+  // LOG: for signature
   myLog("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  // LOG: for signature
   myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);

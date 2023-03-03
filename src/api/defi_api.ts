@@ -18,6 +18,7 @@ import { sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
+import { StakeInfoOrigin } from "../defs/loopring_defs";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -651,21 +652,15 @@ export class DefiAPI extends BaseAPI {
     privateKey: string,
     apiKey: string
   ) {
-    const dataToSig = [
-      request.accountId,
-      request.hash,
-      request.token.tokenId,
-      request.token.volume,
-    ];
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_STAKE_REDEEM,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     };
@@ -682,27 +677,20 @@ export class DefiAPI extends BaseAPI {
     request: {
       accountId: number;
       token: loopring_defs.TokenVolumeV3;
-      timestamp: string;
+      timestamp: number;
     },
     privateKey: string,
     apiKey: string
   ) {
-    // const dataToSig = sortObjDictionary(request);
-    const dataToSig = [
-      request.accountId,
-      request.timestamp,
-      request.token.tokenId,
-      request.token.volume,
-    ];
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_STAKE,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     };
@@ -747,10 +735,18 @@ export class DefiAPI extends BaseAPI {
       statuses?: string;
     },
     apiKey: string
-  ): Promise<{
-    list: loopring_defs.STACKING_SUMMARY;
-    raw_data: R;
-  }> {
+  ): Promise<
+    | {
+        raw_data: R;
+        totalNum: number;
+        totalStaked: string;
+        totalStakedRewards: string;
+        totalLastDayPendingRewards: string;
+        totalClaimableRewards: string;
+        list: StakeInfoOrigin[];
+      }
+    | RESULT_INFO
+  > {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_STAKE_SUMMARY,
       queryParams: { ...request },
@@ -764,7 +760,7 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    return { list: raw_data, raw_data };
+    return { ...raw_data, list: raw_data.staking, raw_data };
   }
 
   public async getStakeTransactions<R>(
