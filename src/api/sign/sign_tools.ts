@@ -166,6 +166,9 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split("")).join("");
       // LOG: for signature
       console.log("generateKeyPair end bit changed", end);
+
+      let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
+        generatePrivateKey(result);
       console.log(
         "personalSign again->",
         "publicKey calc by sign",
@@ -175,7 +178,7 @@ export async function generateKeyPair(
         formatedPy,
         publicKey
       );
-      return generatePrivateKey(result);
+      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
     } else {
       return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
     }
