@@ -144,41 +144,45 @@ export async function generateKeyPair(
   try {
     let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
       generatePrivateKey(result);
-    // LOG: for signature
-    console.log(
-      "personalSign ->",
-      "publicKey calc by sign",
-      "x",
-      formatedPx,
-      "y",
-      formatedPy,
-      publicKey
-    );
+
     if (
       publicKey &&
       result.sig.length > 3 &&
-      (formatedPx.toLowerCase() != publicKey.x.toLowerCase() ||
-        formatedPy.toLowerCase() != publicKey.y.toLowerCase())
+      publicKey.x &&
+      publicKey.y &&
+      (!fm.toBig(formatedPx).eq(fm.toBig(publicKey.x)) ||
+        !fm.toBig(formatedPy).eq(fm.toBig(publicKey.y)))
     ) {
       let value = result.sig.split("");
       let end = value.splice(result.sig.length - 2, 2).join("");
       end = end == "1c" ? "01" : "1c";
       result.sig = value.concat(end.split("")).join("");
+      let newValue = generatePrivateKey(result);
       // LOG: for signature
-      console.log("generateKeyPair end bit changed", end);
-
-      let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
-        generatePrivateKey(result);
       console.log(
-        "personalSign again->",
+        "personalSign ->",
         "publicKey calc by sign",
         "x",
         formatedPx,
         "y",
         formatedPy,
-        publicKey
+        "publicKey from server",
+        publicKey,
+        "personalSign again->",
+        "publicKey calc by sign",
+        "x",
+        end,
+        newValue.formatedPx,
+        "y",
+        newValue.formatedPy
       );
-      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
+      return {
+        keyPair: newValue.keyPair,
+        formatedPx: newValue.formatedPx,
+        formatedPy: newValue.formatedPy,
+        sk: newValue.sk,
+        counterFactualInfo,
+      };
     } else {
       return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
     }

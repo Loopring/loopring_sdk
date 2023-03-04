@@ -149,6 +149,23 @@ describe("formatter test", function () {
     },
     TIMEOUT
   );
+  it(
+    "formatter4",
+    async () => {
+      const publicKey = {
+        x: "0x01f9390f9ea86a9b98b180647f28454e2466bf14b4e28533161429f50a8fdea8",
+        y: "0x006b5e578ef145c7339f56a54443b31d77b33b469748d029bdbeabc4928df7",
+      };
+
+      const publicKeyNo0 = {
+        x: "0x1f9390f9ea86a9b98b180647f28454e2466bf14b4e28533161429f50a8fdea8",
+        y: "0x06b5e578ef145c7339f56a54443b31d77b33b469748d029bdbeabc4928df7",
+      };
+      expect(fm.toBig(publicKey.x).eq(fm.toBig(publicKeyNo0.x))).toBe(true);
+      expect(fm.toBig(publicKey.y).eq(fm.toBig(publicKeyNo0.y))).toBe(true);
+    },
+    TIMEOUT
+  );
 
   it("test toBuffer", async () => {
     console.log(toBuffer("420")); // todo add assertion
