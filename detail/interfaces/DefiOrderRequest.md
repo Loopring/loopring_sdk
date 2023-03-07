@@ -34,7 +34,7 @@ accountId
 
 #### Defined in
 
-[defs/loopring_defs.ts:3067](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3067)
+[defs/loopring_defs.ts:3075](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3075)
 
 ___
 
@@ -48,7 +48,7 @@ action
 
 #### Defined in
 
-[defs/loopring_defs.ts:3133](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3133)
+[defs/loopring_defs.ts:3141](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3141)
 
 ___
 
@@ -69,7 +69,7 @@ buyToken
 
 #### Defined in
 
-[defs/loopring_defs.ts:3082](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3082)
+[defs/loopring_defs.ts:3090](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3090)
 
 ___
 
@@ -83,7 +83,7 @@ The orders EdDSA signature. The signature is a hexadecimal string obtained by si
 
 #### Defined in
 
-[defs/loopring_defs.ts:3121](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3121)
+[defs/loopring_defs.ts:3129](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3129)
 
 ___
 
@@ -97,7 +97,7 @@ exchange address
 
 #### Defined in
 
-[defs/loopring_defs.ts:3055](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3055)
+[defs/loopring_defs.ts:3063](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3063)
 
 ___
 
@@ -111,7 +111,7 @@ fee
 
 #### Defined in
 
-[defs/loopring_defs.ts:3097](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3097)
+[defs/loopring_defs.ts:3105](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3105)
 
 ___
 
@@ -125,7 +125,7 @@ fillAmountBOrS
 
 #### Defined in
 
-[defs/loopring_defs.ts:3109](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3109)
+[defs/loopring_defs.ts:3117](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3117)
 
 ___
 
@@ -139,7 +139,7 @@ Maximum order fee that the user can accept, value range (in ten thousandths) 1 ~
 
 #### Defined in
 
-[defs/loopring_defs.ts:3103](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3103)
+[defs/loopring_defs.ts:3111](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3111)
 
 ___
 
@@ -160,7 +160,7 @@ sellToken
 
 #### Defined in
 
-[defs/loopring_defs.ts:3073](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3073)
+[defs/loopring_defs.ts:3081](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3081)
 
 ___
 
@@ -174,7 +174,7 @@ storageId
 
 #### Defined in
 
-[defs/loopring_defs.ts:3061](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3061)
+[defs/loopring_defs.ts:3069](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3069)
 
 ___
 
@@ -188,7 +188,7 @@ taker address
 
 #### Defined in
 
-[defs/loopring_defs.ts:3115](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3115)
+[defs/loopring_defs.ts:3123](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3123)
 
 ___
 
@@ -202,7 +202,7 @@ type
 
 #### Defined in
 
-[defs/loopring_defs.ts:3127](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3127)
+[defs/loopring_defs.ts:3135](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3135)
 
 ___
 
@@ -216,4 +216,4 @@ Timestamp for order become invalid
 
 #### Defined in
 
-[defs/loopring_defs.ts:3091](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L3091)
+[defs/loopring_defs.ts:3099](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L3099)

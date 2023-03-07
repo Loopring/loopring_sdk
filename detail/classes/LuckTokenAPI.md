@@ -64,7 +64,7 @@
 
 #### Defined in
 
-[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L104)
+[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L104)
 
 ## Properties
 
@@ -78,7 +78,7 @@
 
 #### Defined in
 
-[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L39)
+[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L39)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L40)
+[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L40)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L38)
+[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L38)
 
 ## Methods
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L41)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L123)
+[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L123)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L136)
+[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L136)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:21](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L21)
+[api/luckToken_api.ts:22](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L22)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:58](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L58)
+[api/luckToken_api.ts:59](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L59)
 
 ___
 
@@ -256,7 +256,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:236](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L236)
+[api/luckToken_api.ts:237](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L237)
 
 ___
 
@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:94](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L94)
+[api/luckToken_api.ts:95](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L95)
 
 ___
 
@@ -317,7 +317,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:275](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L275)
+[api/luckToken_api.ts:276](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L276)
 
 ___
 
@@ -349,7 +349,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:169](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L169)
+[api/luckToken_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L170)
 
 ___
 
@@ -388,13 +388,13 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:125](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L125)
+[api/luckToken_api.ts:126](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L126)
 
 ___
 
 ### getLuckTokenSummary
 
-▸ **getLuckTokenSummary**<`R`\>(`apiKey`): `Promise`<{ `raw_data`: `R` ; `tokenSummaryList`: { `amount`: `string` ; `isNft?`: `Boolean` ; `nftTokenInfo?`: [`NFTTokenInfo`](../interfaces/NFTTokenInfo.md) ; `tokenId`: `number`  }[] ; `totalNum`: `number`  }\>
+▸ **getLuckTokenSummary**<`R`\>(`apiKey`): `Promise`<{ `raw_data`: `R` ; `tokenSummaryList`: { `amount`: `string` ; `isNft?`: `Boolean` ; `nftTokenInfo?`: [`NFTTokenInfo`](../interfaces/NFTTokenInfo.md) & `Partial`<[`UserNFTBalanceInfo`](../interfaces/UserNFTBalanceInfo.md)<[`NFT_IMAGE_SIZES`](../enums/NFT_IMAGE_SIZES.md)\>\> ; `tokenId`: `number`  }[] ; `totalNum`: `number`  }\>
 
 #### Type parameters
 
@@ -410,11 +410,11 @@ ___
 
 #### Returns
 
-`Promise`<{ `raw_data`: `R` ; `tokenSummaryList`: { `amount`: `string` ; `isNft?`: `Boolean` ; `nftTokenInfo?`: [`NFTTokenInfo`](../interfaces/NFTTokenInfo.md) ; `tokenId`: `number`  }[] ; `totalNum`: `number`  }\>
+`Promise`<{ `raw_data`: `R` ; `tokenSummaryList`: { `amount`: `string` ; `isNft?`: `Boolean` ; `nftTokenInfo?`: [`NFTTokenInfo`](../interfaces/NFTTokenInfo.md) & `Partial`<[`UserNFTBalanceInfo`](../interfaces/UserNFTBalanceInfo.md)<[`NFT_IMAGE_SIZES`](../enums/NFT_IMAGE_SIZES.md)\>\> ; `tokenId`: `number`  }[] ; `totalNum`: `number`  }\>
 
 #### Defined in
 
-[api/luckToken_api.ts:311](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L311)
+[api/luckToken_api.ts:312](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L312)
 
 ___
 
@@ -449,7 +449,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:199](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L199)
+[api/luckToken_api.ts:200](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L200)
 
 ___
 
@@ -467,7 +467,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L182)
+[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L182)
 
 ___
 
@@ -497,7 +497,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L82)
+[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L82)
 
 ___
 
@@ -529,7 +529,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:341](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L341)
+[api/luckToken_api.ts:342](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L342)
 
 ___
 
@@ -558,7 +558,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:613](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L613)
+[api/luckToken_api.ts:517](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L517)
 
 ___
 
@@ -587,7 +587,7 @@ ___
 
 #### Defined in
 
-[api/luckToken_api.ts:378](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/luckToken_api.ts#L378)
+[api/luckToken_api.ts:379](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/luckToken_api.ts#L379)
 
 ___
 
@@ -611,7 +611,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L178)
+[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L178)
 
 ___
 
@@ -635,4 +635,4 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L170)
+[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L170)

@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[defs/loopring_enums.ts:159](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_enums.ts#L159)
+[defs/loopring_enums.ts:165](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_enums.ts#L165)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_enums.ts:157](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_enums.ts#L157)
+[defs/loopring_enums.ts:163](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_enums.ts#L163)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_enums.ts:160](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_enums.ts#L160)
+[defs/loopring_enums.ts:166](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_enums.ts#L166)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_enums.ts:156](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_enums.ts#L156)
+[defs/loopring_enums.ts:162](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_enums.ts#L162)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[defs/loopring_enums.ts:158](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_enums.ts#L158)
+[defs/loopring_enums.ts:164](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_enums.ts#L164)

@@ -75,7 +75,7 @@
 
 #### Defined in
 
-[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L104)
+[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L104)
 
 ## Properties
 
@@ -89,7 +89,7 @@
 
 #### Defined in
 
-[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L39)
+[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L39)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L40)
+[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L40)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L38)
+[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L38)
 
 ## Methods
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:302](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L302)
+[api/wallet_api.ts:301](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L301)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L41)
 
 ___
 
@@ -188,7 +188,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:426](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L426)
+[api/wallet_api.ts:425](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L425)
 
 ___
 
@@ -228,7 +228,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:96](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L96)
+[api/wallet_api.ts:96](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L96)
 
 ___
 
@@ -270,7 +270,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:132](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L132)
+[api/wallet_api.ts:132](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L132)
 
 ___
 
@@ -294,7 +294,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L123)
+[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L123)
 
 ___
 
@@ -320,7 +320,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:484](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L484)
+[api/wallet_api.ts:483](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L483)
 
 ___
 
@@ -350,7 +350,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L136)
+[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L136)
 
 ___
 
@@ -377,7 +377,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:543](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L543)
+[api/wallet_api.ts:542](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L542)
 
 ___
 
@@ -404,7 +404,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:653](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L653)
+[api/wallet_api.ts:652](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L652)
 
 ___
 
@@ -418,7 +418,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:616](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L616)
+[api/wallet_api.ts:615](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L615)
 
 ___
 
@@ -445,7 +445,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:733](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L733)
+[api/wallet_api.ts:732](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L732)
 
 ___
 
@@ -465,7 +465,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:821](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L821)
+[api/wallet_api.ts:820](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L820)
 
 ___
 
@@ -495,7 +495,7 @@ getProtectors
 
 #### Defined in
 
-[api/wallet_api.ts:696](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L696)
+[api/wallet_api.ts:695](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L695)
 
 ___
 
@@ -515,7 +515,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:785](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L785)
+[api/wallet_api.ts:784](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L784)
 
 ___
 
@@ -535,7 +535,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L41)
+[api/wallet_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L41)
 
 ___
 
@@ -555,7 +555,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:763](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L763)
+[api/wallet_api.ts:762](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L762)
 
 ___
 
@@ -581,7 +581,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:514](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L514)
+[api/wallet_api.ts:513](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L513)
 
 ___
 
@@ -607,7 +607,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:453](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L453)
+[api/wallet_api.ts:452](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L452)
 
 ___
 
@@ -627,7 +627,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:570](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L570)
+[api/wallet_api.ts:569](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L569)
 
 ___
 
@@ -645,7 +645,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L182)
+[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L182)
 
 ___
 
@@ -667,7 +667,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:172](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L172)
+[api/wallet_api.ts:172](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L172)
 
 ___
 
@@ -687,7 +687,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:192](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L192)
+[api/wallet_api.ts:192](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L192)
 
 ___
 
@@ -717,7 +717,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L82)
+[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L82)
 
 ___
 
@@ -745,7 +745,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:631](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L631)
+[api/wallet_api.ts:630](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L630)
 
 ___
 
@@ -769,7 +769,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L178)
+[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L178)
 
 ___
 
@@ -793,7 +793,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L170)
+[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L170)
 
 ___
 
@@ -820,7 +820,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:254](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L254)
+[api/wallet_api.ts:254](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L254)
 
 ___
 
@@ -844,7 +844,7 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:236](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L236)
+[api/wallet_api.ts:236](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L236)
 
 ___
 
@@ -874,4 +874,4 @@ ___
 
 #### Defined in
 
-[api/wallet_api.ts:311](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/wallet_api.ts#L311)
+[api/wallet_api.ts:310](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/wallet_api.ts#L310)

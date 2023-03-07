@@ -35,10 +35,16 @@
 - [getDualPrices](DefiAPI.md#getdualprices)
 - [getDualTransactions](DefiAPI.md#getdualtransactions)
 - [getDualUserLocked](DefiAPI.md#getdualuserlocked)
+- [getStakeProducts](DefiAPI.md#getstakeproducts)
+- [getStakeSummary](DefiAPI.md#getstakesummary)
+- [getStakeTransactions](DefiAPI.md#getstaketransactions)
 - [makeReq](DefiAPI.md#makereq)
 - [orderDefi](DefiAPI.md#orderdefi)
 - [orderDual](DefiAPI.md#orderdual)
 - [returnTxHash](DefiAPI.md#returntxhash)
+- [sendStake](DefiAPI.md#sendstake)
+- [sendStakeClaim](DefiAPI.md#sendstakeclaim)
+- [sendStakeRedeem](DefiAPI.md#sendstakeredeem)
 - [setBaseUrl](DefiAPI.md#setbaseurl)
 - [setChainId](DefiAPI.md#setchainid)
 
@@ -64,7 +70,7 @@
 
 #### Defined in
 
-[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L104)
+[api/base_api.ts:104](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L104)
 
 ## Properties
 
@@ -78,7 +84,7 @@
 
 #### Defined in
 
-[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L39)
+[api/base_api.ts:39](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L39)
 
 ___
 
@@ -92,7 +98,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L40)
+[api/base_api.ts:40](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L40)
 
 ___
 
@@ -106,7 +112,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L38)
+[api/base_api.ts:38](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L38)
 
 ## Methods
 
@@ -130,7 +136,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L41)
+[api/base_api.ts:41](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L41)
 
 ___
 
@@ -154,7 +160,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L123)
+[api/base_api.ts:123](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L123)
 
 ___
 
@@ -184,7 +190,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L136)
+[api/base_api.ts:136](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L136)
 
 ___
 
@@ -211,7 +217,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:77](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L77)
+[api/defi_api.ts:80](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L80)
 
 ___
 
@@ -238,7 +244,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:215](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L215)
+[api/defi_api.ts:219](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L219)
 
 ___
 
@@ -258,7 +264,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:25](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L25)
+[api/defi_api.ts:27](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L27)
 
 ___
 
@@ -285,7 +291,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:250](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L250)
+[api/defi_api.ts:254](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L254)
 
 ___
 
@@ -311,7 +317,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:323](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L323)
+[api/defi_api.ts:327](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L327)
 
 ___
 
@@ -333,7 +339,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:393](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L393)
+[api/defi_api.ts:397](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L397)
 
 ___
 
@@ -359,7 +365,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:284](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L284)
+[api/defi_api.ts:288](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L288)
 
 ___
 
@@ -379,7 +385,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:371](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L371)
+[api/defi_api.ts:375](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L375)
 
 ___
 
@@ -400,7 +406,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:416](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L416)
+[api/defi_api.ts:420](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L420)
 
 ___
 
@@ -421,7 +427,97 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:477](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L477)
+[api/defi_api.ts:481](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L481)
+
+___
+
+### getStakeProducts
+
+▸ **getStakeProducts**<`R`\>(): `Promise`<{ `products`: [`STACKING_PRODUCT`](../modules.md#stacking_product)[] ; `raw_data`: `R`  }\>
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `R` |
+
+#### Returns
+
+`Promise`<{ `products`: [`STACKING_PRODUCT`](../modules.md#stacking_product)[] ; `raw_data`: `R`  }\>
+
+#### Defined in
+
+[api/defi_api.ts:707](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L707)
+
+___
+
+### getStakeSummary
+
+▸ **getStakeSummary**<`R`\>(`request`, `apiKey`): `Promise`<[`RESULT_INFO`](../interfaces/RESULT_INFO.md) \| { `list`: [`StakeInfoOrigin`](../modules.md#stakeinfoorigin)[] ; `raw_data`: `R` ; `totalClaimableRewards`: `string` ; `totalLastDayPendingRewards`: `string` ; `totalNum`: `number` ; `totalStaked`: `string` ; `totalStakedRewards`: `string`  }\>
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `R` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `request` | `Object` |
+| `request.accountId` | `number` |
+| `request.end?` | `number` |
+| `request.hashes?` | `string` |
+| `request.limit?` | `number` |
+| `request.offset?` | `number` |
+| `request.start?` | `number` |
+| `request.statuses?` | `string` |
+| `request.tokenId` | `number` |
+| `apiKey` | `string` |
+
+#### Returns
+
+`Promise`<[`RESULT_INFO`](../interfaces/RESULT_INFO.md) \| { `list`: [`StakeInfoOrigin`](../modules.md#stakeinfoorigin)[] ; `raw_data`: `R` ; `totalClaimableRewards`: `string` ; `totalLastDayPendingRewards`: `string` ; `totalNum`: `number` ; `totalStaked`: `string` ; `totalStakedRewards`: `string`  }\>
+
+#### Defined in
+
+[api/defi_api.ts:726](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L726)
+
+___
+
+### getStakeTransactions
+
+▸ **getStakeTransactions**<`R`\>(`request`, `apiKey`): `Promise`<{ `list`: [`STACKING_TRANSACTIONS`](../modules.md#stacking_transactions)[] ; `raw_data`: `R` ; `totalNum`: `number`  }\>
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `R` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `request` | `Object` |
+| `request.accountId` | `number` |
+| `request.end?` | `number` |
+| `request.hashes?` | `string` |
+| `request.limit?` | `number` |
+| `request.offset?` | `number` |
+| `request.start?` | `number` |
+| `request.tokenId` | `number` |
+| `request.types?` | `string` |
+| `apiKey` | `string` |
+
+#### Returns
+
+`Promise`<{ `list`: [`STACKING_TRANSACTIONS`](../modules.md#stacking_transactions)[] ; `raw_data`: `R` ; `totalNum`: `number`  }\>
+
+#### Defined in
+
+[api/defi_api.ts:766](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L766)
 
 ___
 
@@ -439,7 +535,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L182)
+[api/base_api.ts:182](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L182)
 
 ___
 
@@ -467,7 +563,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:176](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L176)
+[api/defi_api.ts:180](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L180)
 
 ___
 
@@ -489,7 +585,7 @@ ___
 
 #### Defined in
 
-[api/defi_api.ts:442](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/defi_api.ts#L442)
+[api/defi_api.ts:446](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L446)
 
 ___
 
@@ -519,7 +615,80 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L82)
+[api/base_api.ts:82](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L82)
+
+___
+
+### sendStake
+
+▸ **sendStake**(`request`, `privateKey`, `apiKey`): `Promise`<`any`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `request` | `Object` |
+| `request.accountId` | `number` |
+| `request.timestamp` | `number` |
+| `request.token` | [`TokenVolumeV3`](../interfaces/TokenVolumeV3.md) |
+| `privateKey` | `string` |
+| `apiKey` | `string` |
+
+#### Returns
+
+`Promise`<`any`\>
+
+#### Defined in
+
+[api/defi_api.ts:676](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L676)
+
+___
+
+### sendStakeClaim
+
+▸ **sendStakeClaim**(`req`, `options?`): `Promise`<`any`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `req` | [`OriginStakeClaimRequestV3WithPatch`](../interfaces/OriginStakeClaimRequestV3WithPatch.md) |
+| `options?` | `Object` |
+| `options.accountId?` | `number` |
+| `options.counterFactualInfo?` | `any` |
+
+#### Returns
+
+`Promise`<`any`\>
+
+#### Defined in
+
+[api/defi_api.ts:512](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L512)
+
+___
+
+### sendStakeRedeem
+
+▸ **sendStakeRedeem**(`request`, `privateKey`, `apiKey`): `Promise`<`any`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `request` | `Object` |
+| `request.accountId` | `number` |
+| `request.hash` | `string` |
+| `request.token` | [`TokenVolumeV3`](../interfaces/TokenVolumeV3.md) |
+| `privateKey` | `string` |
+| `apiKey` | `string` |
+
+#### Returns
+
+`Promise`<`any`\>
+
+#### Defined in
+
+[api/defi_api.ts:646](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/defi_api.ts#L646)
 
 ___
 
@@ -543,7 +712,7 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L178)
+[api/base_api.ts:178](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L178)
 
 ___
 
@@ -567,4 +736,4 @@ ___
 
 #### Defined in
 
-[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/api/base_api.ts#L170)
+[api/base_api.ts:170](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/api/base_api.ts#L170)

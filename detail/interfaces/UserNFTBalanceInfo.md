@@ -8,6 +8,12 @@
 | :------ | :------ |
 | `I` | [`NFT_IMAGE_SIZES`](../enums/NFT_IMAGE_SIZES.md) |
 
+## Hierarchy
+
+- [`NFTTokenInfo`](NFTTokenInfo.md)
+
+  ↳ **`UserNFTBalanceInfo`**
+
 ## Table of contents
 
 ### Properties
@@ -18,10 +24,13 @@
 - [isCounterFactualNFT](UserNFTBalanceInfo.md#iscounterfactualnft)
 - [locked](UserNFTBalanceInfo.md#locked)
 - [metadata](UserNFTBalanceInfo.md#metadata)
+- [minter](UserNFTBalanceInfo.md#minter)
 - [nftData](UserNFTBalanceInfo.md#nftdata)
 - [nftId](UserNFTBalanceInfo.md#nftid)
+- [nftType](UserNFTBalanceInfo.md#nfttype)
 - [pending](UserNFTBalanceInfo.md#pending)
 - [preference](UserNFTBalanceInfo.md#preference)
+- [status](UserNFTBalanceInfo.md#status)
 - [tokenAddress](UserNFTBalanceInfo.md#tokenaddress)
 - [tokenId](UserNFTBalanceInfo.md#tokenid)
 - [total](UserNFTBalanceInfo.md#total)
@@ -34,7 +43,7 @@
 
 #### Defined in
 
-[defs/loopring_defs.ts:2670](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2670)
+[defs/loopring_defs.ts:2681](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2681)
 
 ___
 
@@ -44,7 +53,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2685](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2685)
+[defs/loopring_defs.ts:2693](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2693)
 
 ___
 
@@ -54,7 +63,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2687](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2687)
+[defs/loopring_defs.ts:2695](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2695)
 
 ___
 
@@ -64,7 +73,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2688](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2688)
+[defs/loopring_defs.ts:2696](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2696)
 
 ___
 
@@ -74,7 +83,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2676](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2676)
+[defs/loopring_defs.ts:2684](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2684)
 
 ___
 
@@ -84,27 +93,63 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2686](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2686)
+[defs/loopring_defs.ts:2694](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2694)
+
+___
+
+### minter
+
+• **minter**: `string`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[minter](NFTTokenInfo.md#minter)
+
+#### Defined in
+
+[defs/loopring_defs.ts:2715](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2715)
 
 ___
 
 ### nftData
 
-• `Optional` **nftData**: `string`
+• **nftData**: `string`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[nftData](NFTTokenInfo.md#nftdata)
 
 #### Defined in
 
-[defs/loopring_defs.ts:2672](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2672)
+[defs/loopring_defs.ts:2714](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2714)
 
 ___
 
 ### nftId
 
-• `Optional` **nftId**: `string`
+• **nftId**: `string`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[nftId](NFTTokenInfo.md#nftid)
 
 #### Defined in
 
-[defs/loopring_defs.ts:2674](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2674)
+[defs/loopring_defs.ts:2718](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2718)
+
+___
+
+### nftType
+
+• **nftType**: `string`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[nftType](NFTTokenInfo.md#nfttype)
+
+#### Defined in
+
+[defs/loopring_defs.ts:2716](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2716)
 
 ___
 
@@ -121,7 +166,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2677](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2677)
+[defs/loopring_defs.ts:2685](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2685)
 
 ___
 
@@ -138,17 +183,35 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2681](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2681)
+[defs/loopring_defs.ts:2689](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2689)
+
+___
+
+### status
+
+• **status**: `boolean`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[status](NFTTokenInfo.md#status)
+
+#### Defined in
+
+[defs/loopring_defs.ts:2719](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2719)
 
 ___
 
 ### tokenAddress
 
-• `Optional` **tokenAddress**: `string`
+• **tokenAddress**: `string`
+
+#### Inherited from
+
+[NFTTokenInfo](NFTTokenInfo.md).[tokenAddress](NFTTokenInfo.md#tokenaddress)
 
 #### Defined in
 
-[defs/loopring_defs.ts:2673](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2673)
+[defs/loopring_defs.ts:2717](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2717)
 
 ___
 
@@ -158,7 +221,7 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2671](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2671)
+[defs/loopring_defs.ts:2682](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2682)
 
 ___
 
@@ -168,4 +231,4 @@ ___
 
 #### Defined in
 
-[defs/loopring_defs.ts:2675](https://github.com/Loopring/loopring_sdk/blob/24fdf4c/src/defs/loopring_defs.ts#L2675)
+[defs/loopring_defs.ts:2683](https://github.com/Loopring/loopring_sdk/blob/81e0b16/src/defs/loopring_defs.ts#L2683)
