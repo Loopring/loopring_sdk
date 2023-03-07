@@ -44,6 +44,7 @@ export enum LOOPRING_URLs {
   GET_MINIMAL_ORDER_AMT = "/api/v3/user/orderAmount", // IGNORE for now.
   GET_MINIMUM_TOKEN_AMT = "/api/v3/user/orderUserRateAmount",
   GET_OFFCHAIN_FEE_AMT = "/api/v3/user/offchainFee",
+  GET_USER_BILLS = "/api/v3/user/bills",
 
   GET_ALLOWANCES = "/api/v3/eth/allowances",
   GET_ETH_NONCE = "/api/v3/eth/nonce",

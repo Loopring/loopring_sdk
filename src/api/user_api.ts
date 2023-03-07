@@ -3024,4 +3024,44 @@ export class UserAPI extends BaseAPI {
       };
     }
   }
+
+  /*
+   * Get user txs
+   */
+  public async getUserBills<R>(
+    request: loopring_defs.GetUserBillsRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    userTxs: loopring_defs.UserTx[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_BILLS,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    const userTxs: loopring_defs.UserTx[] = [];
+
+    if (raw_data?.transactions instanceof Array) {
+      raw_data.transactions.forEach((item: loopring_defs.UserTx) => {
+        userTxs.push(item);
+      });
+    }
+
+    return {
+      totalNum: raw_data?.totalNum,
+      userTxs,
+      raw_data,
+    };
+  }
 }

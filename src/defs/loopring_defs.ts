@@ -24,6 +24,7 @@ import {
   TransferType,
   TxStatus,
   TxType,
+  UserBillTypes,
   UserNFTTxTypes,
   UserTxTypes,
   WithdrawalTypes,
@@ -1216,6 +1217,16 @@ export interface GetUserTxsRequest {
   offset?: number;
   limit?: number;
   types?: UserTxTypes[] | string;
+}
+export interface GetUserBillsRequest {
+  accountId: number;
+  fromAddress?: string;
+  transferAddress?: string;
+  start?: number;
+  end?: number;
+  offset?: number;
+  limit?: number;
+  billType?: UserBillTypes[];
 }
 
 export interface GetUserNFTTxsRequest {
@@ -3922,9 +3933,35 @@ export interface GetContactsRequest {
   accountId: number;
 }
 
+export enum AddressType {
+  UNKNOWN_ADDRESS=0,
+  LOOPRING_HEBAO_CF=100,
+  // hebao 
+  LOOPRING_HEBAO_CONTRACT_1_1_6=2000,
+  LOOPRING_HEBAO_CONTRACT_1_2_0=2001,
+  LOOPRING_HEBAO_CONTRACT_2_0_0=2002,
+  LOOPRING_HEBAO_CONTRACT_2_1_0=2003,
+  
+  LOOPRING_DEX_EOA=300,
+  //exchange
+  EXCHANGE_OTHER=4000,
+  EXCHANGE_BINANCE=4001,
+  EXCHANGE_OKX=4002,
+  EXCHANGE_HUOBI=4003,
+  EXCHANGE_COINBASE=4004,
+  
+  EOA=5000,
+  EOA_METAMASK=5001,
+  EOA_COINBASE=5002,
+  EOA_LEDGER=5003,
+  
+  CONTRACT=600,
+  
+}
+
 export interface GetContactsResponse {
   contacts: {
-    addressType: number;
+    addressType: AddressType;
     contactAddress: string;
     contactMemo: string;
     contactName: string;

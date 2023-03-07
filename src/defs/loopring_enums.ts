@@ -120,6 +120,12 @@ export enum UserTxTypes {
   WITHDRAW_LUCKY_TOKEN = "withdraw_lucky_token",
 }
 
+export enum UserBillTypes {
+  DEPOSIT = 0,
+  ONCHAIN_WITHDRAWAL = 1,
+  TRANSFER = 2,
+}
+
 export enum UserNFTTxTypes {
   DEPOSIT = "deposit",
   TRANSFER = "transfer",
