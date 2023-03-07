@@ -298,7 +298,6 @@ export class WalletAPI extends BaseAPI {
     );
     return { sig: result.ecdsaSig };
   }
-  //TODO UT is setPublic
   public encodeAddressesPacked(addrs: string[]) {
     const addrsBs = Buffer.concat(
       addrs.map((a) => {

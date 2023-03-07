@@ -2,6 +2,10 @@
 
 ## JS SDK Version ChangeLog
 
+#### v3.1.5
+    1) hardware wallet last digital match / hard-code 
+         generateKeyPair(_, publicKey: { x: string; y: string } | undefined = undefined)
+
 #### v3.1.0
     1) dual API update (support for Partial order)
     2) red Packet feature 
@@ -142,3 +146,4 @@
 #### v1.3.0 && v1.3.1 -- !!! revert
     formatter Uint8Array support
     # !!! revert
+

@@ -626,7 +626,6 @@ describe("orderERC20", function () {
           isAtoB,
           10, // user Input value no decimal 10 lrc,
           0.1,
-          //TODO MOCK value
           amountMap,
           "LRC-ETH",
           // close = ticker.tickers[7],

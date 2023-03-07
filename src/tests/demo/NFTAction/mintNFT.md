@@ -3,8 +3,8 @@
 Definition: Mint Layer2 NFT, Loopring follow the ipfs NFT format, IPFS CID will convert to nftId, please view MetaNFT.md
  
 >    <p style={color:"red"}>!!! important  describe<p>
->    <p>Follow mehod is the simple way for mint NTF, but this kind of NFT will using the same contact & with   no Contract metadata forever on L1</p> 
->    <p>New Version of NFT will has it isolate Contract/colletion with metadata inforamtion</p> 
+>    <p>Follow method is the simple way for mint NTF, but this kind of NFT will using the same contact & with   no Contract metadata forever on L1</p> 
+>    <p>New Version of NFT will has it isolate Contract/collection with metadata information</p> 
 >    <P>From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT</p>
 >    
 ```ts

@@ -402,6 +402,15 @@ export async function personalSign(
         pwd,
         async function (err: any, result: any) {
           if (!err) {
+            // LOG: for signature
+            myLog(
+              "ecRecover before",
+              "msg",
+              msg,
+              "result",
+              result,
+              counterFactualInfo
+            );
             // Valid:1. counter Factual signature Valid
             if (counterFactualInfo && accountId) {
               myLog("fcWalletValid counterFactualInfo accountId:");
@@ -442,7 +451,6 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
-            myLog("ecRecover before", msg, result);
 
             // Valid: 3. EOA signature Valid by ecRecover
             if (

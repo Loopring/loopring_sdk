@@ -44,6 +44,7 @@ import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
 import { keccak } from "ethereumjs-util";
 import { lte } from "lodash";
+import any = jasmine.any;
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -68,29 +69,11 @@ export interface KeyPairParams {
   counterFactualInfo?: CounterFactualInfo;
   isMobile?: boolean;
 }
-
-export async function generateKeyPair({
-  web3,
-  address,
-  walletType,
-  keySeed,
-  chainId,
-  accountId,
-  counterFactualInfo,
-  isMobile,
-}: KeyPairParams) {
-  const result: any = await personalSign(
-    web3,
-    address,
-    "",
-    keySeed,
-    walletType,
-    chainId,
-    accountId,
-    counterFactualInfo,
-    isMobile === undefined ? IsMobile.any() : isMobile
-  );
-
+export function generatePrivateKey(result: {
+  sig: string;
+  counterFactualInfo: any;
+  error: any;
+}) {
   if (!result.error) {
     // myLog("sig:", result.sig);
     const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig));
@@ -120,6 +103,91 @@ export async function generateKeyPair({
   } else {
     console.log("generateKeyPair personalSign error", result.error);
     throw Error(result.error);
+  }
+}
+export async function generateKeyPair(
+  {
+    web3,
+    address,
+    walletType,
+    keySeed,
+    chainId,
+    accountId,
+    counterFactualInfo,
+    isMobile,
+  }: KeyPairParams,
+  publicKey: { x: string; y: string } | undefined = undefined
+) {
+  // LOG: for signature
+  // console.log(
+  //   "personalSign ->",
+  //   "counterFactualInfo",
+  //   counterFactualInfo,
+  //   "keySeed",
+  //   keySeed,
+  //   "walletType",
+  //   walletType,
+  //   "publicKey from sever side ",
+  //   publicKey
+  // );
+  const result: any = await personalSign(
+    web3,
+    address,
+    "",
+    keySeed,
+    walletType,
+    chainId,
+    accountId,
+    counterFactualInfo,
+    isMobile === undefined ? IsMobile.any() : isMobile
+  );
+  try {
+    let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
+      generatePrivateKey(result);
+
+    if (
+      publicKey &&
+      result.sig.length > 3 &&
+      publicKey.x &&
+      publicKey.y &&
+      (!fm.toBig(formatedPx).eq(fm.toBig(publicKey.x)) ||
+        !fm.toBig(formatedPy).eq(fm.toBig(publicKey.y)))
+    ) {
+      let value = result.sig.split("");
+      let end = value.splice(result.sig.length - 2, 2).join("");
+      end = end == "1c" ? "01" : "1c";
+      result.sig = value.concat(end.split("")).join("");
+      let newValue = generatePrivateKey(result);
+      // LOG: for signature
+      console.log(
+        "personalSign ->",
+        "publicKey calc by sign",
+        "x",
+        formatedPx,
+        "y",
+        formatedPy,
+        "publicKey from server",
+        publicKey,
+        "personalSign again->",
+        "publicKey calc by sign",
+        "x",
+        end,
+        newValue.formatedPx,
+        "y",
+        newValue.formatedPy
+      );
+      return {
+        keyPair: newValue.keyPair,
+        formatedPx: newValue.formatedPx,
+        formatedPy: newValue.formatedPy,
+        sk: newValue.sk,
+        counterFactualInfo,
+      };
+    } else {
+      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
+    }
+  } catch (error) {
+    throw Error(error as any);
   }
 }
 
@@ -200,10 +268,12 @@ export function getEdDSASig(
   const uri = encodeURIComponent(`${basePath}${api_url}`);
 
   const message = `${method}&${uri}&${params}`;
+  // LOG: for signature
   myLog("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  // LOG: for signature
   myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);

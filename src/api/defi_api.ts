@@ -18,6 +18,7 @@ import { sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
+import { StakeInfoOrigin } from "../defs/loopring_defs";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -629,12 +630,17 @@ export class DefiAPI extends BaseAPI {
     let raw_data;
     try {
       raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      return { raw_data, ...raw_data };
     } catch (error) {
       throw error as AxiosResponse;
     }
     // return this.returnTxHash(raw_data);
     // const raw_data = (await this.makeReq().request(reqParams)).data;
-    return { raw_data, ...raw_data };
   }
 
   public async sendStakeRedeem(
@@ -646,21 +652,55 @@ export class DefiAPI extends BaseAPI {
     privateKey: string,
     apiKey: string
   ) {
-    const dataToSig = sortObjDictionary(request);
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_STAKE_REDEEM,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { raw_data, ...raw_data };
+  }
+  public async sendStake(
+    request: {
+      accountId: number;
+      token: loopring_defs.TokenVolumeV3;
+      timestamp: number;
+    },
+    privateKey: string,
+    apiKey: string
+  ) {
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_STAKE,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: privateKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return { raw_data, ...raw_data };
   }
 
@@ -675,6 +715,11 @@ export class DefiAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return { products: raw_data, raw_data };
   }
 
@@ -690,10 +735,18 @@ export class DefiAPI extends BaseAPI {
       statuses?: string;
     },
     apiKey: string
-  ): Promise<{
-    list: loopring_defs.STACKING_SUMMARY;
-    raw_data: R;
-  }> {
+  ): Promise<
+    | {
+        raw_data: R;
+        totalNum: number;
+        totalStaked: string;
+        totalStakedRewards: string;
+        totalLastDayPendingRewards: string;
+        totalClaimableRewards: string;
+        list: StakeInfoOrigin[];
+      }
+    | RESULT_INFO
+  > {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_STAKE_SUMMARY,
       queryParams: { ...request },
@@ -702,7 +755,12 @@ export class DefiAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return { list: raw_data, raw_data };
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { ...raw_data, list: raw_data.staking, raw_data };
   }
 
   public async getStakeTransactions<R>(
@@ -718,7 +776,7 @@ export class DefiAPI extends BaseAPI {
     },
     apiKey: string
   ): Promise<{
-    list: loopring_defs.STACKING_TRANSACTIONS;
+    list: loopring_defs.STACKING_TRANSACTIONS[];
     totalNum: number;
     raw_data: R;
   }> {
@@ -730,6 +788,11 @@ export class DefiAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
     };
     const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
     return {
       list: raw_data.transactions,
       totalNum: raw_data.totalNum,
