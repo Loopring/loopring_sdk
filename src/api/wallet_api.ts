@@ -8,6 +8,7 @@ import {
   HebaoOperationLog,
   LockHebaoHebaoParam,
   ModuleType,
+  NetworkWallet,
   Protector,
   ReqParams,
   WalletType,
@@ -449,19 +450,15 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  public async getWalletType<T extends any>({
-    wallet,
-    network = "eThereum",
-  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+  public async getWalletType<T extends any>(
+    request: loopring_defs.GET_WALLET_TYPE
+  ): Promise<{
     walletType: WalletType | undefined;
     raw_data: T;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_WALLET_TYPE,
-      queryParams: {
-        wallet,
-        network,
-      },
+      queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -480,18 +477,15 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  public async getContractType<T = ContractType>({
-    wallet,
-    network = "eThereum",
-  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+  public async getContractType<T = ContractType>(
+    request: loopring_defs.GET_WALLET_TYPE
+  ): Promise<{
     contractType: T | undefined;
     raw_data: T;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_WALLET_CONTRACTVERSION,
-      queryParams: {
-        wallet,
-      },
+      queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -510,18 +504,15 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  public async getWalletModules<T = ModuleType>({
-    wallet,
-    network = "eThereum",
-  }: loopring_defs.GET_WALLET_TYPE): Promise<{
+  public async getWalletModules<T = ModuleType>(
+    request: loopring_defs.GET_WALLET_TYPE
+  ): Promise<{
     walletModule: T | undefined;
     raw_data: T;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_WALLET_MODULES,
-      queryParams: {
-        wallet,
-      },
+      queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -612,9 +603,10 @@ export class WalletAPI extends BaseAPI {
     }
   }
 
-  public async getHebaoConfig() {
+  public async getHebaoConfig(request: { network?: NetworkWallet }) {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_HEBAO_CONFIG,
+      queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };

@@ -57,6 +57,12 @@ export interface ReqOptions {
 
   url?: string;
 }
+export enum NetworkWallet {
+  ETHEREUM = "ETHEREUM",
+  ARBITRUM = "ARBITRUM",
+  GOERLI = "GOERLI",
+  TAIKO = "TAIKO",
+}
 
 export interface ReqParams {
   url: string;
@@ -1180,9 +1186,9 @@ export interface GetUserAssetsRequest {
   wallet: string;
   assetType?: AssetType;
   currency?: Currency;
-
   limit?: number;
   offset?: number;
+  network?: NetworkWallet;
 }
 
 export interface GetUserTradeAmount {
@@ -1200,8 +1206,8 @@ export interface GetTokenPricesRequest {
   token: string;
   intervalType?: IntervalType;
   currency?: Currency;
-
   limit?: number;
+  network?: NetworkWallet;
 }
 
 export interface getLatestTokenPricesRequest {
@@ -1303,6 +1309,7 @@ export interface SendMetaTxRequest {
   requestId: string;
   securityId: string;
   guardianType: string;
+  network?: NetworkWallet;
 }
 
 /**
@@ -1310,6 +1317,7 @@ export interface SendMetaTxRequest {
  */
 export interface GetGuardianApproveListRequest {
   guardian: string;
+  network?: NetworkWallet;
 }
 
 /**
@@ -1317,11 +1325,12 @@ export interface GetGuardianApproveListRequest {
  */
 export interface GetEnsNameRequest {
   owner: string;
+  network?: NetworkWallet;
 }
 
 export interface GET_WALLET_TYPE {
   wallet: string;
-  network?: string;
+  network?: NetworkWallet;
 }
 
 /**
@@ -1329,6 +1338,7 @@ export interface GET_WALLET_TYPE {
  */
 export interface GetEnsAddressRequest {
   fullName: string;
+  network?: NetworkWallet;
 }
 
 export interface SubmitApproveSignatureRequestWithPatch {
@@ -1356,6 +1366,7 @@ export interface ApproveSignatureRequest {
   securityNumber: string;
   signer: string; //address,
   signature: string;
+  network?: NetworkWallet;
 }
 
 /**
@@ -1365,6 +1376,7 @@ export interface ApproveSignatureRequest {
 export interface GetProtectorRequest {
   guardian: string;
   protectAddress?: string;
+  network?: NetworkWallet;
 }
 
 export enum TradesFillTypes {
@@ -2995,7 +3007,7 @@ export interface ApproveHebaoRequestV3WithPatch {
 }
 
 export interface RejectHebaoRequestV3WithPatch {
-  request: { approveRecordId: string; signer: string };
+  request: { approveRecordId: string; signer: string; network?: NetworkWallet };
   web3: Web3;
   address: string;
   chainId: ChainId;
@@ -3022,10 +3034,10 @@ export interface HebaoOperationLogs {
   fromTime: number;
   to?: string;
   offset?: number;
-  network?: "ETHEREUM";
   statues?: string;
   hebaoTxType?: string;
   limit?: number;
+  network?: NetworkWallet;
 }
 
 export interface WalletType {
@@ -3948,29 +3960,28 @@ export interface GetContactsRequest {
 }
 
 export enum AddressType {
-  UNKNOWN_ADDRESS=0,
-  LOOPRING_HEBAO_CF=100,
-  // hebao 
-  LOOPRING_HEBAO_CONTRACT_1_1_6=2000,
-  LOOPRING_HEBAO_CONTRACT_1_2_0=2001,
-  LOOPRING_HEBAO_CONTRACT_2_0_0=2002,
-  LOOPRING_HEBAO_CONTRACT_2_1_0=2003,
-  
-  LOOPRING_DEX_EOA=300,
+  UNKNOWN_ADDRESS = 0,
+  LOOPRING_HEBAO_CF = 100,
+  // hebao
+  LOOPRING_HEBAO_CONTRACT_1_1_6 = 2000,
+  LOOPRING_HEBAO_CONTRACT_1_2_0 = 2001,
+  LOOPRING_HEBAO_CONTRACT_2_0_0 = 2002,
+  LOOPRING_HEBAO_CONTRACT_2_1_0 = 2003,
+
+  LOOPRING_DEX_EOA = 300,
   //exchange
-  EXCHANGE_OTHER=4000,
-  EXCHANGE_BINANCE=4001,
-  EXCHANGE_OKX=4002,
-  EXCHANGE_HUOBI=4003,
-  EXCHANGE_COINBASE=4004,
-  
-  EOA=5000,
-  EOA_METAMASK=5001,
-  EOA_COINBASE=5002,
-  EOA_LEDGER=5003,
-  
-  CONTRACT=600,
-  
+  EXCHANGE_OTHER = 4000,
+  EXCHANGE_BINANCE = 4001,
+  EXCHANGE_OKX = 4002,
+  EXCHANGE_HUOBI = 4003,
+  EXCHANGE_COINBASE = 4004,
+
+  EOA = 5000,
+  EOA_METAMASK = 5001,
+  EOA_COINBASE = 5002,
+  EOA_LEDGER = 5003,
+
+  CONTRACT = 600,
 }
 
 export interface GetContactsResponse {
@@ -3982,8 +3993,8 @@ export interface GetContactsResponse {
     isFavourite: boolean;
     network: string;
     ownerAccountId: number;
-  }[], 
-  total: number
+  }[];
+  total: number;
 }
 
 export interface CreateContactRequest {

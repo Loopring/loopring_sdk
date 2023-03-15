@@ -1,6 +1,3 @@
-import * as loopring_defs from "./loopring_defs";
-import { ReqMethod, SIG_FLAG } from "./loopring_enums";
-
 export enum LOOPRING_URLs {
   GET_AVAILABLE_BROKER = "/api/v3/getAvailableBroker",
   GET_RELAYER_CURRENT_TIME = "/api/v3/timestamp",
@@ -88,11 +85,11 @@ export enum LOOPRING_URLs {
   SET_REFERRER = "/api/v3/refer",
 
   GET_WS_KEY = "/v3/ws/key",
+  GET_LATEST_TOKEN_PRICES = "/api/v3/datacenter/getLatestTokenPrices",
+  GET_USER_TRADE_AMOUNT = "/api/v3/datacenter/getUserTradeAmount",
 
   GET_USER_ASSETS = "/api/wallet/v3/userAssets",
-  GET_USER_TRADE_AMOUNT = "/api/v3/datacenter/getUserTradeAmount",
   GET_TOKEN_PRICES = "/api/wallet/v3/tokenPrices",
-  GET_LATEST_TOKEN_PRICES = "/api/v3/datacenter/getLatestTokenPrices",
   GET_GUARDIAN_APPROVE_LIST = "/api/wallet/v3/getGuardianApproveList",
   GET_PROTECTORS = "/api/wallet/v3/getProtects",
   GET_OPERATION_LOGS = "/api/wallet/v3/operationLogs",
@@ -100,12 +97,12 @@ export enum LOOPRING_URLs {
   GET_WALLET_TYPE = "/api/wallet/v3/wallet/type",
   GET_WALLET_MODULES = "/api/wallet/v3/walletModules",
   GET_WALLET_CONTRACTVERSION = "/api/wallet/v3/contractVersion",
-
-  SUBMIT_APPROVE_SIGNATURE = "/api/wallet/v3/submitApproveSignature",
-  REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",
-  OFFICIAL_LOCK_OR_UNLOCK = "/api/wallet/v3/officialLockOrUnlock",
   RESOLVE_ENS = "/api/wallet/v3/resolveEns",
   RESOLVE_NAME = "/api/wallet/v3/resolveName",
+  //
+  SUBMIT_APPROVE_SIGNATURE = "/api/wallet/v3/submitApproveSignature",
+  REJECT_APPROVE_SIGNATURE = "/api/wallet/v3/rejectApproveSignature",
+  // OFFICIAL_LOCK_OR_UNLOCK = "/api/wallet/v3/officialLockOrUnlock",
   SEND_META_TX = "/api/wallet/v3/sendMetaTx",
 
   GET_ACCOUNT_SERVICES = "/api/v3/spi/getAccountServices",
@@ -181,5 +178,4 @@ export enum LOOPRING_URLs {
   CREATE_CONTACT = "/api/v3/user/contact/add",
   UPDATE_CONTACT = "/api/v3/user/contact/update",
   DELETE_CONTACT = "/api/v3/user/contact",
-
 }
