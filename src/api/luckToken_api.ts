@@ -286,7 +286,8 @@ export class LuckTokenAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_BALANCES,
-      queryParams: { ...request, 
+      queryParams: { 
+        ...request, 
         // statuses: request.tokens?.join(",") 
       },
       apiKey,
