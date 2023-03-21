@@ -628,7 +628,7 @@ export class UserAPI extends BaseAPI {
           price: item[4],
           market: item[5],
           fee: item[6],
-          type: item[7],
+          type: item[13],
         });
       });
     }
