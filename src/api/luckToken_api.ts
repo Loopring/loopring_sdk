@@ -172,7 +172,6 @@ export class LuckTokenAPI extends BaseAPI {
       limit?: number;
       hash: string;
       fromId?: number;
-      showHelper: boolean;
       accountId?: number;
     },
     apiKey: string
@@ -196,6 +195,38 @@ export class LuckTokenAPI extends BaseAPI {
     }
     return { raw_data, detail: raw_data };
   }
+  
+  public async getBlindBoxDetail<R>(
+    request: {
+      limit?: number;
+      hash: string;
+      fromId?: number;
+      showHelper: boolean;
+      accountId?: number;
+    },
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    // detail: loopring_defs.LuckTokenClaimDetail;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_LUCK_TOKEN_BLINDBOXDETAIL,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { raw_data };
+  }
+
+  
 
   public async getLuckTokenWithdrawals<R>(
     request: {
@@ -255,7 +286,9 @@ export class LuckTokenAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_BALANCES,
-      queryParams: { ...request, statuses: request.tokens?.join(",") },
+      queryParams: { ...request, 
+        // statuses: request.tokens?.join(",") 
+      },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -358,6 +391,43 @@ export class LuckTokenAPI extends BaseAPI {
 
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_LUCK_TOKEN_CLAIMLUCKYTOKEN,
+      bodyParams: request,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+      apiKey,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { raw_data, ...raw_data };
+  }
+  public async sendLuckTokenClaimBlindBox<R>({
+    request,
+    apiKey,
+    eddsaKey,
+  }: {
+    request: {
+      hash: string;
+      claimer: string;
+      referrer: string;
+    };
+    eddsaKey: string;
+    apiKey: string;
+  }): Promise<{
+    raw_data: R;
+  }> {
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.POST_LUCK_TOKEN_CLAIMBLINDBOX,
       bodyParams: request,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.EDDSA_SIG,
@@ -769,5 +839,42 @@ export class LuckTokenAPI extends BaseAPI {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getLuckTokenClaimedBlindBox<R>(
+    request: {
+      fromId: number;
+      limit?: number;
+      isNft?: boolean;
+      offset?: number;
+      statuses?: number[]
+    },
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    list: Array<
+      loopring_defs.LuckyTokenBlindBoxItemReceive & { id: number }
+    >;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_LUCK_TOKEN_CLAIMEDBLINDBOX,
+      queryParams: { ...request, statuses: request?.statuses?.join(",") },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      raw_data,
+      totalNum: raw_data?.totalNum,
+      list: raw_data.list,
+    };
   }
 }

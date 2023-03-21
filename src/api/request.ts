@@ -59,6 +59,7 @@ export class Request {
   }
 
   constructor(baseUrl: string, timeout: number) {
+
     this.baseOptions = {
       baseURL: baseUrl,
       timeout: timeout,
