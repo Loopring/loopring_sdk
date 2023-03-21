@@ -42,9 +42,6 @@ import Web3 from "web3";
 import { myLog } from "../../utils/log_tools";
 import { personalSign } from "../base_api";
 import { CounterFactualInfo, IsMobile } from "../../defs";
-import { keccak } from "ethereumjs-util";
-import { lte } from "lodash";
-import any = jasmine.any;
 
 export enum GetEcDSASigType {
   HasDataStruct,

@@ -697,6 +697,10 @@ export interface GetMarketTradesRequest {
   market: string;
   limit?: number;
 }
+export enum OrderMakerType {
+  taker = "taker",
+  maker = "maker",
+}
 
 export interface MarketTradeInfo {
   tradeTime: number;
@@ -706,6 +710,7 @@ export interface MarketTradeInfo {
   price: string;
   market: string;
   fee: string;
+  type: OrderMakerType;
 }
 
 export interface GetWithdrawalAgentsRequest {
