@@ -1190,7 +1190,6 @@ export function calcDual({
     .toBig(info.profit)
     .times(info.ratio)
     .toFixed(6, BigNumber.ROUND_DOWN);
-
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
     lessEarnVol = toBig(settleRatio).plus(1).times(sellVol); //dualViewInfo.strike);
     lessEarnTokenSymbol = sellToken.symbol;
@@ -1233,8 +1232,10 @@ export function calcDual({
       dualMarket.quoteLimitAmount,
       toBig(rule.currencyMin).times("1e" + sellToken.decimals)
     ); // rule.baseMin;
-
-    quota = BigNumber.min(info.baseSize, balance[currency].free);
+    quota = BigNumber.min(
+      toBig(info.baseSize).times(info.strike).toString(), 
+      balance[currency].free
+    );
     maxSellAmount = BigNumber.min(rule.currencyMax, quota);
     /** calc current maxFeeBips **/
     feeTokenSymbol = buyToken.symbol;
