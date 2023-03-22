@@ -2,6 +2,9 @@
 
 ## JS SDK Version ChangeLog
 
+#### v3.2.6
+    1) BlindBox Redpacket
+
 #### v3.2.1
     1) LRC staking
     2) signature bug fix  

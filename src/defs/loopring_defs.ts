@@ -3593,6 +3593,17 @@ export enum LuckyTokenViewType {
 export enum LuckyTokenClaimType {
   RELAY = 0,
   COMMON = 1,
+  BLIND_BOX = 2,
+}
+export enum ClaimRecordStatus {
+  WAITING_CLAIM  = "WAITING_CLAIM", 
+  CLAIMED        = "CLAIMED", 
+  EXPIRED        = "EXPIRED", 
+}
+export enum BlindBoxStatus {
+  NOT_OPENED = "NOT_OPENED",
+  OPENED = "OPENED",
+  EXPIRED = "EXPIRED",
 }
 export type LuckyTokenChampion = {
   accountId: number;
@@ -3605,6 +3616,8 @@ export type LuckyTokenAmount = {
   remainCount: number;
   totalAmount: string;
   remainAmount: string;
+  claimedBoxCount: number;
+  giftCount: number;
 };
 export type LuckyTokenType = {
   partition: LuckyTokenAmountType;
@@ -3638,6 +3651,26 @@ export type LuckyTokenItemForReceive = {
   nftTokenInfo?: UserNFTBalanceInfo;
   isNft?: boolean;
 };
+export type BlindBoxClaimInfo = { // 盲盒信息
+  id: number;
+  hash: string;
+  claimer: {
+    accountId: number;
+    address: string;
+    ens: string;
+  },
+  tokenId: number;
+  nftHash: string;
+  amount: string;
+  status: string;
+  openTime: string;
+  expireTime: string;
+  createdAt: number;
+}
+export type LuckyTokenBlindBoxItemReceive = {
+  luckyToken: LuckyTokenItemForReceive,
+  claim: BlindBoxClaimInfo,
+}
 export type LuckTokenClaim = {
   hash: string;
   claimer: {
@@ -3776,6 +3809,7 @@ export type LuckyTokenItemForSendV3 = {
    * @memberof LuckyTokenItemForSend
    */
   numbers: number; // <10000
+  giftNumbers: number; // <10000
   memo: string;
   signerFlag: boolean;
   templateId: number;
