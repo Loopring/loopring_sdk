@@ -118,6 +118,10 @@ export enum UserTxTypes {
   DELEGATED_FORCE_WITHDRAW = "delegated_force_withdraw",
   SEND_LUCKY_TOKEN = "send_lucky_token",
   WITHDRAW_LUCKY_TOKEN = "withdraw_lucky_token",
+  WITHDRAW = "onchain_withdrawal",
+  SEND_BACK_LUCKY_TOKEN = "send_back_lucky_token",
+  DUAL_INVESTMENT = "dual_investment",
+  L2_STAKING = "l2_staking",
 }
 
 export enum UserBillTypes {
