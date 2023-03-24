@@ -24,11 +24,11 @@ export enum SigSuffix {
 }
 
 export const NFTFactory = {
-  [ ChainId.MAINNET ]: "0xc852aC7aAe4b0f0a0Deb9e8A391ebA2047d80026",
-  [ ChainId.GOERLI ]: "0x25315F9878BA07221db684b7ad3676502E914894",
+  [ChainId.MAINNET]: "0xc852aC7aAe4b0f0a0Deb9e8A391ebA2047d80026",
+  [ChainId.GOERLI]: "0x0ad87482a1bfd0B3036Bb4b13708C88ACAe1b8bA",
 };
 
 export const NFTFactory_Collection = {
-  [ ChainId.MAINNET ]: "0x97BE94250AEF1Df307749aFAeD27f9bc8aB911db",
-  [ ChainId.GOERLI ]: "0xfDDA90dbCc99B3a91e3fB1292991Ba1076d9E281",
+  [ChainId.MAINNET]: "0x97BE94250AEF1Df307749aFAeD27f9bc8aB911db",
+  [ChainId.GOERLI]: "0x0ad87482a1bfd0B3036Bb4b13708C88ACAe1b8bA",
 };
