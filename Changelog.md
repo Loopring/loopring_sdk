@@ -2,7 +2,7 @@
 
 ## JS SDK Version ChangeLog
 
-#### v3.2.7
+#### v3.3.0
     1) GLOBAL information update
 
 #### v3.2.6
