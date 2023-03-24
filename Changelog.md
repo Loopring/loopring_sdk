@@ -2,6 +2,9 @@
 
 ## JS SDK Version ChangeLog
 
+#### v3.2.7
+    1) GLOBAL information update
+
 #### v3.2.6
     1) BlindBox Redpacket
 

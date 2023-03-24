@@ -19,8 +19,8 @@ import { sortObjDictionary } from "../utils";
 
 const GLOBAL_KEY = {
   GOERLI: {
-    key: "6ZNfPWXa88yUKLUakKzr8CkzmEb2frzXKkWq6MC85V1QTxPdsp2w1bAaGxAg8CLw",
-    id: 10373,
+    key: "685xvATlBCsvzyiTxaS02vu0b1xN0DAFpNpslKUNCuSxDhx8gyyz8VmvUqqe5HSQ",
+    id: 10013,
   },
   MAIN: {
     key: "re356TcrQ6KhlpkvWxP4UN0C4EqxQVV7ZjvLjunwTjaQPZ20ue2ZgClFeT7okpDQ",
