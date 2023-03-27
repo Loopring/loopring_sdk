@@ -162,21 +162,11 @@ export class Request {
       ...localVarRequestOptions,
       url: this.baseOptions.baseURL + urlPathStr,
     };
+    
 
     // myLog(optInOne);
     // myLog("headers config", optInOne);
-    return await this._axios.request({
-      ...optInOne,
-      proxy: {
-        host: '127.0.0.1',
-        port: 7890,
-          // auth?: {
-          //   username: string;
-          //   password:string;
-          // };
-          // protocol?: string;
-      }
-    });
+    return await this._axios.request(optInOne);
   }
 
   public updateOpt(reqOpt: ReqOptions) {
