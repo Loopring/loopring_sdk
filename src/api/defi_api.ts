@@ -18,7 +18,6 @@ import { sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
-import { StakeInfoOrigin } from "../defs/loopring_defs";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -743,7 +742,7 @@ export class DefiAPI extends BaseAPI {
         totalStakedRewards: string;
         totalLastDayPendingRewards: string;
         totalClaimableRewards: string;
-        list: StakeInfoOrigin[];
+        list: loopring_defs.StakeInfoOrigin[];
       }
     | RESULT_INFO
   > {
@@ -794,9 +793,126 @@ export class DefiAPI extends BaseAPI {
       };
     }
     return {
+      list: raw_data,
+      totalNum: raw_data.totalNum,
+      raw_data,
+    };
+  }
+
+  public async getCefiMarkets<R>(): Promise<{
+    products: loopring_defs.CEX_MARKET[];
+    raw_data: R;
+  }> {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_CEFI_MARKETS,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      products: raw_data,
+      raw_data,
+    };
+  }
+
+  public async getCefiDepth<R>({
+    request,
+    apiKey,
+  }: {
+    request: {
+      market: string;
+      level: number;
+      limit?: number;
+    };
+    apiKey: string;
+  }): Promise<{
+    version: number;
+    timestamp: number;
+    market: string;
+    bids: loopring_defs.DepthData;
+    asks: loopring_defs.DepthData;
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_CEFI_DEPTH,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      ...raw_data,
+      raw_data: raw_data,
+    };
+  }
+  public async getCefiOrders<R>({
+    request,
+    apiKey,
+  }: {
+    request: {
+      accountId: number;
+    };
+    apiKey: string;
+  }) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_CEFI_ORDERS,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
       list: raw_data.transactions,
       totalNum: raw_data.totalNum,
       raw_data,
     };
+  }
+
+  public async sendCefiOrder({
+    request,
+    privateKey,
+    apiKey,
+  }: {
+    request: loopring_defs.OriginCEXV3OrderRequest;
+    privateKey: string;
+    apiKey: string;
+  }) {
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_CEFI_ORDER,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: privateKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return { raw_data, ...raw_data };
   }
 }

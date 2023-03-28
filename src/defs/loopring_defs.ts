@@ -3092,22 +3092,16 @@ export interface DefiOrderRequest {
   accountId: number;
   /**
    * sellToken
-   * @type {{tokenId:TokenID,volume:string}}
+   * @type TokenVolumeV3
    * @memberof DefiOrderRequest
    */
-  sellToken: {
-    tokenId: number;
-    volume: string;
-  };
+  sellToken: TokenVolumeV3;
   /**
    * buyToken
-   * @type {{tokenId:TokenID,volume:string}}
+   * @type TokenVolumeV3
    * @memberof DefiOrderRequest
    */
-  buyToken: {
-    tokenId: number;
-    volume: string;
-  };
+  buyToken: TokenVolumeV3;
   /**
    * Timestamp for order become invalid
    * @type {number}
@@ -3483,22 +3477,16 @@ export interface DualOrderRequest {
   accountId: number;
   /**
    * sellToken
-   * @type {{tokenId:TokenID,volume:string}}
+   * @type TokenVolumeV3
    * @memberof DefiOrderRequest
    */
-  sellToken: {
-    tokenId: number;
-    volume: string;
-  };
+  sellToken: TokenVolumeV3;
   /**
    * buyToken
-   * @type {{tokenId:TokenID,volume:string}}
+   * @type TokenVolumeV3
    * @memberof DefiOrderRequest
    */
-  buyToken: {
-    tokenId: number;
-    volume: string;
-  };
+  buyToken: TokenVolumeV3;
   /**
    * Timestamp for order become invalid
    * @type {number}
@@ -3596,9 +3584,9 @@ export enum LuckyTokenClaimType {
   BLIND_BOX = 2,
 }
 export enum ClaimRecordStatus {
-  WAITING_CLAIM  = "WAITING_CLAIM", 
-  CLAIMED        = "CLAIMED", 
-  EXPIRED        = "EXPIRED", 
+  WAITING_CLAIM = "WAITING_CLAIM",
+  CLAIMED = "CLAIMED",
+  EXPIRED = "EXPIRED",
 }
 export enum BlindBoxStatus {
   NOT_OPENED = "NOT_OPENED",
@@ -3651,14 +3639,15 @@ export type LuckyTokenItemForReceive = {
   nftTokenInfo?: UserNFTBalanceInfo;
   isNft?: boolean;
 };
-export type BlindBoxClaimInfo = { // 盲盒信息
+export type BlindBoxClaimInfo = {
+  // 盲盒信息
   id: number;
   hash: string;
   claimer: {
     accountId: number;
     address: string;
     ens: string;
-  },
+  };
   tokenId: number;
   nftHash: string;
   amount: string;
@@ -3666,11 +3655,11 @@ export type BlindBoxClaimInfo = { // 盲盒信息
   openTime: string;
   expireTime: string;
   createdAt: number;
-}
+};
 export type LuckyTokenBlindBoxItemReceive = {
-  luckyToken: LuckyTokenItemForReceive,
-  claim: BlindBoxClaimInfo,
-}
+  luckyToken: LuckyTokenItemForReceive;
+  claim: BlindBoxClaimInfo;
+};
 export type LuckTokenClaim = {
   hash: string;
   claimer: {
@@ -4059,4 +4048,90 @@ export interface DeleteContactRequest {
   accountId: number;
   contactName?: string;
   contactMemo?: string;
+}
+
+export type CEX_MARKET = {
+  market: string;
+  baseTokenId: number;
+  quoteTokenId: number;
+  precisionForPrice: number;
+  orderbookAggLevels: number;
+  precisionForAmount: number;
+  precisionForTotal: number;
+  enabled: boolean;
+  feeBips: number;
+  cefiQuota: {
+    base: string | "";
+    quote: string | "";
+  };
+  l2Quota: {
+    base: string | "";
+    quote: string | "";
+  };
+};
+
+export interface OriginCEXV3OrderRequest {
+  /**
+   * exchange address
+   * @type {string}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  exchange: string;
+  /**
+   * storageId
+   * @type {number}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  storageId: number;
+  /**
+   * accountId
+   * @type {number}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  accountId: number;
+  /**
+   * sellToken
+   * @type TokenVolumeV3
+   * @memberof OriginCEXV3OrderRequest
+   */
+  sellToken: TokenVolumeV3;
+  /**
+   * buyToken
+   * @type TokenVolumeV3
+   * @memberof OriginCEXV3OrderRequest
+   */
+  buyToken: TokenVolumeV3;
+  /**
+   * allOrNone
+   * @description Whether the order supports partial fills or not.Currently only supports false as a valid value
+   * @type boolean
+   * @memberof OriginCEXV3OrderRequest
+   */
+  allOrNone: Boolean;
+  /**
+   * fillAmountBOrS
+   * @type boolean
+   * @memberof OriginCEXV3OrderRequest
+   */
+  fillAmountBOrS: boolean;
+  /**
+   * Timestamp for order become invalid
+   * @type {number}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  validUntil: number;
+  /**
+   * fee
+   * @type {string}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  maxFeeBips: number;
+  /**
+   * The orders EdDSA signature. The signature is a hexadecimal string obtained by signing the order itself and concatenating the resulting signature parts (Rx, Ry, and S). Used to authenticate and authorize the operation.
+   * @type {string}
+   * @memberof OriginCEXV3OrderRequest
+   */
+  eddsaSignature?: string;
+  clientOrderId: string;
+  orderType: OrderTypeResp;
 }

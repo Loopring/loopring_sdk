@@ -181,4 +181,10 @@ export enum LOOPRING_URLs {
   CREATE_CONTACT = "/api/v3/user/contact/add",
   UPDATE_CONTACT = "/api/v3/user/contact/update",
   DELETE_CONTACT = "/api/v3/user/contact",
+
+  // CEFI_MARKETS
+  GET_CEFI_MARKETS = "api/v3/cefi/markets",
+  GET_CEFI_DEPTH = "api/v3/cefi/depth",
+  GET_CEFI_ORDERS = "api/v3/cefi/orders",
+  POST_CEFI_ORDER = "api/v3/cefi/order",
 }
