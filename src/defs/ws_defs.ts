@@ -14,13 +14,14 @@ export enum WsOps {
 export enum WsTopicType {
   account = "account",
   order = "order",
-  orderbook = "orderbook",
-  mixorder = "mixorder",
   trade = "trade",
   mixtrade = "mixtrade",
   ticker = "ticker",
   candlestick = "candlestick",
   ammpool = "ammpool",
+  orderbook = "orderbook",
+  mixorder = "mixorder",
+  cefiOrderBook = "cefiOrderBook",
 }
 
 export const getAccountArg = () => {
@@ -60,6 +61,17 @@ export interface WsOrder {
   market: string;
 }
 
+export type OrderWsRequest = {
+  topic:
+    | WsTopicType.orderbook
+    | WsTopicType.mixorder
+    | WsTopicType.cefiOrderBook;
+  market: string;
+  level: number;
+  count?: number;
+  snapshot?: boolean;
+  showOverlap?: boolean;
+};
 export const getOrderBookArg = ({
   topic = WsTopicType.orderbook,
   market,
@@ -67,14 +79,7 @@ export const getOrderBookArg = ({
   count,
   snapshot,
   showOverlap,
-}: {
-  topic?: string;
-  market: string;
-  level: number;
-  count?: number;
-  snapshot?: boolean;
-  showOverlap?: boolean;
-}) => {
+}: OrderWsRequest) => {
   const obj: any = {
     topic,
     market,
@@ -83,34 +88,29 @@ export const getOrderBookArg = ({
     snapshot,
     showOverlap,
   };
-
   Object.keys(obj).forEach((key) =>
     obj[key] === undefined ? delete obj[key] : {}
   );
-
   return obj;
 };
 
 export const getMixOrderArg = ({
-  market,
-  level,
-  count,
-  snapshot,
-  showOverlap,
-}: {
-  market: string;
-  level: number;
-  count?: number;
-  snapshot?: boolean;
-  showOverlap?: boolean;
-}) => {
+  topic = WsTopicType.mixorder,
+  ...orderWsRequest
+}: { topic: WsTopicType.mixorder } & Omit<OrderWsRequest, "topic">) => {
   return getOrderBookArg({
-    topic: WsTopicType.mixorder,
-    market,
-    level,
-    count,
-    snapshot,
-    showOverlap,
+    topic,
+    ...orderWsRequest,
+  });
+};
+
+export const getCefiOrderBook = ({
+  topic = WsTopicType.cefiOrderBook,
+  ...orderWsRequest
+}: { topic: WsTopicType.cefiOrderBook } & Omit<OrderWsRequest, "topic">) => {
+  return getOrderBookArg({
+    topic,
+    ...orderWsRequest,
   });
 };
 
