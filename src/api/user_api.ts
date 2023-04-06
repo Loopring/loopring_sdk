@@ -17,6 +17,7 @@ import {
   LoopringErrorCode,
   ConnectorError,
   CounterFactualInfo,
+  GetUserRewardRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -3065,6 +3066,41 @@ export class UserAPI extends BaseAPI {
     return {
       totalNum: raw_data?.totalNum,
       userTxs,
+      raw_data,
+    };
+  }
+
+  /*
+   * Get user txs
+   */
+  public async getUserRewards<R>(
+    request: loopring_defs.GetUserRewardRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_PROTOCOL_REWARDS,
+      queryParams: { ...request, size: request?.size ?? 200 },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      ...raw_data,
       raw_data,
     };
   }

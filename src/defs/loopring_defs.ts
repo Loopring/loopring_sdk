@@ -1239,6 +1239,16 @@ export interface GetUserBillsRequest {
   limit?: number;
   billType?: UserBillTypes[];
 }
+export enum REWARD_TYPE {
+  MakerRewards = 1,
+  ReferralRewards = 2,
+  RefereeRewards = 3,
+}
+export interface GetUserRewardRequest {
+  rewardType: REWARD_TYPE;
+  accountId: number;
+  size?: number;
+}
 
 export interface GetUserNFTTxsRequest {
   accountId: number;
@@ -4060,14 +4070,19 @@ export type CEX_MARKET = {
   precisionForTotal: number;
   enabled: boolean;
   feeBips: number;
-  cefiQuota: {
+  minAmount: {
     base: string | "";
     quote: string | "";
   };
-  l2Quota: {
+  cefiAmount: {
     base: string | "";
     quote: string | "";
   };
+  l2Amount: {
+    base: string | "";
+    quote: string | "";
+  };
+  cexMarket: "CEFI-LRC-USDT";
 };
 
 export interface OriginCEXV3OrderRequest {
@@ -4135,3 +4150,23 @@ export interface OriginCEXV3OrderRequest {
   clientOrderId: string;
   orderType: OrderTypeResp;
 }
+
+export type CexResult = {
+  exceedDepth: boolean;
+  isAtoB: boolean;
+  isReverse: boolean;
+  feeBips: string;
+  /**
+   *  with decimals
+   */
+  amountS: string | undefined;
+  /**
+   *  with decimals
+   */
+  amountB: string | undefined;
+  info: CEX_MARKET;
+  // view
+  sellVol: string | undefined;
+  // view
+  buyVol: string | undefined;
+};

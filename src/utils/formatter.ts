@@ -398,18 +398,18 @@ export function makeAmmPool<R>(raw_data: any): {
   };
 }
 
-export function makeMarkets<R>(
+export function makeMarkets<R, C extends MarketInfo>(
   raw_data: any,
   url: string = LOOPRING_URLs.GET_MARKETS
 ): {
-  markets: LoopringMap<MarketInfo>;
+  markets: LoopringMap<C>;
   pairs: LoopringMap<TokenRelatedInfo>;
   tokenArr: string[];
   tokenArrStr: string;
   marketArr: string[];
   marketArrStr: string;
 } {
-  const markets: LoopringMap<MarketInfo> = {};
+  const markets: LoopringMap<C> = {};
 
   const pairs: LoopringMap<TokenRelatedInfo> = {};
 
@@ -417,7 +417,8 @@ export function makeMarkets<R>(
 
   if (raw_data?.markets instanceof Array) {
     raw_data.markets.forEach((item: any) => {
-      const marketInfo: MarketInfo = {
+      const marketInfo: C = {
+        ...item,
         baseTokenId: item.baseTokenId,
         enabled: item.enabled,
         market: item.market,

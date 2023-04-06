@@ -1,5 +1,6 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from "./base_api";
+import * as fm from "../utils/formatter";
 
 import * as loopring_defs from "../defs/loopring_defs";
 import { SEP } from "../defs";
@@ -18,6 +19,10 @@ import { sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
+import { DepthData } from "../defs/loopring_defs";
+import { getMidPrice } from "./exchange_api";
+import { dexDethRawMock } from "../tests/MockSwapData";
+import { myLog } from "../utils/log_tools";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -800,7 +805,14 @@ export class DefiAPI extends BaseAPI {
   }
 
   public async getCefiMarkets<R>(): Promise<{
-    products: loopring_defs.CEX_MARKET[];
+    markets: loopring_defs.LoopringMap<
+      loopring_defs.CEX_MARKET & { type: "CEX" }
+    >;
+    pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo>;
+    tokenArr: string[];
+    tokenArrStr: string;
+    marketArr: string[];
+    marketArrStr: string;
     raw_data: R;
   }> {
     const reqParams = {
@@ -814,34 +826,82 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
+    const markets: loopring_defs.LoopringMap<
+      loopring_defs.CEX_MARKET & { type: "CEX" }
+    > = {};
+
+    const pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo> = {};
+
+    // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
+
+    if (raw_data instanceof Array) {
+      // let _markets = [];
+      // if (types) {
+      //   _markets = raw_data.markets.filter(
+      //     (item: loopring_defs.DefiMarketInfo) =>
+      //       types.includes(item.type?.toUpperCase())
+      //   );
+      // } else {
+      //   _markets = raw_data.markets;
+      // }
+      raw_data.forEach((item: any) => {
+        const marketInfo: loopring_defs.CEX_MARKET = {
+          ...item,
+        };
+
+        markets[marketInfo.market] = { ...marketInfo, type: "CEX" };
+        const { base, quote } = marketInfo?.cefiAmount ?? {
+          base: "",
+          quote: "",
+        };
+        if (marketInfo.enabled && marketInfo.cefiAmount && base && quote) {
+          if (!pairs[base]) {
+            pairs[base] = {
+              tokenId: item.baseTokenId,
+              tokenList: [quote],
+            };
+          } else {
+            pairs[base].tokenList = [...pairs[base].tokenList, quote];
+          }
+          if (!pairs[quote]) {
+            pairs[quote] = {
+              tokenId: item.baseTokenId,
+              tokenList: [base],
+            };
+          } else {
+            pairs[quote].tokenList = [...pairs[quote].tokenList, base];
+          }
+        }
+      });
+    }
+    const marketArr: string[] = Reflect.ownKeys(markets) as string[];
+    const tokenArr: string[] = Reflect.ownKeys(pairs) as string[];
     return {
-      products: raw_data,
+      markets,
+      pairs,
+      tokenArr,
+      tokenArrStr: tokenArr.join(SEP),
+      marketArr,
+      marketArrStr: marketArr.join(SEP),
       raw_data,
     };
   }
 
   public async getCefiDepth<R>({
     request,
-    apiKey,
   }: {
     request: {
       market: string;
       level: number;
       limit?: number;
     };
-    apiKey: string;
   }): Promise<{
-    version: number;
-    timestamp: number;
-    market: string;
-    bids: loopring_defs.DepthData;
-    asks: loopring_defs.DepthData;
+    depth: loopring_defs.DepthData;
     raw_data: R;
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_CEFI_DEPTH,
       queryParams: { ...request },
-      apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -851,9 +911,38 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
+    const symbol = raw_data.market;
+    const timestamp = raw_data.timestamp;
+
+    const { asks, bids, mid_price } = getMidPrice({
+      _asks: raw_data.asks,
+      _bids: raw_data.bids,
+    });
+
+    const depth: DepthData = {
+      symbol,
+      // @ts-ignore
+      market: raw_data.market,
+      version: raw_data.version,
+      timestamp,
+      mid_price,
+      bids: bids.ab_arr,
+      bids_prices: bids.ab_prices,
+      bids_amtTotals: bids.ab_amtTotals,
+      bids_volTotals: bids.ab_volTotals,
+      bids_amtTotal: bids.amtTotal.toString(),
+      bids_volTotal: bids.volTotal.toString(),
+      asks: asks.ab_arr,
+      asks_prices: asks.ab_prices,
+      asks_amtTotals: asks.ab_amtTotals,
+      asks_volTotals: asks.ab_volTotals,
+      asks_amtTotal: asks.amtTotal.toString(),
+      asks_volTotal: asks.volTotal.toString(),
+    };
+
     return {
-      ...raw_data,
-      raw_data: raw_data,
+      depth,
+      raw_data: raw_data as unknown as R,
     };
   }
   public async getCefiOrders<R>({

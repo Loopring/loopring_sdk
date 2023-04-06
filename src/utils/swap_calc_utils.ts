@@ -5,6 +5,9 @@ import {
   ABInfo,
   AmmPoolSnapshot,
   CalDualResult,
+  CEX_MARKET,
+  CexResult,
+  ConnectorError,
   DefiMarketInfo,
   DepthData,
   DUAL_TYPE,
@@ -14,6 +17,7 @@ import {
   DualRulesCoinsInfo,
   ExitAmmPoolRequest,
   JoinAmmPoolRequest,
+  LoopringErrorCode,
   LoopringMap,
   MarketInfo,
   OffchainFeeInfo,
@@ -1233,7 +1237,7 @@ export function calcDual({
       toBig(rule.currencyMin).times("1e" + sellToken.decimals)
     ); // rule.baseMin;
     quota = BigNumber.min(
-      toBig(info.baseSize).times(info.strike).toString(), 
+      toBig(info.baseSize).times(info.strike).toString(),
       balance[currency].free
     );
     maxSellAmount = BigNumber.min(rule.currencyMax, quota);
@@ -1263,5 +1267,148 @@ export function calcDual({
     // dualViewInfo: dualViewInfo as unknown as R,
     feeVol,
     feeTokenSymbol,
+  };
+}
+
+/**
+ *
+ * @param info  CEX_MARKET
+ * @param index
+ * @param rule
+ * @param balance
+ * @param feeVol
+ * @param sellToken
+ * @param buyToken
+ * @param sellAmount
+ * @param currentPrice
+ */
+export function calcDex({
+  info,
+  input,
+  sell,
+  buy,
+  isAtoB,
+  marketArr,
+  tokenMap,
+  marketMap,
+  depth,
+  feeBips,
+}: {
+  info: CEX_MARKET;
+  input: string;
+  sell: string;
+  buy: string;
+  isAtoB: boolean;
+  marketArr: string[];
+  tokenMap: LoopringMap<TokenInfo>;
+  marketMap: LoopringMap<MarketInfo>;
+  depth: DepthData;
+  feeBips: string;
+}): CexResult | undefined {
+  const sellToken = tokenMap[sell];
+  const buyToken = tokenMap[buy];
+  const reserveInfo = getReserveInfo(sell, buy, marketArr, tokenMap, marketMap);
+  if (!reserveInfo) {
+    throw {
+      message: ConnectorError.CEX_NO_PRODUCT,
+      msg: ConnectorError.CEX_NO_PRODUCT,
+      code: LoopringErrorCode.CEX_NO_PRODUCT,
+    };
+  }
+  const { isReverse } = reserveInfo;
+  let sellVol, buyVol, amountB, amountS, exceedDepth;
+  if (isAtoB) {
+    sellVol = input;
+    amountS = fm.toBig(input ? input : 0).times("1e" + sellToken.decimals);
+    const amountInWei = amountS;
+    if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
+      throw {
+        message: ConnectorError.CEX_NO_DEPTH_ERROR,
+        msg: ConnectorError.CEX_NO_DEPTH_ERROR,
+        code: LoopringErrorCode.CEX_NO_DEPTH_ERROR,
+      };
+    } else {
+      if (!isReverse) {
+        exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_amtTotal));
+        // console.log('3 amountInWei:', amountInWei, ' bids_amtTotal:', depth.bids_amtTotal)
+      } else {
+        exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_volTotal));
+        // console.log('4 amountInWei:', amountInWei, ' asks_volTotal:', depth.asks_volTotal)
+      }
+      let outputOrderbook;
+
+      if (exceedDepth) {
+        outputOrderbook = fm
+          .toBig(amountInWei)
+          .times(!isReverse ? depth.mid_price : 1 / depth.mid_price);
+      } else {
+        outputOrderbook = getOutputOrderbook(
+          input,
+          sellToken,
+          buyToken,
+          feeBips,
+          isAtoB,
+          isReverse,
+          depth
+        ).toString();
+      }
+
+      amountB = fm.toBig(amountB).toString();
+
+      buyVol = fm
+        .toBig(amountB ?? 0)
+        .div("1e" + buyToken.decimals)
+        .toString();
+    }
+  } else {
+    buyVol = input;
+    amountB = fm.toBig(input ? input : 0).times("1e" + buyToken.decimals);
+
+    if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
+      throw {
+        message: ConnectorError.CEX_NO_DEPTH_ERROR,
+        msg: ConnectorError.CEX_NO_DEPTH_ERROR,
+        code: LoopringErrorCode.CEX_NO_DEPTH_ERROR,
+      };
+    } else {
+      if (!isReverse) {
+        exceedDepth = amountB.gt(fm.toBig(depth.bids_volTotal));
+      } else {
+        exceedDepth = amountB.gt(fm.toBig(depth.asks_amtTotal));
+      }
+      let outputOrderbook;
+      if (exceedDepth) {
+        outputOrderbook = fm
+          .toBig(amountB)
+          .times(!isReverse ? 1 / depth.mid_price : depth.mid_price);
+      } else {
+        outputOrderbook = getOutputOrderbook(
+          input,
+          sellToken,
+          buyToken,
+          feeBips,
+          isAtoB,
+          isReverse,
+          depth
+        );
+      }
+
+      amountS = fm.toBig(outputOrderbook).toString();
+      sellVol = fm
+        .toBig(amountS ?? 0)
+        .div("1e" + sellToken.decimals)
+        .toString();
+    } // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
+  }
+  return {
+    feeBips,
+    info,
+    isAtoB,
+    isReverse,
+    sellVol,
+    buyVol,
+    amountB: amountB?.toString(),
+    amountS: amountS?.toString(),
+    exceedDepth,
   };
 }

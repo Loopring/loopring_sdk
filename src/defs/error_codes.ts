@@ -53,6 +53,8 @@ export enum LoopringErrorCode {
   USER_DENIED_2 = 500007,
   NO_EDDSA_KEY = 500008,
   HTTP_ERROR = 500009,
+  CEX_NO_DEPTH_ERROR = 500010,
+  CEX_NO_PRODUCT = 500011,
 }
 
 export enum ConnectorError {
@@ -65,6 +67,8 @@ export enum ConnectorError {
   CONTRACTNFT_SET_APPROVE = "ContractNFT set Approve error",
   NO_EDDSA_KEY = "No EDDSA KEY",
   HTTP_ERROR = "HTTP Request Failed!",
+  CEX_NO_DEPTH_ERROR = "NO Depth for CEX",
+  CEX_NO_PRODUCT = "NO Market for CEX",
 }
 
 export interface RESULT_INFO {

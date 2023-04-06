@@ -73,6 +73,7 @@ export enum LOOPRING_URLs {
   GET_DELEGATE_GET_IPFS = "/api/v3/delegator/ipfs",
   GET_LIQUIDITY_MINING_USER_HISTORY = "/api/v3/sidecar/liquidityMiningUserHistory",
   GET_PROTOCOL_PORTRAIT = "/api/v3/sidecar/ProtocolPortrait",
+  GET_PROTOCOL_REWARDS = "/api/v3/sidecar/commissionReward",
   GET_AMM_ASSET_HISTORY = "/api/v3/amm/assets",
   GET_ASSET_LOCK_RECORDS = "api/v3/user/lockRecords",
 

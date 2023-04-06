@@ -62,7 +62,7 @@ export interface WsOrder {
 }
 
 export type OrderWsRequest = {
-  topic:
+  topic?:
     | WsTopicType.orderbook
     | WsTopicType.mixorder
     | WsTopicType.cefiOrderBook;
@@ -97,7 +97,7 @@ export const getOrderBookArg = ({
 export const getMixOrderArg = ({
   topic = WsTopicType.mixorder,
   ...orderWsRequest
-}: { topic: WsTopicType.mixorder } & Omit<OrderWsRequest, "topic">) => {
+}: { topic?: WsTopicType.mixorder } & Omit<OrderWsRequest, "topic">) => {
   return getOrderBookArg({
     topic,
     ...orderWsRequest,
@@ -107,7 +107,7 @@ export const getMixOrderArg = ({
 export const getCefiOrderBook = ({
   topic = WsTopicType.cefiOrderBook,
   ...orderWsRequest
-}: { topic: WsTopicType.cefiOrderBook } & Omit<OrderWsRequest, "topic">) => {
+}: { topic?: WsTopicType.cefiOrderBook } & Omit<OrderWsRequest, "topic">) => {
   return getOrderBookArg({
     topic,
     ...orderWsRequest,

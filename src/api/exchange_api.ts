@@ -154,6 +154,25 @@ export function getMidPrice({
     mid_price,
   };
 }
+export function getCexMidPrice({
+  _asks,
+  _bids,
+}: {
+  _asks: any[];
+  _bids: any[];
+}) {
+  const bids = genAB(_bids);
+  const asks = genAB(_asks);
+
+  const mid_price =
+    (bids.ab_prices[bids.ab_prices.length - 1] + asks.ab_prices[0]) / 2;
+
+  return {
+    bids,
+    asks,
+    mid_price,
+  };
+}
 
 export class ExchangeAPI extends BaseAPI {
   /*
