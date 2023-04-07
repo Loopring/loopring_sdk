@@ -889,12 +889,14 @@ export class DefiAPI extends BaseAPI {
 
   public async getCefiDepth<R>({
     request,
+    tokenMap,
   }: {
     request: {
       market: string;
       level: number;
       limit?: number;
     };
+    tokenMap?: any;
   }): Promise<{
     depth: loopring_defs.DepthData;
     raw_data: R;
@@ -911,6 +913,7 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
+
     const symbol = raw_data.market;
     const timestamp = raw_data.timestamp;
 

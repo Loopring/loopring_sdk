@@ -194,7 +194,9 @@ function getOutputOrderbook(
 
       for (let i = bids.length - 1; i >= 0; i--) {
         const abInfo: ABInfo = bids[i];
-
+        if (fm.toBig(abInfo.amt).lte(BIG0)) {
+          continue;
+        }
         // console.log(`i:${i} abInfo:`, abInfo, `decimals:${baseToken.decimals} ${quoteToken.decimals}`)
 
         const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.amt))
@@ -227,6 +229,9 @@ function getOutputOrderbook(
 
       for (let i = 0; i < depth.asks.length; i++) {
         const abInfo: ABInfo = depth.asks[i];
+        if (fm.toBig(abInfo.amt).lte(BIG0)) {
+          continue;
+        }
         // const placed: string = fm.toBig(abInfo.vol).div(BIG10.pow(quoteToken.decimals)).toString()
         const consume: string = fm.toBig(remain).gte(fm.toBig(abInfo.vol))
           ? abInfo.vol
@@ -649,7 +654,6 @@ export function getOutputAmount({
         // console.log('4 amountInWei:', amountInWei, ' asks_volTotal:', depth.asks_volTotal)
       }
     }
-
     // console.log(`a2b(input:${input})  exceedDepth:`, exceedDepth, ' isSwapEnabled:', marketInfo.isSwapEnabled)
 
     if (exceedDepth) {
@@ -1318,9 +1322,9 @@ export function calcDex({
   const { isReverse } = reserveInfo;
   let sellVol, buyVol, amountB, amountS, exceedDepth;
   if (isAtoB) {
-    sellVol = input;
-    amountS = fm.toBig(input ? input : 0).times("1e" + sellToken.decimals);
-    const amountInWei = amountS;
+    amountS = input;
+    sellVol = fm.toBig(input ? input : 0).times("1e" + sellToken.decimals);
+    const amountInWei = sellVol;
     if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
       throw {
         message: ConnectorError.CEX_NO_DEPTH_ERROR,
@@ -1330,17 +1334,17 @@ export function calcDex({
     } else {
       if (!isReverse) {
         exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_amtTotal));
-        // console.log('3 amountInWei:', amountInWei, ' bids_amtTotal:', depth.bids_amtTotal)
       } else {
         exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_volTotal));
-        // console.log('4 amountInWei:', amountInWei, ' asks_volTotal:', depth.asks_volTotal)
       }
       let outputOrderbook;
-
       if (exceedDepth) {
         outputOrderbook = fm
-          .toBig(amountInWei)
+          .toBig(amountS)
           .times(!isReverse ? depth.mid_price : 1 / depth.mid_price);
+
+        amountB = outputOrderbook.toString();
+        buyVol = fm.toBig(amountB).times("1e" + buyToken.decimals);
       } else {
         outputOrderbook = getOutputOrderbook(
           input,
@@ -1351,18 +1355,18 @@ export function calcDex({
           isReverse,
           depth
         ).toString();
+        amountB = outputOrderbook;
+        buyVol = toWEI(tokenMap, buy, outputOrderbook);
+        // amountB = fm
+        //   .toBig(buyVol ?? 0)
+        //   .div("1e" + buyToken.decimals)
+        //   .toString();
       }
-
-      amountB = fm.toBig(amountB).toString();
-
-      buyVol = fm
-        .toBig(amountB ?? 0)
-        .div("1e" + buyToken.decimals)
-        .toString();
     }
   } else {
-    buyVol = input;
-    amountB = fm.toBig(input ? input : 0).times("1e" + buyToken.decimals);
+    amountB = input;
+    buyVol = fm.toBig(input ? input : 0).times("1e" + buyToken.decimals);
+    const amountInWei = buyVol;
 
     if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
       throw {
@@ -1372,15 +1376,20 @@ export function calcDex({
       };
     } else {
       if (!isReverse) {
-        exceedDepth = amountB.gt(fm.toBig(depth.bids_volTotal));
+        exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.bids_volTotal));
       } else {
-        exceedDepth = amountB.gt(fm.toBig(depth.asks_amtTotal));
+        exceedDepth = fm.toBig(amountInWei).gt(fm.toBig(depth.asks_amtTotal));
       }
       let outputOrderbook;
       if (exceedDepth) {
         outputOrderbook = fm
-          .toBig(amountB)
+          .toBig(buyVol)
           .times(!isReverse ? 1 / depth.mid_price : depth.mid_price);
+        amountS = outputOrderbook.toString();
+        sellVol = fm
+          .toBig(amountS)
+          .times("1e" + sellToken.decimals)
+          .toString();
       } else {
         outputOrderbook = getOutputOrderbook(
           input,
@@ -1391,13 +1400,14 @@ export function calcDex({
           isReverse,
           depth
         );
+        myLog(outputOrderbook.toString());
+        // sellVol = outputOrderbook;
+        sellVol = toWEI(tokenMap, sell, outputOrderbook);
+        amountS = fm
+          .toBig(sellVol ?? 0)
+          .div("1e" + sellToken.decimals)
+          .toString();
       }
-
-      amountS = fm.toBig(outputOrderbook).toString();
-      sellVol = fm
-        .toBig(amountS ?? 0)
-        .div("1e" + sellToken.decimals)
-        .toString();
     } // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
   }
   return {
@@ -1405,8 +1415,8 @@ export function calcDex({
     info,
     isAtoB,
     isReverse,
-    sellVol,
-    buyVol,
+    sellVol: sellVol.toString(),
+    buyVol: buyVol.toString(),
     amountB: amountB?.toString(),
     amountS: amountS?.toString(),
     exceedDepth,
