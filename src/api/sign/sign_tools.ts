@@ -452,7 +452,6 @@ export async function getEcDSASig(
       }
       throw new Error(signature.error);
     case GetEcDSASigType.Contract:
-      // TODO:
       hash = sigUtil.TypedDataUtils.sign(typedData);
       hash = fm.toHex(hash);
       myLog("Contract Contract hash", hash);

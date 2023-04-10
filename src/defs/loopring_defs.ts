@@ -4061,7 +4061,7 @@ export interface DeleteContactRequest {
 }
 
 export type CEX_MARKET = {
-  market: string;
+  market: string; //`CEFI-${string}-${string}`
   baseTokenId: number;
   quoteTokenId: number;
   precisionForPrice: number;

@@ -15,7 +15,7 @@ import {
   SigSuffix,
   SoursURL,
 } from "../defs";
-import { sortObjDictionary } from "../utils";
+import { makeMarkets, sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
@@ -826,63 +826,40 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       };
     }
-    const markets: loopring_defs.LoopringMap<
-      loopring_defs.CEX_MARKET & { type: "CEX" }
-    > = {};
+    let result: any = {};
 
     const pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo> = {};
 
     // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
 
     if (raw_data instanceof Array) {
-      // let _markets = [];
-      // if (types) {
-      //   _markets = raw_data.markets.filter(
-      //     (item: loopring_defs.DefiMarketInfo) =>
-      //       types.includes(item.type?.toUpperCase())
-      //   );
-      // } else {
-      //   _markets = raw_data.markets;
-      // }
-      raw_data.forEach((item: any) => {
-        const marketInfo: loopring_defs.CEX_MARKET = {
-          ...item,
-        };
-
-        markets[marketInfo.market] = { ...marketInfo, type: "CEX" };
-        const { base, quote } = marketInfo?.cefiAmount ?? {
-          base: "",
-          quote: "",
-        };
-        if (marketInfo.enabled && marketInfo.cefiAmount && base && quote) {
-          if (!pairs[base]) {
-            pairs[base] = {
-              tokenId: item.baseTokenId,
-              tokenList: [quote],
-            };
+      const reformat = raw_data.reduce(
+        (prev, ele: loopring_defs.CEX_MARKET) => {
+          if (/-/gi.test(ele.market)) {
+            return [
+              ...prev,
+              {
+                ...ele,
+                cexMarket: ele.market,
+                market: ele.market.replace("CEFI-", ""),
+                // enabled: true,
+              } as loopring_defs.CEX_MARKET,
+            ];
           } else {
-            pairs[base].tokenList = [...pairs[base].tokenList, quote];
+            return prev;
           }
-          if (!pairs[quote]) {
-            pairs[quote] = {
-              tokenId: item.baseTokenId,
-              tokenList: [base],
-            };
-          } else {
-            pairs[quote].tokenList = [...pairs[quote].tokenList, base];
-          }
-        }
-      });
+        },
+        [] as loopring_defs.CEX_MARKET[]
+      );
+      let result = makeMarkets({ markets: reformat });
     }
-    const marketArr: string[] = Reflect.ownKeys(markets) as string[];
-    const tokenArr: string[] = Reflect.ownKeys(pairs) as string[];
     return {
-      markets,
-      pairs,
-      tokenArr,
-      tokenArrStr: tokenArr.join(SEP),
-      marketArr,
-      marketArrStr: marketArr.join(SEP),
+      markets: result.markets,
+      pairs: result.pairs,
+      tokenArr: result.tokenArr,
+      tokenArrStr: result.tokenArrStr,
+      marketArr: result.marketArr,
+      marketArrStr: result.marketArrStr,
       raw_data,
     };
   }
