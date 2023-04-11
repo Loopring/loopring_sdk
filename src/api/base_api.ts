@@ -201,15 +201,17 @@ export async function ecRecover(
               result: address.toLowerCase() === account.toLowerCase(),
             });
           } else {
+            // LOG: for signature
+            console.log("ecRecover 1:", err);
             resolve({
               error: "ecRecover 1:" + err + "or no address:" + address,
             });
-            myLog("ecRecover error", err);
           }
         }
       );
     } catch (err) {
-      myLog("ecRecover error", err);
+      // LOG: for signature
+      console.log("ecRecover 2:", err);
       resolve({ error: ("ecRecover 2:" + err) as any });
     }
   });
@@ -230,6 +232,8 @@ export async function contractWalletValidate32(
         _signature: toBuffer(sig),
       }
     );
+    // LOG: for signature
+    console.log("contractWalletValidate32", data);
 
     web3.eth.call(
       {
@@ -245,7 +249,11 @@ export async function contractWalletValidate32(
           resolve({
             result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
           });
-        } else resolve({ error: err });
+        } else {
+          // LOG: for signature
+          console.log("contractWalletValidate32 err", err);
+          resolve({ error: err });
+        }
       }
     );
   });
@@ -403,7 +411,7 @@ export async function personalSign(
         async function (err: any, result: any) {
           if (!err) {
             // LOG: for signature
-            myLog(
+            console.log(
               "ecRecover before",
               "msg",
               msg,
@@ -460,12 +468,17 @@ export async function personalSign(
               account === web3.currentProvider?.selectedAddress;
               return resolve({ sig: result });
             } else {
+              // LOG: for signature
+              console.log("ecRecover before", result);
               const valid: any = await ecRecover(web3, account, msg, result);
-              myLog("ecRecover after", valid.result);
+              // LOG: for signature
+              console.log("ecRecover after", valid.result);
               if (valid.result) {
                 return resolve({ sig: result });
               }
             }
+            // LOG: for signature
+            console.log("Valid: 5. contractWallet before");
 
             // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(
@@ -474,6 +487,8 @@ export async function personalSign(
               msg,
               result
             );
+            // LOG: for signature
+            console.log("Valid: 5. contractWallet", walletValid2);
 
             if (walletValid2.result) {
               return resolve({ sig: result });
@@ -525,6 +540,11 @@ export async function personalSign(
         }
       );
     } catch (err) {
+      // LOG: for signature
+      console.log(
+        "personalSign callback err",
+        (err as unknown as any)?.message
+      );
       resolve({ error: err as any });
     }
   });

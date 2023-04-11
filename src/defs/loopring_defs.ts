@@ -3648,6 +3648,7 @@ export type LuckyTokenItemForReceive = {
   createdAt: number;
   nftTokenInfo?: UserNFTBalanceInfo;
   isNft?: boolean;
+  isOfficial?: boolean;
 };
 export type BlindBoxClaimInfo = {
   // 盲盒信息

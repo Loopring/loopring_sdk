@@ -116,17 +116,18 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined
 ) {
   // LOG: for signature
-  // console.log(
-  //   "personalSign ->",
-  //   "counterFactualInfo",
-  //   counterFactualInfo,
-  //   "keySeed",
-  //   keySeed,
-  //   "walletType",
-  //   walletType,
-  //   "publicKey from sever side ",
-  //   publicKey
-  // );
+  // TODO:
+  console.log(
+    "personalSign ->",
+    "counterFactualInfo",
+    counterFactualInfo,
+    "keySeed",
+    keySeed,
+    "walletType",
+    walletType,
+    "publicKey from sever side ",
+    publicKey
+  );
   const result: any = await personalSign(
     web3,
     address,
@@ -266,12 +267,12 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`;
   // LOG: for signature
-  myLog("getEdDSASig", message);
+  console.log("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
   // LOG: for signature
-  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  console.log("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);
 
