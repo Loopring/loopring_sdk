@@ -3594,9 +3594,10 @@ export enum LuckyTokenClaimType {
   BLIND_BOX = 2,
 }
 export enum ClaimRecordStatus {
-  WAITING_CLAIM = "WAITING_CLAIM",
-  CLAIMED = "CLAIMED",
-  EXPIRED = "EXPIRED",
+  WAITING_CLAIM  = "WAITING_CLAIM", 
+  CLAIMED        = "CLAIMED", 
+  EXPIRED        = "EXPIRED", 
+  CLAIMING       = "CLAIMING",
 }
 export enum BlindBoxStatus {
   NOT_OPENED = "NOT_OPENED",
@@ -3649,6 +3650,7 @@ export type LuckyTokenItemForReceive = {
   nftTokenInfo?: UserNFTBalanceInfo;
   isNft?: boolean;
   isOfficial?: boolean;
+  nftExpireTime: number;
 };
 export type BlindBoxClaimInfo = {
   // 盲盒信息
@@ -3730,6 +3732,7 @@ export type LuckTokenClaimDetail = {
   luckyToken: {
     id: number;
   } & LuckyTokenItemForReceive;
+  claimStatus: ClaimRecordStatus;
 };
 
 export type LuckTokenWithdraw = {
@@ -3785,6 +3788,7 @@ export interface OriginLuckTokenWithdrawsRequestV3 {
     };
   };
   nftData?: string;
+  luckyTokenHash?: string;
 }
 
 export interface OriginLuckTokenWithdrawsRequestV3WithPatch {
