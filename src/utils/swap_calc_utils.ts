@@ -1297,6 +1297,7 @@ export function calcDex({
   marketMap,
   depth,
   feeBips,
+  slipBips,
 }: {
   info: CEX_MARKET;
   input: string;
@@ -1308,6 +1309,7 @@ export function calcDex({
   marketMap: LoopringMap<MarketInfo>;
   depth: DepthData;
   feeBips: string;
+  slipBips: string;
 }): CexResult | undefined {
   const sellToken = tokenMap[sell];
   const buyToken = tokenMap[buy];
@@ -1320,7 +1322,7 @@ export function calcDex({
     };
   }
   const { isReverse } = reserveInfo;
-  let sellVol, buyVol, amountB, amountS, exceedDepth;
+  let sellVol, buyVol, amountB, amountS, exceedDepth, amountBSlipped;
   if (isAtoB) {
     amountS = input;
     sellVol = fm.toBig(input ? input : 0).times("1e" + sellToken.decimals);
@@ -1410,6 +1412,10 @@ export function calcDex({
       }
     } // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
   }
+  if (amountB) {
+    amountBSlipped = getMinReceived(amountB, buyToken.decimals, slipBips);
+    // amountBMiniReceiveCutFee = amountBSlipped.minReceived - feeBips
+  }
   return {
     feeBips,
     info,
@@ -1419,6 +1425,8 @@ export function calcDex({
     buyVol: buyVol.toString(),
     amountB: amountB?.toString(),
     amountS: amountS?.toString(),
+    amountBSlipped,
+    // amountBMiniReceiveCutFee,
     exceedDepth,
   };
 }

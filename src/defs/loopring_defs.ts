@@ -3594,10 +3594,10 @@ export enum LuckyTokenClaimType {
   BLIND_BOX = 2,
 }
 export enum ClaimRecordStatus {
-  WAITING_CLAIM  = "WAITING_CLAIM",
-  CLAIMED        = "CLAIMED",
-  EXPIRED        = "EXPIRED",
-  CLAIMING       = "CLAIMING",
+  WAITING_CLAIM = "WAITING_CLAIM",
+  CLAIMED = "CLAIMED",
+  EXPIRED = "EXPIRED",
+  CLAIMING = "CLAIMING",
 }
 export enum BlindBoxStatus {
   NOT_OPENED = "NOT_OPENED",
@@ -4165,6 +4165,15 @@ export type CexResult = {
    *  with decimals
    */
   amountS: string | undefined;
+  amountBSlipped:
+    | {
+        minReceived: string;
+        minReceivedVal: string;
+        minimumDecimal: number;
+      }
+    | undefined;
+  // amountBMiniReceiveCutFee: string | undefined;
+
   /**
    *  with decimals
    */
