@@ -372,6 +372,33 @@ export class LuckTokenAPI extends BaseAPI {
       tokenSummaryList: raw_data.tokenSummaryList,
     };
   }
+  public async getLuckTokenNFTBalances<R>(request: {
+    accountId: number,
+  }, apiKey: string): Promise<{
+    raw_data: R;
+    amount: number;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_LUCK_TOKEN_NFTBALANCES,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      raw_data,
+      amount: raw_data.amount as number
+      // totalNum: raw_data.count,
+      // tokenSummaryList: raw_data.tokenSummaryList,
+    };
+  }
 
   public async sendLuckTokenClaimLuckyToken<R>({
     request,
