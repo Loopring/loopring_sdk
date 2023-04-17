@@ -1412,8 +1412,12 @@ export function calcDex({
       }
     } // console.log(`b2a(input:${input}) exceedDepth:${exceedDepth} amountB:${amountB}`)
   }
-  if (amountB) {
-    amountBSlipped = getMinReceived(amountB, buyToken.decimals, slipBips);
+  if (buyVol) {
+    amountBSlipped = getMinReceived(
+      buyVol.toString(),
+      buyToken.decimals,
+      slipBips
+    );
     // amountBMiniReceiveCutFee = amountBSlipped.minReceived - feeBips
   }
   return {

@@ -798,7 +798,7 @@ export class DefiAPI extends BaseAPI {
       };
     }
     return {
-      list: raw_data,
+      list: raw_data.transactions,
       totalNum: raw_data.totalNum,
       raw_data,
     };
@@ -851,7 +851,7 @@ export class DefiAPI extends BaseAPI {
         },
         [] as loopring_defs.CEX_MARKET[]
       );
-      let result = makeMarkets({ markets: reformat });
+      result = makeMarkets({ markets: reformat });
     }
     return {
       markets: result.markets,
@@ -963,15 +963,29 @@ export class DefiAPI extends BaseAPI {
     privateKey: string;
     apiKey: string;
   }) {
-    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    // const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const dataToSig = [
+      request.exchange,
+      request.storageId,
+      request.accountId,
+      request.sellToken.tokenId,
+      request.buyToken.tokenId,
+      request.sellToken.volume,
+      request.buyToken.volume,
+      request.validUntil,
+      request.maxFeeBips,
+      request.fillAmountBOrS ? 1 : 0,
+      0,
+    ];
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_CEFI_ORDER,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
+        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     };
