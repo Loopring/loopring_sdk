@@ -4066,7 +4066,7 @@ export interface DeleteContactRequest {
 }
 
 export type CEX_MARKET = {
-  market: string; //`CEFI-${string}-${string}`
+  market: string; //`LRC-USDT`;
   baseTokenId: number;
   quoteTokenId: number;
   precisionForPrice: number;
@@ -4087,7 +4087,7 @@ export type CEX_MARKET = {
     base: string | "";
     quote: string | "";
   };
-  cexMarket: "CEFI-LRC-USDT";
+  cexMarket: string; //`${CEXNAME}LRC-USDT`;
 };
 
 export interface OriginCEXV3OrderRequest {
@@ -4184,3 +4184,5 @@ export type CexResult = {
   // view
   buyVol: string | undefined;
 };
+
+export const CEXNAME = "CEFI-";

@@ -19,10 +19,8 @@ import { makeMarkets, sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
-import { DepthData } from "../defs/loopring_defs";
+import { CEXNAME, DepthData, GetOrdersRequest } from "../defs/loopring_defs";
 import { getMidPrice } from "./exchange_api";
-import { dexDethRawMock } from "../tests/MockSwapData";
-import { myLog } from "../utils/log_tools";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -804,7 +802,7 @@ export class DefiAPI extends BaseAPI {
     };
   }
 
-  public async getCefiMarkets<R>(): Promise<{
+  public async getBtradeMarkets<R>(): Promise<{
     markets: loopring_defs.LoopringMap<
       loopring_defs.CEX_MARKET & { type: "CEX" }
     >;
@@ -816,7 +814,7 @@ export class DefiAPI extends BaseAPI {
     raw_data: R;
   }> {
     const reqParams = {
-      url: LOOPRING_URLs.GET_CEFI_MARKETS,
+      url: LOOPRING_URLs.GET_BTRATE_MARKETS,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     };
@@ -841,7 +839,7 @@ export class DefiAPI extends BaseAPI {
               {
                 ...ele,
                 cexMarket: ele.market,
-                market: ele.market.replace("CEFI-", ""),
+                market: ele.market.replace(CEXNAME, ""),
                 // enabled: true,
               } as loopring_defs.CEX_MARKET,
             ];
@@ -864,7 +862,7 @@ export class DefiAPI extends BaseAPI {
     };
   }
 
-  public async getCefiDepth<R>({
+  public async getBtradeDepth<R>({
     request,
     tokenMap,
   }: {
@@ -879,7 +877,7 @@ export class DefiAPI extends BaseAPI {
     raw_data: R;
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_CEFI_DEPTH,
+      url: LOOPRING_URLs.GET_BTRATE_DEPTH,
       queryParams: { ...request },
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -925,17 +923,15 @@ export class DefiAPI extends BaseAPI {
       raw_data: raw_data as unknown as R,
     };
   }
-  public async getCefiOrders<R>({
+  public async getBtradeOrders<R>({
     request,
     apiKey,
   }: {
-    request: {
-      accountId: number;
-    };
+    request: GetOrdersRequest;
     apiKey: string;
   }) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_CEFI_ORDERS,
+      url: LOOPRING_URLs.GET_BTRATE_ORDERS,
       queryParams: { ...request },
       apiKey,
       method: ReqMethod.GET,
@@ -954,7 +950,7 @@ export class DefiAPI extends BaseAPI {
     };
   }
 
-  public async sendCefiOrder({
+  public async sendBtradeOrder({
     request,
     privateKey,
     apiKey,
@@ -978,7 +974,7 @@ export class DefiAPI extends BaseAPI {
       0,
     ];
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_CEFI_ORDER,
+      url: LOOPRING_URLs.POST_BTRATE_ORDER,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,

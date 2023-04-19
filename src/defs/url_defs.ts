@@ -186,8 +186,8 @@ export enum LOOPRING_URLs {
   DELETE_CONTACT = "/api/v3/user/contact",
 
   // CEFI_MARKETS
-  GET_CEFI_MARKETS = "api/v3/cefi/markets",
-  GET_CEFI_DEPTH = "api/v3/cefi/depth",
-  GET_CEFI_ORDERS = "api/v3/cefi/orders",
-  POST_CEFI_ORDER = "api/v3/cefi/order",
+  GET_BTRATE_MARKETS = "api/v3/btrade/markets",
+  GET_BTRATE_DEPTH = "api/v3/btrade/depth",
+  GET_BTRATE_ORDERS = "api/v3/btrade/orders",
+  POST_BTRATE_ORDER = "api/v3/btrade/order",
 }
