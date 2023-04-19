@@ -19,10 +19,8 @@ import { makeMarkets, sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
-import { DepthData } from "../defs/loopring_defs";
+import { CEXNAME, DepthData, GetOrdersRequest } from "../defs/loopring_defs";
 import { getMidPrice } from "./exchange_api";
-import { dexDethRawMock } from "../tests/MockSwapData";
-import { myLog } from "../utils/log_tools";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -841,7 +839,7 @@ export class DefiAPI extends BaseAPI {
               {
                 ...ele,
                 cexMarket: ele.market,
-                market: ele.market.replace("CEFI-", ""),
+                market: ele.market.replace(CEXNAME, ""),
                 // enabled: true,
               } as loopring_defs.CEX_MARKET,
             ];
@@ -929,9 +927,7 @@ export class DefiAPI extends BaseAPI {
     request,
     apiKey,
   }: {
-    request: {
-      accountId: number;
-    };
+    request: GetOrdersRequest;
     apiKey: string;
   }) {
     const reqParams: loopring_defs.ReqParams = {
