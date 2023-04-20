@@ -6,7 +6,7 @@ import {
   AmmPoolSnapshot,
   CalDualResult,
   BTRADE_MARKET,
-  CexResult,
+  BtradeResult,
   ConnectorError,
   DefiMarketInfo,
   DepthData,
@@ -1310,15 +1310,15 @@ export function calcDex({
   depth: DepthData;
   feeBips: string;
   slipBips: string;
-}): CexResult | undefined {
+}): BtradeResult | undefined {
   const sellToken = tokenMap[sell];
   const buyToken = tokenMap[buy];
   const reserveInfo = getReserveInfo(sell, buy, marketArr, tokenMap, marketMap);
   if (!reserveInfo) {
     throw {
-      message: ConnectorError.CEX_NO_PRODUCT,
-      msg: ConnectorError.CEX_NO_PRODUCT,
-      code: LoopringErrorCode.CEX_NO_PRODUCT,
+      message: ConnectorError.BTRADE_NO_PRODUCT,
+      msg: ConnectorError.BTRADE_NO_PRODUCT,
+      code: LoopringErrorCode.BTRADE_NO_PRODUCT,
     };
   }
   const { isReverse } = reserveInfo;
@@ -1329,9 +1329,9 @@ export function calcDex({
     const amountInWei = sellVol;
     if (isEmpty(depth.bids_amtTotal) || isEmpty(depth.asks_volTotal)) {
       throw {
-        message: ConnectorError.CEX_NO_DEPTH_ERROR,
-        msg: ConnectorError.CEX_NO_DEPTH_ERROR,
-        code: LoopringErrorCode.CEX_NO_DEPTH_ERROR,
+        message: ConnectorError.BTRADE_NO_DEPTH_ERROR,
+        msg: ConnectorError.BTRADE_NO_DEPTH_ERROR,
+        code: LoopringErrorCode.BTRADE_NO_DEPTH_ERROR,
       };
     } else {
       if (!isReverse) {
@@ -1372,9 +1372,9 @@ export function calcDex({
 
     if (isEmpty(depth.bids_volTotal) || isEmpty(depth.asks_amtTotal)) {
       throw {
-        message: ConnectorError.CEX_NO_DEPTH_ERROR,
-        msg: ConnectorError.CEX_NO_DEPTH_ERROR,
-        code: LoopringErrorCode.CEX_NO_DEPTH_ERROR,
+        message: ConnectorError.BTRADE_NO_DEPTH_ERROR,
+        msg: ConnectorError.BTRADE_NO_DEPTH_ERROR,
+        code: LoopringErrorCode.BTRADE_NO_DEPTH_ERROR,
       };
     } else {
       if (!isReverse) {

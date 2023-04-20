@@ -154,7 +154,7 @@ export function getMidPrice({
     mid_price,
   };
 }
-export function getCexMidPrice({
+export function getBtradeMidPrice({
   _asks,
   _bids,
 }: {

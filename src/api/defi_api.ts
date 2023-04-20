@@ -19,7 +19,7 @@ import { makeMarkets, sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
-import { CEXNAME, DepthData, GetOrdersRequest } from "../defs/loopring_defs";
+import { BTRADENAME, DepthData, GetOrdersRequest } from "../defs/loopring_defs";
 import { getMidPrice } from "./exchange_api";
 
 export class DefiAPI extends BaseAPI {
@@ -804,7 +804,7 @@ export class DefiAPI extends BaseAPI {
 
   public async getBtradeMarkets<R>(): Promise<{
     markets: loopring_defs.LoopringMap<
-      loopring_defs.BTRADE_MARKET & { type: "CEX" }
+      loopring_defs.BTRADE_MARKET & { type: "BTRADE" }
     >;
     pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo>;
     tokenArr: string[];
@@ -838,8 +838,8 @@ export class DefiAPI extends BaseAPI {
               ...prev,
               {
                 ...ele,
-                cexMarket: ele.market,
-                market: ele.market.replace(CEXNAME, ""),
+                btradeMarket: ele.market,
+                market: ele.market.replace(BTRADENAME, ""),
                 // enabled: true,
               } as loopring_defs.BTRADE_MARKET,
             ];
@@ -955,7 +955,7 @@ export class DefiAPI extends BaseAPI {
     privateKey,
     apiKey,
   }: {
-    request: loopring_defs.OriginCEXV3OrderRequest;
+    request: loopring_defs.OriginBTRADEV3OrderRequest;
     privateKey: string;
     apiKey: string;
   }) {

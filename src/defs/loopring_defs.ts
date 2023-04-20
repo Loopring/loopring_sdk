@@ -4079,7 +4079,7 @@ export type BTRADE_MARKET = {
     base: string | "";
     quote: string | "";
   };
-  cefiAmount: {
+  btradeAmount: {
     base: string | "";
     quote: string | "";
   };
@@ -4087,76 +4087,76 @@ export type BTRADE_MARKET = {
     base: string | "";
     quote: string | "";
   };
-  cexMarket: string; //`${CEXNAME}LRC-USDT`;
+  btradeMarket: string; //`${BTRADENAME}LRC-USDT`;
 };
 
-export interface OriginCEXV3OrderRequest {
+export interface OriginBTRADEV3OrderRequest {
   /**
    * exchange address
    * @type {string}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   exchange: string;
   /**
    * storageId
    * @type {number}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   storageId: number;
   /**
    * accountId
    * @type {number}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   accountId: number;
   /**
    * sellToken
    * @type TokenVolumeV3
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   sellToken: TokenVolumeV3;
   /**
    * buyToken
    * @type TokenVolumeV3
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   buyToken: TokenVolumeV3;
   /**
    * allOrNone
    * @description Whether the order supports partial fills or not.Currently only supports false as a valid value
    * @type boolean
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   allOrNone: Boolean;
   /**
    * fillAmountBOrS
    * @type boolean
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   fillAmountBOrS: boolean;
   /**
    * Timestamp for order become invalid
    * @type {number}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   validUntil: number;
   /**
    * fee
    * @type {string}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   maxFeeBips: number;
   /**
    * The orders EdDSA signature. The signature is a hexadecimal string obtained by signing the order itself and concatenating the resulting signature parts (Rx, Ry, and S). Used to authenticate and authorize the operation.
    * @type {string}
-   * @memberof OriginCEXV3OrderRequest
+   * @memberof OriginBTRADEV3OrderRequest
    */
   eddsaSignature?: string;
   clientOrderId: string;
   orderType: OrderTypeResp;
 }
 
-export type CexResult = {
+export type BtradeResult = {
   exceedDepth: boolean;
   isAtoB: boolean;
   isReverse: boolean;
@@ -4185,4 +4185,4 @@ export type CexResult = {
   buyVol: string | undefined;
 };
 
-export const CEXNAME = "CEFI-";
+export const BTRADENAME = "BTRADE-";
