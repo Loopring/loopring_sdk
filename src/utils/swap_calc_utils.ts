@@ -5,7 +5,7 @@ import {
   ABInfo,
   AmmPoolSnapshot,
   CalDualResult,
-  CEX_MARKET,
+  BTRADE_MARKET,
   CexResult,
   ConnectorError,
   DefiMarketInfo,
@@ -1276,7 +1276,7 @@ export function calcDual({
 
 /**
  *
- * @param info  CEX_MARKET
+ * @param info  BTRADE_MARKET
  * @param index
  * @param rule
  * @param balance
@@ -1299,7 +1299,7 @@ export function calcDex({
   feeBips,
   slipBips,
 }: {
-  info: CEX_MARKET;
+  info: BTRADE_MARKET;
   input: string;
   sell: string;
   buy: string;

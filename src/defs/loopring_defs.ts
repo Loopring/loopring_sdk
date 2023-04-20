@@ -4065,7 +4065,7 @@ export interface DeleteContactRequest {
   contactMemo?: string;
 }
 
-export type CEX_MARKET = {
+export type BTRADE_MARKET = {
   market: string; //`LRC-USDT`;
   baseTokenId: number;
   quoteTokenId: number;
@@ -4178,7 +4178,7 @@ export type CexResult = {
    *  with decimals
    */
   amountB: string | undefined;
-  info: CEX_MARKET;
+  info: BTRADE_MARKET;
   // view
   sellVol: string | undefined;
   // view

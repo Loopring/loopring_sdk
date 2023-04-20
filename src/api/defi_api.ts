@@ -804,7 +804,7 @@ export class DefiAPI extends BaseAPI {
 
   public async getBtradeMarkets<R>(): Promise<{
     markets: loopring_defs.LoopringMap<
-      loopring_defs.CEX_MARKET & { type: "CEX" }
+      loopring_defs.BTRADE_MARKET & { type: "CEX" }
     >;
     pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo>;
     tokenArr: string[];
@@ -832,7 +832,7 @@ export class DefiAPI extends BaseAPI {
 
     if (raw_data instanceof Array) {
       const reformat = raw_data.reduce(
-        (prev, ele: loopring_defs.CEX_MARKET) => {
+        (prev, ele: loopring_defs.BTRADE_MARKET) => {
           if (/-/gi.test(ele.market)) {
             return [
               ...prev,
@@ -841,13 +841,13 @@ export class DefiAPI extends BaseAPI {
                 cexMarket: ele.market,
                 market: ele.market.replace(CEXNAME, ""),
                 // enabled: true,
-              } as loopring_defs.CEX_MARKET,
+              } as loopring_defs.BTRADE_MARKET,
             ];
           } else {
             return prev;
           }
         },
-        [] as loopring_defs.CEX_MARKET[]
+        [] as loopring_defs.BTRADE_MARKET[]
       );
       result = makeMarkets({ markets: reformat });
     }
