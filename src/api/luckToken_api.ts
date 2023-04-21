@@ -494,10 +494,6 @@ export class LuckTokenAPI extends BaseAPI {
     let { transfer } = request;
     transfer.payeeId = 0;
     transfer.memo = `LuckTokenWithdrawalBy${request.claimer}`;
-    transfer.maxFee = {
-      volume: "0",
-      tokenId: 0,
-    };
 
     const sigHW = async () => {
       const result = await sign_tools.signTransferWithoutDataStructure(
@@ -580,8 +576,8 @@ export class LuckTokenAPI extends BaseAPI {
     // @ts-ignore
     _transfer = {
       ..._transfer,
-      maxFeeAmount: maxFee.volume,
-      feeToken: maxFee.tokenId,
+      maxFeeAmount: maxFee?.volume ? maxFee?.volume : "0",
+      feeToken: maxFee?.tokenId ? maxFee?.tokenId : 0,
       amount: token.volume,
       token: token.tokenId,
       ecdsaAuth: ecdsaSignature,
