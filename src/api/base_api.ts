@@ -14,20 +14,12 @@ import {
   TX_HASH_API,
 } from "../defs";
 import { Request } from "./request";
-import {
-  ecrecover,
-  fromRpcSig,
-  hashPersonalMessage,
-  keccak,
-  keccak256,
-  pubToAddress,
-  toRpcSig,
-} from "ethereumjs-util";
 import { addHexPrefix, toBuffer, toHex } from "../utils";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
 import { AxiosResponse } from "axios";
+import * as ethUtil from "ethereumjs-util";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +
@@ -188,33 +180,38 @@ export async function ecRecover(
   web3: Web3,
   account: string,
   msg: string,
-  sig: any
+  sig: any,
+  time = 3000
 ) {
-  return new Promise((resolve) => {
-    try {
-      web3.eth.personal.ecRecover(
-        msg,
-        sig,
-        function (err: any, address: string) {
-          if (!err && address) {
-            resolve({
-              result: address.toLowerCase() === account.toLowerCase(),
-            });
-          } else {
-            // LOG: for signature
-            console.log("ecRecover 1:", err);
-            resolve({
-              error: "ecRecover 1:" + err + "or no address:" + address,
-            });
-          }
-        }
+  let timer;
+  return await Promise.race([
+    new Promise((_r, rej) => (timer = setTimeout(rej, time))),
+    new Promise((resolve) => {
+      // web3.eth.personal.ecRecover();
+      const hash = ethUtil.hashPersonalMessage(toBuffer(msg));
+      const signature = ethUtil.fromRpcSig(sig);
+      const result = ethUtil.ecrecover(
+        hash,
+        signature.v,
+        signature.r,
+        signature.s
       );
-    } catch (err) {
-      // LOG: for signature
-      console.log("ecRecover 2:", err);
-      resolve({ error: ("ecRecover 2:" + err) as any });
-    }
-  });
+      const result2 = ethUtil.pubToAddress(result);
+      const recAddress = toHex(result2);
+      myLog("ecRecover recAddress", result, result2, recAddress);
+      resolve({
+        result: recAddress.toLowerCase() === account.toLowerCase(),
+      });
+    }),
+  ])
+    .catch((error) => {
+      console.log("ecRecover 2:", error);
+      return { error: ("ecRecover 2:" + error) as any };
+    })
+    .finally(() => {
+      console.log("ecRecover 2: timeout");
+      return "ecRecover 2: timeout";
+    });
 }
 
 export async function contractWalletValidate32(
@@ -224,7 +221,7 @@ export async function contractWalletValidate32(
   sig: any
 ) {
   return new Promise((resolve) => {
-    const hash = hashPersonalMessage(toBuffer(msg));
+    const hash = ethUtil.hashPersonalMessage(toBuffer(msg));
     const data = ABI.Contracts.ContractWallet.encodeInputs(
       "isValidSignature(bytes32,bytes)",
       {
@@ -277,13 +274,17 @@ export async function mykeyWalletValid(
       },
       function (err: any, res: any) {
         if (!err) {
-          const signature = fromRpcSig(sig);
-          const hash = hashPersonalMessage(keccak256(toBuffer(msg)));
+          const signature = ethUtil.fromRpcSig(sig);
+          const hash = ethUtil.hashPersonalMessage(
+            ethUtil.keccak256(toBuffer(msg))
+          );
           const address = addHexPrefix(
             ABI.Contracts.ContractWallet.decodeOutputs("getKeyData", res)[0]
           );
           const recAddress = toHex(
-            pubToAddress(ecrecover(hash, signature.v, signature.r, signature.s))
+            ethUtil.pubToAddress(
+              ethUtil.ecrecover(hash, signature.v, signature.r, signature.s)
+            )
           );
           resolve({
             result: recAddress.toLowerCase() === address.toLowerCase(),
@@ -316,7 +317,7 @@ export async function ecRecover2(
     messageBuffer,
   ];
 
-  const totalHash = keccak(Buffer.concat(parts));
+  const totalHash = ethUtil.keccak(Buffer.concat(parts));
 
   const r = Buffer.from(signature.substring(0, 64), "hex");
   const s = Buffer.from(signature.substring(64, 128), "hex");
@@ -327,9 +328,9 @@ export async function ecRecover2(
 
   if (v <= 1) v += 27;
 
-  const pub = ecrecover(totalHash, v, r, s);
+  const pub = ethUtil.ecrecover(totalHash, v, r, s);
 
-  const recoveredAddress = "0x" + pubToAddress(pub).toString("hex");
+  const recoveredAddress = "0x" + ethUtil.pubToAddress(pub).toString("hex");
 
   if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
     myLog("v:", v, "old_v:", old_v, " recoveredAddress:", recoveredAddress);
@@ -370,8 +371,8 @@ export interface InitParam {
 }
 
 export function formatSig(rpcSig: string) {
-  const sig = fromRpcSig(rpcSig);
-  return toRpcSig(sig.v, sig.r, sig.s);
+  const sig = ethUtil.fromRpcSig(rpcSig);
+  return ethUtil.toRpcSig(sig.v, sig.r, sig.s);
 }
 export function recoverSignType(
   web3: any,
