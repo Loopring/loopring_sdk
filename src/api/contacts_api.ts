@@ -46,7 +46,7 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data as boolean  
+    return raw_data   
   }
 
   public async updateContact(
@@ -62,7 +62,7 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data as boolean  
+    return raw_data  
   }
   public async deleteContact(
     request: DeleteContactRequest,
@@ -78,7 +78,7 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data as boolean
+    return raw_data 
   }
 
 }

@@ -4000,6 +4000,8 @@ export interface OriginStakeClaimRequestV3WithPatch {
 export interface GetContactsRequest {
   isHebao: boolean;
   accountId: number;
+  limit?: number;
+  offset?: number;
 }
 
 export enum AddressType {
@@ -4025,6 +4027,7 @@ export enum AddressType {
   EOA_LEDGER = 5003,
 
   CONTRACT = 600,
+  OFFICIAL = 200
 }
 
 export interface GetContactsResponse {
