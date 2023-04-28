@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v3.3.16 
+    1）Change Ecrecove function
+    2）Stop limit
+    3) Red Packet 
+    4) Block trade
 
 #### v3.3.0
     1) GLOBAL information update
