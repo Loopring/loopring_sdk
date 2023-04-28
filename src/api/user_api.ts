@@ -18,6 +18,8 @@ import {
   ConnectorError,
   CounterFactualInfo,
   GetUserRewardRequest,
+  STOP_SIDE,
+  EXTRAORDER_TYPE,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -25,7 +27,7 @@ import * as loopring_defs from "../defs/loopring_defs";
 import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
-import { sortObjDictionary } from "../utils";
+import { RequiredPart, sortObjDictionary } from "../utils";
 import { generateKeyPair, KeyPairParams } from "./sign/sign_tools";
 import { AxiosResponse } from "axios";
 
@@ -165,7 +167,10 @@ export class UserAPI extends BaseAPI {
    * Submit an order
    */
   public async submitOrder(
-    orderRequest: loopring_defs.SubmitOrderRequestV3,
+    {
+      extraOrderType = EXTRAORDER_TYPE.TRADITIONAL_ORDER,
+      ...orderRequest
+    }: loopring_defs.SubmitOrderRequestV3,
     privateKey: string,
     apiKey: string
   ) {
@@ -190,6 +195,54 @@ export class UserAPI extends BaseAPI {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
       bodyParams: orderRequest,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigObj: {
+        dataToSig,
+        sigPatch: SigPatchField.EddsaSignature,
+        PrivateKey: privateKey,
+      },
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+
+    return this.returnTxHash(raw_data);
+  }
+
+  public async submitStopOrder(
+    {
+      extraOrderType = EXTRAORDER_TYPE.STOP_LIMIT,
+      stopSide, // = STOP_SIDE.NO_CONDITION,
+      ...orderRequest
+    }: RequiredPart<
+      loopring_defs.SubmitOrderRequestV3,
+      "extraOrderType" | "stopSide" | "stopPrice"
+    >,
+    privateKey: string,
+    apiKey: string
+  ) {
+    if (!orderRequest.tradeChannel) {
+      orderRequest.tradeChannel = TradeChannel.MIXED;
+    }
+
+    const dataToSig = [
+      orderRequest.exchange,
+      orderRequest.storageId,
+      orderRequest.accountId,
+      orderRequest.sellToken.tokenId,
+      orderRequest.buyToken.tokenId,
+      orderRequest.sellToken.volume,
+      orderRequest.buyToken.volume,
+      orderRequest.validUntil,
+      orderRequest.maxFeeBips,
+      orderRequest.fillAmountBOrS ? 1 : 0,
+      0,
+    ];
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.ORDER_ACTION,
+      bodyParams: { ...orderRequest, extraOrderType, stopSide },
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,

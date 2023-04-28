@@ -1432,6 +1432,15 @@ export interface CancelMultiOrdersByClientOrderIdRequest {
   clientOrderId: string; // comma seprated string
 }
 
+export enum EXTRAORDER_TYPE {
+  TRADITIONAL_ORDER = "TRADITIONAL_ORDER",
+  STOP_LIMIT = "STOP_LIMIT",
+}
+export enum STOP_SIDE {
+  NO_CONDITION = "NO_CONDITION",
+  GREAT_THAN_AND_EQUAL = "GREAT_THAN_AND_EQUAL",
+  LESS_THAN_AND_EQUAL = "LESS_THAN_AND_EQUAL",
+}
 export interface SubmitOrderRequestV3 {
   /**
    * The adderss of the exchange which has to process this order
@@ -1526,6 +1535,9 @@ export interface SubmitOrderRequestV3 {
    * @memberof SubmitOrderRequestV3
    */
   channelId?: string;
+  extraOrderType?: EXTRAORDER_TYPE;
+  stopPrice?: string;
+  stopSide?: STOP_SIDE;
 }
 
 /**
@@ -4027,7 +4039,7 @@ export enum AddressType {
   EOA_LEDGER = 5003,
 
   CONTRACT = 600,
-  OFFICIAL = 200
+  OFFICIAL = 200,
 }
 
 export interface GetContactsResponse {
