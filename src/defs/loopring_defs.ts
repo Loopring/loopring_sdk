@@ -921,6 +921,9 @@ export interface OrderDetail {
   orderType: OrderTypeResp;
   tradeChannel: TradeChannel;
   status: OrderStatus;
+  extraOrderType?: boolean;
+  stopPrice?: string;
+  stopSide: STOP_SIDE;
 }
 
 export interface GetUserOrderFeeRateRequest {
