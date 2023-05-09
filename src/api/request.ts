@@ -59,7 +59,6 @@ export class Request {
   }
 
   constructor(baseUrl: string, timeout: number) {
-
     this.baseOptions = {
       baseURL: baseUrl,
       timeout: timeout,
@@ -144,7 +143,7 @@ export class Request {
       }
 
       if (params?.ecdsaSignature) {
-        bodyParams.ecdsaSignature = params?.ecdsaSignature;
+        bodyParams.eddsaSignature = params?.ecdsaSignature;
       }
 
       if (params?.eddsaSignature) {
@@ -162,7 +161,6 @@ export class Request {
       ...localVarRequestOptions,
       url: this.baseOptions.baseURL + urlPathStr,
     };
-    
 
     // myLog(optInOne);
     // myLog("headers config", optInOne);

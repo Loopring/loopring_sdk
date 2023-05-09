@@ -28,7 +28,11 @@ import * as sign_tools from "./sign/sign_tools";
 import { isContract } from "./contract_api";
 import BN from "bn.js";
 import { RequiredPart, sortObjDictionary } from "../utils";
-import { generateKeyPair, KeyPairParams } from "./sign/sign_tools";
+import {
+  generateKeyPair,
+  getEdDSASigWithPoseidon,
+  KeyPairParams,
+} from "./sign/sign_tools";
 import { AxiosResponse } from "axios";
 
 export class UserAPI extends BaseAPI {
@@ -239,15 +243,22 @@ export class UserAPI extends BaseAPI {
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
     ];
-
+    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, apiKey).result;
+    const bodyParams = {
+      ...orderRequest,
+      extraOrderType,
+      stopSide,
+      eddsaSignature,
+    };
+    const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams);
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
-      bodyParams: { ...orderRequest, extraOrderType, stopSide },
+      bodyParams: bodyParams,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
-        dataToSig,
+        dataToSig: _dataToSig,
         sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },

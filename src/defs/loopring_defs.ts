@@ -1052,6 +1052,12 @@ export interface OffChainWithdrawalRequestV3 {
   counterFactualInfo?: CounterFactualInfo;
 }
 
+export enum EXTRA_ORDER_TYPES {
+  TRADITIONAL_ORDER = "TRADITIONAL_ORDER",
+  STOP_LIMIT = "STOP_LIMIT",
+  TRAILING_STOP = "TRAILING_STOP",
+  OCO = "OCO",
+}
 export interface GetOrdersRequest {
   accountId: number;
   market?: string;
@@ -1063,6 +1069,7 @@ export interface GetOrdersRequest {
   limit?: number;
   offset?: number;
   orderTypes?: OrderType;
+  extraOrderTypes?: string;
 }
 
 export interface GetUserRegTxsRequest {
