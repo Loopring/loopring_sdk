@@ -901,4 +901,33 @@ export class LuckTokenAPI extends BaseAPI {
       list: raw_data.list,
     };
   }
+  
+  public async getLuckTokenUnclaimNFTBlindboxCnt<R>(
+    request: {
+      accountId: number;
+    },
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    count: number;
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.POST_LUCK_TOKEN_UNCLAIMNFTANDBLINDCNT,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };    
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      raw_data,
+      count: raw_data?.count,
+    };
+  }
 }
