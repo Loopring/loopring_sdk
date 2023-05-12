@@ -133,6 +133,7 @@ export enum LOOPRING_URLs {
   GET_NFT_LEGACY_COLLECTION = "/api/v3/nft/collection/legacy",
   GET_NFT_LEGACY_TOKENADDRESS = "/api/v3/nft/collection/legacy/tokenAddress",
   GET_NFT_LEGACY_BALANCE = "/api/v3/nft/collection/legacy/balance",
+  GET_USER_LOCKSUMMAR = "api/v3/user/lockSummary",
 
   GET_NFTs_INFO = "/api/v3/nft/info/nfts",
   GET_USER_NFT_TRANSFER_HISTORY = "/api/v3/user/nft/transfers",

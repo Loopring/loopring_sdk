@@ -21,7 +21,7 @@ export enum WsTopicType {
   ammpool = "ammpool",
   orderbook = "orderbook",
   mixorder = "mixorder",
-  btradeOrderBook = "btradeOrderBook",
+  btradedepth = "btradedepth",
 }
 
 export const getAccountArg = () => {
@@ -65,7 +65,7 @@ export type OrderWsRequest = {
   topic?:
     | WsTopicType.orderbook
     | WsTopicType.mixorder
-    | WsTopicType.btradeOrderBook;
+    | WsTopicType.btradedepth;
   market: string;
   level: number;
   count?: number;
@@ -105,9 +105,9 @@ export const getMixOrderArg = ({
 };
 
 export const getBtradeOrderBook = ({
-  topic = WsTopicType.btradeOrderBook,
+  topic = WsTopicType.btradedepth,
   ...orderWsRequest
-}: { topic?: WsTopicType.btradeOrderBook } & Omit<OrderWsRequest, "topic">) => {
+}: { topic?: WsTopicType.btradedepth } & Omit<OrderWsRequest, "topic">) => {
   return getOrderBookArg({
     topic,
     ...orderWsRequest,

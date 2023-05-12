@@ -20,6 +20,7 @@ import {
   GetUserRewardRequest,
   STOP_SIDE,
   EXTRAORDER_TYPE,
+  getUserLockSummarRequest,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -3146,6 +3147,41 @@ export class UserAPI extends BaseAPI {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_PROTOCOL_REWARDS,
       queryParams: { ...request, size: request?.size ?? 200 },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    };
+  }
+
+  /*
+   * Get user GET_USER_LOCKSUMMAR
+   */
+  public async getUserLockSummar<R>(
+    request: loopring_defs.getUserLockSummarRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_USER_LOCKSUMMAR,
+      queryParams: request,
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,

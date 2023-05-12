@@ -4211,3 +4211,17 @@ export type BtradeResult = {
 };
 
 export const BTRADENAME = "BTRADE-";
+
+export enum LOCK_TYPE {
+  DUAL_CURRENCY = "DUAL_CURRENCY",
+  DUAL_BASE = "DUAL_BASE",
+  BTRADE = "BTRADE",
+  L2STAKING = "L2STAKING",
+  STOP_LIMIT = "STOP_LIMIT",
+}
+
+export type getUserLockSummarRequest = {
+  accountId: number;
+  tokenId: number;
+  lockTags: LOCK_TYPE[];
+};
