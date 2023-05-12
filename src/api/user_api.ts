@@ -17,10 +17,8 @@ import {
   LoopringErrorCode,
   ConnectorError,
   CounterFactualInfo,
-  GetUserRewardRequest,
-  STOP_SIDE,
   EXTRAORDER_TYPE,
-  getUserLockSummarRequest,
+  UserLockSummary,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -3173,12 +3171,14 @@ export class UserAPI extends BaseAPI {
   /*
    * Get user GET_USER_LOCKSUMMAR
    */
-  public async getUserLockSummar<R>(
-    request: loopring_defs.getUserLockSummarRequest,
+  public async getUserLockSummary<R = loopring_defs.UserLockSummary>(
+    request: loopring_defs.getUserLockSummaryRequest,
     apiKey: string
-  ): Promise<{
-    raw_data: R;
-  }> {
+  ): Promise<
+    R & {
+      raw_data: R;
+    }
+  > {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_LOCKSUMMAR,
       queryParams: request,

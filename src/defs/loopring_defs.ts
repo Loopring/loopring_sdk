@@ -4220,8 +4220,16 @@ export enum LOCK_TYPE {
   STOP_LIMIT = "STOP_LIMIT",
 }
 
-export type getUserLockSummarRequest = {
+export type getUserLockSummaryRequest = {
   accountId: number;
   tokenId: number;
   lockTags: LOCK_TYPE[];
+};
+
+export type UserLockSummary = {
+  lockRecord: {
+    amount: string;
+    lockTag: string;
+    tokenId: number;
+  }[];
 };
