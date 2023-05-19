@@ -143,7 +143,7 @@ export class Request {
       }
 
       if (params?.ecdsaSignature) {
-        bodyParams.eddsaSignature = params?.ecdsaSignature;
+        bodyParams.ecdsaSignature = params?.ecdsaSignature;
       }
 
       if (params?.eddsaSignature) {
