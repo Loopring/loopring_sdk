@@ -61,6 +61,7 @@ export enum OffchainFeeReqType {
   DEFI_JOIN = 21,
   DEFI_EXIT = 22,
   FORCE_WITHDRAWAL = 23,
+  EXTRA_TYPES = 24,
 }
 export enum OffchainNFTFeeReqType {
   NFT_MINT = 9,
@@ -68,6 +69,7 @@ export enum OffchainNFTFeeReqType {
   NFT_TRANSFER = 11,
   NFT_DEPLOY = 13,
   NFT_TRANSFER_AND_UPDATE_ACCOUNT = 19,
+  EXTRA_TYPES = 24,
 }
 
 export enum TradingInterval {

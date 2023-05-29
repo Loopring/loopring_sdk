@@ -944,6 +944,7 @@ export class DefiAPI extends BaseAPI {
       };
     }
     return {
+      //  baseSettled quoteSettled
       list: raw_data.transactions,
       totalNum: raw_data.totalNum,
       raw_data,

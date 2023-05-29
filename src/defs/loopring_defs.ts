@@ -783,15 +783,6 @@ export interface UpdateUserApiKeyRequest {
   accountId: number;
 }
 
-// ORDER=0,
-// OFFCHAIN_WITHDRAWAL=1,
-// UPDATE_ACCOUNT=2,
-// TRANSFER=3,
-// FAST_OFFCHAIN_WITHDRAWAL=4,
-// OPEN_ACCOUNT=5,
-// AMM_EXIT=6,
-// DEPOSIT=7,
-// AMM_JOIN=8,
 export type GetOffchainFeeAmtRequest =
   | ({
       accountId: number;
@@ -822,7 +813,8 @@ export type GetOffchainFeeAmtRequest =
       requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL;
       tokenSymbol: string;
       amount: string;
-    };
+    }
+  | { requestType: OffchainFeeReqType.EXTRA_TYPES; extratypes: any };
 
 /**
  * @methodOf OffchainNFTFeeReqType.NFT_MINT
@@ -836,13 +828,23 @@ export type GetNFTOffchainFeeAmtRequest = {
   amount?: string;
 } & XOR<
   {
-    requestType: Omit<OffchainNFTFeeReqType, 9 | 10>;
+    requestType: Omit<
+      OffchainNFTFeeReqType,
+      | OffchainNFTFeeReqType.NFT_MINT
+      | OffchainNFTFeeReqType.NFT_WITHDRAWAL
+      | OffchainNFTFeeReqType.EXTRA_TYPES
+    >;
   },
   | {
-      requestType: 9;
+      requestType: OffchainNFTFeeReqType.NFT_MINT;
       tokenAddress: string;
     }
-  | { requestType: 10; tokenAddress: string; deployInWithdraw?: boolean }
+  | {
+      requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL;
+      tokenAddress: string;
+      deployInWithdraw?: boolean;
+    }
+  | { requestType: OffchainNFTFeeReqType.EXTRA_TYPES; extratypes: any }
 >;
 
 export interface OrderInfo {
@@ -4179,6 +4181,7 @@ export interface OriginBTRADEV3OrderRequest {
   eddsaSignature?: string;
   clientOrderId: string;
   orderType: OrderTypeResp;
+  fastMode: boolean;
 }
 
 export type BtradeResult = {
