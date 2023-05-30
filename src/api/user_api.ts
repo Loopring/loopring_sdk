@@ -261,7 +261,6 @@ export class UserAPI extends BaseAPI {
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig: _dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     };
