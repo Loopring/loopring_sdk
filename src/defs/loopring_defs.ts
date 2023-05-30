@@ -814,7 +814,7 @@ export type GetOffchainFeeAmtRequest =
       tokenSymbol: string;
       amount: string;
     }
-  | { requestType: OffchainFeeReqType.EXTRA_TYPES; extratypes: any };
+  | { requestType: OffchainFeeReqType.EXTRA_TYPES; extraType: any };
 
 /**
  * @methodOf OffchainNFTFeeReqType.NFT_MINT
@@ -844,7 +844,7 @@ export type GetNFTOffchainFeeAmtRequest = {
       tokenAddress: string;
       deployInWithdraw?: boolean;
     }
-  | { requestType: OffchainNFTFeeReqType.EXTRA_TYPES; extratypes: any }
+  | { requestType: OffchainNFTFeeReqType.EXTRA_TYPES; extraType: any }
 >;
 
 export interface OrderInfo {

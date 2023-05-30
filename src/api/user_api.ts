@@ -242,7 +242,10 @@ export class UserAPI extends BaseAPI {
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
     ];
-    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, apiKey).result;
+    const eddsaSignature = getEdDSASigWithPoseidon(
+      dataToSig,
+      privateKey
+    ).result;
     const bodyParams = {
       ...orderRequest,
       extraOrderType,
