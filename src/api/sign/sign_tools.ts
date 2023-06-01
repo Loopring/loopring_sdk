@@ -117,7 +117,7 @@ export async function generateKeyPair(
 ) {
   // LOG: for signature
   // TODO:
-  console.log(
+  myLog(
     "personalSign ->",
     "counterFactualInfo",
     counterFactualInfo,
@@ -157,7 +157,7 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split("")).join("");
       let newValue = generatePrivateKey(result);
       // LOG: for signature
-      console.log(
+      myLog(
         "personalSign ->",
         "publicKey calc by sign",
         "x",
@@ -267,12 +267,12 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`;
   // LOG: for signature
-  console.log("getEdDSASig", message);
+  myLog("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
   // LOG: for signature
-  console.log("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);
 
