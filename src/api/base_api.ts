@@ -20,6 +20,9 @@ import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
 import { AxiosResponse } from "axios";
 import * as ethUtil from "ethereumjs-util";
+import { Contract } from "ethers";
+import { isContract } from "./contract_api";
+// import contractWalletAbi from "../../config/abis/contractWallet.json";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +
@@ -230,29 +233,26 @@ export async function contractWalletValidate32(
       }
     );
     // LOG: for signature
-    myLog("contractWalletValidate32", data);
-
-    web3.eth.call(
-      {
-        to: account, // contract addr
-        data: data,
-      },
-      function (err: any, result: any) {
-        if (!err) {
-          const valid = ABI.Contracts.ContractWallet.decodeOutputs(
-            "isValidSignature(bytes32,bytes)",
-            result
-          );
-          resolve({
-            result: toHex(toBuffer(valid[0])) === data.slice(0, 10),
-          });
-        } else {
-          // LOG: for signature
-          myLog("contractWalletValidate32 err", err);
-          resolve({ error: err });
-        }
-      }
+    console.log("ecRecover isValidSignature(bytes32,bytes)", data);
+    const signature = ethUtil.fromRpcSig(sig);
+    const result = ethUtil.ecrecover(
+      data,
+      signature.v,
+      signature.r,
+      signature.s
     );
+    const result2 = ethUtil.pubToAddress(result);
+    const recAddress = toHex(result2);
+    // LOG: for signature
+    console.log(
+      "ecRecover contractWalletValidate32",
+      result,
+      result2,
+      recAddress
+    );
+    resolve({
+      result: recAddress.toLowerCase() === account.toLowerCase(),
+    });
   });
 }
 
@@ -412,7 +412,7 @@ export async function personalSign(
         async function (err: any, result: any) {
           if (!err) {
             // LOG: for signature
-            myLog(
+            console.log(
               "ecRecover before",
               "msg",
               msg,
@@ -470,17 +470,16 @@ export async function personalSign(
               return resolve({ sig: result });
             } else {
               // LOG: for signature
-              myLog("ecRecover before", result);
+              console.log("ecRecover before", result);
               const valid: any = await ecRecover(web3, account, msg, result);
               // LOG: for signature
-              myLog("ecRecover after", valid.result);
+              console.log("ecRecover after", valid.result);
               if (valid.result) {
                 return resolve({ sig: result });
               }
             }
             // LOG: for signature
-            // console.log("Valid: 5. contractWallet before");
-
+            console.log("Valid: 5. contractWallet before");
             // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
             const walletValid2: any = await contractWalletValidate32(
               web3,
@@ -489,11 +488,21 @@ export async function personalSign(
               result
             );
             // LOG: for signature
-            myLog("Valid: 5. contractWallet", walletValid2);
-
+            console.log("Valid: 5. contractWallet", walletValid2);
+            const isContractCheck = await isContract(web3, account);
             if (walletValid2.result) {
               return resolve({ sig: result });
+            } else if (isContractCheck) {
+              // LOG: for signature
+              console.log("Valid: 5 failed isContract. no ecrecover");
+              return resolve({ sig: result });
             }
+            // const isContractCheck = await isContract(web3, account);
+            // if (isContractCheck) {
+            //   // LOG: for signature
+            //   console.error("Valid: 5 failed isContract. no ecrecover");
+            //   return resolve({ sig: result });
+            // }
 
             // Valid: 6. counter Factual signature Valid when no counterFactualInfo
             if (accountId) {
@@ -542,7 +551,10 @@ export async function personalSign(
       );
     } catch (err) {
       // LOG: for signature
-      myLog("personalSign callback err", (err as unknown as any)?.message);
+      console.log(
+        "personalSign callback err",
+        (err as unknown as any)?.message
+      );
       resolve({ error: err as any });
     }
   });
