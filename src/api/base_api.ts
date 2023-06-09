@@ -492,29 +492,27 @@ export async function personalSign(
                 return resolve({ sig: result });
               }
             }
+
             // LOG: for signature
+            // Valid: 5. contractWallet no recover
+            // signature Valid `isValidSignature(bytes32,bytes)`
             myLog("Valid: 5. contractWallet before");
-            // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
-            const walletValid2: any = await contractWalletValidate32(
-              web3,
-              account,
-              msg,
-              result
-            );
-            // LOG: for signature
-            myLog("Valid: 5. contractWallet", walletValid2);
             const isContractCheck = await isContract(web3, account);
-            if (walletValid2.result) {
-              return resolve({ sig: result });
-            } else if (isContractCheck) {
+            if (isContractCheck) {
               // LOG: for signature
               myLog("Valid: 5 failed isContract. no ecrecover");
               return resolve({ sig: result });
             }
-            // const isContractCheck = await isContract(web3, account);
-            // if (isContractCheck) {
-            //   // LOG: for signature
-            //   console.error("Valid: 5 failed isContract. no ecrecover");
+
+            // Valid: 5. contractWallet signature Valid `isValidSignature(bytes32,bytes)`
+            // const walletValid2: any = await contractWalletValidate32(
+            //   web3,
+            //   account,
+            //   msg,
+            //   result
+            // );
+            // LOG: for signature
+            // if (walletValid2.result) {
             //   return resolve({ sig: result });
             // }
 
