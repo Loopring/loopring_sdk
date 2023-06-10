@@ -364,7 +364,7 @@ export async function signEip712WalletConnect(
   typedData: any
 ) {
   try {
-    const response: any = await web3.currentProvider?.request(
+    const response: any = await web3.currentProvider?.send(
       "eth_signTypedData",
       [account, typedData]
     );
@@ -396,7 +396,7 @@ export async function getEcDSASig(
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
       response = await new Promise((resolve) => {
-        web3.currentProvider.request(
+        web3.currentProvider.send(
           {
             method: "eth_signTypedData_v4",
             params,
