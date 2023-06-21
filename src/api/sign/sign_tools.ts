@@ -278,6 +278,43 @@ export function getEdDSASig(
   return sig;
 }
 
+export function creatEdDSASigHasH({
+  method,
+  basePath,
+  api_url,
+  requestInfo,
+}: {
+  method: string;
+  basePath: string;
+  api_url: string;
+  requestInfo: any;
+}) {
+  let params = undefined;
+
+  method = method.toUpperCase().trim();
+
+  if (method === "GET" || method === "DELETE") {
+    params = makeRequestParamStr(requestInfo);
+  } else if (method === "POST" || method === "PUT") {
+    params = makeObjectStr(requestInfo);
+  } else {
+    throw new Error(`${method} is not supported yet!`);
+  }
+
+  const uri = encodeURIComponent(`${basePath}${api_url}`);
+
+  const message = `${method}&${uri}&${params}`;
+  // LOG: for signature
+  myLog("getEdDSASig", message);
+
+  let _hash: any = new BigInteger(sha256(message).toString(), 16);
+
+  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  // LOG: for signature
+  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  return { hash, hashRaw: _hash.toString() };
+}
+
 export function verifyEdDSASig(
   hash: string,
   input: { Rx: string; Ry: string; s: string }
@@ -351,7 +388,7 @@ export async function signEip712(
     );
   });
 
-  if (response["result"]) {
+  if (response?.result) {
     return response;
   } else {
     throw new Error(response["error"]["message"]);
@@ -364,13 +401,47 @@ export async function signEip712WalletConnect(
   typedData: any
 ) {
   try {
-    const response: any = await web3.currentProvider?.send(
-      "eth_signTypedData",
-      [account, typedData]
-    );
+    let response: any;
+    if (
+      window?.ethereum?.isLoopring ||
+      !web3.currentProvider?.signer?.session
+    ) {
+      const result: any = await new Promise((resolve) => {
+        web3.currentProvider?.sendAsync(
+          {
+            method: "eth_signTypedData",
+            params: [account, typedData],
+            account,
+          },
+          (err: any, result: any) => {
+            if (err) {
+              resolve({ error: { message: err.message } });
+              return;
+            }
 
+            if (result.error) {
+              resolve({ error: { message: result.error.message } });
+              return;
+            }
+
+            resolve({ result: result.result });
+          }
+        );
+      });
+      console.log("eth_signTypedData", result);
+      response = result?.result;
+    } else {
+      response = await web3.currentProvider?.send("eth_signTypedData", [
+        account,
+        typedData,
+      ]);
+    }
+    // LOG: for signature
+    myLog("eth_signTypedData success", response);
     return response;
   } catch (err) {
+    // LOG: for signature
+    myLog("eth_signTypedData error", err);
     return { error: err as any };
   }
 }
@@ -403,11 +474,19 @@ export async function getEcDSASig(
             address,
           },
           function (err: any, result: any) {
+            // LOG: for signature
+            console.log("eth_signTypedData_v4 success", response);
             if (err) {
+              // LOG: for signature
+              console.log("eth_signTypedData_v4 error", err);
               resolve({ error: { message: err.message } });
             } else if (result?.error) {
+              // LOG: for signature
+              console.log("eth_signTypedData_v4 error", result);
               resolve({ error: { message: result.error.message } });
             } else {
+              // LOG: for signature
+              console.log("eth_signTypedData_v4", result);
               resolve({ result: result.result });
             }
           }
