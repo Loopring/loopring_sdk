@@ -25,9 +25,15 @@ import {
   RESULT_INFO,
   SigSuffix,
 } from "../defs";
-import { getEcDSASig, GetEcDSASigType } from "./sign/sign_tools";
+import {
+  creatEdDSASigHasH,
+  getEcDSASig,
+  GetEcDSASigType,
+  getEdDSASig,
+  getEdDSASigWithPoseidon,
+} from "./sign/sign_tools";
 import { sha256 } from "ethereumjs-util";
-import { toHex } from "../utils";
+import { sortObjDictionary, toHex } from "../utils";
 import { sendRawTx } from "./contract_api";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
@@ -170,21 +176,21 @@ export class WalletAPI extends BaseAPI {
     return typedData;
   }
 
-  public rejectApproveHash(request: { approveRecordId: any; signer: any }) {
-    const uri = encodeURIComponent(
-      `${this.baseUrl + LOOPRING_URLs.REJECT_APPROVE_SIGNATURE}`
-    );
-    const params = encodeURIComponent(
-      JSON.stringify({
-        approveRecordId: request.approveRecordId,
-        signer: request.signer,
-      })
-    );
-    const message = `${ReqMethod.POST}&${uri}&${params}`;
-    myLog("rejectApproveHash", message);
-    myLog("rejectApproveHash hash", toHex(sha256(Buffer.from(message))));
-    return toHex(sha256(Buffer.from(message)));
-  }
+  // public rejectApproveHash(request: { approveRecordId: any; signer: any }) {
+  //   const uri = encodeURIComponent(
+  //     `${this.baseUrl + LOOPRING_URLs.REJECT_APPROVE_SIGNATURE}`
+  //   );
+  //   const params = encodeURIComponent(
+  //     JSON.stringify({
+  //       approveRecordId: request.approveRecordId,
+  //       signer: request.signer,
+  //     })
+  //   );
+  //   const message = `${ReqMethod.POST}&${uri}&${params}`;
+  //   myLog("rejectApproveHash", message);
+  //   myLog("rejectApproveHash hash", toHex(sha256(Buffer.from(message))));
+  //   return toHex(sha256(Buffer.from(message)));
+  // }
 
   /**
    *
@@ -192,21 +198,40 @@ export class WalletAPI extends BaseAPI {
    */
   public async rejectHebao(req: loopring_defs.RejectHebaoRequestV3WithPatch) {
     const { web3, address, request, chainId } = req;
-    const signHash = this.rejectApproveHash({
-      approveRecordId: request.approveRecordId,
-      signer: request.signer,
+    const dataToSig = sortObjDictionary(request);
+    const { hashRaw } = creatEdDSASigHasH({
+      method: ReqMethod.POST,
+      basePath: this.baseUrl,
+      api_url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
+      requestInfo: dataToSig,
     });
+    myLog("signHash", hashRaw);
     const result: any = await personalSign(
       web3,
       address,
       "",
-      signHash,
+      toHex(hashRaw),
       ConnectorNames.Unknown,
       chainId
     );
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("approveRecordId", request.approveRecordId);
-    dataToSig.set("signer", address);
+    // params.method,
+    //
+    //   params.url,
+    //   params.sigObj?.dataToSig,
+    // const eddsaSignature = getEdDSASig(
+    //   method
+    // basePath
+    // api_url
+    // requestInfo
+    // PrivateKey
+    // ).result;
+    // const signHash = this.rejectApproveHash(dataToSig});
+
+    // const dataToSig: Map<string, any> = new Map();
+    // dataToSig.set("approveRecordId", request.approveRecordId);
+    // dataToSig.set("network", request.network);
+    // dataToSig.set("signer", address);
+    //
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
       queryParams: {},

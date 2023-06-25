@@ -1,3 +1,14 @@
+/**
+ * BigNumber -> BigInt
+ * BigNumber.from() -> BigInt() or \dn
+ * div -> /
+ * sub -> -
+ * gt -> >
+ * lt -> <
+ * gte -> >=
+ * eq -> ==
+ * and -> &&=
+ */
 /*
 Implements Pure-EdDSA and Hash-EdDSA
 
@@ -27,7 +38,7 @@ For Hash-EdDSA, the message `M` is compressed before H(R,A,M)
 For further information see: https://ed2519.cr.yp.to/eddsa-20150704.pdf
 */
 
-import { BigNumber } from "ethers";
+// import { BigNumber } from "ethers";
 import { field, FQ } from "./field";
 import { jubjub, Point } from "./jubjub";
 import { sha512 } from "js-sha512";
@@ -50,9 +61,9 @@ export class Signature {
 export class SignedMessage {
   public A: Point;
   public sig: Signature;
-  public msg: BigNumber;
+  public msg: BigInt;
 
-  constructor(A: Point, sig: Signature, msg: BigNumber) {
+  constructor(A: Point, sig: Signature, msg: BigInt) {
     this.A = A;
     this.sig = sig;
     this.msg = msg;
@@ -66,7 +77,7 @@ export class SignedMessage {
 }
 
 export class SignatureScheme {
-  static to_bytes(arg: BigNumber) {
+  static to_bytes(arg: BigInt) {
     const outputLength = 32;
 
     // console.log(`input ${arg.toString()}`)
@@ -95,7 +106,7 @@ export class SignatureScheme {
   Can be used to truncate the message before hashing it
   as part of the public parameters.
   */
-  static prehash_message(M: BigNumber) {
+  static prehash_message(M: BigInt) {
     return M;
   }
 
@@ -111,7 +122,7 @@ export class SignatureScheme {
       (Implementation detail: To save time in the computation of `rB`, the signer
       can replace `r` with `r mod L` before computing `rB`.)
   */
-  static hash_secret_python(k: FQ, arg: BigNumber) {
+  static hash_secret_python(k: FQ, arg: BigInt) {
     const byteArray0 = this.to_bytes(k.n);
     const byteArray1 = this.to_bytes(arg);
 
@@ -136,11 +147,9 @@ export class SignatureScheme {
     }
     const sha512MessageHexStr = sha512StrItems.join("");
     // console.log(`sha512MessageHexStr ${sha512MessageHexStr}`)
-    const sha512MessageHexStrBigInt = BigNumber.from(
-      "0x" + sha512MessageHexStr
-    );
+    const sha512MessageHexStrBigInt = BigInt("0x" + sha512MessageHexStr);
     // console.log(`sha512MessageHexStrBigInt ${sha512MessageHexStrBigInt}`)
-    const hashed = sha512MessageHexStrBigInt.mod(jubjub.JUBJUB_L);
+    const hashed = sha512MessageHexStrBigInt % jubjub.JUBJUB_L;
     // console.log(`hashed ${hashed.toString()}`)
     return hashed;
   }
@@ -149,7 +158,7 @@ export class SignatureScheme {
     return Point.generate();
   }
 
-  static sign(msg: BigNumber, key: FQ, B: Point) {
+  static sign(msg: BigInt, key: FQ, B: Point) {
     // console.log("B ", B.x.n.toString(), B.y.n.toString())
 
     const copyKey = new FQ(key.n, key.m);
@@ -164,7 +173,7 @@ export class SignatureScheme {
     const r = this.hash_secret_python(key, M);
     // console.log("r ", r.toString())
 
-    const copy_r = BigNumber.from(r.toString());
+    const copy_r = BigInt(r.toString());
 
     const R = B.mul(copy_r);
 
@@ -176,9 +185,9 @@ export class SignatureScheme {
     // console.log("t ", t.toString())
 
     const t_c = t;
-    const key_n_t = key.n.mul(t_c);
-    const left = r.add(key_n_t);
-    const S = left.mod(jubjub.JUBJUB_E);
+    const key_n_t = key.n * t_c;
+    const left = r + key_n_t;
+    const S = left % jubjub.JUBJUB_E;
 
     // console.log("S ", S.toString())
 
@@ -196,7 +205,7 @@ export class SignatureScheme {
     return [point.x.n, point.y.n];
   }
 
-  static hash_public(R: Point, A: Point, M: BigNumber) {
+  static hash_public(R: Point, A: Point, M: BigInt) {
     let inputMsg: any;
     inputMsg = this.as_scalar(R).concat(this.as_scalar(A)).concat([M]);
     // console.log(`inputMsg ${inputMsg}`)
@@ -206,7 +215,7 @@ export class SignatureScheme {
       6,
       52,
       "poseidon",
-      BigNumber.from(5),
+      BigInt(5),
       null,
       null,
       128

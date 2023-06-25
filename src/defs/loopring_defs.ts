@@ -2520,6 +2520,7 @@ export interface UpdateAccountRequestV3 {
   hashApproved?: string;
 
   keySeed?: string;
+  recommenderAccountId?: number;
   counterFactualInfo?: CounterFactualInfo;
 }
 

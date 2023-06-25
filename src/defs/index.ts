@@ -31,8 +31,11 @@ export const IsMobile = {
   },
 
   any: function () {
-    if (typeof global.navigator === 'undefined' || typeof navigator === 'undefined') {
-      console.log("IsMobile any navigator is undefined")
+    if (
+      typeof global.navigator === "undefined" ||
+      typeof navigator === "undefined"
+    ) {
+      console.log("IsMobile any navigator is undefined");
       return false;
     }
     return (
@@ -49,7 +52,8 @@ export const IsMobile = {
 type Ethereum = any;
 declare global {
   interface Window {
-    ethereum?: Ethereum;
+    ethereum?: Ethereum & { [key: string]: boolean; isLoopring: boolean };
+
     // socketEventMap: {[key:string]:any
     // imageConfig:{[key:string]:any}|undefined
   }

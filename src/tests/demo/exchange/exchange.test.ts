@@ -14,7 +14,7 @@ import {
   TokenInfo,
   TokenRelatedInfo,
 } from "../../../index";
-import { concatSig } from "eth-sig-util";
+import { concatSig } from "@metamask/eth-sig-util";
 describe("exchangeMain", function () {
   it(
     "getExchangeInfo",
