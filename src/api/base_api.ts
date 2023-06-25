@@ -20,7 +20,6 @@ import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
 import { AxiosResponse } from "axios";
 import * as ethUtil from "ethereumjs-util";
-import { Contract } from "ethers";
 import { isContract } from "./contract_api";
 // import contractWalletAbi from "../../config/abis/contractWallet.json";
 
@@ -42,8 +41,7 @@ export class BaseAPI {
         ...err,
         msg: ConnectorError.HTTP_ERROR,
         code: LoopringErrorCode.HTTP_ERROR,
-      };
-      err?.message;
+      } as RESULT_INFO;
     } else if (!err || !err?.message) {
       return {
         message: "unKnown",
@@ -61,7 +59,7 @@ export class BaseAPI {
           ...err,
           message: key as keyof typeof ConnectorError,
           code: LoopringErrorCode[key as keyof typeof ConnectorError],
-        };
+        } as RESULT_INFO;
       }
       return {
         ...(err instanceof Error

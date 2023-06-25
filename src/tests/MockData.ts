@@ -12,7 +12,6 @@ import {
 } from "../api";
 import Web3 from "web3";
 import * as sdk from "../index";
-import { EIP712TypedData } from "eth-sig-util";
 const PrivateKeyProvider = require("truffle-privatekey-provider");
 /***
  * LoopringAPIClass
@@ -450,7 +449,7 @@ export let AMM_MAP = {
   },
 };
 
-export const testTypedData: EIP712TypedData = {
+export const testTypedData = {
   types: {
     EIP712Domain: [
       { name: "name", type: "string" },
