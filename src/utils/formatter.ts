@@ -1,6 +1,8 @@
 import * as ethUtil from "ethereumjs-util";
 import BN from "bn.js";
 import BigNumber from "bignumber.js";
+import { Buffer } from "buffer";
+
 import {
   AmmPoolInfoV3,
   LOOPRING_URLs,
@@ -41,6 +43,8 @@ export function addHexPrefix(input: any) {
 export function toBuffer(mixed: any) {
   if (mixed instanceof Buffer) {
     return mixed;
+  } else if (typeof mixed === "string" && !mixed.startsWith("0x")) {
+    return Buffer.from(mixed);
   } else {
     return ethUtil.toBuffer(mixed);
   }
@@ -62,7 +66,7 @@ export function zeroPad(num: any, places: any) {
  * @returns {string}
  */
 export function toHex(
-  mixed: number | BigNumber | BN | Buffer | string | Uint8Array
+  mixed: number | BigNumber | BN | Buffer | string | Uint8Array | BigInt
 ) {
   if (
     typeof mixed === "number" ||
@@ -73,7 +77,7 @@ export function toHex(
   }
 
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
-    return addHexPrefix(mixed.toString("hex"));
+    return addHexPrefix((mixed as Buffer).toString("hex"));
   }
 
   if (typeof mixed === "string") {
@@ -106,7 +110,7 @@ export function toNumber(
   }
 
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
-    return Number(mixed.toString("hex"));
+    return Number((mixed as Buffer).toString("hex"));
   }
 
   throw new Error("Unsupported type");
@@ -132,7 +136,7 @@ export function toBig(
     return new BigNumber(mixed);
   }
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
-    return new BigNumber(mixed.toString("hex"));
+    return new BigNumber((mixed as Buffer).toString("hex"));
   }
 
   throw new Error("Unsupported type");
@@ -172,7 +176,7 @@ export function toGWEI(value: any) {
  */
 export function formatKey(mixed: Buffer | string | Uint8Array) {
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
-    return mixed.toString("hex");
+    return (mixed as Buffer).toString("hex");
   }
 
   if (typeof mixed === "string") {
@@ -188,7 +192,7 @@ export function formatKey(mixed: Buffer | string | Uint8Array) {
  */
 export function formatAddress(mixed: Buffer | string | Uint8Array) {
   if (mixed instanceof Buffer || mixed instanceof Uint8Array) {
-    return ethUtil.toChecksumAddress("0x" + mixed.toString("hex"));
+    return ethUtil.toChecksumAddress("0x" + (mixed as Buffer).toString("hex"));
   }
 
   if (typeof mixed === "string") {
