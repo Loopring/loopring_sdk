@@ -261,7 +261,8 @@ export class NFTAPI extends BaseAPI {
         LOOPRING_URLs.IPFS_META_URL
       );
       result = result.replace("{id}", web3.utils.hexToNumberString(nftId));
-      return await fetch(result).then((response) => response.json());
+      // @ts-ignore
+      return await window.fetch(result).then((response) => response.json());
     } catch (err) {
       return {
         code: LoopringErrorCode.CONTRACTNFT_URI,
@@ -433,7 +434,7 @@ export class NFTAPI extends BaseAPI {
       exchangeAddress,
       "0",
       data,
-      chainId,
+      chainId as ChainId,
       nonce,
       gasPrice,
       gasLimit,

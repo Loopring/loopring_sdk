@@ -530,7 +530,7 @@ export class DefiAPI extends BaseAPI {
     const { transfer } = request;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
     transfer.payeeId = 0;
     transfer.memo = `STAKE-CLAIM->${request.accountId}`;
 

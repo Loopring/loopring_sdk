@@ -350,7 +350,7 @@ export class WalletAPI extends BaseAPI {
       isHWAddr: isHWAddrOld,
     } = req;
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result: any = await this.signHebaoApproveWithoutDataStructure(
@@ -430,6 +430,7 @@ export class WalletAPI extends BaseAPI {
         };
       }
     }
+    // @ts-ignore
     request.signature = ecdsaSignature;
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,

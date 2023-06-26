@@ -262,7 +262,7 @@ export function getEdDSASig(
   requestInfo: any,
   PrivateKey: string | undefined
 ) {
-  let params = undefined;
+  let params: string | undefined = undefined;
 
   method = method.toUpperCase().trim();
 
@@ -301,7 +301,7 @@ export function creatEdDSASigHasH({
   api_url: string;
   requestInfo: any;
 }) {
-  let params = undefined;
+  let params: string | undefined = undefined;
 
   method = method.toUpperCase().trim();
 
@@ -415,6 +415,7 @@ export async function signEip712WalletConnect(
   try {
     let response: any;
     if (
+      // @ts-ignore
       window?.ethereum?.isLoopring ||
       !web3.currentProvider?.signer?.session
     ) {

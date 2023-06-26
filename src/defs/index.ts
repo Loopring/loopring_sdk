@@ -9,31 +9,40 @@ export * from "./error_codes";
 
 export const IsMobile = {
   Android: function () {
-    return navigator.userAgent.match(/Android/i);
+    // @ts-ignore
+    return window.navigator.userAgent.match(/Android/i);
   },
   BlackBerry: function () {
-    return navigator.userAgent.match(/BlackBerry/i);
+    // @ts-ignore
+    return window.navigator.userAgent.match(/BlackBerry/i);
   },
   iOS: function () {
-    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    // @ts-ignore
+    return window.navigator.userAgent.match(/iPhone|iPad|iPod/i);
   },
   Opera: function () {
-    return navigator.userAgent.match(/Opera Mini/i);
+    // @ts-ignore
+    return window.navigator.userAgent.match(/Opera Mini/i);
   },
   Windows: function () {
     return (
-      navigator.userAgent.match(/IEMobile/i) ||
-      navigator.userAgent.match(/WPDesktop/i)
+      // @ts-ignore
+      window.navigator.userAgent.match(/IEMobile/i) ||
+      // @ts-ignore
+      window.navigator.userAgent.match(/WPDesktop/i)
     );
   },
   Ethereum: function () {
+    // @ts-ignore
     return window?.ethereum && window?.ethereum.isImToken;
   },
 
   any: function () {
     if (
+      // @ts-ignore
       typeof global.navigator === "undefined" ||
-      typeof navigator === "undefined"
+      // @ts-ignore
+      typeof window.navigator === "undefined"
     ) {
       console.log("IsMobile any navigator is undefined");
       return false;
@@ -48,13 +57,3 @@ export const IsMobile = {
     );
   },
 };
-
-type Ethereum = any;
-declare global {
-  interface Window {
-    ethereum?: Ethereum & { [key: string]: boolean; isLoopring: boolean };
-
-    // socketEventMap: {[key:string]:any
-    // imageConfig:{[key:string]:any}|undefined
-  }
-}

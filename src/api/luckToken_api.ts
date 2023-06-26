@@ -195,7 +195,7 @@ export class LuckTokenAPI extends BaseAPI {
     }
     return { raw_data, detail: raw_data };
   }
-  
+
   public async getBlindBoxDetail<R>(
     request: {
       limit?: number;
@@ -225,8 +225,6 @@ export class LuckTokenAPI extends BaseAPI {
     }
     return { raw_data };
   }
-
-  
 
   public async getLuckTokenWithdrawals<R>(
     request: {
@@ -286,9 +284,9 @@ export class LuckTokenAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_BALANCES,
-      queryParams: { 
-        ...request, 
-        // statuses: request.tokens?.join(",") 
+      queryParams: {
+        ...request,
+        // statuses: request.tokens?.join(",")
       },
       apiKey,
       method: ReqMethod.GET,
@@ -372,9 +370,12 @@ export class LuckTokenAPI extends BaseAPI {
       tokenSummaryList: raw_data.tokenSummaryList,
     };
   }
-  public async getLuckTokenNFTBalances<R>(request: {
-    accountId: number,
-  }, apiKey: string): Promise<{
+  public async getLuckTokenNFTBalances<R>(
+    request: {
+      accountId: number;
+    },
+    apiKey: string
+  ): Promise<{
     raw_data: R;
     amount: number;
   }> {
@@ -394,7 +395,7 @@ export class LuckTokenAPI extends BaseAPI {
     }
     return {
       raw_data,
-      amount: raw_data.amount as number
+      amount: raw_data.amount as number,
       // totalNum: raw_data.count,
       // tokenSummaryList: raw_data.tokenSummaryList,
     };
@@ -490,7 +491,7 @@ export class LuckTokenAPI extends BaseAPI {
     const { accountId, counterFactualInfo }: any = options;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
     let { transfer } = request;
     transfer.payeeId = 0;
     transfer.memo = `LuckTokenWithdrawalBy${request.claimer}`;
@@ -634,7 +635,7 @@ export class LuckTokenAPI extends BaseAPI {
     const { accountId, counterFactualInfo }: any = options;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const {
       luckyToken: { maxFeeAmount, token, amount, feeToken, ...rest },
@@ -871,15 +872,13 @@ export class LuckTokenAPI extends BaseAPI {
       limit?: number;
       isNft?: boolean;
       offset?: number;
-      statuses?: number[]
+      statuses?: number[];
     },
     apiKey: string
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    list: Array<
-      loopring_defs.LuckyTokenBlindBoxItemReceive & { id: number }
-    >;
+    list: Array<loopring_defs.LuckyTokenBlindBoxItemReceive & { id: number }>;
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_CLAIMEDBLINDBOX,
@@ -901,7 +900,7 @@ export class LuckTokenAPI extends BaseAPI {
       list: raw_data.list,
     };
   }
-  
+
   public async getLuckTokenUnclaimNFTBlindboxCnt<R>(
     request: {
       accountId: number;
@@ -917,7 +916,7 @@ export class LuckTokenAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };    
+    };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
     if (raw_data?.resultInfo) {

@@ -440,12 +440,15 @@ export async function personalSign(
 
             // Valid: 2. webview directory signature Valid
             if (
+              // @ts-ignore
               typeof window !== "undefined" &&
+              // @ts-ignore
               (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
               isMobile &&
               // Mobile directory connect will sign ConnectorNames as MetaMask only
               walletType === ConnectorNames.MetaMask
             ) {
+              // @ts-ignore
               const address: string[] = await window.ethereum?.request({
                 method: "eth_requestAccounts",
               });

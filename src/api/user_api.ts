@@ -1709,7 +1709,7 @@ export class UserAPI extends BaseAPI {
       ? options
       : { accountId: 0 };
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signOffchainWithdrawWithoutDataStructure(
@@ -1830,7 +1830,7 @@ export class UserAPI extends BaseAPI {
       : { accountId: 0 };
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signTransferWithoutDataStructure(
@@ -1953,7 +1953,7 @@ export class UserAPI extends BaseAPI {
     const { transfer } = request;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
     transfer.payeeId = 0;
     transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`;
     transfer.maxFee = {
@@ -2091,7 +2091,7 @@ export class UserAPI extends BaseAPI {
     const { transfer } = request;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
     transfer.payeeId = 0;
     transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
     transfer.maxFee = {
@@ -2226,7 +2226,7 @@ export class UserAPI extends BaseAPI {
       : { accountId: 0 };
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signNFTTransferWithoutDataStructure(
@@ -2348,7 +2348,7 @@ export class UserAPI extends BaseAPI {
       : { accountId: 0 };
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signNFTWithdrawWithoutDataStructure(
@@ -2486,7 +2486,7 @@ export class UserAPI extends BaseAPI {
       ? request.royaltyPercentage
       : 0;
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signNFTMintWithoutDataStructure(
@@ -2839,7 +2839,7 @@ export class UserAPI extends BaseAPI {
     const { transfer } = request;
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
     transfer.payeeId = 0;
     transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
     transfer.maxFee = {
@@ -2964,7 +2964,7 @@ export class UserAPI extends BaseAPI {
       : { accountId: 0 };
 
     const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    let ecdsaSignature: string | undefined = undefined;
 
     const sigHW = async () => {
       const result = await sign_tools.signUpdateAccountWithoutDataStructure(

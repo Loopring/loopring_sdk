@@ -1,4 +1,4 @@
-import { TokenInfo } from "defs";
+import {TokenInfo} from "../defs";
 
 const specialSymbols = ["ETH2x-FIL"];
 
