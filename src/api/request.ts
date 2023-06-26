@@ -168,6 +168,7 @@ export class Request {
   }
 
   public updateOpt(reqOpt: ReqOptions) {
+    // @ts-ignore
     this._axios.interceptors.request.use((req: AxiosRequestConfig) => {
       if (reqOpt?.baseUrl) {
         req.baseURL = reqOpt?.baseUrl;
@@ -175,6 +176,7 @@ export class Request {
       if (reqOpt?.url) {
         req.url = reqOpt?.url;
       }
+      req.headers = req.headers ?? {};
       if (reqOpt?.apiKey) {
         req.headers["X-API-KEY"] = reqOpt?.apiKey;
       }
