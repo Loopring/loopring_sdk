@@ -409,7 +409,7 @@ export async function personalSign(
         async function (err: any, result: any) {
           if (!err) {
             // LOG: for signature
-            console.log(
+            myLog(
               "ecRecover before",
               "msg",
               msg,
@@ -467,10 +467,10 @@ export async function personalSign(
               return resolve({ sig: result });
             } else {
               // LOG: for signature
-              console.log("ecRecover before", result);
+              myLog("ecRecover before", result);
               const valid: any = await ecRecover(web3, account, msg, result);
               // LOG: for signature
-              console.log("ecRecover after", valid.result);
+              myLog("ecRecover after", valid.result);
               if (valid.result) {
                 return resolve({ sig: result });
               }
@@ -483,7 +483,7 @@ export async function personalSign(
             const isContractCheck = await isContract(web3, account);
             if (isContractCheck) {
               // LOG: for signature
-              console.log("Valid: 5 failed isContract. no ecrecover");
+              myLog("Valid: 5 failed isContract. no ecrecover");
               return resolve({ sig: result });
             }
 
@@ -545,10 +545,7 @@ export async function personalSign(
       );
     } catch (err) {
       // LOG: for signature
-      console.log(
-        "personalSign callback err",
-        (err as unknown as any)?.message
-      );
+      myLog("personalSign callback err", (err as unknown as any)?.message);
       resolve({ error: err as any });
     }
   });

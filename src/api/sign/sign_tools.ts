@@ -128,7 +128,7 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined
 ) {
   // LOG: for signature
-  console.log(
+  myLog(
     "personalSign ->",
     "counterFactualInfo",
     counterFactualInfo,
@@ -168,7 +168,7 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split("")).join("");
       let newValue = generatePrivateKey(result);
       // LOG: for signature
-      console.log(
+      myLog(
         "personalSign ->",
         "publicKey calc by sign",
         "x",
@@ -278,12 +278,12 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`;
   // LOG: for signature
-  console.log("getEdDSASig", message);
+  myLog("getEdDSASig", message);
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
   // LOG: for signature
-  console.log("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
 
   const sig = genSigWithPadding(PrivateKey, hash);
 
@@ -317,13 +317,13 @@ export function creatEdDSASigHasH({
 
   const message = `${method}&${uri}&${params}`;
   // LOG: for signature
-  console.log("getEdDSASig", message);
+  myLog("getEdDSASig", message);
 
   let _hash: any = new BigInteger(sha256(message).toString(), 16);
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
   // LOG: for signature
-  console.log("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
   return { hash, hashRaw: toHex(_hash) };
 }
 
@@ -449,11 +449,11 @@ export async function signEip712WalletConnect(
       ]);
     }
     // LOG: for signature
-    console.log("eth_signTypedData success", response);
+    myLog("eth_signTypedData success", response);
     return response;
   } catch (err) {
     // LOG: for signature
-    console.log("eth_signTypedData error", err);
+    myLog("eth_signTypedData error", err);
     return { error: err as any };
   }
 }
@@ -487,18 +487,18 @@ export async function getEcDSASig(
           },
           function (err: any, result: any) {
             // LOG: for signature
-            console.log("eth_signTypedData_v4 success", response);
+            myLog("eth_signTypedData_v4 success", response);
             if (err) {
               // LOG: for signature
-              console.log("eth_signTypedData_v4 error", err);
+              myLog("eth_signTypedData_v4 error", err);
               resolve({ error: { message: err.message } });
             } else if (result?.error) {
               // LOG: for signature
-              console.log("eth_signTypedData_v4 error", result);
+              myLog("eth_signTypedData_v4 error", result);
               resolve({ error: { message: result.error.message } });
             } else {
               // LOG: for signature
-              console.log("eth_signTypedData_v4", result);
+              myLog("eth_signTypedData_v4", result);
               resolve({ result: result.result });
             }
           }
