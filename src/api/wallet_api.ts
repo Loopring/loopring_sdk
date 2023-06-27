@@ -1,5 +1,5 @@
 import { BaseAPI, personalSign } from "./base_api";
-import { isContract } from "./contract_api";
+import { isContract, sendRawTx } from "./contract_api";
 import * as loopring_defs from "../defs/loopring_defs";
 import {
   ContractType,
@@ -29,16 +29,11 @@ import {
   creatEdDSASigHasH,
   getEcDSASig,
   GetEcDSASigType,
-  getEdDSASig,
-  getEdDSASigWithPoseidon,
 } from "./sign/sign_tools";
-import { sha256 } from "ethereumjs-util";
+import * as ethUtil from "ethereumjs-util";
 import { sortObjDictionary, toHex } from "../utils";
-import { sendRawTx } from "./contract_api";
 import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
-import * as ethUtil from "ethereumjs-util";
-import { LoopringAPI } from "../tests/MockData";
 import { AxiosResponse } from "axios";
 
 export class WalletAPI extends BaseAPI {
@@ -136,6 +131,7 @@ export class WalletAPI extends BaseAPI {
     };
     return typedData;
   }
+
   public getApproveRecoverV2TypedData(
     chainId: ChainId,
     guardiaContractAddress: any,
@@ -176,22 +172,6 @@ export class WalletAPI extends BaseAPI {
     return typedData;
   }
 
-  // public rejectApproveHash(request: { approveRecordId: any; signer: any }) {
-  //   const uri = encodeURIComponent(
-  //     `${this.baseUrl + LOOPRING_URLs.REJECT_APPROVE_SIGNATURE}`
-  //   );
-  //   const params = encodeURIComponent(
-  //     JSON.stringify({
-  //       approveRecordId: request.approveRecordId,
-  //       signer: request.signer,
-  //     })
-  //   );
-  //   const message = `${ReqMethod.POST}&${uri}&${params}`;
-  //   myLog("rejectApproveHash", message);
-  //   myLog("rejectApproveHash hash", toHex(sha256(Buffer.from(message))));
-  //   return toHex(sha256(Buffer.from(message)));
-  // }
-
   /**
    *
    * @param approveRecordId  request.id
@@ -214,24 +194,7 @@ export class WalletAPI extends BaseAPI {
       ConnectorNames.Unknown,
       chainId
     );
-    // params.method,
-    //
-    //   params.url,
-    //   params.sigObj?.dataToSig,
-    // const eddsaSignature = getEdDSASig(
-    //   method
-    // basePath
-    // api_url
-    // requestInfo
-    // PrivateKey
-    // ).result;
-    // const signHash = this.rejectApproveHash(dataToSig});
 
-    // const dataToSig: Map<string, any> = new Map();
-    // dataToSig.set("approveRecordId", request.approveRecordId);
-    // dataToSig.set("network", request.network);
-    // dataToSig.set("signer", address);
-    //
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
       queryParams: {},
@@ -324,6 +287,7 @@ export class WalletAPI extends BaseAPI {
     );
     return { sig: result.ecdsaSig };
   }
+
   public encodeAddressesPacked(addrs: string[]) {
     const addrsBs = Buffer.concat(
       addrs.map((a) => {
@@ -333,6 +297,7 @@ export class WalletAPI extends BaseAPI {
     myLog("addrsBs", addrsBs.toString());
     return addrsBs;
   }
+
   public async submitApproveSignature<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
     guardians: string[] = [],
@@ -555,6 +520,7 @@ export class WalletAPI extends BaseAPI {
       raw_data,
     };
   }
+
   public async getEnsByAddress<R extends any, T extends string>(
     request: loopring_defs.GetEnsNameRequest
   ): Promise<{

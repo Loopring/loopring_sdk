@@ -22,7 +22,7 @@ import { AxiosResponse } from "axios";
 import * as ethUtil from "ethereumjs-util";
 import { Contract } from "ethers";
 import { isContract } from "./contract_api";
-// import contractWalletAbi from "../../config/abis/contractWallet.json";
+// import contractWalletAbi from "../../config/abis/contractWallet.js";
 
 export const KEY_MESSAGE =
   "Sign this message to access Loopring Exchange: " +

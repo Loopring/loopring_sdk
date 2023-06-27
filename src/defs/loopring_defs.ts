@@ -88,6 +88,7 @@ export interface ReqParams {
   };
   eddsaSignature?: string;
   ecdsaSignature?: string;
+  eddsaSignatureREFER?: boolean;
 }
 
 export interface LoopringMap<T> {
@@ -2640,6 +2641,7 @@ export interface UpdateAccountRequestV3WithPatch {
   chainId: ChainId;
   walletType: ConnectorNames;
   isHWAddr?: boolean;
+  privateKey?: string;
 }
 
 export interface GetAccountServicesRequest {

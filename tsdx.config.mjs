@@ -1,6 +1,15 @@
 const replace = require("@rollup/plugin-replace");
-const babel = require("@rollup/plugin-babel");
 const resolve = require("@rollup/plugin-node-resolve");
+const commonjs = require("@rollup/plugin-commonjs");
+const json = require("@rollup/plugin-json");
+//  json from  "@rollup/plugin-json";
+
+// import replace from "@rollup/plugin-replace";
+// import resolve from "@rollup/plugin-node-resolve";
+// import {createBasicConfig} from '@open-wc/building-rollup';
+// import commonjs from '@rollup/plugin-commonjs';
+// import typescript from "@rollup/plugin-typescript";
+// import json from  "@rollup/plugin-json";
 
 module.exports = {
   rollup(config, options) {
@@ -13,8 +22,11 @@ module.exports = {
           })
         : p
     );
+    config.plugins.push(commonjs({
+      defaultIsModuleExports: 'auto',
+    }))
     config.plugins.push(resolve());
-    config.plugins.push(babel());
+    config.plugins.push(json);
     return config;
   },
 };

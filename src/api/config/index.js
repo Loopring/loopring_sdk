@@ -1,7 +1,6 @@
 import { toBig, toFixed } from "../../utils/formatter";
 // eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
-const config = require("./config.json");
-
+import config from "./config";
 function getMaintenanceMode() {
   return config.maintenanceMode;
 }

@@ -1,12 +1,12 @@
 /* eslint-disable */
 import Contract from "./Contract";
+import erc20Abi from "../../config/abis/erc20";
+import exchange36Abi from "../../config/abis/exchange_3_6";
+import contractWalletAbi from "../../config/abis/contractWallet";
+import erc721Abi from "../../config/abis/erc721";
+import erc1155Abi from "../../config/abis/erc1155";
+import hebao from "../../config/abis/hebao";
 
-const erc20Abi = require("../../config/abis/erc20.json");
-const exchange36Abi = require("../../config/abis/exchange_3_6.json");
-const contractWalletAbi = require("../../config/abis/contractWallet.json");
-const erc721Abi = require("../../config/abis/erc721.json");
-const erc1155Abi = require("../../config/abis/erc1155.json");
-const hebao = require("../../config/abis/hebao.json");
 const ERC20Token = new Contract(erc20Abi);
 const ExchangeContract = new Contract(exchange36Abi);
 const ContractWallet = new Contract(contractWalletAbi);

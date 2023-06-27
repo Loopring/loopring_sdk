@@ -29,6 +29,7 @@ import BN from "bn.js";
 import { RequiredPart, sortObjDictionary } from "../utils";
 import {
   generateKeyPair,
+  getEdDSASig,
   getEdDSASigWithPoseidon,
   KeyPairParams,
 } from "./sign/sign_tools";
@@ -915,7 +916,10 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const { request, eddsaKey, apiKey } = req;
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
@@ -941,7 +945,10 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTradeRequestV3WithPatch
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const { request, apiKey, eddsaKey } = req;
 
     const dataToSig: Map<string, any> = new Map();
@@ -1695,7 +1702,10 @@ export class UserAPI extends BaseAPI {
   public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | AxiosResponse | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -1815,7 +1825,10 @@ export class UserAPI extends BaseAPI {
   public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | AxiosResponse | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -1937,7 +1950,10 @@ export class UserAPI extends BaseAPI {
   public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2075,7 +2091,10 @@ export class UserAPI extends BaseAPI {
   public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2211,7 +2230,10 @@ export class UserAPI extends BaseAPI {
   public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2333,7 +2355,10 @@ export class UserAPI extends BaseAPI {
   public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2461,7 +2486,10 @@ export class UserAPI extends BaseAPI {
       counterFactualInfo?: any;
       _noEcdsa?: boolean;
     }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2823,7 +2851,10 @@ export class UserAPI extends BaseAPI {
   public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
     const {
       request,
       web3,
@@ -2957,8 +2988,18 @@ export class UserAPI extends BaseAPI {
   public async updateAccount<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
-    const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld } = req;
+  ): Promise<
+    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
+    | RESULT_INFO
+  > {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      isHWAddr: isHWAddrOld,
+      privateKey,
+    } = req;
     const { accountId, counterFactualInfo }: any = options
       ? options
       : { accountId: 0 };
@@ -3039,12 +3080,25 @@ export class UserAPI extends BaseAPI {
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
+    const dataToSig = sortObjDictionary({
+      ...request,
+      ecdsaSignature: ecdsaSignature,
+    });
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ACCOUNT_ACTION,
       bodyParams: request,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
+      ...(privateKey && request.recommenderAccountId
+        ? {
+            eddsaSignatureREFER: true,
+            sigObj: {
+              PrivateKey: privateKey,
+              dataToSig: dataToSig,
+            },
+          }
+        : {}),
     };
 
     let raw_data;

@@ -1,33 +1,33 @@
-[
+export default [
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "wallet",
+        type: "address",
+      },
     ],
-    "name": "lock",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "lock",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
+        internalType: "address",
+        name: "wallet",
+        type: "address",
       },
       {
-        "internalType": "address",
-        "name": "guardian",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "guardian",
+        type: "address",
+      },
     ],
-    "name": "unlock",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-]
+    name: "unlock",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];

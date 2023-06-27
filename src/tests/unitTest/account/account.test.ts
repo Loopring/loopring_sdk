@@ -111,6 +111,7 @@ describe("AccountDemo", function () {
         LOOPRING_EXPORTED_ACCOUNT.gasPrice,
         LOOPRING_EXPORTED_ACCOUNT.gasLimit,
         sdk.ChainId.GOERLI,
+        // @ts-ignor
         nonce,
         true
       );
