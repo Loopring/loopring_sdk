@@ -1,5 +1,6 @@
 const replace = require("@rollup/plugin-replace");
-const commonjs = require("@rollup/plugin-commonjs");
+const babel = require("@rollup/plugin-babel");
+const resolve = require("@rollup/plugin-node-resolve");
 
 module.exports = {
   rollup(config, options) {
@@ -12,7 +13,8 @@ module.exports = {
           })
         : p
     );
-    config.plugins.push(commonjs());
+    config.plugins.push(resolve());
+    config.plugins.push(babel());
     return config;
   },
 };

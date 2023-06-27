@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.4.0",
+  "version": "3.3.42",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -8,12 +8,18 @@
   "typings": "dist/index.d.ts",
   "module": "dist/loopring-sdk.esm.js",
   "files": [
-    "dist"
+    "dist",
+    "!tests",
+    "!__snapshots__",
+    "!*.test.js",
+    "!*.test.js.map",
+    "!*.test.ts",
+    "!*.test.d.ts"
   ],
+  "type": "module",
   "dependencies": {
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",
-    "@metamask/eth-sig-util": "^5.1.0",
     "@types/jsbn": "^1.2.30",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
@@ -22,14 +28,15 @@
     "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
     "crypto-js": "^4.0.0",
+    "eth-sig-util": "2.3.0",
     "ethereumjs-abi": "0.6.8",
-    "ethereumjs-util": "^7.1.5",
+    "ethereumjs-util": "5.2.0",
     "ethers": "^5.7.2",
     "js-sha3": "^0.8.0",
     "js-sha512": "^0.8.0",
     "jsbn": "^1.1.0",
     "web-encoding": "^1.1.5",
-    "web3": "^4.0.1"
+    "web3": "1.10.0"
   },
   "build": {
     "files": [
@@ -43,7 +50,7 @@
     }
   },
   "scripts": {
-    "build": "tsdx build",
+    "build": "rimraf dist && tsdx build",
     "start": "yarn link; tsdx watch",
     "test": "tsdx test",
     "test_calc": "tsdx test",
@@ -60,11 +67,9 @@
   },
   "browserslist": {
     "production": [
-      "chrome >= 67",
-      "edge >= 79",
-      "firefox >= 68",
-      "opera >= 54",
-      "safari >= 14"
+      "last 2 chrome version",
+      "last 2 firefox version",
+      "last 2 safari version"
     ],
     "development": [
       "last 1 chrome version",
@@ -80,6 +85,12 @@
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@microsoft/tsdoc": "^0.13.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/bignumber.js": "^5.0.0",
     "@types/classnames": "^2.2.11",
     "@types/collections": "^5.1.2",
@@ -110,12 +121,14 @@
     "mocha": "^8.3.2",
     "prettier": "2.5.1",
     "request-promise": "^4.2.6",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.25.3",
     "truffle-privatekey-provider": "1.5.0",
     "ts-node": "^10.0.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.0",
     "typedoc": "^0.22.9",
     "typedoc-plugin-markdown": "^3.11.7",
-    "typescript": "^4.1.2"
+    "typescript": "^5.1.3"
   }
 }
