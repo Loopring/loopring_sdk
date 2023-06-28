@@ -1,4 +1,4 @@
-import sha256 from "crypto-js/sha256";
+import sha256 from "crypto-js/sha256.js";
 import * as abi from "ethereumjs-abi";
 import * as sigUtil from "eth-sig-util";
 
