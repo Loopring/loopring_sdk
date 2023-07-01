@@ -1252,6 +1252,52 @@ export interface GetUserBillsRequest {
   limit?: number;
   billType?: UserBillTypes[];
 }
+export interface GetReferSelf {
+  accountId: string;
+  offset?: number;
+  limit?: number;
+  start?: number;
+  end?: number;
+}
+export interface ReferSelf {
+  accountId: string;
+  lrcAmount: string;
+  startAt: number;
+  endAt: number;
+}
+export enum GetReferStatisticReason {
+  Recommender = 9,
+  Invited = 1,
+}
+
+export interface GetReferStatistic {
+  accountId: string;
+  reason: GetReferStatisticReason;
+}
+export interface ReferStatistic {
+  accountId: number;
+  totalProfit: string;
+  claimableProfit: string;
+  tradeNum: number;
+  reason: string;
+  createdAt: number;
+  updatedAt: number;
+  downsidesNum: number;
+}
+
+export interface GetReferDownsides {
+  accountId: string;
+  offset?: number;
+  limit?: number;
+  start?: number;
+  end?: number;
+}
+export interface ReferDownsides {
+  address: string;
+  lrcAmount: string;
+  startAt: number;
+  endAt: number;
+}
 export enum REWARD_TYPE {
   MakerRewards = 1,
   ReferralRewards = 2,

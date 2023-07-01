@@ -1,7 +1,14 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
-#### v3.3.16 
+#### v3.4.15
+    1）Internal browser contract signarue support
+    2）referral signature at active account
+    3）referral reword
+    4）Explorer Collection related Entry and feature optimization
+    5）insufficient quota reminder for Dual Invest
+    6）Add tutorial on Block trade
+#### v3.3.16
     1）Change Ecrecove function
     2）Stop limit
     3) Red Packet 

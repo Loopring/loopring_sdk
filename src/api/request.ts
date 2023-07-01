@@ -127,16 +127,6 @@ export class Request {
       default:
         break;
     }
-    if (params?.eddsaSignatureREFER && params.sigObj?.PrivateKey) {
-      sig = getEdDSASig(
-        params.method,
-        this.baseOptions.baseURL,
-        params.url,
-        params.sigObj?.dataToSig,
-        params.sigObj?.PrivateKey
-      );
-      headers["X-API-SIG-REFER"] = sig;
-    }
 
     if (sig) {
       headers["X-API-SIG"] = sig;
@@ -144,6 +134,17 @@ export class Request {
       headers["X-API-SIG"] = params?.ecdsaSignature;
     } else if (params?.eddsaSignature) {
       headers["X-API-SIG"] = params?.eddsaSignature;
+    }
+
+    if (params?.eddsaSignatureREFER && params.sigObj?.PrivateKey) {
+      const sig = getEdDSASig(
+        params.method,
+        this.baseOptions.baseURL,
+        params.url,
+        params.sigObj?.dataToSig,
+        params.sigObj?.PrivateKey
+      );
+      headers["X-API-SIG-REFER"] = sig;
     }
 
     // myLog('headers["X-API-SIG"]', headers["X-API-SIG"]);

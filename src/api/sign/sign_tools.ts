@@ -128,6 +128,7 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined
 ) {
   // LOG: for signature
+
   myLog(
     "personalSign ->",
     "counterFactualInfo",
