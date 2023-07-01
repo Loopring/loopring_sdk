@@ -19,6 +19,7 @@ import {
   CounterFactualInfo,
   EXTRAORDER_TYPE,
   UserLockSummary,
+  ReferStatistic,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
@@ -3186,6 +3187,88 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userTxs,
       raw_data,
+    };
+  }
+
+  public async getReferDownsides<R>(
+    request: loopring_defs.GetReferDownsides,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    record: loopring_defs.ReferDownsides[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_REFER_DOWNSIDES,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      totalNum: raw_data?.totalNum,
+      record: raw_data.record,
+      raw_data,
+    };
+  }
+  public async getReferSelf<R>(
+    request: loopring_defs.GetReferSelf,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    totalNum: number;
+    record: loopring_defs.ReferSelf[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_REFER_SELF,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+    return {
+      totalNum: raw_data?.totalNum,
+      record: raw_data.record,
+      raw_data,
+    };
+  }
+
+  public async getReferStatistic<R = ReferStatistic>(
+    request: loopring_defs.GetReferStatistic,
+    apiKey: string
+  ): Promise<{ raw_data: R } & R> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_REFER_STATISTIC,
+      queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+
+    const raw_data = (await this.makeReq().request(reqParams)).data;
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      };
+    }
+
+    return {
+      ...raw_data,
+      raw_data: raw_data,
     };
   }
 

@@ -192,4 +192,8 @@ export enum LOOPRING_URLs {
   GET_BTRATE_DEPTH = "api/v3/btrade/depth",
   GET_BTRATE_ORDERS = "api/v3/btrade/orders",
   POST_BTRATE_ORDER = "api/v3/btrade/order",
+
+  GET_REFER_DOWNSIDES = "api/v3/user/refer/profit/downsides",
+  GET_REFER_SELF = "/api/v3/user/refer/profit/self",
+  GET_REFER_STATISTIC = "/api/v3/user/refer/statistic",
 }
