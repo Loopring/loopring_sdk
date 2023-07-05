@@ -1148,39 +1148,6 @@ export function calcDefi({
 /**
  *
  * @param info
- * @param rule
- * @param sellToken
- * @param dualMarket
- */
-export function calcDualMiniVol({
-  info,
-  rule,
-  sellToken,
-  dualMarket,
-}: {
-  info: DualProductAndPrice;
-  rule: DualRulesCoinsInfo;
-  sellToken: TokenInfo;
-  dualMarket: DefiMarketInfo;
-}): string {
-  let miniSellVol
-  if (info.dualType === DUAL_TYPE.DUAL_BASE) {
-    miniSellVol = BigNumber.max(
-      dualMarket.baseLimitAmount,
-      toBig(rule.baseMin).times("1e" + sellToken.decimals)
-    );
-  } else {
-    miniSellVol = BigNumber.max(
-      dualMarket.quoteLimitAmount,
-      toBig(rule.currencyMin).times("1e" + sellToken.decimals)
-    ); // rule.baseMin;
-  }
-  return miniSellVol.toString()
-}
-
-/**
- *
- * @param info
  * @param index
  * @param rule
  * @param balance
@@ -1225,7 +1192,7 @@ export function calcDual({
     feeTokenSymbol,
     quota,
     maxFeeBips;
-  const miniSellVol = calcDualMiniVol({info, rule, sellToken, dualMarket})
+  const miniSellVol = calcDualMiniVol({ info, rule, sellToken, dualMarket });
   const { base, currency } = info;
   const settleRatio = fm
     .toBig(info.profit)

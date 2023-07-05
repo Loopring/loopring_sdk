@@ -3196,7 +3196,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    record: loopring_defs.ReferDownsides[];
+    records: loopring_defs.ReferDownsides[];
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_DOWNSIDES,
@@ -3214,7 +3214,7 @@ export class UserAPI extends BaseAPI {
     }
     return {
       totalNum: raw_data?.totalNum,
-      record: raw_data.record,
+      records: raw_data.records,
       raw_data,
     };
   }
@@ -3224,7 +3224,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    record: loopring_defs.ReferSelf[];
+    records: loopring_defs.ReferSelf[];
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_SELF,
@@ -3242,7 +3242,7 @@ export class UserAPI extends BaseAPI {
     }
     return {
       totalNum: raw_data?.totalNum,
-      record: raw_data.record,
+      records: raw_data.records,
       raw_data,
     };
   }
