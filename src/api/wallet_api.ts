@@ -410,7 +410,7 @@ export class WalletAPI extends BaseAPI {
     } catch (error) {
       throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data) as loopring_defs.TX_HASH_RESULT<T>;
   }
 
   public async getAddressByENS<R extends any, T extends string>(
@@ -571,7 +571,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         data,
-        chainId,
+        chainId as ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),
@@ -585,7 +585,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         "0xf83d08ba",
-        chainId,
+        chainId as ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),

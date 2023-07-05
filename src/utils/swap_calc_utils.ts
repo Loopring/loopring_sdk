@@ -1163,7 +1163,7 @@ export function calcDualMiniVol({
   sellToken: TokenInfo;
   dualMarket: DefiMarketInfo;
 }): string {
-  let miniSellVol
+  let miniSellVol;
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
     miniSellVol = BigNumber.max(
       dualMarket.baseLimitAmount,
@@ -1175,7 +1175,7 @@ export function calcDualMiniVol({
       toBig(rule.currencyMin).times("1e" + sellToken.decimals)
     ); // rule.baseMin;
   }
-  return miniSellVol.toString()
+  return miniSellVol.toString();
 }
 
 /**
@@ -1225,7 +1225,7 @@ export function calcDual({
     feeTokenSymbol,
     quota,
     maxFeeBips;
-  const miniSellVol = calcDualMiniVol({info, rule, sellToken, dualMarket})
+  const miniSellVol = calcDualMiniVol({ info, rule, sellToken, dualMarket });
   const { base, currency } = info;
   const settleRatio = fm
     .toBig(info.profit)

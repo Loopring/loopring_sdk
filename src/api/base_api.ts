@@ -476,9 +476,9 @@ export async function personalSign(
               }
             }
 
-            // LOG: for signature
             // Valid: 5. contractWallet no recover
             // signature Valid `isValidSignature(bytes32,bytes)`
+            // LOG: for signature
             console.log("Valid: 5. contractWallet before");
             const isContractCheck = await isContract(web3, account);
             if (isContractCheck) {

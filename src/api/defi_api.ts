@@ -17,7 +17,6 @@ import {
 } from "../defs";
 import { makeMarkets, sortObjDictionary } from "../utils";
 import * as sign_tools from "./sign/sign_tools";
-import { isContract } from "./contract_api";
 import { AxiosResponse } from "axios";
 import { BTRADENAME, DepthData, GetOrdersRequest } from "../defs/loopring_defs";
 import { getMidPrice } from "./exchange_api";
@@ -534,79 +533,17 @@ export class DefiAPI extends BaseAPI {
     transfer.payeeId = 0;
     transfer.memo = `STAKE-CLAIM->${request.accountId}`;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo;
