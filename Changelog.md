@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### v3.5.0
+    1）ecdsaSignature update to `eth_signTypedData_v4`  use method `sendAsync`
 #### v3.4.15
     1）Internal browser contract signarue support
     2）referral signature at active account

@@ -57,6 +57,7 @@ export interface ReqOptions {
 
   url?: string;
 }
+
 export enum NetworkWallet {
   ETHEREUM = "ETHEREUM",
   ARBITRUM = "ARBITRUM",
@@ -698,6 +699,7 @@ export interface GetMarketTradesRequest {
   market: string;
   limit?: number;
 }
+
 export enum OrderMakerType {
   taker = "taker",
   maker = "maker",
@@ -729,6 +731,7 @@ export interface GetTokenBalancesRequest {
   owner: string;
   token: TokenAddress[];
 }
+
 export interface GetALLTokenBalancesRequest {
   owner: string;
 }
@@ -1061,6 +1064,7 @@ export enum EXTRA_ORDER_TYPES {
   TRAILING_STOP = "TRAILING_STOP",
   OCO = "OCO",
 }
+
 export interface GetOrdersRequest {
   accountId: number;
   market?: string;
@@ -1242,6 +1246,7 @@ export interface GetUserTxsRequest {
   limit?: number;
   types?: UserTxTypes[] | string;
 }
+
 export interface GetUserBillsRequest {
   accountId: number;
   fromAddress?: string;
@@ -1252,6 +1257,7 @@ export interface GetUserBillsRequest {
   limit?: number;
   billType?: UserBillTypes[];
 }
+
 export interface GetReferSelf {
   accountId: string;
   offset?: number;
@@ -1259,12 +1265,14 @@ export interface GetReferSelf {
   start?: number;
   end?: number;
 }
+
 export interface ReferSelf {
   accountId: string;
   lrcAmount: string;
   startAt: number;
   endAt: number;
 }
+
 export enum GetReferStatisticReason {
   Recommender = 9,
   Invited = 1,
@@ -1274,6 +1282,7 @@ export interface GetReferStatistic {
   accountId: string;
   reason: GetReferStatisticReason;
 }
+
 export interface ReferStatistic {
   accountId: number;
   totalProfit: string;
@@ -1292,17 +1301,20 @@ export interface GetReferDownsides {
   start?: number;
   end?: number;
 }
+
 export interface ReferDownsides {
   address: string;
   lrcAmount: string;
   startAt: number;
   endAt: number;
 }
+
 export enum REWARD_TYPE {
   MakerRewards = 1,
   ReferralRewards = 2,
   RefereeRewards = 3,
 }
+
 export interface GetUserRewardRequest {
   rewardType: REWARD_TYPE;
   accountId: number;
@@ -1495,11 +1507,13 @@ export enum EXTRAORDER_TYPE {
   TRADITIONAL_ORDER = "TRADITIONAL_ORDER",
   STOP_LIMIT = "STOP_LIMIT",
 }
+
 export enum STOP_SIDE {
   NO_CONDITION = "NO_CONDITION",
   GREAT_THAN_AND_EQUAL = "GREAT_THAN_AND_EQUAL",
   LESS_THAN_AND_EQUAL = "LESS_THAN_AND_EQUAL",
 }
+
 export interface SubmitOrderRequestV3 {
   /**
    * The adderss of the exchange which has to process this order
@@ -2726,6 +2740,7 @@ export enum LegacyNFT {
   outside = "outside",
   undecided = "undecided",
 }
+
 export interface GetUserNFTLegacyBalanceRequest {
   accountId: number;
   tokenAddress: string;
@@ -3343,6 +3358,7 @@ export enum NFT_PREFERENCE_TYPE {
   fav = "fav",
   hide = "hide",
 }
+
 export type UpdateNFTLegacyCollectionRequest = {
   accountId: number;
   nftHashes: string[];
@@ -3388,6 +3404,7 @@ export interface GetUserLegacyCollectionRequest {
   offset?: number;
   limit?: number;
 }
+
 export interface GetCollectionWholeNFTsRequest {
   id: number;
   metadata?: boolean;
@@ -3637,6 +3654,7 @@ export enum LuckyTokenItemStatusIndex {
   OVER_DUE = 4,
   FAILED = 5,
 }
+
 export enum LuckyTokenWithdrawStatus {
   RECEIVED = 0,
   PROCESSING = 1,
@@ -3653,30 +3671,36 @@ export enum LuckyTokenItemStatus {
   OVER_DUE = "OVER_DUE",
   FAILED = "FAILED",
 }
+
 export enum LuckyTokenAmountType {
   RANDOM = 0,
   AVERAGE = 1,
 }
+
 export enum LuckyTokenViewType {
   PUBLIC = 0,
   PRIVATE = 1,
 }
+
 export enum LuckyTokenClaimType {
   RELAY = 0,
   COMMON = 1,
   BLIND_BOX = 2,
 }
+
 export enum ClaimRecordStatus {
   WAITING_CLAIM = "WAITING_CLAIM",
   CLAIMED = "CLAIMED",
   EXPIRED = "EXPIRED",
   CLAIMING = "CLAIMING",
 }
+
 export enum BlindBoxStatus {
   NOT_OPENED = "NOT_OPENED",
   OPENED = "OPENED",
   EXPIRED = "EXPIRED",
 }
+
 export type LuckyTokenChampion = {
   accountId: number;
   address: string;
@@ -4007,6 +4031,7 @@ export type STACKING_PRODUCT = {
   minAmount: string;
   maxAmount: string;
 };
+
 export enum StakeStatus {
   received = "received",
   locked = "locked",
@@ -4014,6 +4039,7 @@ export enum StakeStatus {
   completely_unlocked = "completely_unlocked",
   failed = "failed",
 }
+
 export type StakeInfoOrigin = {
   accountId: number;
   tokenId: number;
@@ -4037,11 +4063,13 @@ export type STACKING_SUMMARY = {
   totalClaimableRewards: string;
   staking: StakeInfoOrigin[];
 };
+
 export enum StakeTransactionType {
   subscribe = "subscribe",
   redeem = "redeem",
   claim = "claim",
 }
+
 export type STACKING_TRANSACTIONS = {
   accountId: number;
   tokenId: number;
@@ -4052,7 +4080,8 @@ export type STACKING_TRANSACTIONS = {
   createdAt: number;
   updatedAt: number;
 };
-export interface OriginStakeClaimRequestV3 {
+
+export interface OriginClaimRequestV3 {
   accountId: number;
   token: TokenVolumeV3;
   transfer: Omit<OriginTransferRequestV3, "payeeId" | "memo"> & {
@@ -4060,8 +4089,11 @@ export interface OriginStakeClaimRequestV3 {
     memo?: string;
   };
 }
-export interface OriginStakeClaimRequestV3WithPatch {
-  request: OriginStakeClaimRequestV3;
+
+export type OriginStakeClaimRequestV3 = OriginClaimRequestV3;
+
+export interface OriginClaimRequestV3WithPatch {
+  request: OriginClaimRequestV3;
   web3: Web3;
   chainId: ChainId;
   walletType: ConnectorNames;
@@ -4069,6 +4101,11 @@ export interface OriginStakeClaimRequestV3WithPatch {
   apiKey: string;
   isHWAddr?: boolean;
 }
+
+export type OriginStakeClaimRequestV3WithPatch = Omit<
+  OriginClaimRequestV3WithPatch,
+  "request"
+> & { request: OriginStakeClaimRequestV3 };
 
 export interface GetContactsRequest {
   isHebao: boolean;
@@ -4284,4 +4321,24 @@ export type UserLockSummary = {
     lockTag: string;
     tokenId: number;
   }[];
+};
+
+export interface GetTotalClaimRequest {
+  accountId: number;
+}
+
+export enum CLAIM_TYPE {
+  PROTOCOL_FEE = "PROTOCOL_FEE",
+  RECOMMENDER_FEE = "RECOMMENDER_FEE",
+  REFERER_FEE = "REFERER_FEE",
+  REBATE_FEE = "REBATE_FEE",
+  LRC_STAKING = "LRC_STAKING",
+}
+
+export type ClaimItem = {
+  tokenId: number;
+  claimableInfo: Array<{
+    amount: string;
+    claimType: CLAIM_TYPE;
+  }>;
 };

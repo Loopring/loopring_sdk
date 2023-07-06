@@ -3,37 +3,38 @@
 import { BaseAPI } from "./base_api";
 
 import {
-  RESULT_INFO,
-  ReqMethod,
-  SIG_FLAG,
-  SigPatchField,
-  TradeChannel,
-  LOOPRING_URLs,
-  ConnectorNames,
-  SigSuffix,
-  NFTFactory,
   ChainId,
-  NFTFactory_Collection,
-  LoopringErrorCode,
+  ClaimItem,
   ConnectorError,
+  ConnectorNames,
   CounterFactualInfo,
   EXTRAORDER_TYPE,
-  UserLockSummary,
+  LOOPRING_URLs,
+  LoopringErrorCode,
+  NFTFactory,
+  NFTFactory_Collection,
   ReferStatistic,
+  ReqMethod,
+  RESULT_INFO,
+  SIG_FLAG,
+  SigPatchField,
+  SigSuffix,
+  TradeChannel,
 } from "../defs";
 
 import * as loopring_defs from "../defs/loopring_defs";
 
 import * as sign_tools from "./sign/sign_tools";
-import { isContract } from "./contract_api";
-import BN from "bn.js";
-import { RequiredPart, sortObjDictionary } from "../utils";
 import {
   generateKeyPair,
-  getEdDSASig,
+  getEcDSASig,
+  GetEcDSASigType,
   getEdDSASigWithPoseidon,
+  getUpdateAccountEcdsaTypedData,
   KeyPairParams,
 } from "./sign/sign_tools";
+import BN from "bn.js";
+import { RequiredPart, sortObjDictionary } from "../utils";
 import { AxiosResponse } from "axios";
 
 export class UserAPI extends BaseAPI {
@@ -1722,78 +1723,17 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signOffchainWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.offchainWithdrawWrap({
+        withdraw: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signOffchainWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
       request,
@@ -1846,79 +1786,17 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        request.payerAddr,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: request as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitInternalTransfer notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            request.payerAddr,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              request.payerAddr,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              request.payerAddr,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       request,
@@ -1946,7 +1824,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFTAction Deploy request
+   * Submit Force Withdrawals request
    */
   public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
@@ -1977,81 +1855,17 @@ export class UserAPI extends BaseAPI {
       volume: "0",
       tokenId: transfer.token.tokenId,
     };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
-
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo;
     }
@@ -2119,79 +1933,17 @@ export class UserAPI extends BaseAPI {
       tokenId: transfer.token.tokenId,
     };
 
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo;
@@ -2251,79 +2003,17 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTTransferWithoutDataStructure(
-        web3,
-        request.fromAddress,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.transferNFTWrap({
+        transfer: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signTNFTransferWithDataStructure(
-            web3,
-            request.fromAddress,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.fromAddress);
-      try {
-        if (isContractCheck) {
-          // signOffchainWithdrawWithDataStructureForContract
-          const result =
-            await sign_tools.signNFTTransferWithDataStructureForContract(
-              web3,
-              request.fromAddress,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signNFTTransferWithDataStructureForContract(
-              web3,
-              request.fromAddress,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
       request,
@@ -2376,82 +2066,17 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.withdrawNFTWrap({
+        withdraw: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signNFTWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-
-      try {
-        if (isContractCheck) {
-          // signNFTWithdrawWithDataStructureForContract
-          // myLog('signNFTWithdrawWithDataStructureForContract')
-          const result =
-            await sign_tools.signNFTWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signNFTWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(
       request,
@@ -2517,84 +2142,17 @@ export class UserAPI extends BaseAPI {
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
 
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTMintWithoutDataStructure(
-        web3,
-        request.minterAddress,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.mintNFTWrap({
+        mint: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (!_noEcdsa) {
-      if (
-        walletType === ConnectorNames.MetaMask ||
-        walletType === ConnectorNames.Gamestop ||
-        walletType === ConnectorNames.OtherExtension
-      ) {
-        try {
-          if (isHWAddr) {
-            await sigHW();
-          } else {
-            const result = await sign_tools.signNFTMintWithDataStructure(
-              web3,
-              request.minterAddress,
-              request,
-              chainId,
-              walletType,
-              accountId,
-              counterFactualInfo
-            );
-            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          }
-        } catch (err) {
-          throw {
-            ...this.genErr(err as any),
-          };
-        }
-      } else {
-        try {
-          const isContractCheck = await isContract(web3, request.minterAddress);
-
-          if (isContractCheck) {
-            // signNFTMintWithDataStructureForContract
-            // myLog('signNFTMintWithDataStructureForContract')
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId
-              );
-            ecdsaSignature = result.ecdsaSig;
-          } else if (counterFactualInfo) {
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId,
-                counterFactualInfo
-              );
-            ecdsaSignature = result.ecdsaSig;
-            // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
-          } else {
-            await sigHW();
-          }
-        } catch (err) {
-          throw {
-            ...this.genErr(err as any),
-          };
-        }
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
       request,
@@ -2847,7 +2405,7 @@ export class UserAPI extends BaseAPI {
   }
 
   /*
-   * Submit NFTAction Deploy request
+   * Submit Deploy Collection request
    */
   public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
@@ -2878,80 +2436,17 @@ export class UserAPI extends BaseAPI {
       volume: "0",
       tokenId: transfer.token.tokenId,
     };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo;
@@ -3007,77 +2502,28 @@ export class UserAPI extends BaseAPI {
 
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signUpdateAccountWithoutDataStructure(
+    const typedData = getUpdateAccountEcdsaTypedData(request, chainId);
+    try {
+      const result = await getEcDSASig(
         web3,
-        request,
+        typedData,
+        request.owner,
+        isHWAddr
+          ? GetEcDSASigType.WithoutDataStruct
+          : GetEcDSASigType.HasDataStruct,
         chainId,
-        walletType,
         accountId,
+        "",
+        ConnectorNames.Unknown,
         counterFactualInfo
       );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signUpdateAccountWithDataStructure(
-            web3,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-      try {
-        if (isContractCheck) {
-          // myLog('signUpdateAccountWithDataStructureForContract')
-          const result =
-            await sign_tools.signUpdateAccountWithDataStructureForContract(
-              web3,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog('ecdsaSignature:', ecdsaSignature)
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signUpdateAccountWithDataStructureForContract(
-              web3,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
+      ecdsaSignature =
+        result.ecdsaSig + (isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02);
+    } catch (error) {
+      console.log("EcDSASig error try sign WithoutDataStruct");
+      throw error;
     }
+
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo;
     }
@@ -3196,7 +2642,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    record: loopring_defs.ReferDownsides[];
+    records: loopring_defs.ReferDownsides[];
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_DOWNSIDES,
@@ -3214,7 +2660,7 @@ export class UserAPI extends BaseAPI {
     }
     return {
       totalNum: raw_data?.totalNum,
-      record: raw_data.record,
+      records: raw_data.records,
       raw_data,
     };
   }
@@ -3224,7 +2670,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<{
     raw_data: R;
     totalNum: number;
-    record: loopring_defs.ReferSelf[];
+    records: loopring_defs.ReferSelf[];
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_SELF,
@@ -3242,7 +2688,7 @@ export class UserAPI extends BaseAPI {
     }
     return {
       totalNum: raw_data?.totalNum,
-      record: raw_data.record,
+      records: raw_data.records,
       raw_data,
     };
   }
@@ -3321,6 +2767,109 @@ export class UserAPI extends BaseAPI {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_LOCKSUMMAR,
       queryParams: request,
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    };
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      };
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    };
+  }
+
+  public async sendTotalClaim(
+    req: loopring_defs.OriginClaimRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any }
+  ) {
+    const {
+      request,
+      web3,
+      chainId,
+      walletType,
+      eddsaKey,
+      apiKey,
+      isHWAddr: isHWAddrOld,
+    } = req;
+    const { accountId, counterFactualInfo }: any = options
+      ? options
+      : { accountId: 0 };
+    const { transfer } = request;
+
+    const isHWAddr = !!isHWAddrOld;
+    let ecdsaSignature = undefined;
+    transfer.payeeId = 0;
+    transfer.memo = `STAKE-CLAIM->${request.accountId}`;
+
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      });
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02;
+    } catch (error) {}
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo;
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey
+    ).result;
+    transfer.ecdsaSignature = ecdsaSignature;
+    const dataToSig: Map<string, any> = sortObjDictionary(request);
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_TOTAL_CLAIM,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    };
+
+    let raw_data;
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data;
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        };
+      }
+      return { raw_data, ...raw_data };
+    } catch (error) {
+      throw error as AxiosResponse;
+    }
+  }
+  public async getUserTotalClaim<R>(
+    request: loopring_defs.GetTotalClaimRequest,
+    apiKey: string
+  ): Promise<{
+    raw_data: R;
+    accountId: number;
+    items: ClaimItem[];
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_TOTAL_CLAIM_INFO,
+      queryParams: { ...request },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
