@@ -157,8 +157,12 @@ export class WalletAPI extends BaseAPI {
       newOwner = guardian.businessDataJson.value.value.newOwner;
       newGuardians = guardian.businessDataJson.value.value.newGuardians;
     }
-    const guardiansBs = this.encodeAddressesPacked(newGuardians);
-    const guardiansHash = ethUtil.keccak(guardiansBs);
+    let guardiansBs, guardiansHash;
+    if (newOwner && newGuardians) {
+      guardiansBs = this.encodeAddressesPacked(newGuardians);
+      guardiansHash = ethUtil.keccak(guardiansBs);
+    }
+
     ecdsaSignature = await sign_tools.signHebaoApproveWrap({
       chainId,
       web3,
