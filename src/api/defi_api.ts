@@ -11,7 +11,6 @@ import {
   SEP,
   SIG_FLAG,
   SigPatchField,
-  SigSuffix,
   SoursURL,
 } from '../defs'
 import { makeMarkets, sortObjDictionary } from '../utils'
@@ -513,7 +512,7 @@ export class DefiAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {}
 
     if (counterFactualInfo) {
