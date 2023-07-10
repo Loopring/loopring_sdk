@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.4.14",
+  "version": "3.5.6",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -17,6 +17,15 @@
     "!*.test.d.ts"
   ],
   "type": "module",
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "jsxSingleQuote": true,
+    "bracketSpacing": true
+  },
   "dependencies": {
     "@ethereumjs/common": "^2.4.0",
     "@ethereumjs/tx": "^3.3.0",
@@ -35,12 +44,13 @@
     "js-sha3": "^0.8.0",
     "js-sha512": "^0.8.0",
     "jsbn": "^1.1.0",
+    "multiformats": "^12.0.1",
     "web-encoding": "^1.1.5",
     "web3": "1.10.0"
   },
   "build": {
     "files": [
-      "build/**/*",
+      "src/**/*",
       "node_modules/**/*"
     ],
     "publish": {
@@ -119,7 +129,7 @@
     "honkit": "^3.6.20",
     "jest": "^26.6.3",
     "mocha": "^8.3.2",
-    "prettier": "2.5.1",
+    "prettier": "2.8.8",
     "request-promise": "^4.2.6",
     "rimraf": "^5.0.1",
     "rollup": "^3.25.3",

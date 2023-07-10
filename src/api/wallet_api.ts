@@ -1,38 +1,30 @@
 import { BaseAPI, personalSign } from "./base_api";
-import { isContract, sendRawTx } from "./contract_api";
+import { sendRawTx } from "./contract_api";
 import * as loopring_defs from "../defs/loopring_defs";
-import {
-  ContractType,
-  GetUserTradesRequest,
-  Guardian,
-  HebaoOperationLog,
-  LockHebaoHebaoParam,
-  ModuleType,
-  NetworkWallet,
-  Protector,
-  ReqParams,
-  WalletType,
-} from "../defs/loopring_defs";
-
-import { ReqMethod, SIG_FLAG } from "../defs/loopring_enums";
-import api from "./ethereum/contracts";
-
-import { LOOPRING_URLs } from "../defs/url_defs";
 import {
   ChainId,
   ConnectorNames,
+  ContractType,
+  GetUserTradesRequest,
+  Guardian,
   HEBAO_META_TYPE,
+  HebaoOperationLog,
+  LockHebaoHebaoParam,
+  LOOPRING_URLs,
+  ModuleType,
+  NetworkWallet,
+  Protector,
+  ReqMethod,
+  ReqParams,
   RESULT_INFO,
+  SIG_FLAG,
   SigSuffix,
+  WalletType,
 } from "../defs";
-import {
-  creatEdDSASigHasH,
-  getEcDSASig,
-  GetEcDSASigType,
-} from "./sign/sign_tools";
+import api from "./ethereum/contracts";
+import * as sign_tools from "./sign/sign_tools";
 import * as ethUtil from "ethereumjs-util";
 import { sortObjDictionary, toHex } from "../utils";
-import Web3 from "web3";
 import { myLog } from "../utils/log_tools";
 import { AxiosResponse } from "axios";
 
@@ -76,102 +68,6 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  // 1.x
-
-  // 2.0
-  // const TYPE_STR =
-  //   "recover(address wallet,uint256 validUntil,address newOwner,address[] newGuardians)";
-  // const RECOVER_TYPEHASH = ethUtil.keccak(Buffer.from(TYPE_STR));
-  //
-  // const guardiansBs = encodeAddressesPacked(guardians);
-  // const guardiansHash = ethUtil.keccak(guardiansBs);
-  //
-  // const encodedRequest = ethAbi.encodeParameters(
-  //   ["bytes32", "address", "uint256", "address", "bytes32"],
-  //   [RECOVER_TYPEHASH, walletAddress, validUntil, newOwner, guardiansHash]
-  // );
-  //
-  //   const encodedRequest = web3.eth.abi.encodeParameters(
-  //     ["bytes32", "address", "uint256", "address"],
-  //     [RECOVER_TYPEHASH, request.wallet, request.validUntil, newOwner]
-  //   );
-  private getApproveRecoverTypedData(
-    chainId: ChainId,
-    guardiaContractAddress: any,
-    wallet: any,
-    validUntil: any,
-    newOwner: any
-  ) {
-    const typedData = {
-      types: {
-        EIP712Domain: [
-          { name: "name", type: "string" },
-          { name: "version", type: "string" },
-          { name: "chainId", type: "uint256" },
-          { name: "verifyingContract", type: "address" },
-        ],
-        recover: [
-          { name: "wallet", type: "address" },
-          { name: "validUntil", type: "uint256" },
-          { name: "newOwner", type: "address" },
-        ],
-      },
-      domain: {
-        name: "GuardianModule",
-        version: "1.2.0",
-        chainId: chainId,
-        verifyingContract: guardiaContractAddress,
-      },
-      primaryType: "recover",
-      message: {
-        wallet: wallet,
-        validUntil: validUntil,
-        newOwner: newOwner,
-      },
-    };
-    return typedData;
-  }
-
-  public getApproveRecoverV2TypedData(
-    chainId: ChainId,
-    guardiaContractAddress: any,
-    wallet: any,
-    validUntil: any,
-    newOwner: any,
-    newGuardians: Buffer | any
-  ) {
-    const typedData = {
-      types: {
-        EIP712Domain: [
-          { name: "name", type: "string" },
-          { name: "version", type: "string" },
-          { name: "chainId", type: "uint256" },
-          { name: "verifyingContract", type: "address" },
-        ],
-        recover: [
-          { name: "wallet", type: "address" },
-          { name: "validUntil", type: "uint256" },
-          { name: "newOwner", type: "address" },
-          { name: "newGuardians", type: "string" },
-        ],
-      },
-      domain: {
-        name: "GuardianModule",
-        version: "1.2.0",
-        chainId: chainId,
-        verifyingContract: guardiaContractAddress,
-      },
-      primaryType: "recover",
-      message: {
-        wallet: wallet,
-        validUntil: validUntil,
-        newOwner: newOwner,
-        newGuardians: newGuardians,
-      },
-    };
-    return typedData;
-  }
-
   /**
    *
    * @param approveRecordId  request.id
@@ -179,7 +75,7 @@ export class WalletAPI extends BaseAPI {
   public async rejectHebao(req: loopring_defs.RejectHebaoRequestV3WithPatch) {
     const { web3, address, request, chainId } = req;
     const dataToSig = sortObjDictionary(request);
-    const { hashRaw } = creatEdDSASigHasH({
+    const { hashRaw } = sign_tools.creatEdDSASigHasH({
       method: ReqMethod.POST,
       basePath: this.baseUrl,
       api_url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
@@ -222,72 +118,6 @@ export class WalletAPI extends BaseAPI {
     };
   }
 
-  public async signHebaoApproveWithoutDataStructure(
-    web3: Web3,
-    owner: string,
-    guardian: Guardian,
-    chainId: ChainId,
-    walletType: ConnectorNames
-  ) {
-    const result = await personalSign(
-      web3,
-      owner,
-      "",
-      guardian.messageHash,
-      walletType,
-      chainId
-    );
-    return result;
-  }
-
-  public async signHebaoApproveWithDataStructureForContract(
-    web3: Web3,
-    owner: string,
-    guardian: Guardian,
-    chainId: ChainId,
-    newOwner = "",
-    newGuardians: undefined | Buffer | any = undefined,
-    masterCopy: undefined | string = undefined,
-    forwarderModuleAddress: undefined | string = undefined
-  ) {
-    let typedData;
-    myLog("forwarderModuleAddress", forwarderModuleAddress);
-
-    if (forwarderModuleAddress) {
-      typedData = this.getApproveRecoverTypedData(
-        chainId,
-        forwarderModuleAddress,
-        guardian.signedRequest.wallet,
-        guardian.signedRequest.validUntil,
-        newOwner
-      );
-      myLog("typedData", typedData);
-    } else {
-      typedData = this.getApproveRecoverV2TypedData(
-        chainId,
-        masterCopy,
-        guardian.signedRequest.wallet,
-        guardian.signedRequest.validUntil,
-        newOwner,
-        newGuardians
-      );
-      myLog("typedData", typedData);
-    }
-
-    const result = await getEcDSASig(
-      web3,
-      typedData,
-      owner,
-      GetEcDSASigType.Contract,
-      chainId,
-      undefined,
-      "",
-      ConnectorNames.Unknown
-      // counterFactualInfo
-    );
-    return { sig: result.ecdsaSig };
-  }
-
   public encodeAddressesPacked(addrs: string[]) {
     const addrsBs = Buffer.concat(
       addrs.map((a) => {
@@ -309,92 +139,44 @@ export class WalletAPI extends BaseAPI {
       request,
       web3,
       chainId,
-      walletType,
+      // walletType,
       guardian,
       apiKey,
       isHWAddr: isHWAddrOld,
     } = req;
     const isHWAddr = !!isHWAddrOld;
     let ecdsaSignature = undefined;
+    let newOwner = undefined,
+      newGuardians = [];
 
-    const sigHW = async () => {
-      const result: any = await this.signHebaoApproveWithoutDataStructure(
-        web3,
-        request.signer,
-        guardian,
-        chainId,
-        walletType
-      );
-      ecdsaSignature = result?.sig + SigSuffix.Suffix03;
-    };
-    // metamask not import hw appWallet.
     if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.Coinbase ||
-      walletType === ConnectorNames.OtherExtension
+      guardian.businessDataJson &&
+      guardian.businessDataJson.value &&
+      guardian.businessDataJson.value.value
     ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result: any = await this.signHebaoApproveWithoutDataStructure(
-            web3,
-            request.signer,
-            guardian,
-            chainId,
-            walletType
-          );
-          ecdsaSignature = result?.sig + SigSuffix.Suffix03;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.signer);
-      try {
-        if (isContractCheck) {
-          let newOwner = undefined,
-            newGuardians = [];
-
-          guardian.businessDataJson.value.value.newOwner
-            ? guardian.businessDataJson.value.value.newOwner
-            : 0;
-          if (
-            guardian.businessDataJson &&
-            guardian.businessDataJson.value &&
-            guardian.businessDataJson.value.value
-          ) {
-            newOwner = guardian.businessDataJson.value.value.newOwner;
-            newGuardians = guardian.businessDataJson.value.value.newGuardians;
-          }
-          const guardiansBs = this.encodeAddressesPacked(newGuardians);
-          const guardiansHash = ethUtil.keccak(guardiansBs);
-          // const guardiansBs =
-          //   LoopringAPI.walletAPI.encodeAddressesPacked(guardian.businessDataJson.value.value.newGuardians);
-          const result =
-            await this.signHebaoApproveWithDataStructureForContract(
-              web3,
-              request.signer,
-              guardian,
-              chainId,
-              newOwner,
-              isContract1XAddress ? undefined : guardiansHash,
-              isContract1XAddress ? undefined : masterCopy,
-              forwarderModuleAddress ? undefined : forwarderModuleAddress
-            );
-          ecdsaSignature = result.sig;
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
+      newOwner = guardian.businessDataJson.value.value.newOwner;
+      newGuardians = guardian.businessDataJson.value.value.newGuardians;
     }
+    let guardiansBs, guardiansHash;
+    if (newOwner && newGuardians) {
+      guardiansBs = this.encodeAddressesPacked(newGuardians);
+      guardiansHash = ethUtil.keccak(guardiansBs);
+    }
+
+    ecdsaSignature = await sign_tools.signHebaoApproveWrap({
+      chainId,
+      web3,
+      owner: request.signer,
+      isHWAddr,
+      wallet: guardian.signedRequest.wallet,
+      validUntil: guardian.signedRequest.validUntil,
+      newOwner,
+      newGuardians: isContract1XAddress ? undefined : guardiansHash,
+      masterCopy: isContract1XAddress ? undefined : masterCopy,
+      forwarderModuleAddress,
+      messageHash: guardian.messageHash,
+    });
+    ecdsaSignature += SigSuffix.Suffix03;
     request.signature = ecdsaSignature;
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
@@ -410,7 +192,7 @@ export class WalletAPI extends BaseAPI {
     } catch (error) {
       throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data) as loopring_defs.TX_HASH_RESULT<T>;
   }
 
   public async getAddressByENS<R extends any, T extends string>(
@@ -571,7 +353,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         data,
-        chainId,
+        chainId as ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),
@@ -585,7 +367,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         "0xf83d08ba",
-        chainId,
+        chainId as ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),

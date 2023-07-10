@@ -1,39 +1,28 @@
-import sha256 from "crypto-js/sha256";
-import * as abi from "ethereumjs-abi";
-import * as sigUtil from "eth-sig-util";
+import sha256 from 'crypto-js/sha256'
+import * as abi from 'ethereumjs-abi'
+import * as sigUtil from 'eth-sig-util'
 
-import * as ethUtil from "ethereumjs-util";
+import * as ethUtil from 'ethereumjs-util'
 
-import BN from "bn.js";
+import BN from 'bn.js'
 
-import BigInteger from "bignumber.js";
-import { bnToBufWithFixedLength } from "./poseidon/eddsa";
-import { EDDSAUtil } from "./poseidon/EDDSAUtil";
-import { field } from "./poseidon/field";
-import { permunation, PoseidonParams } from "./poseidon/permutation";
+import BigInteger from 'bignumber.js'
+import { bnToBufWithFixedLength } from './poseidon/eddsa'
+import { EDDSAUtil } from './poseidon/EDDSAUtil'
+import { field } from './poseidon/field'
+import { permunation, PoseidonParams } from './poseidon/permutation'
 
-import * as fm from "../../utils/formatter";
-import { toBig, toHex } from "../../utils/formatter";
-
-import { ChainId, ConnectorNames } from "../../defs/web3_defs";
-import { Buffer } from "buffer";
-
-/**
- * BigNumber -> BigInt
- * BigNumber.from() -> BigInt() or \dn
- * div -> /
- * sub -> -
- * gt -> >
- * lt -> <
- * gte -> >=
- * eq -> ==
- * and -> &&=
- */
+import * as fm from '../../utils/formatter'
+import { toBig, toHex } from '../../utils'
 
 import {
   AmmPoolRequestPatch,
+  ChainId,
+  ConnectorNames,
+  CounterFactualInfo,
   DualOrderRequest,
   ExitAmmPoolRequest,
+  IsMobile,
   JoinAmmPoolRequest,
   NFTMintRequestV3,
   NFTOrderRequestV3,
@@ -46,14 +35,28 @@ import {
   PublicKey,
   SubmitOrderRequestV3,
   UpdateAccountRequestV3,
-} from "../../defs/loopring_defs";
+} from '../../defs'
+import { Buffer } from 'buffer'
 
-import Web3 from "web3";
-import { myLog } from "../../utils/log_tools";
-import { personalSign } from "../base_api";
-import { CounterFactualInfo, IsMobile } from "../../defs";
+/**
+ * BigNumber -> BigInt
+ * BigNumber.from() -> BigInt() or \dn
+ * div -> /
+ * sub -> -
+ * gt -> >
+ * lt -> <
+ * gte -> >=
+ * eq -> ==
+ * and -> &&=
+ */
+import * as loopring_defs from '../../defs/loopring_defs'
 
-import { BigNumber } from "@ethersproject/bignumber";
+import Web3 from 'web3'
+import { myLog } from '../../utils/log_tools'
+import { personalSign } from '../base_api'
+
+import { BigNumber } from '@ethersproject/bignumber'
+import { isContract } from '../contract_api'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -61,46 +64,39 @@ export enum GetEcDSASigType {
   Contract,
 }
 
-const MIN_NFT_TOKENID = 32768;
+const MIN_NFT_TOKENID = 32768
 
 const SNARK_SCALAR_FIELD = new BigInteger(
-  "21888242871839275222246405745257275088548364400416034343698204186575808495617",
-  10
-);
+  '21888242871839275222246405745257275088548364400416034343698204186575808495617',
+  10,
+)
 
 export interface KeyPairParams {
-  web3: any;
-  address: string;
-  walletType: ConnectorNames;
-  keySeed: string;
-  chainId: ChainId;
-  accountId?: number;
-  counterFactualInfo?: CounterFactualInfo;
-  isMobile?: boolean;
+  web3: any
+  address: string
+  walletType: ConnectorNames
+  keySeed: string
+  chainId: ChainId
+  accountId?: number
+  counterFactualInfo?: CounterFactualInfo
+  isMobile?: boolean
 }
-export function generatePrivateKey(result: {
-  sig: string;
-  counterFactualInfo: any;
-  error: any;
-}) {
+
+export function generatePrivateKey(result: { sig: string; counterFactualInfo: any; error: any }) {
   if (!result.error && result.sig) {
     // myLog("sig:", result.sig);
-    const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig));
+    const seedBuff = ethUtil.sha256(fm.toBuffer(result.sig))
     // myLog(`seedBuff.toString('hex') ${seedBuff.toString('hex')}`)
-    const seed = BigNumber.from("0x" + seedBuff.toString("hex"));
+    const seed = BigNumber.from('0x' + seedBuff.toString('hex'))
     // myLog(`seed ${seed.toString()}`)
-    const bitIntDataItems = bnToBufWithFixedLength(seed.toString(), 32);
+    const bitIntDataItems = bnToBufWithFixedLength(seed.toString(), 32)
     // myLog(`bigIntData ${bitIntDataItems}`)
-    const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems);
+    const keyPair = EDDSAUtil.generateKeyPair(bitIntDataItems)
     // myLog("keyPair", keyPair)
 
-    const formatedPx = fm.formatEddsaKey(
-      fm.toHex(fm.toBig(keyPair.publicKeyX))
-    );
-    const formatedPy = fm.formatEddsaKey(
-      fm.toHex(fm.toBig(keyPair.publicKeyY))
-    );
-    const sk = toHex(toBig(keyPair.secretKey));
+    const formatedPx = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyX)))
+    const formatedPy = fm.formatEddsaKey(fm.toHex(fm.toBig(keyPair.publicKeyY)))
+    const sk = toHex(toBig(keyPair.secretKey))
 
     return {
       keyPair,
@@ -108,12 +104,13 @@ export function generatePrivateKey(result: {
       formatedPy,
       sk,
       counterFactualInfo: result.counterFactualInfo,
-    };
+    }
   } else {
-    console.log("generateKeyPair personalSign error", result.error);
-    throw Error(result.error);
+    console.log('generateKeyPair personalSign error', result.error)
+    throw Error(result.error)
   }
 }
+
 export async function generateKeyPair(
   {
     web3,
@@ -125,35 +122,34 @@ export async function generateKeyPair(
     counterFactualInfo,
     isMobile,
   }: KeyPairParams,
-  publicKey: { x: string; y: string } | undefined = undefined
+  publicKey: { x: string; y: string } | undefined = undefined,
 ) {
   // LOG: for signature
 
   myLog(
-    "personalSign ->",
-    "counterFactualInfo",
+    'personalSign ->',
+    'counterFactualInfo',
     counterFactualInfo,
-    "keySeed",
+    'keySeed',
     keySeed,
-    "walletType",
+    'walletType',
     walletType,
-    "publicKey from sever side ",
-    publicKey
-  );
+    'publicKey from sever side ',
+    publicKey,
+  )
   const result: any = await personalSign(
     web3,
     address,
-    "",
+    '',
     keySeed,
     walletType,
     chainId,
     accountId,
     counterFactualInfo,
-    isMobile === undefined ? IsMobile.any() : isMobile
-  );
+    isMobile === undefined ? IsMobile.any() : isMobile,
+  )
   try {
-    let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } =
-      generatePrivateKey(result);
+    let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } = generatePrivateKey(result)
 
     if (
       publicKey &&
@@ -163,132 +159,131 @@ export async function generateKeyPair(
       (!fm.toBig(formatedPx).eq(fm.toBig(publicKey.x)) ||
         !fm.toBig(formatedPy).eq(fm.toBig(publicKey.y)))
     ) {
-      let value = result.sig.split("");
-      let end = value.splice(result.sig.length - 2, 2).join("");
-      end = end == "1c" ? "01" : "1c";
-      result.sig = value.concat(end.split("")).join("");
-      let newValue = generatePrivateKey(result);
+      let value = result.sig.split('')
+      let end = value.splice(result.sig.length - 2, 2).join('')
+      end = end == '1c' ? '01' : '1c'
+      result.sig = value.concat(end.split('')).join('')
+      let newValue = generatePrivateKey(result)
       // LOG: for signature
       myLog(
-        "personalSign ->",
-        "publicKey calc by sign",
-        "x",
+        'personalSign ->',
+        'publicKey calc by sign',
+        'x',
         formatedPx,
-        "y",
+        'y',
         formatedPy,
-        "publicKey from server",
+        'publicKey from server',
         publicKey,
-        "personalSign again->",
-        "publicKey calc by sign",
-        "x",
+        'personalSign again->',
+        'publicKey calc by sign',
+        'x',
         end,
         newValue.formatedPx,
-        "y",
-        newValue.formatedPy
-      );
+        'y',
+        newValue.formatedPy,
+      )
       return {
         keyPair: newValue.keyPair,
         formatedPx: newValue.formatedPx,
         formatedPy: newValue.formatedPy,
         sk: newValue.sk,
         counterFactualInfo,
-      };
+      }
     } else {
-      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo };
+      return { keyPair, formatedPx, formatedPy, sk, counterFactualInfo }
     }
   } catch (error) {
-    throw Error(error as any);
+    throw Error(error as any)
   }
 }
 
 const makeRequestParamStr = (request: Map<string, any>) => {
-  const arrObj = Array.from(request);
+  const arrObj = Array.from(request)
   arrObj.sort(function (a, b) {
-    return a[0].localeCompare(b[0]);
-  });
-  const orderedMap = new Map(arrObj.map((i) => [i[0], i[1]]));
+    return a[0].localeCompare(b[0])
+  })
+  const orderedMap = new Map(arrObj.map((i) => [i[0], i[1]]))
 
-  const paramlist: Array<string> = [];
+  const paramlist: Array<string> = []
 
-  const keys = Object.keys(Object.fromEntries(orderedMap));
+  const keys = Object.keys(Object.fromEntries(orderedMap))
 
   if (keys) {
     keys.forEach((key: string) => {
-      const value = request.get(key);
-      if (value !== undefined && value !== "")
-        paramlist.push(`${key}=${value}`);
-    });
+      const value = request.get(key)
+      if (value !== undefined && value !== '') paramlist.push(`${key}=${value}`)
+    })
   }
 
   // force to change encode ',' due to different encode rules between server and client
-  return encodeURIComponent(paramlist.join("&")).replace(/%2C/g, "%252C");
-};
+  return encodeURIComponent(paramlist.join('&')).replace(/%2C/g, '%252C')
+}
 
 //submitOrderV3
 const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
-  const signature = EDDSAUtil.sign(PrivateKey, hash);
+  const signature = EDDSAUtil.sign(PrivateKey, hash)
 
-  let signatureRx_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.Rx)));
+  let signatureRx_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.Rx)))
   if (signatureRx_Hex.length < 64) {
-    const padding = new Array(64 - signatureRx_Hex.length).fill(0);
-    signatureRx_Hex = padding.join("").toString() + signatureRx_Hex;
+    const padding = new Array(64 - signatureRx_Hex.length).fill(0)
+    signatureRx_Hex = padding.join('').toString() + signatureRx_Hex
   }
 
-  let signatureRy_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.Ry)));
+  let signatureRy_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.Ry)))
   if (signatureRy_Hex.length < 64) {
-    const padding = new Array(64 - signatureRy_Hex.length).fill(0);
-    signatureRy_Hex = padding.join("").toString() + signatureRy_Hex;
+    const padding = new Array(64 - signatureRy_Hex.length).fill(0)
+    signatureRy_Hex = padding.join('').toString() + signatureRy_Hex
   }
 
-  let signatureS_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.s)));
+  let signatureS_Hex = fm.clearHexPrefix(fm.toHex(fm.toBN(signature.s)))
   if (signatureS_Hex.length < 64) {
-    const padding = new Array(64 - signatureS_Hex.length).fill(0);
-    signatureS_Hex = padding.join("").toString() + signatureS_Hex;
+    const padding = new Array(64 - signatureS_Hex.length).fill(0)
+    signatureS_Hex = padding.join('').toString() + signatureS_Hex
   }
 
-  const result = "0x" + signatureRx_Hex + signatureRy_Hex + signatureS_Hex;
+  const result = '0x' + signatureRx_Hex + signatureRy_Hex + signatureS_Hex
   // myLog("signature result", result)
-  return result;
-};
+  return result
+}
 
 const makeObjectStr = (request: Map<string, any>) => {
-  const jsonTxt = JSON.stringify(Object.fromEntries(request));
-  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape); //replace(/'/ig, "%27")
-};
+  const jsonTxt = JSON.stringify(Object.fromEntries(request))
+  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape) //replace(/'/ig, "%27")
+}
 
 export function getEdDSASig(
   method: string,
   basePath: string,
   api_url: string,
   requestInfo: any,
-  PrivateKey: string | undefined
+  PrivateKey: string | undefined,
 ) {
-  let params = undefined;
+  let params = undefined
 
-  method = method.toUpperCase().trim();
+  method = method.toUpperCase().trim()
 
-  if (method === "GET" || method === "DELETE") {
-    params = makeRequestParamStr(requestInfo);
-  } else if (method === "POST" || method === "PUT") {
-    params = makeObjectStr(requestInfo);
+  if (method === 'GET' || method === 'DELETE') {
+    params = makeRequestParamStr(requestInfo)
+  } else if (method === 'POST' || method === 'PUT') {
+    params = makeObjectStr(requestInfo)
   } else {
-    throw new Error(`${method} is not supported yet!`);
+    throw new Error(`${method} is not supported yet!`)
   }
 
-  const uri = encodeURIComponent(`${basePath}${api_url}`);
+  const uri = encodeURIComponent(`${basePath}${api_url}`)
 
-  const message = `${method}&${uri}&${params}`;
+  const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog("getEdDSASig", message);
-  let _hash: any = new BigInteger(sha256(message).toString(), 16);
+  myLog('getEdDSASig', message)
+  let _hash: any = new BigInteger(sha256(message).toString(), 16)
 
-  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
+  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
 
-  const sig = genSigWithPadding(PrivateKey, hash);
+  const sig = genSigWithPadding(PrivateKey, hash)
 
-  return sig;
+  return sig
 }
 
 export function creatEdDSASigHasH({
@@ -297,72 +292,70 @@ export function creatEdDSASigHasH({
   api_url,
   requestInfo,
 }: {
-  method: string;
-  basePath: string;
-  api_url: string;
-  requestInfo: any;
+  method: string
+  basePath: string
+  api_url: string
+  requestInfo: any
 }) {
-  let params = undefined;
+  let params = undefined
 
-  method = method.toUpperCase().trim();
+  method = method.toUpperCase().trim()
 
-  if (method === "GET" || method === "DELETE") {
-    params = makeRequestParamStr(requestInfo);
-  } else if (method === "POST" || method === "PUT") {
-    params = makeObjectStr(requestInfo);
+  if (method === 'GET' || method === 'DELETE') {
+    params = makeRequestParamStr(requestInfo)
+  } else if (method === 'POST' || method === 'PUT') {
+    params = makeObjectStr(requestInfo)
   } else {
-    throw new Error(`${method} is not supported yet!`);
+    throw new Error(`${method} is not supported yet!`)
   }
 
-  const uri = encodeURIComponent(`${basePath}${api_url}`);
+  const uri = encodeURIComponent(`${basePath}${api_url}`)
 
-  const message = `${method}&${uri}&${params}`;
+  const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog("getEdDSASig", message);
+  myLog('getEdDSASig', message)
 
-  let _hash: any = new BigInteger(sha256(message).toString(), 16);
+  let _hash: any = new BigInteger(sha256(message).toString(), 16)
 
-  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {});
+  let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog("getEdDSASig hash", message, "_hash", _hash, "hash", hash);
-  return { hash, hashRaw: toHex(_hash) };
+  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  return { hash, hashRaw: toHex(_hash) }
 }
 
 export function verifyEdDSASig(
   hash: string,
-  input: { Rx: string; Ry: string; s: string }
+  input: { Rx: string; Ry: string; s: string },
 ): Boolean {
-  return true;
+  return true
 }
-export const getEdDSASigWithPoseidon = (
-  inputs: any,
-  PrivateKey: string | undefined
-) => {
-  const p = field.SNARK_SCALAR_FIELD;
+
+export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefined) => {
+  const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
     inputs.length + 1,
     6,
     53,
-    "poseidon",
+    'poseidon',
     BigNumber.from(5),
     null,
     null,
-    128
-  );
-  let bigIntInputs: any;
-  bigIntInputs = [];
+    128,
+  )
+  let bigIntInputs: any
+  bigIntInputs = []
   for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    bigIntInputs.push(BigNumber.from(input));
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
   }
-  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams)
   // myLog("getEdDSASigWithPoseidon", hash.toHexString(), bigIntInputs);
   return {
     hash,
     result: genSigWithPadding(PrivateKey, hash),
-  };
-};
+  }
+}
 
 /**
  * @description sign EIP712
@@ -372,12 +365,7 @@ export const getEdDSASigWithPoseidon = (
  * @param params
  * @returns {Promise.<*>}
  */
-export async function signEip712(
-  web3: any,
-  account: string,
-  method: string,
-  params: any
-) {
+export async function signEip712(web3: any, account: string, method: string, params: any) {
   const response: any = await new Promise((resolve) => {
     web3.currentProvider?.sendAsync(
       {
@@ -387,75 +375,65 @@ export async function signEip712(
       },
       function (err: any, result: any) {
         if (err) {
-          resolve({ error: { message: err.message } });
-          return;
+          resolve({ error: { message: err.message } })
+          return
         }
 
         if (result.error) {
-          resolve({ error: { message: result.error.message } });
-          return;
+          resolve({ error: { message: result.error.message } })
+          return
         }
 
-        resolve({ result: result.result });
-      }
-    );
-  });
+        resolve({ result: result.result })
+      },
+    )
+  })
 
   if (response?.result) {
-    return response;
+    return response
   } else {
-    throw new Error(response["error"]["message"]);
+    throw new Error(response['error']['message'])
   }
 }
 
-export async function signEip712WalletConnect(
-  web3: any,
-  account: string,
-  typedData: any
-) {
+export async function signEip712WalletConnect(web3: any, account: string, typedData: any) {
   try {
-    let response: any;
-    if (
-      window?.ethereum?.isLoopring ||
-      !web3.currentProvider?.signer?.session
-    ) {
+    let response: any
+    if (window?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) {
       const result: any = await new Promise((resolve) => {
         web3.currentProvider?.sendAsync(
           {
-            method: "eth_signTypedData",
+            method: 'eth_signTypedData',
             params: [account, typedData],
             account,
           },
           (err: any, result: any) => {
             if (err) {
-              resolve({ error: { message: err.message } });
-              return;
+              resolve({ error: { message: err.message } })
+              return
             }
 
             if (result.error) {
-              resolve({ error: { message: result.error.message } });
-              return;
+              resolve({ error: { message: result.error.message } })
+              return
             }
 
-            resolve({ result: result.result });
-          }
-        );
-      });
-      console.log("eth_signTypedData", result);
-      response = result?.result;
+            resolve({ result: result.result })
+          },
+        )
+      })
+      console.log('eth_signTypedData', result)
+      response = result?.result
     } else {
-      response = await web3.currentProvider?.send("eth_signTypedData", [
-        account,
-        typedData,
-      ]);
+      response = await web3.currentProvider?.send('eth_signTypedData', [account, typedData])
     }
     // LOG: for signature
-    myLog("eth_signTypedData success", response);
-    return response;
+    myLog('eth_signTypedData success', response)
+    return response
   } catch (err) {
     // LOG: for signature
-    myLog("eth_signTypedData error", err);
-    return { error: err as any };
+    myLog('eth_signTypedData error', err)
+    return { error: err as any }
   }
 }
 
@@ -466,64 +444,55 @@ export async function getEcDSASig(
   type: GetEcDSASigType,
   chainId: ChainId,
   accountId?: number,
-  pwd = "",
+  pwd = '',
   walletType?: ConnectorNames,
-  counterFactualInfo?: CounterFactualInfo
+  counterFactualInfo?: CounterFactualInfo,
 ) {
-  const msgParams = JSON.stringify(typedData);
-  const params = [address, msgParams];
+  const msgParams = JSON.stringify(typedData)
+  const params = [address, msgParams]
 
-  let response: any,
-    hash: Buffer | string,
-    signEip712Result: any,
-    signature: any;
+  let response: any, hash: Buffer | string, signEip712Result: any, signature: any
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
-      response = await new Promise((resolve) => {
-        web3.currentProvider.send(
-          {
-            method: "eth_signTypedData_v4",
-            params,
-            address,
-          },
-          function (err: any, result: any) {
-            // LOG: for signature
-            myLog("eth_signTypedData_v4 success", response);
-            if (err) {
-              // LOG: for signature
-              myLog("eth_signTypedData_v4 error", err);
-              resolve({ error: { message: err.message } });
-            } else if (result?.error) {
-              // LOG: for signature
-              myLog("eth_signTypedData_v4 error", result);
-              resolve({ error: { message: result.error.message } });
-            } else {
-              // LOG: for signature
-              myLog("eth_signTypedData_v4", result);
-              resolve({ result: result.result });
-            }
-          }
-        );
-      });
-
-      if (!response["result"]) {
-        throw new Error(response["error"]["message"]);
+      try {
+        response = await new Promise((resolve, reject) => {
+          web3.currentProvider.sendAsync(
+            {
+              method: 'eth_signTypedData_v4',
+              params,
+              address,
+            },
+            (error: any, result: any) => {
+              if (error || result?.error) {
+                // return error || result.error;
+                reject(error || result?.error)
+              }
+              myLog('eth_signTypedData_v4', result)
+              let _result
+              if (typeof result === 'string') {
+                // resolve(result);
+                _result = result
+              } else {
+                _result = result?.result
+              }
+              resolve(_result.slice(0, 132))
+            },
+          )
+        })
+      } catch (error) {
+        myLog('eth_signTypedData_v4 error', error)
+        throw error?.message ?? error //new Error(response["error"]["message"]);
       }
-
       return {
-        ecdsaSig: response.result,
-      };
+        ecdsaSig: response,
+      }
 
     case GetEcDSASigType.WithoutDataStruct:
-      hash = sigUtil.TypedDataUtils.sign(typedData);
-      hash = fm.toHex(hash);
-
-      // myLog('WithoutDataStruct hash:', hash)
-
+      hash = sigUtil.TypedDataUtils.sign(typedData)
+      hash = fm.toHex(hash)
       if (!walletType) {
-        throw Error("no walletType set!");
+        throw Error('no walletType set!')
       }
-
       signature = await personalSign(
         web3,
         address,
@@ -533,60 +502,50 @@ export async function getEcDSASig(
         chainId,
         counterFactualInfo ? counterFactualInfo.accountId : undefined,
         counterFactualInfo,
-        IsMobile.any()
-      );
+        IsMobile.any(),
+      )
 
       if (signature?.sig) {
         return {
           ecdsaSig: signature.sig,
           counterFactualInfo: signature.counterFactualInfo,
-        };
+        }
       }
-      throw new Error(signature.error);
-    case GetEcDSASigType.Contract:
-      hash = sigUtil.TypedDataUtils.sign(
-        typedData
-        // sigUtil.SignTypedDataVersion.V3
-      );
-      hash = fm.toHex(hash);
-      myLog("Contract Contract hash", hash);
-
-      signEip712Result = await signEip712WalletConnect(
-        web3,
-        address as string,
-        msgParams
-      );
-
-      if (signEip712Result.error) {
-        throw Error("Contract sig error");
-      }
-
-      return {
-        ecdsaSig: signEip712Result,
-      };
+      throw new Error(signature.error)
+    // case GetEcDSASigType.Contract:
+    //   signEip712Result = await signEip712WalletConnect(
+    //     web3,
+    //     address as string,
+    //     msgParams
+    //   );
+    //
+    //   if (signEip712Result.error) {
+    //     throw Error("Contract sig error");
+    //   }
+    //
+    //   return {
+    //     ecdsaSig: signEip712Result,
+    //   };
     default:
-      break;
+      break
   }
-  throw Error("getEcDSASig unsupported switch case:" + type);
+  throw Error('getEcDSASig unsupported switch case:' + type)
 }
 
 export function convertPublicKey2(pk: PublicKey) {
   // return new BN(EdDSA.pack(pk.x, pk.y), 16);
-  return new BN(EDDSAUtil.pack(pk.x, pk.y), 16);
+  return new BN(EDDSAUtil.pack(pk.x, pk.y), 16)
 }
 
 export function convertPublicKey(pk: PublicKey) {
-  const publicKeyX = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.x)));
-  const publicKeyY = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.y)));
+  const publicKeyX = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.x)))
+  const publicKeyY = fm.formatEddsaKey(fm.toHex(fm.toBig(pk.y)))
 
   // return new BN(EdDSA.pack(publicKeyX, publicKeyY), 16);
-  return new BN(EDDSAUtil.pack(publicKeyX, publicKeyY), 16);
+  return new BN(EDDSAUtil.pack(publicKeyX, publicKeyY), 16)
 }
 
-export function getUpdateAccountEcdsaTypedData(
-  data: UpdateAccountRequestV3,
-  chainId: ChainId
-) {
+export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, chainId: ChainId) {
   const message: any = {
     owner: data.owner,
     accountID: data.accountId,
@@ -595,125 +554,56 @@ export function getUpdateAccountEcdsaTypedData(
     publicKey: fm.addHexPrefix(convertPublicKey2(data.publicKey).toString(16)),
     validUntil: data.validUntil,
     nonce: data.nonce,
-  };
+  }
 
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       AccountUpdate: [
-        { name: "owner", type: "address" },
-        { name: "accountID", type: "uint32" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "publicKey", type: "uint256" },
-        { name: "validUntil", type: "uint32" },
-        { name: "nonce", type: "uint32" },
+        { name: 'owner', type: 'address' },
+        { name: 'accountID', type: 'uint32' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'publicKey', type: 'uint256' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'nonce', type: 'uint32' },
       ],
     },
-    primaryType: "AccountUpdate",
+    primaryType: 'AccountUpdate',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
+  }
 
-  return typedData;
-}
-
-export async function signUpdateAccountWithDataStructure(
-  web3: Web3,
-  bodyParams: UpdateAccountRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
-  // myLog('typedData:', typedData)
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    bodyParams.owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signUpdateAccountWithoutDataStructure(
-  web3: Web3,
-  bodyParams: UpdateAccountRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData: any = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    bodyParams.owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signUpdateAccountWithDataStructureForContract(
-  web3: Web3,
-  bodyParams: UpdateAccountRequestV3,
-  chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getUpdateAccountEcdsaTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    bodyParams.owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+  return typedData
 }
 
 // withdraw
 export function get_EddsaSig_OffChainWithdraw(
   request: OffChainWithdrawalRequestV3,
-  eddsaKey: string
+  eddsaKey: string,
 ) {
   const onchainDataHash = abi
     .soliditySHA3(
-      ["uint256", "address", "bytes"],
+      ['uint256', 'address', 'bytes'],
       [
         request.minGas,
         new BN(fm.clearHexPrefix(request.to), 16),
-        new Buffer(request.extraData ?? ""),
-      ]
+        new Buffer(request.extraData ?? ''),
+      ],
     )
-    .slice(0, 20);
+    .slice(0, 20)
 
-  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString("hex"));
+  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
 
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
@@ -725,24 +615,24 @@ export function get_EddsaSig_OffChainWithdraw(
     orderHashStr,
     request.validUntil,
     request.storageId,
-  ];
+  ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getOrderHash(request: SubmitOrderRequestV3) {
-  const p = field.SNARK_SCALAR_FIELD;
+  const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
     12,
     6,
     53,
-    "poseidon",
+    'poseidon',
     BigNumber.from(5),
     null,
     null,
-    128
-  );
+    128,
+  )
 
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
@@ -756,21 +646,21 @@ export function getOrderHash(request: SubmitOrderRequestV3) {
     request.maxFeeBips,
     request.fillAmountBOrS ? 1 : 0,
     new BN(ethUtil.toBuffer(request.taker)).toString(),
-  ];
-  let bigIntInputs: any;
-  bigIntInputs = [];
+  ]
+  let bigIntInputs: any
+  bigIntInputs = []
   for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    bigIntInputs.push(BigNumber.from(input));
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
   }
-  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
-  let hashInHex = hash.toHexString();
-  return hashInHex;
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams)
+  let hashInHex = hash.toHexString()
+  return hashInHex
 }
 
 export function getWithdrawTypedData(
   data: OffChainWithdrawalRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
 ): sigUtil.EIP712TypedData {
   const message = {
     owner: data.owner,
@@ -780,133 +670,259 @@ export function getWithdrawTypedData(
     feeTokenID: data.maxFee.tokenId,
     maxFee: data.maxFee.volume,
     to: data.to,
-    extraData: data.extraData ? data.extraData : "",
+    extraData: data.extraData ? data.extraData : '',
     minGas: data.minGas,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
 
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Withdrawal: [
-        { name: "owner", type: "address" },
-        { name: "accountID", type: "uint32" },
-        { name: "tokenID", type: "uint16" },
-        { name: "amount", type: "uint96" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "to", type: "address" },
-        { name: "extraData", type: "bytes" },
-        { name: "minGas", type: "uint256" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'owner', type: 'address' },
+        { name: 'accountID', type: 'uint32' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'to', type: 'address' },
+        { name: 'extraData', type: 'bytes' },
+        { name: 'minGas', type: 'uint256' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Withdrawal",
+    primaryType: 'Withdrawal',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
-export async function signOffchainWithdrawWithDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OffChainWithdrawalRequestV3,
-  chainId: ChainId,
-  accountId: number,
+export async function offchainWithdrawWrap({
+  withdraw,
+  chainId,
+  web3,
+  accountId,
+  isHWAddr,
+  counterFactualInfo,
+}: {
+  withdraw: loopring_defs.OffChainWithdrawalRequestV3
+  web3: any
+  chainId: ChainId
+  accountId: number
+  isHWAddr: boolean
   counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+}) {
+  const typedData = getWithdrawTypedData(withdraw, chainId)
+  try {
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      withdraw.owner,
+      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+      chainId,
+      accountId,
+      '',
+      ConnectorNames.Unknown,
+      counterFactualInfo,
+    )
+    return result.ecdsaSig
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
-export async function signOffchainWithdrawWithoutDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OffChainWithdrawalRequestV3,
+export async function getApproveRecoverTypedData(
   chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
+  guardiaContractAddress: any,
+  wallet: any,
+  validUntil: any,
+  newOwner: any,
 ) {
-  const typedData: any = getWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
+  const typedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      recover: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'newOwner', type: 'address' },
+      ],
+    },
+    domain: {
+      name: 'GuardianModule',
+      version: '1.2.0',
+      chainId: chainId,
+      verifyingContract: guardiaContractAddress,
+    },
+    primaryType: 'recover',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      newOwner: newOwner,
+    },
+  }
+  return typedData
 }
 
-export async function signOffchainWithdrawWithDataStructureForContract(
-  web3: Web3,
-  owner: string,
-  bodyParams: OffChainWithdrawalRequestV3,
+export async function getApproveRecoverV2TypedData(
   chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
+  guardiaContractAddress: any,
+  wallet: any,
+  validUntil: any,
+  newOwner: any,
+  newGuardians: Buffer | any,
 ) {
-  const typedData = getWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+  const typedData = {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
+      recover: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'newOwner', type: 'address' },
+        { name: 'newGuardians', type: 'string' },
+      ],
+    },
+    domain: {
+      name: 'GuardianModule',
+      version: '1.2.0',
+      chainId: chainId,
+      verifyingContract: guardiaContractAddress,
+    },
+    primaryType: 'recover',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      newOwner: newOwner,
+      newGuardians: newGuardians,
+    },
+  }
+  return typedData
+}
+
+export async function signHebaoApproveWrap(
+  props: {
+    web3: any
+    chainId: ChainId
+    owner: string
+    isHWAddr: boolean
+  } & (
+    | { messageHash: string }
+    | ({
+        counterFactualInfo?: CounterFactualInfo
+        wallet: string
+        validUntil: number
+        newOwner: string
+      } & (
+        | { forwarderModuleAddress?: undefined | string }
+        | { newGuardians?: any; masterCopy?: string }
+      ))
+  ),
+) {
+  let typedData: any
+  try {
+    const {
+      chainId,
+      web3,
+      owner,
+      isHWAddr,
+      wallet,
+      validUntil,
+      forwarderModuleAddress,
+      newOwner,
+      masterCopy,
+      newGuardians,
+      messageHash,
+    } = props as any
+    const isContractCheck = await isContract(web3, owner)
+    if (!isContractCheck && messageHash) {
+      const signature: any = await personalSign(
+        web3,
+        owner,
+        '',
+        messageHash,
+        ConnectorNames.Unknown,
+        chainId,
+      )
+      if (signature?.sig) {
+        return signature.sig
+      }
+    } else {
+      if (forwarderModuleAddress && newOwner) {
+        typedData = getApproveRecoverTypedData(
+          chainId,
+          forwarderModuleAddress,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          newOwner,
+        )
+        myLog('typedData', typedData)
+      } else if (newOwner && newGuardians) {
+        typedData = getApproveRecoverV2TypedData(
+          chainId,
+          masterCopy,
+          wallet, //guardian.signedRequest.wallet,
+          validUntil, //guardian.signedRequest.validUntil,
+          newOwner,
+          newGuardians,
+        )
+        myLog('typedData', typedData)
+      }
+      const result = await getEcDSASig(
+        web3,
+        typedData,
+        owner,
+        isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+        chainId,
+        undefined,
+        '',
+        ConnectorNames.Unknown,
+        // counterFactualInfo
+      )
+      return result.ecdsaSig
+    }
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
 //NFT Withdraw
-export function get_EddsaSig_NFT_Withdraw(
-  request: NFTWithdrawRequestV3,
-  eddsaKey: string
-) {
+export function get_EddsaSig_NFT_Withdraw(request: NFTWithdrawRequestV3, eddsaKey: string) {
   const onchainDataHash = abi
     .soliditySHA3(
-      ["uint256", "address", "bytes"],
+      ['uint256', 'address', 'bytes'],
       [
         request.minGas,
         new BN(fm.clearHexPrefix(request.to), 16),
-        new Buffer(request.extraData ?? ""),
-      ]
+        new Buffer(request.extraData ?? ''),
+      ],
     )
-    .slice(0, 20);
+    .slice(0, 20)
 
-  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString("hex"));
+  const orderHashStr = fm.addHexPrefix(onchainDataHash.toString('hex'))
 
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
@@ -918,34 +934,34 @@ export function get_EddsaSig_NFT_Withdraw(
     orderHashStr,
     request.validUntil,
     request.storageId,
-  ];
+  ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getNftData(request: NFTMintRequestV3) {
-  const p = field.SNARK_SCALAR_FIELD;
+  const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
     7,
     6,
     52,
-    "poseidon",
+    'poseidon',
     BigNumber.from(5),
     null,
     null,
-    128
-  );
-  const idNo0x = fm.clearHexPrefix(request.nftId);
-  let nftIdLo, nftIdHi;
+    128,
+  )
+  const idNo0x = fm.clearHexPrefix(request.nftId)
+  let nftIdLo, nftIdHi
   if (idNo0x.length > 32) {
-    nftIdLo = new BN(idNo0x.substr(idNo0x.length - 32, 32), 16).toString(10);
-    nftIdHi = new BN(idNo0x.substr(0, idNo0x.length - 32), 16).toString(10);
+    nftIdLo = new BN(idNo0x.substr(idNo0x.length - 32, 32), 16).toString(10)
+    nftIdHi = new BN(idNo0x.substr(0, idNo0x.length - 32), 16).toString(10)
   } else {
-    nftIdLo = new BN(idNo0x.substr(0, idNo0x.length), 16).toString(10);
-    nftIdHi = 0;
+    nftIdLo = new BN(idNo0x.substr(0, idNo0x.length), 16).toString(10)
+    nftIdHi = 0
   }
-  myLog("nftIdLo", nftIdLo, "nftIdHi", nftIdHi);
+  myLog('nftIdLo', nftIdLo, 'nftIdHi', nftIdHi)
 
   const inputs = [
     request.minterAddress,
@@ -954,27 +970,27 @@ export function getNftData(request: NFTMintRequestV3) {
     nftIdLo,
     nftIdHi,
     request.royaltyPercentage,
-  ];
+  ]
 
-  let bigIntInputs: any;
-  bigIntInputs = [];
+  let bigIntInputs: any
+  bigIntInputs = []
   for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    bigIntInputs.push(BigNumber.from(input));
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
   }
-  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams)
   // myLog("get hasher *16 hash:", hash);
-  return hash;
+  return hash
 }
 
 export function getNFTMintTypedData(
   data: NFTMintRequestV3,
   chainId: ChainId,
-  web3: Web3
+  web3: Web3,
 ): sigUtil.EIP712TypedData {
-  let nftId = data.nftId;
-  if (data.nftId.startsWith("0x")) {
-    nftId = web3.utils.hexToNumberString(data.nftId);
+  let nftId = data.nftId
+  if (data.nftId.startsWith('0x')) {
+    nftId = web3.utils.hexToNumberString(data.nftId)
   }
   const message = {
     minterAddress: data.minterAddress,
@@ -987,44 +1003,44 @@ export function getNFTMintTypedData(
     maxFee: data.maxFee.amount,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
 
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Mint: [
-        { name: "minterAddress", type: "address" },
-        { name: "toAccountId", type: "uint32" },
-        { name: "nftType", type: "string" },
-        { name: "amount", type: "uint96" },
-        { name: "nftId", type: "uint256" },
-        { name: "nftAddress", type: "address" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'minterAddress', type: 'address' },
+        { name: 'toAccountId', type: 'uint32' },
+        { name: 'nftType', type: 'string' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'nftId', type: 'uint256' },
+        { name: 'nftAddress', type: 'address' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Mint",
+    primaryType: 'Mint',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
 export function getNFTWithdrawTypedData(
   data: NFTWithdrawRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
 ): sigUtil.EIP712TypedData {
   const message = {
     owner: data.owner,
@@ -1034,122 +1050,83 @@ export function getNFTWithdrawTypedData(
     feeTokenID: data.maxFee.tokenId,
     maxFee: data.maxFee.amount,
     to: data.to,
-    extraData: data.extraData ? data.extraData : "",
+    extraData: data.extraData ? data.extraData : '',
     minGas: data.minGas,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
 
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Withdrawal: [
-        { name: "owner", type: "address" },
-        { name: "accountID", type: "uint32" },
-        { name: "tokenID", type: "uint16" },
-        { name: "amount", type: "uint96" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "to", type: "address" },
-        { name: "extraData", type: "bytes" },
-        { name: "minGas", type: "uint256" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'owner', type: 'address' },
+        { name: 'accountID', type: 'uint32' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'to', type: 'address' },
+        { name: 'extraData', type: 'bytes' },
+        { name: 'minGas', type: 'uint256' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Withdrawal",
+    primaryType: 'Withdrawal',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
-export async function signNFTWithdrawWithDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTWithdrawRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
+export async function withdrawNFTWrap({
+  withdraw,
+  chainId,
+  web3,
+  accountId,
+  isHWAddr,
+  counterFactualInfo,
+}: {
+  withdraw: loopring_defs.NFTWithdrawRequestV3
+  web3: any
+  chainId: ChainId
+  accountId: number
+  isHWAddr: boolean
   counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signNFTWithdrawWithoutDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTWithdrawRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData: any = getNFTWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signNFTWithdrawWithDataStructureForContract(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTWithdrawRequestV3,
-  chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTWithdrawTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+}) {
+  const typedData = getNFTWithdrawTypedData(withdraw, chainId)
+  try {
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      withdraw.owner,
+      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+      chainId,
+      accountId,
+      '',
+      ConnectorNames.Unknown,
+      counterFactualInfo,
+    )
+    return result.ecdsaSig
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
 //NFT Mint
-export function get_EddsaSig_NFT_Mint(
-  request: NFTMintRequestV3,
-  eddsaKey: string
-) {
+export function get_EddsaSig_NFT_Mint(request: NFTMintRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.minterId,
@@ -1160,28 +1137,25 @@ export function get_EddsaSig_NFT_Mint(
     request.maxFee.amount,
     request.validUntil,
     request.storageId,
-  ];
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  ]
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function get_Is_Nft_Token(tokenId: number) {
-  return tokenId >= MIN_NFT_TOKENID;
+  return tokenId >= MIN_NFT_TOKENID
 }
 
 // NFT Order
-export function get_EddsaSig_NFT_Order(
-  request: NFTOrderRequestV3,
-  eddsaKey: string
-) {
-  let fillAmountBOrS = 0;
+export function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: string) {
+  let fillAmountBOrS = 0
   if (request.fillAmountBOrS) {
-    fillAmountBOrS = 1;
+    fillAmountBOrS = 1
   }
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
-    request.sellToken?.tokenId ? request.sellToken.tokenId : "",
+    request.sellToken?.tokenId ? request.sellToken.tokenId : '',
     (request.buyToken as any)?.nftData
       ? (request.buyToken as NFTTokenAmountInfo).nftData
       : request.buyToken.tokenId,
@@ -1191,14 +1165,11 @@ export function get_EddsaSig_NFT_Order(
     request.maxFeeBips,
     fillAmountBOrS,
     new BN(ethUtil.toBuffer(request.taker)).toString(),
-  ];
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  ]
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
-export function get_EddsaSig_Dual_Order(
-  request: DualOrderRequest,
-  eddsaKey: string
-) {
+export function get_EddsaSig_Dual_Order(request: DualOrderRequest, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
@@ -1211,87 +1182,48 @@ export function get_EddsaSig_Dual_Order(
     request.maxFeeBips,
     request.fillAmountBOrS ? 1 : 0,
     0,
-  ];
+  ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
-export async function signNFTMintWithDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTMintRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
+export async function mintNFTWrap({
+  mint,
+  chainId,
+  web3,
+  accountId,
+  isHWAddr,
+  counterFactualInfo,
+}: {
+  mint: loopring_defs.NFTMintRequestV3
+  chainId: ChainId
+  web3: any
+  accountId: number
+  isHWAddr: boolean
   counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTMintTypedData(bodyParams, chainId, web3);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signNFTMintWithoutDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTMintRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData: any = getNFTMintTypedData(bodyParams, chainId, web3);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signNFTMintWithDataStructureForContract(
-  web3: Web3,
-  owner: string,
-  bodyParams: NFTMintRequestV3,
-  chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTMintTypedData(bodyParams, chainId, web3);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+}) {
+  const typedData = getNFTMintTypedData(mint, chainId, web3)
+  try {
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      mint.minterAddress,
+      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+      chainId,
+      accountId,
+      '',
+      ConnectorNames.Unknown,
+      counterFactualInfo,
+    )
+    return result.ecdsaSig
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
 // transfer
-export function get_EddsaSig_Transfer(
-  request: OriginTransferRequestV3,
-  eddsaKey: string
-) {
+export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.payerId,
@@ -1305,12 +1237,13 @@ export function get_EddsaSig_Transfer(
     0,
     request.validUntil,
     request.storageId,
-  ];
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  ]
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
+
 export function getTransferOldTypedData(
   data: OriginTransferRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
 ): sigUtil.EIP712TypedData {
   const message = {
     from: data.payerAddr,
@@ -1321,41 +1254,41 @@ export function getTransferOldTypedData(
     maxFee: data.maxFee.volume,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Transfer: [
-        { name: "from", type: "address" },
-        { name: "to", type: "address" },
-        { name: "tokenID", type: "uint16" },
-        { name: "amount", type: "uint96" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'from', type: 'address' },
+        { name: 'to', type: 'address' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Transfer",
+    primaryType: 'Transfer',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
 export function getTransferTypedData(
   data: OriginTransferRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
 ): sigUtil.EIP712TypedData {
   const message = {
     from: data.payerAddr,
@@ -1366,113 +1299,109 @@ export function getTransferTypedData(
     maxFee: data.maxFee.volume,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Transfer: [
-        { name: "from", type: "address" },
-        { name: "to", type: "address" },
-        { name: "tokenID", type: "uint16" },
-        { name: "amount", type: "uint96" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'from', type: 'address' },
+        { name: 'to', type: 'address' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Transfer",
+    primaryType: 'Transfer',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
-export async function signTransferWithDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginTransferRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
+export async function transferWrap({
+  transfer,
+  chainId,
+  web3,
+  isHWAddr,
+  accountId,
+  counterFactualInfo,
+}: {
+  transfer: loopring_defs.OriginTransferRequestV3
+  web3: any
+  chainId: ChainId
+  accountId: number
+  isHWAddr: boolean
   counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+}): Promise<string> {
+  const typedData = getTransferTypedData(transfer, chainId)
+  try {
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      transfer.payerAddr,
+      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+      chainId,
+      accountId,
+      '',
+      ConnectorNames.Unknown,
+      counterFactualInfo,
+    )
+    return result.ecdsaSig
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
-export async function signTransferWithoutDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginTransferRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
+export async function transferNFTWrap({
+  transfer,
+  chainId,
+  web3,
+  isHWAddr,
+  accountId,
+  counterFactualInfo,
+}: {
+  transfer: loopring_defs.OriginNFTTransferRequestV3
+  chainId: ChainId
+  web3: any
+  accountId: number
+  isHWAddr: boolean
   counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData: any = getTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
+}): Promise<string> {
+  const typedData = getNFTTransferTypedData(transfer, chainId)
+  try {
+    const result = await getEcDSASig(
+      web3,
+      typedData,
+      transfer.fromAddress,
+      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+      chainId,
+      accountId,
+      '',
+      ConnectorNames.Unknown,
+      counterFactualInfo,
+    )
+    return result.ecdsaSig
+  } catch (error) {
+    console.log('EcDSASig error try sign WithoutDataStruct')
+    throw error
+  }
 }
 
-export async function signTransferWithDataStructureForContract(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginTransferRequestV3,
-  chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export function get_EddsaSig_NFT_Transfer(
-  request: OriginNFTTransferRequestV3,
-  eddsaKey: string
-) {
+export function get_EddsaSig_NFT_Transfer(request: OriginNFTTransferRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.fromAccountId,
@@ -1486,23 +1415,23 @@ export function get_EddsaSig_NFT_Transfer(
     0,
     request.validUntil,
     request.storageId,
-  ];
-  return getEdDSASigWithPoseidon(inputs, eddsaKey);
+  ]
+  return getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getNftTradeHash(request: NFTTradeRequestV3) {
-  const p = field.SNARK_SCALAR_FIELD;
+  const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
     7,
     6,
     52,
-    "poseidon",
+    'poseidon',
     BigNumber.from(5),
     null,
     null,
-    128
-  );
+    128,
+  )
 
   const inputs = [
     request.taker.accountId,
@@ -1511,21 +1440,21 @@ export function getNftTradeHash(request: NFTTradeRequestV3) {
     request.maker.accountId,
     request.maker.sellToken.tokenId,
     request.maker.storageId,
-  ];
-  let bigIntInputs: any;
-  bigIntInputs = [];
+  ]
+  let bigIntInputs: any
+  bigIntInputs = []
   for (let i = 0; i < inputs.length; i++) {
-    const input = inputs[i];
-    bigIntInputs.push(BigNumber.from(input));
+    const input = inputs[i]
+    bigIntInputs.push(BigNumber.from(input))
   }
-  const hash = permunation.poseidon(bigIntInputs, poseidonParams);
-  let hashInHex = hash.toHexString();
-  return hashInHex;
+  const hash = permunation.poseidon(bigIntInputs, poseidonParams)
+  let hashInHex = hash.toHexString()
+  return hashInHex
 }
 
 export function getNFTTransferTypedData(
   data: OriginNFTTransferRequestV3,
-  chainId: ChainId
+  chainId: ChainId,
 ): sigUtil.EIP712TypedData {
   const message = {
     from: data.fromAddress,
@@ -1536,132 +1465,54 @@ export function getNFTTransferTypedData(
     maxFee: data.maxFee.amount,
     validUntil: data.validUntil,
     storageID: data.storageId,
-  };
+  }
   const typedData: sigUtil.EIP712TypedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       Transfer: [
-        { name: "from", type: "address" },
-        { name: "to", type: "address" },
-        { name: "tokenID", type: "uint16" },
-        { name: "amount", type: "uint96" },
-        { name: "feeTokenID", type: "uint16" },
-        { name: "maxFee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
-        { name: "storageID", type: "uint32" },
+        { name: 'from', type: 'address' },
+        { name: 'to', type: 'address' },
+        { name: 'tokenID', type: 'uint16' },
+        { name: 'amount', type: 'uint96' },
+        { name: 'feeTokenID', type: 'uint16' },
+        { name: 'maxFee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
+        { name: 'storageID', type: 'uint32' },
       ],
     },
-    primaryType: "Transfer",
+    primaryType: 'Transfer',
     domain: {
-      name: "Loopring Protocol",
-      version: "3.6.0",
+      name: 'Loopring Protocol',
+      version: '3.6.0',
       chainId: chainId,
       verifyingContract: data.exchange,
     },
     message: message,
-  };
-  return typedData;
-}
-
-export async function signTNFTransferWithDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginNFTTransferRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.HasDataStruct,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
-}
-
-export async function signNFTTransferWithoutDataStructure(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginNFTTransferRequestV3,
-  chainId: ChainId,
-  walletType: ConnectorNames,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData: any = getNFTTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.WithoutDataStruct,
-    chainId,
-    accountId,
-    "",
-    walletType,
-    counterFactualInfo
-  );
-  return result;
-}
-
-// export async function signNFTTransferWithoutDataStructure(web3: Web3, owner: string, bodyParams: OriginTransferRequestV3,
-//                                                        chainId: ChainId, walletType: ConnectorNames) {
-//   const typedData: any = getTransferTypedData(bodyParams, chainId)
-//   const result = await getEcDSASig(web3, typedData, owner, GetEcDSASigType.WithoutDataStruct, '', walletType)
-//   return result
-// }
-
-export async function signNFTTransferWithDataStructureForContract(
-  web3: Web3,
-  owner: string,
-  bodyParams: OriginNFTTransferRequestV3,
-  chainId: ChainId,
-  accountId: number,
-  counterFactualInfo?: CounterFactualInfo
-) {
-  const typedData = getNFTTransferTypedData(bodyParams, chainId);
-  const result = await getEcDSASig(
-    web3,
-    typedData,
-    owner,
-    GetEcDSASigType.Contract,
-    chainId,
-    accountId,
-    "",
-    ConnectorNames.Unknown,
-    counterFactualInfo
-  );
-  return result;
+  }
+  return typedData
 }
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
   const hash = fm.toHex(
     sigUtil.TypedDataUtils.sign(
-      typedData
+      typedData,
       // sigUtil.SignTypedDataVersion.V4
-    )
-  );
-  myLog("eddsaSign", hash);
-  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
-  const signature = EDDSAUtil.sign(eddsaKey, sigHash);
+    ),
+  )
+  myLog('eddsaSign', hash)
+  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
+  const signature = EDDSAUtil.sign(eddsaKey, sigHash)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
-  };
+  }
 }
 
 export function eddsaSignWithDomain(
@@ -1669,206 +1520,132 @@ export function eddsaSignWithDomain(
   primaryType: string,
   message: sigUtil.EIP712Message,
   types: sigUtil.EIP712Types,
-  eddsaKey: string
+  eddsaKey: string,
 ) {
-  const parts = [Buffer.from("1901", "hex")];
-  parts.push(Buffer.from(domainHax.slice(2), "hex"));
+  const parts = [Buffer.from('1901', 'hex')]
+  parts.push(Buffer.from(domainHax.slice(2), 'hex'))
 
   //https://github.com/MetaMask/eth-sig-util/blob/main/CHANGELOG.md
-  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types));
-  const hash = fm.toHex(ethUtil.keccak(Buffer.concat(parts))); //5.2.0 - 2018-04-27 keccak  sha3() -> keccak()
-  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8));
-  const signature = EDDSAUtil.sign(eddsaKey, sigHash);
+  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types))
+  const hash = fm.toHex(ethUtil.keccak(Buffer.concat(parts))) //5.2.0 - 2018-04-27 keccak  sha3() -> keccak()
+  const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
+  const signature = EDDSAUtil.sign(eddsaKey, sigHash)
   return {
     eddsaSig:
       fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Rx))) +
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.Ry)))) +
       fm.clearHexPrefix(fm.formatEddsaKey(fm.toHex(fm.toBig(signature.s)))),
-  };
+  }
 }
 
-export function getAmmJoinEcdsaTypedData(
-  data: JoinAmmPoolRequest,
-  patch: AmmPoolRequestPatch
-) {
+export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
   const message = {
     owner: data.owner,
-    joinAmounts: [
-      data.joinTokens.pooled[0].volume,
-      data.joinTokens.pooled[1].volume,
-    ],
+    joinAmounts: [data.joinTokens.pooled[0].volume, data.joinTokens.pooled[1].volume],
     joinStorageIDs: data.storageIds,
     mintMinAmount: data.joinTokens.minimumLp.volume,
     fee: data.fee,
     validUntil: data.validUntil,
-  };
+  }
 
   // myLog('message:', message)
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       PoolJoin: [
-        { name: "owner", type: "address" },
-        { name: "joinAmounts", type: "uint96[]" },
-        { name: "joinStorageIDs", type: "uint32[]" },
-        { name: "mintMinAmount", type: "uint96" },
-        { name: "fee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
+        { name: 'owner', type: 'address' },
+        { name: 'joinAmounts', type: 'uint96[]' },
+        { name: 'joinStorageIDs', type: 'uint32[]' },
+        { name: 'mintMinAmount', type: 'uint96' },
+        { name: 'fee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
       ],
     },
-    primaryType: "PoolJoin",
+    primaryType: 'PoolJoin',
     domain: {
       name: patch.ammName,
-      version: "1.0.0",
+      version: '1.0.0',
       chainId: patch.chainId,
       verifyingContract: patch.poolAddress,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
 // ammpool join
-export function get_EddsaSig_JoinAmmPool(
-  data: JoinAmmPoolRequest,
-  patch: AmmPoolRequestPatch
-) {
+export function get_EddsaSig_JoinAmmPool(data: JoinAmmPoolRequest, patch: AmmPoolRequestPatch) {
   if (data.domainSeparator) {
-    const typedData = getAmmJoinEcdsaTypedData(data, patch);
+    const typedData = getAmmJoinEcdsaTypedData(data, patch)
     return eddsaSignWithDomain(
       data.domainSeparator,
       typedData.primaryType,
       typedData.message,
       typedData.types,
-      patch.eddsaKey
-    );
+      patch.eddsaKey,
+    )
   } else {
-    const typedData = getAmmJoinEcdsaTypedData(data, patch);
-    return eddsaSign(typedData, patch.eddsaKey);
+    const typedData = getAmmJoinEcdsaTypedData(data, patch)
+    return eddsaSign(typedData, patch.eddsaKey)
   }
 }
 
-export function getAmmExitEcdsaTypedData(
-  data: ExitAmmPoolRequest,
-  patch: AmmPoolRequestPatch
-) {
+export function getAmmExitEcdsaTypedData(data: ExitAmmPoolRequest, patch: AmmPoolRequestPatch) {
   const message: any = {
     owner: data.owner,
     burnAmount: data.exitTokens.burned.volume,
     burnStorageID: data.storageId,
-    exitMinAmounts: [
-      data.exitTokens.unPooled[0].volume,
-      data.exitTokens.unPooled[1].volume,
-    ],
+    exitMinAmounts: [data.exitTokens.unPooled[0].volume, data.exitTokens.unPooled[1].volume],
     fee: data.maxFee,
     validUntil: data.validUntil,
-  };
+  }
   const typedData = {
     types: {
       EIP712Domain: [
-        { name: "name", type: "string" },
-        { name: "version", type: "string" },
-        { name: "chainId", type: "uint256" },
-        { name: "verifyingContract", type: "address" },
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
       ],
       PoolExit: [
-        { name: "owner", type: "address" },
-        { name: "burnAmount", type: "uint96" },
-        { name: "burnStorageID", type: "uint32" },
-        { name: "exitMinAmounts", type: "uint96[]" },
-        { name: "fee", type: "uint96" },
-        { name: "validUntil", type: "uint32" },
+        { name: 'owner', type: 'address' },
+        { name: 'burnAmount', type: 'uint96' },
+        { name: 'burnStorageID', type: 'uint32' },
+        { name: 'exitMinAmounts', type: 'uint96[]' },
+        { name: 'fee', type: 'uint96' },
+        { name: 'validUntil', type: 'uint32' },
       ],
     },
-    primaryType: "PoolExit",
+    primaryType: 'PoolExit',
     domain: {
       name: patch.ammName,
-      version: "1.0.0",
+      version: '1.0.0',
       chainId: patch.chainId,
       verifyingContract: patch.poolAddress,
     },
     message: message,
-  };
-  return typedData;
+  }
+  return typedData
 }
 
 // ammpool exit
-export function get_EddsaSig_ExitAmmPool(
-  data: ExitAmmPoolRequest,
-  patch: AmmPoolRequestPatch
-) {
+export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoolRequestPatch) {
   if (data.domainSeparator) {
-    const typedData = getAmmExitEcdsaTypedData(data, patch);
+    const typedData = getAmmExitEcdsaTypedData(data, patch)
     return eddsaSignWithDomain(
       data.domainSeparator,
       typedData.primaryType,
       typedData.message,
       typedData.types,
-      patch.eddsaKey
-    );
+      patch.eddsaKey,
+    )
   } else {
-    const typedData = getAmmExitEcdsaTypedData(data, patch);
-    return eddsaSign(typedData, patch.eddsaKey);
+    const typedData = getAmmExitEcdsaTypedData(data, patch)
+    return eddsaSign(typedData, patch.eddsaKey)
   }
 }
-
-// export function getDefiEcdsaTypedData(
-//   data: DefiOrderRequest,
-//   patch: DefiRequestPatch
-// ) {
-//   const message: any = {
-//     owner: data.owner,
-//     burnAmount: data.exitTokens.burned.volume,
-//     burnStorageID: data.storageId,
-//     exitMinAmounts: [
-//       data.exitTokens.unPooled[0].volume,
-//       data.exitTokens.unPooled[1].volume,
-//     ],
-//     fee: data.maxFee,
-//     validUntil: data.validUntil,
-//   };
-//
-//   const typedData: sigUtil.EIP712TypedData = {
-//     types: {
-//       EIP712Domain: [
-//         { name: "name", type: "string" },
-//         { name: "version", type: "string" },
-//         { name: "chainId", type: "uint256" },
-//         { name: "verifyingContract", type: "address" },
-//       ],
-//       DefiOrder: [
-//         { name: "exchange", type: "address" },
-//         { name: "storageId", type: "uint96" },
-//         { name: "accountId", type: "uint32" },
-//         { name: "sellToken.tokenId", type: "uint16" },
-//         { name: "buyToken.tokenId", type: "uint16" },
-//         { name: "sellToken.volume", type: "uint96" },
-//         { name: "buyToken.volume", type: "uint96" },
-//         { name: "validUntil", type: "uint32" },
-//         { name: "maxFeeBips", type: "uint32" },
-//         { name: "fillAmountBOrS", type: "uint32" },
-//         { nane: "taker", type: "uint32" },
-//       ],
-//     },
-//     primaryType: "DefiOrder",
-//     domain: {
-//       name: patch.ammName,
-//       version: "1.0.0",
-//       chainId: patch.chainId,
-//       verifyingContract: patch.poolAddress,
-//     },
-//     message: message,
-//   };
-//   return typedData;
-// }
-// export function get_EddsaSig_Defi(request: DefiOrderRequest, eddsaKey: string) {
-//
-//   myLog('get_EddsaSig_Defi input',inputs)
-//   return getEdDSASigWithPoseidon(inputs, eddsaKey);
-//   // return eddsaSign(typedData, patch.eddsaKey);
-// }

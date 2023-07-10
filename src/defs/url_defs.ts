@@ -196,4 +196,6 @@ export enum LOOPRING_URLs {
   GET_REFER_DOWNSIDES = "api/v3/user/refer/profit/downsides",
   GET_REFER_SELF = "/api/v3/user/refer/profit/self",
   GET_REFER_STATISTIC = "/api/v3/user/refer/statistic",
+  GET_TOTAL_CLAIM_INFO = "/api/v3/feeRewards/totalClaimInfo",
+  POST_TOTAL_CLAIM = "api/v3/stake/claim",
 }

@@ -1,40 +1,40 @@
 /* eslint-disable camelcase  */
 
-import { BaseAPI } from "./base_api";
+import { BaseAPI } from './base_api'
 
 import {
-  RESULT_INFO,
+  ChainId,
+  ClaimItem,
+  ConnectorError,
+  ConnectorNames,
+  CounterFactualInfo,
+  EXTRAORDER_TYPE,
+  LOOPRING_URLs,
+  LoopringErrorCode,
+  NFTFactory,
+  NFTFactory_Collection,
+  ReferStatistic,
   ReqMethod,
+  RESULT_INFO,
   SIG_FLAG,
   SigPatchField,
   TradeChannel,
-  LOOPRING_URLs,
-  ConnectorNames,
-  SigSuffix,
-  NFTFactory,
-  ChainId,
-  NFTFactory_Collection,
-  LoopringErrorCode,
-  ConnectorError,
-  CounterFactualInfo,
-  EXTRAORDER_TYPE,
-  UserLockSummary,
-  ReferStatistic,
-} from "../defs";
+} from '../defs'
 
-import * as loopring_defs from "../defs/loopring_defs";
+import * as loopring_defs from '../defs/loopring_defs'
 
-import * as sign_tools from "./sign/sign_tools";
-import { isContract } from "./contract_api";
-import BN from "bn.js";
-import { RequiredPart, sortObjDictionary } from "../utils";
+import * as sign_tools from './sign/sign_tools'
 import {
   generateKeyPair,
-  getEdDSASig,
+  getEcDSASig,
+  GetEcDSASigType,
   getEdDSASigWithPoseidon,
+  getUpdateAccountEcdsaTypedData,
   KeyPairParams,
-} from "./sign/sign_tools";
-import { AxiosResponse } from "axios";
+} from './sign/sign_tools'
+import BN from 'bn.js'
+import { RequiredPart, sortObjDictionary } from '../utils'
+import { AxiosResponse } from 'axios'
 
 export class UserAPI extends BaseAPI {
   /*
@@ -44,11 +44,11 @@ export class UserAPI extends BaseAPI {
   public async updateUserApiKey<R>(
     request: loopring_defs.UpdateUserApiKeyRequest,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<{ raw_data: R }> {
-    const dataToSig: Map<string, any> = new Map();
+    const dataToSig: Map<string, any> = new Map()
 
-    dataToSig.set("accountId", request.accountId);
+    dataToSig.set('accountId', request.accountId)
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.API_KEY_ACTION,
@@ -60,17 +60,17 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       raw_data,
-    };
+    }
   }
 
   /*
@@ -81,7 +81,7 @@ export class UserAPI extends BaseAPI {
    */
   public async getNextStorageId<R>(
     request: loopring_defs.GetNextStorageIdRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R; orderId: number; offchainId: number }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NEXT_STORAGE_ID,
@@ -89,20 +89,20 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const { orderId, offchainId } = raw_data;
+    const { orderId, offchainId } = raw_data
     return {
       orderId,
       offchainId,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -110,7 +110,7 @@ export class UserAPI extends BaseAPI {
    */
   public async getOrderDetails<R>(
     request: loopring_defs.GetOrderDetailsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R; orderDetail: loopring_defs.OrderDetail }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
@@ -118,54 +118,54 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       orderDetail: raw_data,
       raw_data,
-    };
+    }
   }
 
   public async getOrders<R>(
     request: loopring_defs.GetOrdersRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    orders: loopring_defs.OrderDetail[];
+    raw_data: R
+    totalNum: number
+    orders: loopring_defs.OrderDetail[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_MULTI_ORDERS,
       queryParams: {
         ...request,
-        status: request.status ? request.status.join(",") : "",
+        status: request.status ? request.status.join(',') : '',
       },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const totalNum: number = raw_data.totalNum;
-    const orders: loopring_defs.OrderDetail[] = raw_data.orders;
+    const totalNum: number = raw_data.totalNum
+    const orders: loopring_defs.OrderDetail[] = raw_data.orders
 
     return {
       totalNum,
       orders,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -177,10 +177,10 @@ export class UserAPI extends BaseAPI {
       ...orderRequest
     }: loopring_defs.SubmitOrderRequestV3,
     privateKey: string,
-    apiKey: string
+    apiKey: string,
   ) {
     if (!orderRequest.tradeChannel) {
-      orderRequest.tradeChannel = TradeChannel.MIXED;
+      orderRequest.tradeChannel = TradeChannel.MIXED
     }
 
     const dataToSig = [
@@ -195,7 +195,7 @@ export class UserAPI extends BaseAPI {
       orderRequest.maxFeeBips,
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
-    ];
+    ]
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
@@ -208,11 +208,11 @@ export class UserAPI extends BaseAPI {
         sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data)
   }
 
   public async submitStopOrder(
@@ -222,13 +222,13 @@ export class UserAPI extends BaseAPI {
       ...orderRequest
     }: RequiredPart<
       loopring_defs.SubmitOrderRequestV3,
-      "extraOrderType" | "stopSide" | "stopPrice"
+      'extraOrderType' | 'stopSide' | 'stopPrice'
     >,
     privateKey: string,
-    apiKey: string
+    apiKey: string,
   ) {
     if (!orderRequest.tradeChannel) {
-      orderRequest.tradeChannel = TradeChannel.MIXED;
+      orderRequest.tradeChannel = TradeChannel.MIXED
     }
 
     const dataToSig = [
@@ -243,18 +243,15 @@ export class UserAPI extends BaseAPI {
       orderRequest.maxFeeBips,
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
-    ];
-    const eddsaSignature = getEdDSASigWithPoseidon(
-      dataToSig,
-      privateKey
-    ).result;
+    ]
+    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
     const bodyParams = {
       ...orderRequest,
       extraOrderType,
       stopSide,
       eddsaSignature,
-    };
-    const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams);
+    }
+    const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
       bodyParams: bodyParams,
@@ -265,11 +262,11 @@ export class UserAPI extends BaseAPI {
         dataToSig: _dataToSig,
         PrivateKey: privateKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data)
   }
 
   /*
@@ -278,14 +275,13 @@ export class UserAPI extends BaseAPI {
   public async cancelOrder<R>(
     request: loopring_defs.CancelOrderRequest,
     PrivateKey: string,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R }> {
-    const dataToSig: Map<string, any> = new Map();
+    const dataToSig: Map<string, any> = new Map()
 
-    dataToSig.set("accountId", request.accountId);
-    if (request.orderHash) dataToSig.set("orderHash", request.orderHash);
-    if (request.clientOrderId)
-      dataToSig.set("clientOrderId", request.clientOrderId);
+    dataToSig.set('accountId', request.accountId)
+    if (request.orderHash) dataToSig.set('orderHash', request.orderHash)
+    if (request.clientOrderId) dataToSig.set('clientOrderId', request.clientOrderId)
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_ACTION,
@@ -297,17 +293,17 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       raw_data,
-    };
+    }
   }
 
   /*
@@ -316,11 +312,11 @@ export class UserAPI extends BaseAPI {
   public async cancelMultiOrdersByHash<R>(
     request: loopring_defs.CancelMultiOrdersByHashRequest,
     PrivateKey: string,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R }> {
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("accountId", request.accountId);
-    dataToSig.set("orderHash", request.orderHash);
+    const dataToSig: Map<string, any> = new Map()
+    dataToSig.set('accountId', request.accountId)
+    dataToSig.set('orderHash', request.orderHash)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_CANCEL_HASH_LIST,
       queryParams: request,
@@ -331,17 +327,17 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       raw_data,
-    };
+    }
   }
 
   /*
@@ -350,11 +346,11 @@ export class UserAPI extends BaseAPI {
   public async cancelMultiOrdersByCreditOrderId<R>(
     request: loopring_defs.CancelMultiOrdersByClientOrderIdRequest,
     PrivateKey: string,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R }> {
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("accountId", request.accountId);
-    dataToSig.set("clientOrderId", request.clientOrderId);
+    const dataToSig: Map<string, any> = new Map()
+    dataToSig.set('accountId', request.accountId)
+    dataToSig.set('clientOrderId', request.clientOrderId)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ORDER_CANCEL_CLIENT_ORDER_ID_LIST,
       queryParams: request,
@@ -365,17 +361,17 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       raw_data,
-    };
+    }
   }
 
   /*
@@ -383,11 +379,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserRegTxs<R>(
     request: loopring_defs.GetUserRegTxsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userRegTxs: loopring_defs.UserRegTx[];
+    raw_data: R
+    totalNum: number
+    userRegTxs: loopring_defs.UserRegTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_REG_TXS,
@@ -395,20 +391,20 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userRegTxs: loopring_defs.UserRegTx[] = raw_data.transactions;
+    const userRegTxs: loopring_defs.UserRegTx[] = raw_data.transactions
     return {
       totalNum: raw_data.totalNum,
       userRegTxs,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -416,11 +412,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserPwdResetTxs<R>(
     request: loopring_defs.GetUserPwdResetTxsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userPwdResetTxs: loopring_defs.UserPwdResetTx[];
+    raw_data: R
+    totalNum: number
+    userPwdResetTxs: loopring_defs.UserPwdResetTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_PWD_RESET_TXS,
@@ -428,21 +424,20 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userPwdResetTxs: loopring_defs.UserPwdResetTx[] =
-      raw_data.transactions;
+    const userPwdResetTxs: loopring_defs.UserPwdResetTx[] = raw_data.transactions
     return {
       totalNum: raw_data.totalNum,
       userPwdResetTxs,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -450,10 +445,10 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserBalances<R>(
     request: loopring_defs.GetUserBalancesRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>;
+    raw_data: R
+    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
@@ -461,35 +456,34 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
-      {};
+    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> = {}
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-        userBalances[item.tokenId] = item;
-      });
+        userBalances[item.tokenId] = item
+      })
     }
 
     return {
       userBalances,
       raw_data,
-    };
+    }
   }
 
   public async getAssetLookRecords<R>(
     request: loopring_defs.GetUserBalancesRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>;
+    raw_data: R
+    userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_ASSET_LOCK_RECORDS,
@@ -497,27 +491,26 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> =
-      {};
+    const userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo> = {}
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserBalanceInfo) => {
-        userBalances[item.tokenId] = item;
-      });
+        userBalances[item.tokenId] = item
+      })
     }
 
     return {
       userBalances,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -525,11 +518,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserDepositHistory<R>(
     request: loopring_defs.GetUserDepositHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userDepositHistory: loopring_defs.UserDepositHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userDepositHistory: loopring_defs.UserDepositHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
@@ -537,20 +530,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
-      userDepositHistory:
-        raw_data.transactions as loopring_defs.UserDepositHistoryTx[],
+      userDepositHistory: raw_data.transactions as loopring_defs.UserDepositHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -558,11 +550,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserOnchainWithdrawalHistory<R>(
     request: loopring_defs.GetUserOnchainWithdrawalHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userOnchainWithdrawalHistory: loopring_defs.UserOnchainWithdrawalHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userOnchainWithdrawalHistory: loopring_defs.UserOnchainWithdrawalHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.WITHDRAWALS_ACTION,
@@ -570,20 +562,20 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
       userOnchainWithdrawalHistory:
         raw_data.transactions as loopring_defs.UserOnchainWithdrawalHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -591,11 +583,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserTransferList<R>(
     request: loopring_defs.GetUserTransferListRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userTransfers: loopring_defs.UserTransferRecord[];
+    raw_data: R
+    totalNum: number
+    userTransfers: loopring_defs.UserTransferRecord[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TRANSFERS_LIST,
@@ -603,20 +595,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
-      userTransfers:
-        raw_data.transactions as loopring_defs.UserTransferRecord[],
+      userTransfers: raw_data.transactions as loopring_defs.UserTransferRecord[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -624,11 +615,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserTxs<R>(
     request: loopring_defs.GetUserTxsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userTxs: loopring_defs.UserTx[];
+    raw_data: R
+    totalNum: number
+    userTxs: loopring_defs.UserTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TXS,
@@ -636,27 +627,27 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userTxs: loopring_defs.UserTx[] = [];
+    const userTxs: loopring_defs.UserTx[] = []
 
     if (raw_data?.transactions instanceof Array) {
       raw_data.transactions.forEach((item: loopring_defs.UserTx) => {
-        userTxs.push(item);
-      });
+        userTxs.push(item)
+      })
     }
 
     return {
       totalNum: raw_data?.totalNum,
       userTxs,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -664,11 +655,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserTrades<R>(
     request: loopring_defs.GetUserTradesRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userTrades: loopring_defs.UserTrade[];
+    raw_data: R
+    totalNum: number
+    userTrades: loopring_defs.UserTrade[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_TRADE_HISTORY,
@@ -676,15 +667,15 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userTrades: loopring_defs.UserTrade[] = [];
+    const userTrades: loopring_defs.UserTrade[] = []
 
     if (raw_data?.trades instanceof Array) {
       raw_data.trades.forEach((item: any[]) => {
@@ -697,15 +688,15 @@ export class UserAPI extends BaseAPI {
           market: item[5],
           fee: item[6],
           type: item[13],
-        });
-      });
+        })
+      })
     }
 
     return {
       totalNum: raw_data.totalNum,
       userTrades,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -714,10 +705,10 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserFeeRate<R>(
     request: loopring_defs.GetUserFeeRateRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo>;
+    raw_data: R
+    userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_FEE_RATE,
@@ -725,28 +716,27 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
 
-    const userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> =
-      {};
+    const userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo> = {}
 
     if (raw_data instanceof Array) {
       raw_data.forEach((item: loopring_defs.UserFeeRateInfo) => {
-        userFreeRateMap[item.symbol] = item;
-      });
+        userFreeRateMap[item.symbol] = item
+      })
     }
 
     return {
       userFreeRateMap,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -754,11 +744,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserOrderFeeRate<R>(
     request: loopring_defs.GetUserOrderFeeRateRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    feeRate: loopring_defs.FeeRateInfo;
-    gasPrice: number;
+    raw_data: R
+    feeRate: loopring_defs.FeeRateInfo
+    gasPrice: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_ORDER_FEE_RATE,
@@ -766,21 +756,21 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const gasPrice = parseInt(raw_data.gasPrice);
+    const gasPrice = parseInt(raw_data.gasPrice)
 
     return {
       feeRate: raw_data.feeRate as loopring_defs.FeeRateInfo,
       gasPrice,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -788,13 +778,13 @@ export class UserAPI extends BaseAPI {
    */
   public async getMinimumTokenAmt<R>(
     request: loopring_defs.GetMinimumTokenAmtRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount];
-    amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount>;
-    gasPrice: number;
-    cacheOverdueAt: any;
+    raw_data: R
+    amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount]
+    amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount>
+    gasPrice: number
+    cacheOverdueAt: any
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
@@ -802,25 +792,24 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const gasPrice = parseInt(raw_data.gasPrice);
+    const gasPrice = parseInt(raw_data.gasPrice)
 
-    const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] =
-      raw_data?.amounts;
+    const amounts: [loopring_defs.TokenAmount, loopring_defs.TokenAmount] = raw_data?.amounts
 
-    const amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount> = {};
+    const amountMap: loopring_defs.LoopringMap<loopring_defs.TokenAmount> = {}
 
     if (amounts instanceof Array) {
       amounts.forEach((item: loopring_defs.TokenAmount) => {
-        amountMap[item.tokenSymbol] = item;
-      });
+        amountMap[item.tokenSymbol] = item
+      })
     }
 
     return {
@@ -829,7 +818,7 @@ export class UserAPI extends BaseAPI {
       gasPrice,
       cacheOverdueAt: raw_data.cacheOverdueAt,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -837,11 +826,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getOffchainFeeAmt<R>(
     request: loopring_defs.GetOffchainFeeAmtRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>;
-    gasPrice: number;
+    raw_data: R
+    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>
+    gasPrice: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
@@ -849,29 +838,29 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const gasPrice = parseInt(raw_data.gasPrice);
+    const gasPrice = parseInt(raw_data.gasPrice)
 
-    const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {};
+    const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {}
 
     if (raw_data?.fees instanceof Array) {
       raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
-        fees[item.token] = item;
-      });
+        fees[item.token] = item
+      })
     }
 
     return {
       fees,
       gasPrice,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -879,10 +868,10 @@ export class UserAPI extends BaseAPI {
    */
   public async getNFTOffchainFeeAmt<R>(
     request: loopring_defs.GetNFTOffchainFeeAmtRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>;
+    raw_data: R
+    fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NFT_OFFCHAIN_FEE_AMT,
@@ -890,43 +879,37 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
 
-    const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {};
+    const fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo> = {}
     if (raw_data?.fees instanceof Array) {
       raw_data.fees.forEach((item: loopring_defs.OffchainFeeInfo) => {
-        fees[item.token] = item;
-      });
+        fees[item.token] = item
+      })
     }
 
     return {
       fees,
       raw_data,
-    };
+    }
   }
 
   /*
    * Submit NFTAction Validate Order request
    */
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const { request, eddsaKey, apiKey } = req;
+    req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch,
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, eddsaKey, apiKey } = req
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(
-      request,
-      eddsaKey
-    ).result;
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(request, eddsaKey).result
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
@@ -934,29 +917,26 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
     // myLog("NFTAction Validate Order request", request);
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data)
   }
 
   /*
    * Submit NFTAction Trade request
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
-    req: loopring_defs.OriginNFTTradeRequestV3WithPatch
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const { request, apiKey, eddsaKey } = req;
+    req: loopring_defs.OriginNFTTradeRequestV3WithPatch,
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, apiKey, eddsaKey } = req
 
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("maker", request.maker);
-    dataToSig.set("makerFeeBips", request.makerFeeBips);
-    dataToSig.set("taker", request.taker);
-    dataToSig.set("takerFeeBips", request.takerFeeBips);
+    const dataToSig: Map<string, any> = new Map()
+    dataToSig.set('maker', request.maker)
+    dataToSig.set('makerFeeBips', request.makerFeeBips)
+    dataToSig.set('taker', request.taker)
+    dataToSig.set('takerFeeBips', request.takerFeeBips)
     // request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
     //   request,
     //   eddsaKey
@@ -972,16 +952,16 @@ export class UserAPI extends BaseAPI {
         // sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: eddsaKey,
       },
-    };
+    }
     // myLog("NFTAction Trade request", request);
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data)
   }
 
   async getUserOwenCollection<R>(
     request: loopring_defs.GetUserOwnerCollectionRequest,
-    apiKey: string
+    apiKey: string,
   ) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_COLLECTION,
@@ -989,18 +969,13 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
@@ -1011,15 +986,15 @@ export class UserAPI extends BaseAPI {
           extends: {
             ...rest,
           },
-        };
+        }
       }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
       raw_data,
-    };
+    }
   }
 
   async getUserLegacyCollection<R>(
     request: loopring_defs.GetUserLegacyCollectionRequest,
-    apiKey: string
+    apiKey: string,
   ) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_LEGACY_COLLECTION,
@@ -1027,18 +1002,13 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
@@ -1049,34 +1019,26 @@ export class UserAPI extends BaseAPI {
           extends: {
             ...rest,
           },
-        };
+        }
       }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
       raw_data,
-    };
+    }
   }
 
-  async getUserNFTCollection(
-    request: loopring_defs.GetUserNFTCollectionRequest,
-    apiKey: string
-  ) {
+  async getUserNFTCollection(request: loopring_defs.GetUserNFTCollectionRequest, apiKey: string) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_COLLECTION_HASNFT,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
@@ -1087,40 +1049,32 @@ export class UserAPI extends BaseAPI {
           extends: {
             ...rest,
           },
-        };
+        }
       }) as loopring_defs.CollectionMeta & { extends: { [a: string]: any } }[],
       raw_data,
-    };
+    }
   }
 
-  async getUserNFTLegacyTokenAddress(
-    request: { accountId: number },
-    apiKey: string
-  ) {
+  async getUserNFTLegacyTokenAddress(request: { accountId: number }, apiKey: string) {
     const reqParams = {
       url: LOOPRING_URLs.GET_NFT_LEGACY_TOKENADDRESS,
       queryParams: request,
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       result: raw_data.addresses,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -1128,11 +1082,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserNFTDepositHistory<R>(
     request: loopring_defs.GetUserNFTDepositHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTDepositHistory: loopring_defs.UserNFTDepositHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userNFTDepositHistory: loopring_defs.UserNFTDepositHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_DEPOSIT_HISTORY,
@@ -1140,20 +1094,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
-      userNFTDepositHistory:
-        raw_data.deposits as loopring_defs.UserNFTDepositHistoryTx[],
+      userNFTDepositHistory: raw_data.deposits as loopring_defs.UserNFTDepositHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -1161,11 +1114,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserNFTWithdrawalHistory<R>(
     request: loopring_defs.GetUserNFTWithdrawalHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTWithdrawalHistory: loopring_defs.UserNFTWithdrawalHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userNFTWithdrawalHistory: loopring_defs.UserNFTWithdrawalHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
@@ -1173,20 +1126,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
-      userNFTWithdrawalHistory:
-        raw_data.withdrawals as loopring_defs.UserNFTWithdrawalHistoryTx[],
+      userNFTWithdrawalHistory: raw_data.withdrawals as loopring_defs.UserNFTWithdrawalHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -1194,11 +1146,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserNFTTransferHistory<R>(
     request: loopring_defs.GetUserNFTTransferHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTTransfers: loopring_defs.UserNFTTransferHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userNFTTransfers: loopring_defs.UserNFTTransferHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
@@ -1206,20 +1158,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
-      userNFTTransfers:
-        raw_data.transfers as loopring_defs.UserNFTTransferHistoryTx[],
+      userNFTTransfers: raw_data.transfers as loopring_defs.UserNFTTransferHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /**
@@ -1229,11 +1180,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserNFTMintHistory<R>(
     request: loopring_defs.GetUserNFTMintHistoryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTMints: loopring_defs.UserNFTMintHistoryTx[];
+    raw_data: R
+    totalNum: number
+    userNFTMints: loopring_defs.UserNFTMintHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_MINT_HISTORY,
@@ -1241,18 +1192,18 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
       userNFTMints: raw_data.transfers as loopring_defs.UserNFTMintHistoryTx[],
       raw_data,
-    };
+    }
   }
 
   /*
@@ -1261,11 +1212,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserNFTTransactionHistory<R>(
     request: loopring_defs.GetUserNFTTxsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTTxs: loopring_defs.UserNFTTxsHistory[];
+    raw_data: R
+    totalNum: number
+    userNFTTxs: loopring_defs.UserNFTTxsHistory[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_TRANSACTION_HISTORY,
@@ -1273,14 +1224,14 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
 
     if (
@@ -1291,24 +1242,16 @@ export class UserAPI extends BaseAPI {
       // raw_data.transactions.metadata.nftId.startsWith("0x")
     ) {
       raw_data.transactions = raw_data.transactions.reduce(
-        (
-          prev: loopring_defs.UserNFTTxsHistory[],
-          item: loopring_defs.UserNFTTxsHistory
-        ) => {
-          if (
-            item.metadata &&
-            item.metadata.nftId &&
-            item.metadata.nftId.startsWith("0x")
-          ) {
-            const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-            item.metadata.nftId =
-              "0x" + hashBN.toString("hex").padStart(64, "0");
+        (prev: loopring_defs.UserNFTTxsHistory[], item: loopring_defs.UserNFTTxsHistory) => {
+          if (item.metadata && item.metadata.nftId && item.metadata.nftId.startsWith('0x')) {
+            const hashBN = new BN(item.metadata.nftId.replace('0x', ''), 16)
+            item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
           }
 
-          return [...prev, item];
+          return [...prev, item]
         },
-        []
-      );
+        [],
+      )
       // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
       // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
@@ -1316,16 +1259,17 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userNFTTxs: raw_data.transactions as loopring_defs.UserNFTTxsHistory[],
       raw_data,
-    };
+    }
   }
+
   public async getUserNFTTradeHistory<R>(
     request: loopring_defs.GetUserNFTTradeRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<
     | {
-        raw_data: R;
-        totalNum: number;
-        trades: loopring_defs.UserNFTTradeHistory[];
+        raw_data: R
+        totalNum: number
+        trades: loopring_defs.UserNFTTradeHistory[]
       }
     | RESULT_INFO
   > {
@@ -1335,34 +1279,34 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
     if (raw_data != null && raw_data.resultInfo) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
-    let trades = raw_data.trades;
+    let trades = raw_data.trades
     return {
       totalNum: raw_data?.totalNum,
       trades,
       raw_data,
-    };
+    }
   }
 
   public async SetReferrer<R>(
     request: loopring_defs.SetReferrerRequest,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<{ raw_data: R; result: any }> {
-    const dataToSig: Map<string, any> = new Map();
+    const dataToSig: Map<string, any> = new Map()
 
-    dataToSig.set("address", request.address);
-    dataToSig.set("promotionCode", request.promotionCode);
-    dataToSig.set("publicKeyX", request.publicKeyX);
-    dataToSig.set("publicKeyY", request.publicKeyY);
-    dataToSig.set("referrer", request.referrer);
+    dataToSig.set('address', request.address)
+    dataToSig.set('promotionCode', request.promotionCode)
+    dataToSig.set('publicKeyX', request.publicKeyX)
+    dataToSig.set('publicKeyY', request.publicKeyY)
+    dataToSig.set('referrer', request.referrer)
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.SET_REFERRER,
@@ -1373,29 +1317,29 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       result: raw_data?.result,
       raw_data,
-    };
+    }
   }
 
   // Get users NFTAction balance, besides amount, it also includes tokenId and nftData
 
   public async getUserNFTBalances<R>(
     request: loopring_defs.GetUserNFTBalancesRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+    raw_data: R
+    totalNum: number
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_BALANCES,
@@ -1403,38 +1347,34 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     if (raw_data.data.length) {
       raw_data.data = raw_data.data.reduce(
-        (
-          prev: loopring_defs.UserNFTBalanceInfo[],
-          item: loopring_defs.UserNFTBalanceInfo
-        ) => {
-          if (item.nftId && item.nftId.startsWith("0x")) {
-            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
-            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+        (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
+          if (item.nftId && item.nftId.startsWith('0x')) {
+            const hashBN = new BN(item.nftId.replace('0x', ''), 16)
+            item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             if (
               request.metadata === true &&
               item.metadata &&
               item.metadata.nftId &&
-              item.metadata.nftId.startsWith("0x")
+              item.metadata.nftId.startsWith('0x')
             ) {
               // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-              item.metadata.nftId =
-                "0x" + hashBN.toString("hex").padStart(64, "0");
+              item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             }
           }
-          return [...prev, item];
+          return [...prev, item]
         },
-        []
-      );
+        [],
+      )
       // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
       // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
@@ -1446,16 +1386,16 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
       raw_data,
-    };
+    }
   }
 
   public async getUserNFTBalancesByCollection<R>(
     request: loopring_defs.GetUserNFTBalancesByCollectionRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+    raw_data: R
+    totalNum: number
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_NFT_BALANCES_BY_COLLECTION,
@@ -1463,38 +1403,34 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     if (raw_data.data.length) {
       raw_data.data = raw_data.data.reduce(
-        (
-          prev: loopring_defs.UserNFTBalanceInfo[],
-          item: loopring_defs.UserNFTBalanceInfo
-        ) => {
-          if (item.nftId && item.nftId.startsWith("0x")) {
-            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
-            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+        (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
+          if (item.nftId && item.nftId.startsWith('0x')) {
+            const hashBN = new BN(item.nftId.replace('0x', ''), 16)
+            item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             if (
               request.metadata === true &&
               item.metadata &&
               item.metadata.nftId &&
-              item.metadata.nftId.startsWith("0x")
+              item.metadata.nftId.startsWith('0x')
             ) {
               // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-              item.metadata.nftId =
-                "0x" + hashBN.toString("hex").padStart(64, "0");
+              item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             }
           }
-          return [...prev, item];
+          return [...prev, item]
         },
-        []
-      );
+        [],
+      )
       // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
       // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
@@ -1506,16 +1442,16 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
       raw_data,
-    };
+    }
   }
 
   public async getUserNFTLegacyBalance<R>(
     request: loopring_defs.GetUserNFTLegacyBalanceRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userNFTBalances: loopring_defs.UserNFTBalanceInfo[];
+    raw_data: R
+    totalNum: number
+    userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NFT_LEGACY_BALANCE,
@@ -1523,38 +1459,34 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     if (raw_data.data.length) {
       raw_data.data = raw_data.data.reduce(
-        (
-          prev: loopring_defs.UserNFTBalanceInfo[],
-          item: loopring_defs.UserNFTBalanceInfo
-        ) => {
-          if (item.nftId && item.nftId.startsWith("0x")) {
-            const hashBN = new BN(item.nftId.replace("0x", ""), 16);
-            item.nftId = "0x" + hashBN.toString("hex").padStart(64, "0");
+        (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
+          if (item.nftId && item.nftId.startsWith('0x')) {
+            const hashBN = new BN(item.nftId.replace('0x', ''), 16)
+            item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             if (
               request.metadata === true &&
               item.metadata &&
               item.metadata.nftId &&
-              item.metadata.nftId.startsWith("0x")
+              item.metadata.nftId.startsWith('0x')
             ) {
               // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-              item.metadata.nftId =
-                "0x" + hashBN.toString("hex").padStart(64, "0");
+              item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
             }
           }
-          return [...prev, item];
+          return [...prev, item]
         },
-        []
-      );
+        [],
+      )
       // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
       // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
     }
@@ -1566,41 +1498,42 @@ export class UserAPI extends BaseAPI {
       totalNum: raw_data?.totalNum,
       userNFTBalances: raw_data.data as loopring_defs.UserNFTBalanceInfo[],
       raw_data,
-    };
+    }
   }
+
   public async getUserVIPAssets<R>(
-    request: loopring_defs.getUserVIPAssetsRequest
+    request: loopring_defs.getUserVIPAssetsRequest,
   ): Promise<{ raw_data: { data: R }; vipAsset: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_VIP_ASSETS,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       vipAsset: raw_data.data ? raw_data.data : raw_data,
       raw_data,
-    };
+    }
   }
 
   public async getUserVIPInfo<R>(
     request: loopring_defs.GetUserVIPInfoRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
+    raw_data: R
     vipInfo: {
-      createdAt: number;
-      validTo: string;
-      org: any;
-      vipTag: any;
-    };
+      createdAt: number
+      validTo: string
+      org: any
+      vipTag: any
+    }
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_VIP_INFO,
@@ -1608,25 +1541,25 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.GET,
       apiKey: apiKey,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     const vipInfo = {
       createdAt: raw_data.created_at,
       validTo: raw_data.valid_to,
       org: raw_data.org,
       vipTag: raw_data.vip_tag,
-    };
+    }
 
     return {
       vipInfo,
       raw_data,
-    };
+    }
   }
 
   public async unLockAccount<R>(
@@ -1634,33 +1567,33 @@ export class UserAPI extends BaseAPI {
       keyPair,
       request,
     }: {
-      keyPair: KeyPairParams;
-      request: loopring_defs.GetUserApiKeyRequest;
+      keyPair: KeyPairParams
+      request: loopring_defs.GetUserApiKeyRequest
     },
-    publicKey: { x: string; y: string } | undefined = undefined
+    publicKey: { x: string; y: string } | undefined = undefined,
   ): Promise<
     | AxiosResponse
     | RESULT_INFO
     | {
-        raw_data: R;
+        raw_data: R
         eddsaKey: {
-          keyPair: object;
-          formatedPx: string;
-          formatedPy: string;
-          sk: string;
-          counterFactualInfo: CounterFactualInfo;
-        };
-        apiKey: string;
+          keyPair: object
+          formatedPx: string
+          formatedPy: string
+          sk: string
+          counterFactualInfo: CounterFactualInfo
+        }
+        apiKey: string
       }
   > {
-    let eddsaKey;
+    let eddsaKey
     try {
-      eddsaKey = await generateKeyPair(keyPair, publicKey);
+      eddsaKey = await generateKeyPair(keyPair, publicKey)
     } catch (error) {
-      throw error;
+      throw error
     }
     if (eddsaKey) {
-      const dataToSig: Map<string, any> = sortObjDictionary(request);
+      const dataToSig: Map<string, any> = sortObjDictionary(request)
       const reqParams: loopring_defs.ReqParams = {
         url: LOOPRING_URLs.API_KEY_ACTION,
         queryParams: request,
@@ -1671,29 +1604,29 @@ export class UserAPI extends BaseAPI {
           dataToSig,
           PrivateKey: eddsaKey.sk,
         },
-      };
-      let raw_data;
+      }
+      let raw_data
       try {
-        raw_data = (await this.makeReq().request(reqParams)).data;
+        raw_data = (await this.makeReq().request(reqParams)).data
       } catch (error) {
-        throw error as AxiosResponse;
+        throw error as AxiosResponse
       }
       if (raw_data?.resultInfo) {
         throw {
           ...raw_data?.resultInfo,
-        };
+        }
       } else {
         return {
           apiKey: raw_data.apiKey,
           raw_data,
           eddsaKey,
-        };
+        }
       }
     } else {
       throw {
         code: LoopringErrorCode.NO_EDDSA_KEY,
         message: ConnectorError.NO_EDDSA_KEY,
-      };
+      }
     }
   }
 
@@ -1702,106 +1635,29 @@ export class UserAPI extends BaseAPI {
    */
   public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
 
-    const sigHW = async () => {
-      const result = await sign_tools.signOffchainWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.offchainWithdrawWrap({
+        withdraw: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
 
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signOffchainWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signOffchainWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("OffchainWithdraw ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(
-      request,
-      eddsaKey
-    ).result;
+    request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey).result
 
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.WITHDRAWALS_ACTION,
@@ -1810,14 +1666,14 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
-    };
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   /*
@@ -1825,107 +1681,29 @@ export class UserAPI extends BaseAPI {
    */
   public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
 
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        request.payerAddr,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: request as loopring_defs.OriginTransferRequestV3,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitInternalTransfer iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitInternalTransfer notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            request.payerAddr,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              request.payerAddr,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              request.payerAddr,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
-      request,
-      eddsaKey
-    ).result;
+    request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
@@ -1934,137 +1712,60 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   /*
-   * Submit NFTAction Deploy request
+   * Submit Force Withdrawals request
    */
   public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const { transfer } = request
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+    transfer.payeeId = 0
+    transfer.memo = `ForceWithdrawalBy${request.requesterAddress}`
     transfer.maxFee = {
-      volume: "0",
+      volume: '0',
       tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
     }
-
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
     if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
+      transfer.counterFactualInfo = counterFactualInfo
     }
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("requesterAddress", request.requesterAddress);
-    dataToSig.set("tokenId", request.tokenId);
-    dataToSig.set("transfer", request.transfer);
-    dataToSig.set("withdrawAddress", request.withdrawAddress);
+      eddsaKey,
+    ).result
+    transfer.ecdsaSignature = ecdsaSignature
+    const dataToSig: Map<string, any> = new Map()
+    dataToSig.set('requesterAddress', request.requesterAddress)
+    dataToSig.set('tokenId', request.tokenId)
+    dataToSig.set('transfer', request.transfer)
+    dataToSig.set('withdrawAddress', request.withdrawAddress)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
       bodyParams: request,
@@ -2075,15 +1776,15 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   /*
@@ -2091,120 +1792,45 @@ export class UserAPI extends BaseAPI {
    */
   public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const { transfer } = request
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+    transfer.payeeId = 0
+    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`
     transfer.maxFee = {
-      volume: "0",
+      volume: '0',
       tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
     }
 
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
+
     if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
+      transfer.counterFactualInfo = counterFactualInfo
     }
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = new Map();
-    dataToSig.set("nftData", request.nftData);
-    dataToSig.set("tokenAddress", request.tokenAddress);
-    dataToSig.set("transfer", request.transfer);
+      eddsaKey,
+    ).result
+    transfer.ecdsaSignature = ecdsaSignature
+    const dataToSig: Map<string, any> = new Map()
+    dataToSig.set('nftData', request.nftData)
+    dataToSig.set('tokenAddress', request.tokenAddress)
+    dataToSig.set('transfer', request.transfer)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
       bodyParams: request,
@@ -2215,122 +1841,45 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
+
   /*
    * Submit NFTAction Transfer request
    */
   public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
 
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTTransferWithoutDataStructure(
-        web3,
-        request.fromAddress,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.transferNFTWrap({
+        transfer: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
 
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signTNFTransferWithDataStructure(
-            web3,
-            request.fromAddress,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.fromAddress);
-      try {
-        if (isContractCheck) {
-          // signOffchainWithdrawWithDataStructureForContract
-          const result =
-            await sign_tools.signNFTTransferWithDataStructureForContract(
-              web3,
-              request.fromAddress,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signNFTTransferWithDataStructureForContract(
-              web3,
-              request.fromAddress,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("NFTransfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(
-      request,
-      eddsaKey
-    ).result;
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
@@ -2339,15 +1888,15 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   /*
@@ -2355,110 +1904,29 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
 
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTWithdrawWithoutDataStructure(
-        web3,
-        request.owner,
-        request,
+    try {
+      ecdsaSignature = await sign_tools.withdrawNFTWrap({
+        withdraw: request,
         chainId,
-        walletType,
+        web3,
+        isHWAddr,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
 
-    // metamask not import hw appWallet.
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signNFTWithdrawWithDataStructure(
-            web3,
-            request.owner,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-
-      try {
-        if (isContractCheck) {
-          // signNFTWithdrawWithDataStructureForContract
-          // myLog('signNFTWithdrawWithDataStructureForContract')
-          const result =
-            await sign_tools.signNFTWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signNFTWithdrawWithDataStructureForContract(
-              web3,
-              request.owner,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("NFTWithdraw ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    }
-
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(
-      request,
-      eddsaKey
-    ).result;
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey).result
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
@@ -2467,141 +1935,57 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
+
   /*
    * Submit NFTAction
    */
   public async submitNFTMint<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTMINTRequestV3WithPatch,
     options?: {
-      accountId?: number;
-      counterFactualInfo?: any;
-      _noEcdsa?: boolean;
-    }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo, _noEcdsa }: any = options
-      ? options
-      : { accountId: 0 };
+      accountId?: number
+      counterFactualInfo?: any
+      _noEcdsa?: boolean
+    },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo, _noEcdsa }: any = options ? options : { accountId: 0 }
     if (request.counterFactualNftInfo === undefined) {
       request.counterFactualNftInfo = {
         nftFactory: NFTFactory[chainId],
         nftOwner: request.minterAddress,
-        nftBaseUri: "",
-      };
-    }
-
-    request.royaltyPercentage = request.royaltyPercentage
-      ? request.royaltyPercentage
-      : 0;
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signNFTMintWithoutDataStructure(
-        web3,
-        request.minterAddress,
-        request,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    // metamask not import hw appWallet.
-    if (!_noEcdsa) {
-      if (
-        walletType === ConnectorNames.MetaMask ||
-        walletType === ConnectorNames.Gamestop ||
-        walletType === ConnectorNames.OtherExtension
-      ) {
-        try {
-          if (isHWAddr) {
-            await sigHW();
-          } else {
-            const result = await sign_tools.signNFTMintWithDataStructure(
-              web3,
-              request.minterAddress,
-              request,
-              chainId,
-              walletType,
-              accountId,
-              counterFactualInfo
-            );
-            ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-          }
-        } catch (err) {
-          throw {
-            ...this.genErr(err as any),
-          };
-        }
-      } else {
-        try {
-          const isContractCheck = await isContract(web3, request.minterAddress);
-
-          if (isContractCheck) {
-            // signNFTMintWithDataStructureForContract
-            // myLog('signNFTMintWithDataStructureForContract')
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId
-              );
-            ecdsaSignature = result.ecdsaSig;
-          } else if (counterFactualInfo) {
-            const result =
-              await sign_tools.signNFTMintWithDataStructureForContract(
-                web3,
-                request.minterAddress,
-                request,
-                chainId,
-                accountId,
-                counterFactualInfo
-              );
-            ecdsaSignature = result.ecdsaSig;
-            // myLog("NFTMintWithData ecdsaSignature:", ecdsaSignature);
-          } else {
-            await sigHW();
-          }
-        } catch (err) {
-          throw {
-            ...this.genErr(err as any),
-          };
-        }
+        nftBaseUri: '',
       }
     }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(
-      request,
-      eddsaKey
-    ).result;
+    request.royaltyPercentage = request.royaltyPercentage ? request.royaltyPercentage : 0
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+
+    try {
+      ecdsaSignature = await sign_tools.mintNFTWrap({
+        mint: request,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
+
+    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey).result
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NFT_MINT,
@@ -2610,26 +1994,24 @@ export class UserAPI extends BaseAPI {
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       ecdsaSignature,
-    };
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   async submitNFTCollection<R>(
     req: loopring_defs.CollectionBasicMeta,
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
-    const _req = req.nftFactory
-      ? req
-      : { ...req, nftFactory: NFTFactory_Collection[chainId] };
-    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const _req = req.nftFactory ? req : { ...req, nftFactory: NFTFactory_Collection[chainId] }
+    const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -2640,33 +2022,28 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       raw_data,
       contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
-    };
+    }
   }
 
   async deleteNFTCollection<R>(
     req: loopring_defs.CollectionDelete,
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<{ raw_data: R }> {
-    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.DELETE_NFT_CREATE_COLLECTION,
       queryParams: req,
@@ -2677,28 +2054,28 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       raw_data,
-    };
+    }
   }
 
   async submitNFTLegacyCollection<R>(
     req: loopring_defs.CollectionLegacyMeta,
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
     // const _req = req.nftFactory
     //   ? req
     //   : { ...req, nftFactory: NFTFactory_Collection[chainId] };
-    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_CREATE_LEGACY_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -2709,37 +2086,32 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       raw_data,
       result: raw_data.result,
-    };
+    }
   }
 
   async submitEditNFTCollection<R>(
-    req: Omit<loopring_defs.CollectionBasicMeta, "nftFactory" | "owner"> & {
-      collectionId: string;
-      accountId: number;
+    req: Omit<loopring_defs.CollectionBasicMeta, 'nftFactory' | 'owner'> & {
+      collectionId: string
+      accountId: number
     },
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
     // const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
-    const dataToSig: Map<string, any> = sortObjDictionary(req);
+    const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -2750,34 +2122,29 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       raw_data,
       contractAddress: raw_data == null ? void 0 : raw_data.contractAddress,
-    };
+    }
   }
 
   async submitUpdateNFTLegacyCollection<R>(
     req: loopring_defs.UpdateNFTLegacyCollectionRequest,
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
-    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
-    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const _req = { ...req, nftHashes: req.nftHashes.join(',') }
+    const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
@@ -2788,34 +2155,29 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       raw_data,
       result: raw_data.result,
-    };
+    }
   }
 
   async submitUpdateNFTGroup<R>(
     req: loopring_defs.UpdateNFTGroupRequest,
     chainId: ChainId,
     apiKey: string,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
-    const _req = { ...req, nftHashes: req.nftHashes.join(",") };
-    const dataToSig: Map<string, any> = sortObjDictionary(_req);
+    const _req = { ...req, nftHashes: req.nftHashes.join(',') }
+    const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: LOOPRING_URLs.POST_NFT_UPDATE_NFT_GROUP,
       bodyParams: Object.fromEntries(dataToSig),
@@ -2826,142 +2188,61 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
 
-    if (
-      raw_data != null &&
-      raw_data.resultInfo &&
-      raw_data != null &&
-      raw_data.resultInfo.code
-    ) {
+    if (raw_data != null && raw_data.resultInfo && raw_data != null && raw_data.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       raw_data,
       result: raw_data.result,
-    };
+    }
   }
 
   /*
-   * Submit NFTAction Deploy request
+   * Submit Deploy Collection request
    */
   public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      eddsaKey,
-      apiKey,
-      isHWAddr: isHWAddrOld,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
-    const { transfer } = request;
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const { transfer } = request
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-    transfer.payeeId = 0;
-    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`;
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+    transfer.payeeId = 0
+    transfer.memo = `NFT-DEPLOY-CONTRACT->${request.tokenAddress}`
     transfer.maxFee = {
-      volume: "0",
+      volume: '0',
       tokenId: transfer.token.tokenId,
-    };
-
-    const sigHW = async () => {
-      const result = await sign_tools.signTransferWithoutDataStructure(
-        web3,
-        transfer.payerAddr,
-        transfer as loopring_defs.OriginTransferRequestV3,
-        chainId,
-        walletType,
-        accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      // myLog("submitDeployNFT iConnectorNames.MetaMask:", walletType);
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          // myLog("submitDeployNFT notHWAddr:", isHWAddr);
-          const result = await sign_tools.signTransferWithDataStructure(
-            web3,
-            transfer.payerAddr,
-            transfer as loopring_defs.OriginTransferRequestV3,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, transfer.payerAddr);
-      try {
-        if (isContractCheck) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signTransferWithDataStructureForContract(
-              web3,
-              transfer.payerAddr,
-              transfer as loopring_defs.OriginTransferRequestV3,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("Transfer ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
     }
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
 
     if (counterFactualInfo) {
-      transfer.counterFactualInfo = counterFactualInfo;
+      transfer.counterFactualInfo = counterFactualInfo
     }
     transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
-      eddsaKey
-    ).result;
-    transfer.ecdsaSignature = ecdsaSignature;
-    const dataToSig: Map<string, any> = sortObjDictionary(request);
+      eddsaKey,
+    ).result
+    transfer.ecdsaSignature = ecdsaSignature
+    const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_DEPLOY_COLLECTION,
       bodyParams: request,
@@ -2972,15 +2253,15 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
-
-    let raw_data;
-    try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
-    } catch (error) {
-      throw error as AxiosResponse;
     }
-    return this.returnTxHash(raw_data);
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
   }
 
   /*
@@ -2988,103 +2269,39 @@ export class UserAPI extends BaseAPI {
    */
   public async updateAccount<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch,
-    options?: { accountId?: number; counterFactualInfo?: any }
-  ): Promise<
-    | (Omit<any, "resultInfo"> & { raw_data: Omit<any, "resultInfo"> })
-    | RESULT_INFO
-  > {
-    const {
-      request,
-      web3,
-      chainId,
-      walletType,
-      isHWAddr: isHWAddrOld,
-      privateKey,
-    } = req;
-    const { accountId, counterFactualInfo }: any = options
-      ? options
-      : { accountId: 0 };
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+    const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld, privateKey } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
-    const isHWAddr = !!isHWAddrOld;
-    let ecdsaSignature = undefined;
-
-    const sigHW = async () => {
-      const result = await sign_tools.signUpdateAccountWithoutDataStructure(
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+    const typedData = getUpdateAccountEcdsaTypedData(request, chainId)
+    try {
+      ecdsaSignature = await getEcDSASig(
         web3,
-        request,
+        typedData,
+        request.owner,
+        isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
         chainId,
-        walletType,
         accountId,
-        counterFactualInfo
-      );
-      ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix03;
-    };
-
-    if (
-      walletType === ConnectorNames.MetaMask ||
-      walletType === ConnectorNames.Gamestop ||
-      walletType === ConnectorNames.OtherExtension
-    ) {
-      try {
-        if (isHWAddr) {
-          await sigHW();
-        } else {
-          const result = await sign_tools.signUpdateAccountWithDataStructure(
-            web3,
-            request,
-            chainId,
-            walletType,
-            accountId,
-            counterFactualInfo
-          );
-          ecdsaSignature = result.ecdsaSig + SigSuffix.Suffix02;
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
-    } else {
-      const isContractCheck = await isContract(web3, request.owner);
-      try {
-        if (isContractCheck) {
-          // myLog('signUpdateAccountWithDataStructureForContract')
-          const result =
-            await sign_tools.signUpdateAccountWithDataStructureForContract(
-              web3,
-              request,
-              chainId,
-              accountId
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog('ecdsaSignature:', ecdsaSignature)
-        } else if (counterFactualInfo) {
-          const result =
-            await sign_tools.signUpdateAccountWithDataStructureForContract(
-              web3,
-              request,
-              chainId,
-              accountId,
-              counterFactualInfo
-            );
-          ecdsaSignature = result.ecdsaSig;
-          // myLog("UpdateAccount ecdsaSignature:", ecdsaSignature);
-        } else {
-          await sigHW();
-        }
-      } catch (err) {
-        throw {
-          ...this.genErr(err as any),
-        };
-      }
+        '',
+        ConnectorNames.Unknown,
+        counterFactualInfo,
+      )
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      console.log('EcDSASig error try sign WithoutDataStruct')
+      throw error
     }
+
     if (counterFactualInfo) {
-      request.counterFactualInfo = counterFactualInfo;
+      request.counterFactualInfo = counterFactualInfo
     }
     const dataToSig = sortObjDictionary({
       ...request,
       ecdsaSignature: ecdsaSignature,
-    });
+    })
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.ACCOUNT_ACTION,
       bodyParams: request,
@@ -3100,26 +2317,27 @@ export class UserAPI extends BaseAPI {
             },
           }
         : {}),
-    };
+    } as unknown as loopring_defs.ReqParams
 
-    let raw_data;
+    let raw_data
     try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
+      raw_data = (await this.makeReq().request(reqParams)).data
     } catch (error) {
-      throw error as AxiosResponse;
+      throw error as AxiosResponse
     }
-    return this.returnTxHash(raw_data);
+    return this.returnTxHash(raw_data)
   }
+
   /*
    * Get the ApiKey associated with the user's account.
    */
   public async getUserApiKey<R>(
     request: loopring_defs.GetUserApiKeyRequest,
-    eddsaKey: string
+    eddsaKey: string,
   ): Promise<{ raw_data: R; apiKey: string }> {
-    const dataToSig: Map<string, any> = new Map();
+    const dataToSig: Map<string, any> = new Map()
 
-    dataToSig.set("accountId", request.accountId);
+    dataToSig.set('accountId', request.accountId)
 
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.API_KEY_ACTION,
@@ -3130,23 +2348,23 @@ export class UserAPI extends BaseAPI {
         dataToSig,
         PrivateKey: eddsaKey,
       },
-    };
+    }
 
-    let raw_data;
+    let raw_data
     try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
+      raw_data = (await this.makeReq().request(reqParams)).data
     } catch (error) {
-      throw error as AxiosResponse;
+      throw error as AxiosResponse
     }
     if (raw_data?.resultInfo) {
       throw {
         ...raw_data?.resultInfo,
-      };
+      }
     } else {
       return {
         apiKey: raw_data.apiKey,
         raw_data,
-      };
+      }
     }
   }
 
@@ -3155,11 +2373,11 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserBills<R>(
     request: loopring_defs.GetUserBillsRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    userTxs: loopring_defs.UserTx[];
+    raw_data: R
+    totalNum: number
+    userTxs: loopring_defs.UserTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_USER_BILLS,
@@ -3167,36 +2385,36 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
-    const userTxs: loopring_defs.UserTx[] = [];
+    const userTxs: loopring_defs.UserTx[] = []
 
     if (raw_data?.transactions instanceof Array) {
       raw_data.transactions.forEach((item: loopring_defs.UserTx) => {
-        userTxs.push(item);
-      });
+        userTxs.push(item)
+      })
     }
 
     return {
       totalNum: raw_data?.totalNum,
       userTxs,
       raw_data,
-    };
+    }
   }
 
   public async getReferDownsides<R>(
     request: loopring_defs.GetReferDownsides,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    records: loopring_defs.ReferDownsides[];
+    raw_data: R
+    totalNum: number
+    records: loopring_defs.ReferDownsides[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_DOWNSIDES,
@@ -3204,27 +2422,28 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
       records: raw_data.records,
       raw_data,
-    };
+    }
   }
+
   public async getReferSelf<R>(
     request: loopring_defs.GetReferSelf,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
-    totalNum: number;
-    records: loopring_defs.ReferSelf[];
+    raw_data: R
+    totalNum: number
+    records: loopring_defs.ReferSelf[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_SELF,
@@ -3232,24 +2451,24 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
     return {
       totalNum: raw_data?.totalNum,
       records: raw_data.records,
       raw_data,
-    };
+    }
   }
 
   public async getReferStatistic<R = ReferStatistic>(
     request: loopring_defs.GetReferStatistic,
-    apiKey: string
+    apiKey: string,
   ): Promise<{ raw_data: R } & R> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_REFER_STATISTIC,
@@ -3257,19 +2476,19 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data?.resultInfo,
-      };
+      }
     }
 
     return {
       ...raw_data,
       raw_data: raw_data,
-    };
+    }
   }
 
   /*
@@ -3277,9 +2496,9 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserRewards<R>(
     request: loopring_defs.GetUserRewardRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<{
-    raw_data: R;
+    raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_PROTOCOL_REWARDS,
@@ -3287,24 +2506,24 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    let raw_data;
+    }
+    let raw_data
     try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
+      raw_data = (await this.makeReq().request(reqParams)).data
     } catch (error) {
-      throw error as AxiosResponse;
+      throw error as AxiosResponse
     }
 
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       ...raw_data,
       raw_data,
-    };
+    }
   }
 
   /*
@@ -3312,10 +2531,10 @@ export class UserAPI extends BaseAPI {
    */
   public async getUserLockSummary<R = loopring_defs.UserLockSummary>(
     request: loopring_defs.getUserLockSummaryRequest,
-    apiKey: string
+    apiKey: string,
   ): Promise<
     R & {
-      raw_data: R;
+      raw_data: R
     }
   > {
     const reqParams: loopring_defs.ReqParams = {
@@ -3324,23 +2543,117 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-    };
-    let raw_data;
+    }
+    let raw_data
     try {
-      raw_data = (await this.makeReq().request(reqParams)).data;
+      raw_data = (await this.makeReq().request(reqParams)).data
     } catch (error) {
-      throw error as AxiosResponse;
+      throw error as AxiosResponse
     }
 
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
-      };
+      }
     }
 
     return {
       ...raw_data,
       raw_data,
-    };
+    }
+  }
+
+  public async sendTotalClaim(
+    req: loopring_defs.OriginClaimRequestV3WithPatch,
+    options?: { accountId?: number; counterFactualInfo?: any },
+  ) {
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const { transfer } = request
+
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+    transfer.payeeId = 0
+    transfer.memo = `STAKE-CLAIM->${request.accountId}`
+
+    try {
+      ecdsaSignature = await sign_tools.transferWrap({
+        transfer: transfer as loopring_defs.OriginTransferRequestV3,
+        chainId,
+        web3,
+        isHWAddr,
+        accountId,
+        counterFactualInfo,
+      })
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {}
+
+    if (counterFactualInfo) {
+      transfer.counterFactualInfo = counterFactualInfo
+    }
+    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+      transfer as loopring_defs.OriginTransferRequestV3,
+      eddsaKey,
+    ).result
+    transfer.ecdsaSignature = ecdsaSignature
+    const dataToSig: Map<string, any> = sortObjDictionary(request)
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_TOTAL_CLAIM,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    }
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+      if (raw_data?.resultInfo) {
+        return {
+          ...raw_data?.resultInfo,
+        }
+      }
+      return { raw_data, ...raw_data }
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+  }
+
+  public async getUserTotalClaim<R>(
+    request: loopring_defs.GetTotalClaimRequest,
+    apiKey?: string,
+  ): Promise<{
+    raw_data: R
+    accountId: number
+    items: ClaimItem[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_TOTAL_CLAIM_INFO,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    }
   }
 }

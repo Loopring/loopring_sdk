@@ -38,10 +38,6 @@ For eth_sign signing types (eth_sign, personal_sign, v1, v3, v4)
 - But ecRecover is by
   walletOwner, `const {walletOwner} = await LoopringAPI.exchangeAPI.getCounterFactualInfo({ accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF, });`
 
-> ❗ when add `SigSuffix` `02|03` ( follow EIP712 + `02`, personal_sign + `03`)
->- for `v4` ecdsaSignature the result signature should + `SigSuffix.Suffix02`;
->- for `personal_sign` ecdsaSignature the result signature should + `SigSuffix.Suffix03`;
-
 ***
 
 ## generateKeyPair
@@ -99,7 +95,9 @@ console.log(
   result.ecdsaSig + sdk.SigSuffix.Suffix03
 );
 ```
+
 ***
+
 ## getEcDSASig: personalSign(Contract)
 
 ```ts

@@ -20,7 +20,6 @@ import { myLog } from "../utils/log_tools";
 import ABI from "./ethereum/contracts";
 import { AxiosResponse } from "axios";
 import * as ethUtil from "ethereumjs-util";
-import { Contract } from "ethers";
 import { isContract } from "./contract_api";
 // import contractWalletAbi from "../../config/abis/contractWallet.js";
 
@@ -42,7 +41,7 @@ export class BaseAPI {
         ...err,
         msg: ConnectorError.HTTP_ERROR,
         code: LoopringErrorCode.HTTP_ERROR,
-      };
+      } as RESULT_INFO;
       err?.message;
     } else if (!err || !err?.message) {
       return {
@@ -61,7 +60,7 @@ export class BaseAPI {
           ...err,
           message: key as keyof typeof ConnectorError,
           code: LoopringErrorCode[key as keyof typeof ConnectorError],
-        };
+        } as RESULT_INFO;
       }
       return {
         ...(err instanceof Error
@@ -179,42 +178,49 @@ export class BaseAPI {
   }
 }
 
-export async function ecRecover(
+export function ecRecover(
   web3: Web3,
   account: string,
   msg: string,
-  sig: any,
-  time = 3000
+  sig: any
+  // time = 3000
 ) {
-  let timer;
-  return await Promise.race([
-    new Promise((_r, rej) => (timer = setTimeout(rej, time))),
-    new Promise((resolve) => {
-      // web3.eth.personal.ecRecover();
-      const hash = ethUtil.hashPersonalMessage(toBuffer(msg));
-      const signature = ethUtil.fromRpcSig(sig);
-      const result = ethUtil.ecrecover(
-        hash,
-        signature.v,
-        signature.r,
-        signature.s
-      );
-      const result2 = ethUtil.pubToAddress(result);
-      const recAddress = toHex(result2);
-      myLog("ecRecover recAddress", result, result2, recAddress);
-      resolve({
-        result: recAddress.toLowerCase() === account.toLowerCase(),
-      });
-    }),
-  ])
-    .catch((error) => {
-      console.log("ecRecover 2:", error);
-      return { error: ("ecRecover 2:" + error) as any };
-    })
-    .finally(() => {
-      console.log("ecRecover 2: timeout");
-      return "ecRecover 2: timeout";
-    });
+  try {
+    // let timer;
+    const hash = ethUtil.hashPersonalMessage(toBuffer(msg));
+    const signature = ethUtil.fromRpcSig(sig);
+    const result = ethUtil.ecrecover(
+      hash,
+      signature.v,
+      signature.r,
+      signature.s
+    );
+    const result2 = ethUtil.pubToAddress(result);
+    const recAddress = toHex(result2);
+    myLog("ecRecover recAddress", result, result2, recAddress);
+    return {
+      result: recAddress.toLowerCase() === account.toLowerCase(),
+    };
+  } catch (error) {
+    return { error };
+  }
+
+  // resolve();
+  // return await Promise.race([
+  //   new Promise((_r, rej) => (timer = setTimeout(rej, time))),
+  //   new Promise((resolve) => {
+  //     // web3.eth.personal.ecRecover();
+  //
+  //   }),
+  // ])
+  //   .catch((error) => {
+  //     console.log("ecRecover 2:", error);
+  //     return { error: ("ecRecover 2:" + error) as any };
+  //   })
+  //   .finally(() => {
+  //     console.log("ecRecover 2: timeout");
+  //     return "ecRecover 2: timeout";
+  //   });
 }
 
 export async function contractWalletValidate32(
@@ -439,36 +445,9 @@ export async function personalSign(
             }
 
             // Valid: 2. webview directory signature Valid
-            if (
-              typeof window !== "undefined" &&
-              (window?.ethereum?.isImToken || window?.ethereum?.isMetaMask) &&
-              isMobile &&
-              // Mobile directory connect will sign ConnectorNames as MetaMask only
-              walletType === ConnectorNames.MetaMask
-            ) {
-              const address: string[] = await window.ethereum?.request({
-                method: "eth_requestAccounts",
-              });
-              if (
-                address?.find(
-                  (item) => item.toLowerCase() === account.toLowerCase()
-                )
-              ) {
-                return resolve({ sig: result });
-              }
-            }
-
-            // Valid: 3. EOA signature Valid by ecRecover
-            if (
-              web3?.currentProvider?.isWalletLink &&
-              web3?.currentProvider?.isConnected
-            ) {
-              account === web3.currentProvider?.selectedAddress;
-              return resolve({ sig: result });
-            } else {
-              // LOG: for signature
+            if (window?.ethereum || web3?.currentProvider?.isConnected) {
               myLog("ecRecover before", result);
-              const valid: any = await ecRecover(web3, account, msg, result);
+              const valid: any = ecRecover(web3, account, msg, result);
               // LOG: for signature
               myLog("ecRecover after", valid.result);
               if (valid.result) {
@@ -476,10 +455,10 @@ export async function personalSign(
               }
             }
 
-            // Valid: 5. contractWallet no recover
+            // Valid: 3. contractWallet no recover
             // signature Valid `isValidSignature(bytes32,bytes)`
             // LOG: for signature
-            console.log("Valid: 5. contractWallet before");
+            myLog("Valid: 3. contractWallet before");
             const isContractCheck = await isContract(web3, account);
             if (isContractCheck) {
               // LOG: for signature
@@ -579,7 +558,8 @@ export async function fcWalletValid(
     } else {
       _result = result;
     }
-    const valid: any = await ecRecover(
+
+    const valid: any = ecRecover(
       web3,
       counterFactualInfo.walletOwner,
       msg,

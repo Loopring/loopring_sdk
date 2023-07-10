@@ -2,24 +2,24 @@ import {
   DEFAULT_TIMEOUT,
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
+  signatureKeyPairMock,
   testTypedData,
   web3,
-  signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
+} from '../../MockData'
+import * as sdk from '../../../index'
 
-describe("signature", function () {
+describe('signature', function () {
   it(
-    "generateKeyPair",
+    'generateKeyPair',
     async () => {
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      const result = await signatureKeyPairMock(accInfo);
-      console.log(result.sk);
+      })
+      const result = await signatureKeyPairMock(accInfo)
+      console.log(result.sk)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   /**
    * test case is not allow brock by Mock provider
    */
@@ -47,7 +47,7 @@ describe("signature", function () {
   //   DEFAULT_TIMEOUT
   // );
 
-  it("getEcDSASig:WithoutDataStruct(personalSign)", async () => {
+  it('getEcDSASig:WithoutDataStruct(personalSign)', async () => {
     const result = await sdk.getEcDSASig(
       web3,
       testTypedData,
@@ -55,16 +55,11 @@ describe("signature", function () {
       sdk.GetEcDSASigType.WithoutDataStruct,
       sdk.ChainId.GOERLI,
       LOOPRING_EXPORTED_ACCOUNT.accountId,
-      "",
-      sdk.ConnectorNames.Unknown
-    );
-    console.log(
-      "getEcDSASig:WithoutDataStruct(personalSign)",
-      result,
-      "ecdsaSig+sdk.SigSuffix.Suffix03",
-      result.ecdsaSig + sdk.SigSuffix.Suffix03
-    );
-  });
+      '',
+      sdk.ConnectorNames.Unknown,
+    )
+    console.log('getEcDSASig:WithoutDataStruct(personalSign)', result)
+  })
   /**
    * test case is not allow brock by Mock provider
    */
@@ -80,6 +75,6 @@ describe("signature", function () {
   //     sdk.ConnectorNames.Unknown
   //   );
   // });
-});
+})
 
-export default {};
+export default {}
