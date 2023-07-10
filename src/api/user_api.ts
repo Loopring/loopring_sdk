@@ -2625,7 +2625,7 @@ export class UserAPI extends BaseAPI {
 
   public async getUserTotalClaim<R>(
     request: loopring_defs.GetTotalClaimRequest,
-    apiKey: string,
+    apiKey?: string,
   ): Promise<{
     raw_data: R
     accountId: number
