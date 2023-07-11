@@ -2278,17 +2278,19 @@ export class UserAPI extends BaseAPI {
     let ecdsaSignature = undefined
     const typedData = getUpdateAccountEcdsaTypedData(request, chainId)
     try {
-      ecdsaSignature = await getEcDSASig(
-        web3,
-        typedData,
-        request.owner,
-        isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
-        chainId,
-        accountId,
-        '',
-        ConnectorNames.Unknown,
-        counterFactualInfo,
-      )
+      ecdsaSignature = (
+        await getEcDSASig(
+          web3,
+          typedData,
+          request.owner,
+          isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+          chainId,
+          accountId,
+          '',
+          ConnectorNames.Unknown,
+          counterFactualInfo,
+        )
+      )?.ecdsaSig
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       console.log('EcDSASig error try sign WithoutDataStruct')
@@ -2652,7 +2654,7 @@ export class UserAPI extends BaseAPI {
     }
 
     return {
-      ...raw_data,
+      ...raw_data?.data,
       raw_data,
     }
   }

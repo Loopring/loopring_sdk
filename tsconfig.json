@@ -21,7 +21,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Classic",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true

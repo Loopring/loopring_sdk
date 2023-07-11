@@ -11,6 +11,8 @@ npm i @loopring-web/loopring-sdk --save
 # Using yarn
 yarn add @loopring-web/loopring-sdk
 ```
+when using for browser make sure set up `NODE_ENV=production|development`
+
 > Make sure you are using the original npm registry.  
 > `npm config set registry http://registry.npmjs.org`
 
