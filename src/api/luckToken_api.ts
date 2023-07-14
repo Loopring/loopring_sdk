@@ -13,6 +13,7 @@ import * as loopring_defs from '../defs/loopring_defs'
 import { sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
+import { SigSuffix } from '../defs'
 
 export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenAgents<R>(): Promise<{
@@ -498,7 +499,7 @@ export class LuckTokenAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {}
 
     if (counterFactualInfo) {
@@ -596,7 +597,7 @@ export class LuckTokenAPI extends BaseAPI {
             accountId,
             counterFactualInfo,
           })
-          // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+          ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
         } catch (error) {}
         eddsaSig = sign_tools.get_EddsaSig_NFT_Transfer(transfer, eddsaKey).result
       } else {
@@ -622,7 +623,7 @@ export class LuckTokenAPI extends BaseAPI {
             accountId,
             counterFactualInfo,
           })
-          // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+          ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
         } catch (error) {}
 
         if (counterFactualInfo) {

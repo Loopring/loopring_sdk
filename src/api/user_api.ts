@@ -19,6 +19,7 @@ import {
   SIG_FLAG,
   SigPatchField,
   TradeChannel,
+  SigSuffix,
 } from '../defs'
 
 import * as loopring_defs from '../defs/loopring_defs'
