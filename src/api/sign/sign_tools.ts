@@ -422,7 +422,8 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
           },
         )
       })
-      console.log('eth_signTypedData', result)
+      // LOG: for signature
+      myLog('eth_signTypedData', result)
       response = result?.result
     } else {
       response = await web3.currentProvider?.send('eth_signTypedData', [account, typedData])
