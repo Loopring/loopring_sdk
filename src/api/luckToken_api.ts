@@ -644,6 +644,7 @@ export class LuckTokenAPI extends BaseAPI {
           payeeId: 0,
           memo: `LuckTokenSendBy${accountId}`,
           eddsaSig,
+          counterFactualInfo,
         },
       }
       const reqParams: loopring_defs.ReqParams = {
