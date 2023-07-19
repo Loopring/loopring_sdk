@@ -1969,20 +1969,20 @@ export class UserAPI extends BaseAPI {
     }
 
     request.royaltyPercentage = request.royaltyPercentage ? request.royaltyPercentage : 0
-    const isHWAddr = !!isHWAddrOld
-    let ecdsaSignature = undefined
+    // const isHWAddr = !!isHWAddrOld
+    // let ecdsaSignature = undefined
 
-    try {
-      ecdsaSignature = await sign_tools.mintNFTWrap({
-        mint: request,
-        chainId,
-        web3,
-        isHWAddr,
-        accountId,
-        counterFactualInfo,
-      })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    // try {
+    //   ecdsaSignature = await sign_tools.mintNFTWrap({
+    //     mint: request,
+    //     chainId,
+    //     web3,
+    //     isHWAddr,
+    //     accountId,
+    //     counterFactualInfo,
+    //   })
+    //   ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    // } catch (error) {}
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1994,7 +1994,7 @@ export class UserAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
-      ecdsaSignature,
+      // ecdsaSignature,
     }
     let raw_data
     try {
@@ -2570,14 +2570,14 @@ export class UserAPI extends BaseAPI {
     req: loopring_defs.OriginClaimRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
   ) {
-    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { request, web3, chainId, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const { transfer } = request
 
     const isHWAddr = !!isHWAddrOld
     let ecdsaSignature = undefined
     transfer.payeeId = 0
-    transfer.memo = `STAKE-CLAIM->${request.accountId}`
+    transfer.memo = `CLAIM—ALL->${request.accountId}`
 
     try {
       ecdsaSignature = await sign_tools.transferWrap({

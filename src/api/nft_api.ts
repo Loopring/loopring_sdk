@@ -547,4 +547,45 @@ export class NFTAPI extends BaseAPI {
       raw_data,
     }
   }
+  async getHadUnknownCollection<R>(request: { accountId: number }) {
+    const reqParams = {
+      url: LOOPRING_URLs.GET_USER_HAD_UNKNOWN_COLLECTION,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+    }
+    // if (raw_data.nftTokenInfos.length) {
+    //   raw_data.nftTokenInfos = raw_data.nftTokenInfos.reduce(
+    //     (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
+    //       if (item.nftId && item.nftId.startsWith('0x')) {
+    //         const hashBN = new BN(item.nftId.replace('0x', ''), 16)
+    //         item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
+    //         if (
+    //           request.metadata === true &&
+    //           item.metadata &&
+    //           item.metadata.nftId &&
+    //           item.metadata.nftId.startsWith('0x')
+    //         ) {
+    //           // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
+    //           item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
+    //         }
+    //       }
+    //       return [...prev, item]
+    //     },
+    //     [],
+    //   )
+    //   // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
+    //   // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
+    // }
+    return {}
+  }
 }

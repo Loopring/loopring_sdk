@@ -75,7 +75,7 @@ export enum LOOPRING_URLs {
   GET_PROTOCOL_PORTRAIT = '/api/v3/sidecar/ProtocolPortrait',
   GET_PROTOCOL_REWARDS = '/api/v3/sidecar/commissionReward',
   GET_AMM_ASSET_HISTORY = '/api/v3/amm/assets',
-  GET_ASSET_LOCK_RECORDS = 'api/v3/user/lockRecords',
+  GET_ASSET_LOCK_RECORDS = '/api/v3/user/lockRecords',
 
   GET_DEFI_TOKENS = '/api/v3/defi/tokens',
   GET_DEFI_MARKETS = '/api/v3/defi/markets',
@@ -133,7 +133,8 @@ export enum LOOPRING_URLs {
   GET_NFT_LEGACY_COLLECTION = '/api/v3/nft/collection/legacy',
   GET_NFT_LEGACY_TOKENADDRESS = '/api/v3/nft/collection/legacy/tokenAddress',
   GET_NFT_LEGACY_BALANCE = '/api/v3/nft/collection/legacy/balance',
-  GET_USER_LOCKSUMMAR = 'api/v3/user/lockSummary',
+  GET_USER_LOCKSUMMAR = '/api/v3/user/lockSummary',
+  GET_USER_HAD_UNKNOWN_COLLECTION = '/api/v3/nft/collection/unknown',
 
   GET_NFTs_INFO = '/api/v3/nft/info/nfts',
   GET_USER_NFT_TRANSFER_HISTORY = '/api/v3/user/nft/transfers',
@@ -188,12 +189,12 @@ export enum LOOPRING_URLs {
   DELETE_CONTACT = '/api/v3/user/contact',
 
   // CEFI_MARKETS
-  GET_BTRATE_MARKETS = 'api/v3/btrade/markets',
-  GET_BTRATE_DEPTH = 'api/v3/btrade/depth',
-  GET_BTRATE_ORDERS = 'api/v3/btrade/orders',
-  POST_BTRATE_ORDER = 'api/v3/btrade/order',
+  GET_BTRATE_MARKETS = '/api/v3/btrade/markets',
+  GET_BTRATE_DEPTH = '/api/v3/btrade/depth',
+  GET_BTRATE_ORDERS = '/api/v3/btrade/orders',
+  POST_BTRATE_ORDER = 'a/pi/v3/btrade/order',
 
-  GET_REFER_DOWNSIDES = 'api/v3/user/refer/profit/downsides',
+  GET_REFER_DOWNSIDES = '/api/v3/user/refer/profit/downsides',
   GET_REFER_SELF = '/api/v3/user/refer/profit/self',
   GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
   GET_TOTAL_CLAIM_INFO = '/api/v3/feeRewards/totalClaimInfo',
