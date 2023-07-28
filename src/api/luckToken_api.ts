@@ -624,7 +624,9 @@ export class LuckTokenAPI extends BaseAPI {
             counterFactualInfo,
           })
           // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-        } catch (error) {}
+        } catch (error) {
+          throw error
+        }
 
         if (counterFactualInfo) {
           transfer.counterFactualInfo = counterFactualInfo
