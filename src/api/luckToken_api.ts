@@ -500,7 +500,9 @@ export class LuckTokenAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
@@ -598,7 +600,9 @@ export class LuckTokenAPI extends BaseAPI {
             counterFactualInfo,
           })
           // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-        } catch (error) {}
+        } catch (error) {
+          throw error
+        }
         eddsaSig = sign_tools.get_EddsaSig_NFT_Transfer(transfer, eddsaKey).result
       } else {
         transfer = {

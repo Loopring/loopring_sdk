@@ -1653,7 +1653,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey).result
 
@@ -1700,7 +1702,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1753,7 +1757,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
@@ -1818,7 +1824,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
@@ -1876,7 +1884,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1923,7 +1933,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -2233,7 +2245,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
@@ -2589,7 +2603,9 @@ export class UserAPI extends BaseAPI {
         counterFactualInfo,
       })
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
