@@ -1652,7 +1652,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -1701,7 +1701,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -1756,7 +1756,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -1823,7 +1823,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -1883,7 +1883,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -1932,7 +1932,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -2244,7 +2244,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -2306,7 +2306,7 @@ export class UserAPI extends BaseAPI {
           counterFactualInfo,
         )
       )?.ecdsaSig
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       console.log('EcDSASig error try sign WithoutDataStruct')
       throw error
@@ -2602,7 +2602,7 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       throw error
     }
@@ -2671,7 +2671,7 @@ export class UserAPI extends BaseAPI {
     }
 
     return {
-      ...raw_data?.data,
+      ...raw_data,
       raw_data,
     }
   }
