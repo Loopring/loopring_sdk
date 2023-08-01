@@ -9,10 +9,10 @@ import {
   GlobalAPI,
   WhitelistedUserAPI,
   DefiAPI,
-} from "../api";
-import Web3 from "web3";
-import * as sdk from "../index";
-const PrivateKeyProvider = require("truffle-privatekey-provider");
+} from '../api'
+import Web3 from 'web3'
+import * as sdk from '../index'
+const PrivateKeyProvider = require('truffle-privatekey-provider')
 /***
  * LoopringAPIClass
  */
@@ -44,9 +44,9 @@ const PrivateKeyProvider = require("truffle-privatekey-provider");
 // }
 // LoopringAPIClass.InitApi({sdk.ChainId.GOERLI})
 
-export const DEFAULT_TIMEOUT = 30000;
+export const DEFAULT_TIMEOUT = 30000
 
-const chainId = sdk.ChainId.GOERLI;
+const chainId = sdk.ChainId.GOERLI
 
 export const LoopringAPI = {
   // second params is http request timeout default is 6000
@@ -61,308 +61,307 @@ export const LoopringAPI = {
   defiAPI: new DefiAPI({ chainId }),
   delegate: new DelegateAPI({ chainId }),
   __chainId__: chainId,
-};
+}
 export const LOOPRING_EXPORTED_ACCOUNT = {
-  address: "0x727e0fa09389156fc803eaf9c7017338efd76e7f",
-  privateKey:
-    "491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c",
+  uatNFTFactory: '0x355E9941C5e301033ecfD37184E78443c5241035',
+  devNFTFactory: '0x85829dD619f11129e8ea08764F0E1A021aD579B9',
+  address: '0x727e0fa09389156fc803eaf9c7017338efd76e7f',
+  privateKey: '491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c',
   accountId: 10037,
-  address2: "0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079",
-  privateKey2:
-    "e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263",
+  address2: '0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079',
+  privateKey2: 'e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263',
   accountId2: 10395,
-  addressCF: "0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15",
+  addressCF: '0x23dE4Da688c94a66E8bbE9BCc95CB03b4e209C15',
   accountIdCF: 11632,
-  addressContractWallet: "0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd",
-  depositAddress: "0x4E8e6a86762546cCfCBaa8A259c7d442383c5127",
-  exchangeAddress: "0x12b7cccF30ba360e5041C6Ce239C9a188B709b2B",
-  whitelistedAddress: "0x35405E1349658BcA12810d0f879Bf6c5d89B512C",
-  whitelistedEddkey:
-    "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33",
+  addressContractWallet: '0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd',
+  depositAddress: '0x4E8e6a86762546cCfCBaa8A259c7d442383c5127',
+  exchangeAddress: '0x12b7cccF30ba360e5041C6Ce239C9a188B709b2B',
+  whitelistedAddress: '0x35405E1349658BcA12810d0f879Bf6c5d89B512C',
+  whitelistedEddkey: '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33',
   // const eddkeyWhitelisted =
   //   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
   //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
   chainId: 5,
-  nftTokenAddress: "0x1e29fd62ee556ee6bb9494faab32b6f269ebb4bf",
+  nftTokenAddress: '0x1e29fd62ee556ee6bb9494faab32b6f269ebb4bf',
   nftTokenId: 32768,
-  nftId: "0xfed3c4c4e2e1471c3f457a7ee9780ae3c77ee7e05ac77bf573ccd5145db7c674",
-  nftData: "0x0e5542cc682fae472f0f9909573244551e56ad25da62a82a1e18f28d0f392147",
-  testNotOx: "727e0fa09389156fc803eaf9c7017338efd76e7f",
+  nftId: '0xfed3c4c4e2e1471c3f457a7ee9780ae3c77ee7e05ac77bf573ccd5145db7c674',
+  nftData: '0x0e5542cc682fae472f0f9909573244551e56ad25da62a82a1e18f28d0f392147',
+  testNotOx: '727e0fa09389156fc803eaf9c7017338efd76e7f',
   tradeLRCValue: 80000000000000,
   tradeETHValue: 0.0001, //same as UI
   gasPrice: 20, // for test
   gasLimit: 200000, // for test
   validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
-};
+}
 
 const provider = new PrivateKeyProvider(
   LOOPRING_EXPORTED_ACCOUNT.privateKey,
-  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-);
+  'https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3',
+)
 const provider2 = new PrivateKeyProvider(
   LOOPRING_EXPORTED_ACCOUNT.privateKey2,
-  "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
-);
+  'https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3',
+)
 // const providerWhiteList = new PrivateKeyProvider(
 //   LOOPRING_EXPORTED_ACCOUNT.whitelistedEddkey,
 //   "https://goerli.infura.io/v3/a06ed9c6b5424b61beafff27ecc3abf3"
 // );
-export const web3 = new Web3(provider);
-export const web3_2 = new Web3(provider2);
+export const web3 = new Web3(provider)
+export const web3_2 = new Web3(provider2)
 
-export const CUSTOMER_KEY_SEED = "XXXXXX" + " with key nonce: " + "${nonce}";
+export const CUSTOMER_KEY_SEED = 'XXXXXX' + ' with key nonce: ' + '${nonce}'
 
 // LoopringAPI.exchangeAPI.getTokens()
 // const {markets:marketMap} LoopringAPI.exchangeAPI?.getMixMarkets()
 export let TOKEN_INFO = {
   addressIndex: {
-    "0x0000000000000000000000000000000000000000": "ETH",
-    "0xfc28028d9b1f6966fe74710653232972f50673be": "LRC",
-    "0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a": "USDT",
-    "0xfeb069407df0e1e4b365c10992f1bc16c078e34b": "LP-LRC-ETH",
-    "0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e": "LP-ETH-USDT",
-    "0xcd2c81b322a5b530b5fa3432e57da6803b0317f7": "DAI",
-    "0x47525e6a5def04c9a56706e93f54cc70c2e8f165": "USDC",
-    "0xf37cf4ced77b985708d591acc6bfd08586ab3409": "LP-USDC-ETH",
+    '0x0000000000000000000000000000000000000000': 'ETH',
+    '0xfc28028d9b1f6966fe74710653232972f50673be': 'LRC',
+    '0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a': 'USDT',
+    '0xfeb069407df0e1e4b365c10992f1bc16c078e34b': 'LP-LRC-ETH',
+    '0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e': 'LP-ETH-USDT',
+    '0xcd2c81b322a5b530b5fa3432e57da6803b0317f7': 'DAI',
+    '0x47525e6a5def04c9a56706e93f54cc70c2e8f165': 'USDC',
+    '0xf37cf4ced77b985708d591acc6bfd08586ab3409': 'LP-USDC-ETH',
   },
   tokenMap: {
     ETH: {
-      type: "ETH",
+      type: 'ETH',
       tokenId: 0,
-      symbol: "ETH",
-      name: "Ethereum",
-      address: "0x0000000000000000000000000000000000000000",
+      symbol: 'ETH',
+      name: 'Ethereum',
+      address: '0x0000000000000000000000000000000000000000',
       decimals: 18,
       precision: 7,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "5000000000000000",
-        maximum: "1000000000000000000000",
-        dust: "200000000000000",
+        minimum: '5000000000000000',
+        maximum: '1000000000000000000000',
+        dust: '200000000000000',
       },
       luckyTokenAmounts: {
-        minimum: "50000000000000",
-        maximum: "1000000000000000000000",
-        dust: "50000000000000",
+        minimum: '50000000000000',
+        maximum: '1000000000000000000000',
+        dust: '50000000000000',
       },
-      fastWithdrawLimit: "100000000000000000000",
+      fastWithdrawLimit: '100000000000000000000',
       gasAmounts: {
-        distribution: "85000",
-        deposit: "100000",
+        distribution: '85000',
+        deposit: '100000',
       },
       enabled: true,
       isLpToken: false,
-      tradePairs: ["LRC", "USDT", "USDC"],
+      tradePairs: ['LRC', 'USDT', 'USDC'],
     },
     LRC: {
-      type: "erc20Trade",
+      type: 'erc20Trade',
       tokenId: 1,
-      symbol: "LRC",
-      name: "Loopring",
-      address: "0xfc28028d9b1f6966fe74710653232972f50673be",
+      symbol: 'LRC',
+      name: 'Loopring',
+      address: '0xfc28028d9b1f6966fe74710653232972f50673be',
       decimals: 18,
       precision: 3,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "5000000000000000000",
-        maximum: "5000000000000000000000000",
-        dust: "5000000000000000000",
+        minimum: '5000000000000000000',
+        maximum: '5000000000000000000000000',
+        dust: '5000000000000000000',
       },
       luckyTokenAmounts: {
-        minimum: "50000000000000000",
-        maximum: "5000000000000000000000000",
-        dust: "50000000000000000",
+        minimum: '50000000000000000',
+        maximum: '5000000000000000000000000',
+        dust: '50000000000000000',
       },
-      fastWithdrawLimit: "750000000000000000000000",
+      fastWithdrawLimit: '750000000000000000000000',
       gasAmounts: {
-        distribution: "101827",
-        deposit: "200000",
+        distribution: '101827',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: false,
-      tradePairs: ["ETH"],
+      tradePairs: ['ETH'],
     },
     USDT: {
-      type: "erc20Trade",
+      type: 'erc20Trade',
       tokenId: 2,
-      symbol: "USDT",
-      name: "USDT",
-      address: "0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a",
+      symbol: 'USDT',
+      name: 'USDT',
+      address: '0xd4e71c4bb48850f5971ce40aa428b09f242d3e8a',
       decimals: 6,
       precision: 2,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "5000000",
-        maximum: "2000000000000",
-        dust: "250000",
+        minimum: '5000000',
+        maximum: '2000000000000',
+        dust: '250000',
       },
       luckyTokenAmounts: {
-        minimum: "50000",
-        maximum: "200000000000",
-        dust: "50000",
+        minimum: '50000',
+        maximum: '200000000000',
+        dust: '50000',
       },
-      fastWithdrawLimit: "250000000000",
+      fastWithdrawLimit: '250000000000',
       gasAmounts: {
-        distribution: "106233",
-        deposit: "200000",
+        distribution: '106233',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: false,
-      tradePairs: ["ETH", "DAI"],
+      tradePairs: ['ETH', 'DAI'],
     },
-    "LP-LRC-ETH": {
-      type: "erc20Trade",
+    'LP-LRC-ETH': {
+      type: 'erc20Trade',
       tokenId: 4,
-      symbol: "LP-LRC-ETH",
-      name: "AMM-LRC-ETH",
-      address: "0xfeb069407df0e1e4b365c10992f1bc16c078e34b",
+      symbol: 'LP-LRC-ETH',
+      name: 'AMM-LRC-ETH',
+      address: '0xfeb069407df0e1e4b365c10992f1bc16c078e34b',
       decimals: 8,
       precision: 6,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "100000000",
-        maximum: "10000000000000000000",
-        dust: "100000000",
+        minimum: '100000000',
+        maximum: '10000000000000000000',
+        dust: '100000000',
       },
       luckyTokenAmounts: {
-        minimum: "100000000",
-        maximum: "10000000000000000000",
-        dust: "100000000",
+        minimum: '100000000',
+        maximum: '10000000000000000000',
+        dust: '100000000',
       },
-      fastWithdrawLimit: "20000000000",
+      fastWithdrawLimit: '20000000000',
       gasAmounts: {
-        distribution: "150000",
-        deposit: "200000",
+        distribution: '150000',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: true,
     },
-    "LP-ETH-USDT": {
-      type: "erc20Trade",
+    'LP-ETH-USDT': {
+      type: 'erc20Trade',
       tokenId: 7,
-      symbol: "LP-ETH-USDT",
-      name: "LP-ETH-USDT",
-      address: "0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e",
+      symbol: 'LP-ETH-USDT',
+      name: 'LP-ETH-USDT',
+      address: '0x049a02fa9bc6bd54a2937e67d174cc69a9194f8e',
       decimals: 8,
       precision: 6,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "100000000",
-        maximum: "10000000000000",
-        dust: "100000000",
+        minimum: '100000000',
+        maximum: '10000000000000',
+        dust: '100000000',
       },
       luckyTokenAmounts: {
-        minimum: "100000000",
-        maximum: "10000000000000",
-        dust: "100000000",
+        minimum: '100000000',
+        maximum: '10000000000000',
+        dust: '100000000',
       },
-      fastWithdrawLimit: "20000000000",
+      fastWithdrawLimit: '20000000000',
       gasAmounts: {
-        distribution: "150000",
-        deposit: "200000",
+        distribution: '150000',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: true,
     },
     DAI: {
-      type: "erc20Trade",
+      type: 'erc20Trade',
       tokenId: 6,
-      symbol: "DAI",
-      name: "dai",
-      address: "0xcd2c81b322a5b530b5fa3432e57da6803b0317f7",
+      symbol: 'DAI',
+      name: 'dai',
+      address: '0xcd2c81b322a5b530b5fa3432e57da6803b0317f7',
       decimals: 18,
       precision: 6,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "10000000000000000000",
-        maximum: "100000000000000000000000",
-        dust: "10000000000000000",
+        minimum: '10000000000000000000',
+        maximum: '100000000000000000000000',
+        dust: '10000000000000000',
       },
       luckyTokenAmounts: {
-        minimum: "10000000000000000000",
-        maximum: "100000000000000000000000",
-        dust: "10000000000000000000",
+        minimum: '10000000000000000000',
+        maximum: '100000000000000000000000',
+        dust: '10000000000000000000',
       },
-      fastWithdrawLimit: "10000000000000000000000",
+      fastWithdrawLimit: '10000000000000000000000',
       gasAmounts: {
-        distribution: "150000",
-        deposit: "200000",
+        distribution: '150000',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: false,
-      tradePairs: ["USDT"],
+      tradePairs: ['USDT'],
     },
     USDC: {
-      type: "USDC",
+      type: 'USDC',
       tokenId: 8,
-      symbol: "USDC",
-      name: "USDC",
-      address: "0x47525e6a5def04c9a56706e93f54cc70c2e8f165",
+      symbol: 'USDC',
+      name: 'USDC',
+      address: '0x47525e6a5def04c9a56706e93f54cc70c2e8f165',
       decimals: 6,
       precision: 6,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "1000",
-        maximum: "10000000000000000000",
-        dust: "100",
+        minimum: '1000',
+        maximum: '10000000000000000000',
+        dust: '100',
       },
       luckyTokenAmounts: {
-        minimum: "1000000",
-        maximum: "10000000000",
-        dust: "1000000",
+        minimum: '1000000',
+        maximum: '10000000000',
+        dust: '1000000',
       },
-      fastWithdrawLimit: "20000000000000000000",
+      fastWithdrawLimit: '20000000000000000000',
       gasAmounts: {
-        distribution: "150000",
-        deposit: "200000",
+        distribution: '150000',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: false,
-      tradePairs: ["ETH"],
+      tradePairs: ['ETH'],
     },
-    "LP-USDC-ETH": {
-      type: "LP-USDC-ETH",
+    'LP-USDC-ETH': {
+      type: 'LP-USDC-ETH',
       tokenId: 9,
-      symbol: "LP-USDC-ETH",
-      name: "LP-USDC-ETH",
-      address: "0xf37cf4ced77b985708d591acc6bfd08586ab3409",
+      symbol: 'LP-USDC-ETH',
+      name: 'LP-USDC-ETH',
+      address: '0xf37cf4ced77b985708d591acc6bfd08586ab3409',
       decimals: 8,
       precision: 7,
       precisionForOrder: 3,
       orderAmounts: {
-        minimum: "100000",
-        maximum: "1000000000000000000000000000000000000000",
-        dust: "10000",
+        minimum: '100000',
+        maximum: '1000000000000000000000000000000000000000',
+        dust: '10000',
       },
       luckyTokenAmounts: {
-        minimum: "1000000000000000",
-        maximum: "10000000000000000000",
-        dust: "1000000000000000",
+        minimum: '1000000000000000',
+        maximum: '10000000000000000000',
+        dust: '1000000000000000',
       },
-      fastWithdrawLimit: "20000000000000000000",
+      fastWithdrawLimit: '20000000000000000000',
       gasAmounts: {
-        distribution: "150000",
-        deposit: "200000",
+        distribution: '150000',
+        deposit: '200000',
       },
       enabled: true,
       isLpToken: true,
     },
   },
   idIndex: {
-    "0": "ETH",
-    "1": "LRC",
-    "2": "USDT",
-    "4": "LP-LRC-ETH",
-    "6": "DAI",
-    "7": "LP-ETH-USDT",
-    "8": "USDC",
-    "9": "LP-USDC-ETH",
+    '0': 'ETH',
+    '1': 'LRC',
+    '2': 'USDT',
+    '4': 'LP-LRC-ETH',
+    '6': 'DAI',
+    '7': 'LP-ETH-USDT',
+    '8': 'USDC',
+    '9': 'LP-USDC-ETH',
   },
   marketMap: {
-    "LRC-ETH": {
+    'LRC-ETH': {
       baseTokenId: 1,
       enabled: true,
-      market: "LRC-ETH",
+      market: 'LRC-ETH',
       orderbookAggLevels: 5,
       precisionForPrice: 6,
       quoteTokenId: 0,
@@ -370,10 +369,10 @@ export let TOKEN_INFO = {
       isSwapEnabled: true,
       createdAt: 1617967800000,
     },
-    "ETH-USDT": {
+    'ETH-USDT': {
       baseTokenId: 0,
       enabled: true,
-      market: "ETH-USDT",
+      market: 'ETH-USDT',
       orderbookAggLevels: 3,
       precisionForPrice: 3,
       quoteTokenId: 2,
@@ -381,10 +380,10 @@ export let TOKEN_INFO = {
       isSwapEnabled: true,
       createdAt: 1617972300000,
     },
-    "DAI-USDT": {
+    'DAI-USDT': {
       baseTokenId: 6,
       enabled: true,
-      market: "DAI-USDT",
+      market: 'DAI-USDT',
       orderbookAggLevels: 2,
       precisionForPrice: 4,
       quoteTokenId: 2,
@@ -392,10 +391,10 @@ export let TOKEN_INFO = {
       isSwapEnabled: true,
       createdAt: 0,
     },
-    "USDC-ETH": {
+    'USDC-ETH': {
       baseTokenId: 8,
       enabled: true,
-      market: "USDC-ETH",
+      market: 'USDC-ETH',
       orderbookAggLevels: 3,
       precisionForPrice: 3,
       quoteTokenId: 0,
@@ -404,37 +403,37 @@ export let TOKEN_INFO = {
       createdAt: 1636974420000,
     },
   },
-};
+}
 
 // const {} = LoopringAPI.ammpoolAPI?.getAmmPoolConf())
 export let AMM_MAP = {
-  "AMM-LRC-ETH": {
-    name: "LRCETH-Pool",
-    market: "AMM-LRC-ETH",
-    address: "0xfEB069407df0e1e4B365C10992F1bc16c078E34b",
-    version: "1.0.0",
+  'AMM-LRC-ETH': {
+    name: 'LRCETH-Pool',
+    market: 'AMM-LRC-ETH',
+    address: '0xfEB069407df0e1e4B365C10992F1bc16c078E34b',
+    version: '1.0.0',
     tokens: { pooled: [1, 0], lp: 4 },
     feeBips: 20,
     precisions: { price: 6, amount: 5 },
-    createdAt: "1617967800000",
+    createdAt: '1617967800000',
     status: 31,
   },
-  "AMM-ETH-USDT": {
-    name: "AMM-ETH-USDT",
-    market: "AMM-ETH-USDT",
-    address: "0x049a02FA9bc6bd54a2937E67D174cc69a9194f8e",
-    version: "1.0.0",
+  'AMM-ETH-USDT': {
+    name: 'AMM-ETH-USDT',
+    market: 'AMM-ETH-USDT',
+    address: '0x049a02FA9bc6bd54a2937E67D174cc69a9194f8e',
+    version: '1.0.0',
     tokens: { pooled: [0, 2], lp: 7 },
     feeBips: 20,
     precisions: { price: 3, amount: 3 },
-    createdAt: "1617972300000",
+    createdAt: '1617972300000',
     status: 31,
   },
-  "AMM-USDC-ETH": {
-    name: "AMM-USDC-ETH",
-    market: "AMM-USDC-ETH",
-    address: "0xf37cf4CEd77b985708D591AcC6BfD08586Ab3409",
-    version: "1.0.0",
+  'AMM-USDC-ETH': {
+    name: 'AMM-USDC-ETH',
+    market: 'AMM-USDC-ETH',
+    address: '0xf37cf4CEd77b985708D591AcC6BfD08586Ab3409',
+    version: '1.0.0',
     tokens: {
       pooled: [8, 0],
       lp: 9,
@@ -444,29 +443,29 @@ export let AMM_MAP = {
       price: 3,
       amount: 4,
     },
-    createdAt: "1636974420000",
+    createdAt: '1636974420000',
     status: 0,
   },
-};
+}
 
 export const testTypedData = {
   types: {
     EIP712Domain: [
-      { name: "name", type: "string" },
-      { name: "version", type: "string" },
-      { name: "chainId", type: "uint256" },
-      { name: "verifyingContract", type: "address" },
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
+      { name: 'chainId', type: 'uint256' },
+      { name: 'verifyingContract', type: 'address' },
     ],
     TestTypedData: [
-      { name: "from", type: "address" },
-      { name: "to", type: "address" },
-      { name: "tokenID", type: "uint16" },
+      { name: 'from', type: 'address' },
+      { name: 'to', type: 'address' },
+      { name: 'tokenID', type: 'uint16' },
     ],
   },
-  primaryType: "TestTypedData",
+  primaryType: 'TestTypedData',
   domain: {
-    name: "Loopring Protocol",
-    version: "3.6.0",
+    name: 'Loopring Protocol',
+    version: '3.6.0',
     chainId: sdk.ChainId.GOERLI,
     verifyingContract: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
   },
@@ -475,12 +474,9 @@ export const testTypedData = {
     to: LOOPRING_EXPORTED_ACCOUNT.address2,
     tokenID: TOKEN_INFO.tokenMap.LRC.tokenId,
   },
-};
+}
 
-export async function signatureKeyPairMock(
-  accInfo: sdk.AccountInfo,
-  _web3: Web3 = web3
-) {
+export async function signatureKeyPairMock(accInfo: sdk.AccountInfo, _web3: Web3 = web3) {
   //
   const eddsaKey = await sdk.generateKeyPair({
     web3: _web3,
@@ -488,11 +484,11 @@ export async function signatureKeyPairMock(
     keySeed:
       accInfo.keySeed ??
       sdk.GlobalAPI.KEY_MESSAGE.replace(
-        "${exchangeAddress}",
-        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress
-      ).replace("${nonce}", (accInfo.nonce - 1).toString()),
+        '${exchangeAddress}',
+        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+      ).replace('${nonce}', (accInfo.nonce - 1).toString()),
     walletType: sdk.ConnectorNames.MetaMask,
     chainId: sdk.ChainId.GOERLI,
-  });
-  return eddsaKey;
+  })
+  return eddsaKey
 }
