@@ -480,8 +480,9 @@ export const testTypedData = {
 
 export async function signatureKeyPairMock(accInfo: sdk.AccountInfo, _web3: Web3 = web3) {
   //@ts-ignore
-  global.ethereum = providers?.EtherscanProvider//@ts-ignore
-  global.window = {...global}
+  global.ethereum = providers?.EtherscanProvider
+  //@ts-ignore
+  global.window = { ...global }
   const eddsaKey = await sdk.generateKeyPair({
     web3: _web3,
     address: accInfo.owner,
