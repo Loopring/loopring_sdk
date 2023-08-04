@@ -8,6 +8,7 @@ import {
 } from '../../MockData'
 import * as sdk from '../../../index'
 import {
+  AccountInfo,
   getEdDSASig,
   getNftData,
   NFTOrderRequestV3,
@@ -18,8 +19,39 @@ import {
 import { myLog } from '../../../utils/log_tools'
 const { performance } = require('perf_hooks')
 // import { genSigWithPadding } from '../../../api/sign/sign_tools'
-
+let mockData:
+  | {
+      accInfo: AccountInfo
+      apiKey: string
+      eddsaKey: any
+    }
+  | undefined = undefined
 describe('signature', function () {
+  beforeEach(async () => {
+    // Step 1. getAccount
+    const accInfo = (
+      await LoopringAPI.exchangeAPI.getAccount({
+        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+      })
+    ).accInfo
+    const eddsaKey = await signatureKeyPairMock(accInfo)
+
+    // Step 3. apiKey
+    const apiKey = (
+      await LoopringAPI.userAPI.getUserApiKey(
+        {
+          accountId: accInfo.accountId,
+        },
+        eddsaKey.sk,
+      )
+    ).apiKey
+
+    mockData = {
+      apiKey,
+      accInfo,
+      eddsaKey,
+    }
+  }, DEFAULT_TIMEOUT * 3)
   it(
     'generateKeyPair',
     async () => {
@@ -74,7 +106,7 @@ describe('signature', function () {
 
   it('genSigWithPadding', async () => {
     // const sign = genSigWithPadding(
-    //   LOOPRING_EXPORTED_ACCOUNT.privateKey,
+    //   LOOPRING_EXPORTED_ACCOUNT.eddsaKey.sk,
     //   '4802789675835142786409394599364863978702692874349325354528260268536567293213',
     // )
     // console.log(sign)
@@ -87,7 +119,7 @@ describe('signature', function () {
       {
         accountId: '10010',
       },
-      LOOPRING_EXPORTED_ACCOUNT.privateKey,
+      mockData.eddsaKey.sk,
     )
     console.log(sign)
   })
@@ -101,7 +133,7 @@ describe('signature', function () {
         {
           accountId: '10010',
         },
-        LOOPRING_EXPORTED_ACCOUNT.privateKey,
+        mockData.eddsaKey.sk,
       )
       console.log(sign)
     }
