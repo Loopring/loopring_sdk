@@ -16,7 +16,8 @@ import {
   SubmitOrderRequestV3,
 } from '../../../index'
 import { myLog } from '../../../utils/log_tools'
-import { genSigWithPadding } from '../../../api/sign/sign_tools'
+const { performance } = require('perf_hooks')
+// import { genSigWithPadding } from '../../../api/sign/sign_tools'
 
 describe('signature', function () {
   it(
@@ -89,6 +90,22 @@ describe('signature', function () {
       LOOPRING_EXPORTED_ACCOUNT.privateKey,
     )
     console.log(sign)
+  })
+  it('getEdDSASig_100', async () => {
+    performance.now()
+    for (let i = 100; i > 0; i--) {
+      const sign = await sdk.getEdDSASig(
+        'GET',
+        'https://uat2.loopring.io',
+        '/api/v3/apiKey/',
+        {
+          accountId: '10010',
+        },
+        LOOPRING_EXPORTED_ACCOUNT.privateKey,
+      )
+      console.log(sign)
+    }
+    performance.now()
   })
   /**
    * test case is not allow brock by Mock provider
