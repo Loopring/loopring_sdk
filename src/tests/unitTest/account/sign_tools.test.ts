@@ -8,6 +8,7 @@ import {
 } from '../../MockData'
 import * as sdk from '../../../index'
 import {
+  getEdDSASig,
   getNftData,
   NFTOrderRequestV3,
   NFTTradeRequestV3,
@@ -15,6 +16,7 @@ import {
   SubmitOrderRequestV3,
 } from '../../../index'
 import { myLog } from '../../../utils/log_tools'
+import { genSigWithPadding } from '../../../api/sign/sign_tools'
 
 describe('signature', function () {
   it(
@@ -67,6 +69,26 @@ describe('signature', function () {
       sdk.ConnectorNames.Unknown,
     )
     console.log('getEcDSASig:WithoutDataStruct(personalSign)', result)
+  })
+
+  it('genSigWithPadding', async () => {
+    // const sign = genSigWithPadding(
+    //   LOOPRING_EXPORTED_ACCOUNT.privateKey,
+    //   '4802789675835142786409394599364863978702692874349325354528260268536567293213',
+    // )
+    // console.log(sign)
+  })
+  it('getEdDSASig', async () => {
+    const sign = await sdk.getEdDSASig(
+      'GET',
+      'https://uat2.loopring.io',
+      '/api/v3/apiKey/',
+      {
+        accountId: '10010',
+      },
+      LOOPRING_EXPORTED_ACCOUNT.privateKey,
+    )
+    console.log(sign)
   })
   /**
    * test case is not allow brock by Mock provider
