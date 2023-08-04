@@ -17,8 +17,8 @@ import {
   SubmitOrderRequestV3,
 } from '../../../index'
 import { myLog } from '../../../utils/log_tools'
-const { performance } = require('perf_hooks')
-// import { genSigWithPadding } from '../../../api/sign/sign_tools'
+import { performance } from 'perf_hooks'
+
 let mockData:
   | {
       accInfo: AccountInfo
@@ -112,20 +112,7 @@ describe('signature', function () {
     // console.log(sign)
   })
   it('getEdDSASig', async () => {
-    const sign = await sdk.getEdDSASig(
-      'GET',
-      'https://uat2.loopring.io',
-      '/api/v3/apiKey/',
-      {
-        accountId: '10010',
-      },
-      mockData.eddsaKey.sk,
-    )
-    console.log(sign)
-  })
-  it('getEdDSASig_100', async () => {
-    performance.now()
-    for (let i = 100; i > 0; i--) {
+    if (mockData) {
       const sign = await sdk.getEdDSASig(
         'GET',
         'https://uat2.loopring.io',
@@ -137,7 +124,24 @@ describe('signature', function () {
       )
       console.log(sign)
     }
-    performance.now()
+  })
+  it('getEdDSASig_100', async () => {
+    if (mockData) {
+      performance.now()
+      for (let i = 100; i > 0; i--) {
+        const sign = await sdk.getEdDSASig(
+          'GET',
+          'https://uat2.loopring.io',
+          '/api/v3/apiKey/',
+          {
+            accountId: '10010',
+          },
+          mockData.eddsaKey.sk,
+        )
+        console.log(sign)
+      }
+      performance.now()
+    }
   })
   /**
    * test case is not allow brock by Mock provider
