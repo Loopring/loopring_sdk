@@ -495,7 +495,7 @@ export class DefiAPI extends BaseAPI {
     req: loopring_defs.OriginStakeClaimRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
   ) {
-    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { request, web3, chainId, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const { transfer } = request
 
@@ -513,8 +513,10 @@ export class DefiAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo

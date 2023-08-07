@@ -1652,8 +1652,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey).result
 
@@ -1699,8 +1701,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1752,8 +1756,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
@@ -1817,8 +1823,11 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
+
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
@@ -1874,8 +1883,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1921,8 +1932,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -1957,8 +1970,8 @@ export class UserAPI extends BaseAPI {
       _noEcdsa?: boolean
     },
   ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
-    const { request, chainId, eddsaKey, apiKey } = req
-    const { counterFactualInfo }: any = options ? options : { accountId: 0 }
+    const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
+    const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     if (request.counterFactualNftInfo === undefined) {
       request.counterFactualNftInfo = {
         nftFactory: NFTFactory[chainId],
@@ -1968,6 +1981,22 @@ export class UserAPI extends BaseAPI {
     }
 
     request.royaltyPercentage = request.royaltyPercentage ? request.royaltyPercentage : 0
+    const isHWAddr = !!isHWAddrOld
+    let ecdsaSignature = undefined
+
+    // try {
+    //   ecdsaSignature = await sign_tools.mintNFTWrap({
+    //     mint: request,
+    //     chainId,
+    //     web3,
+    //     isHWAddr,
+    //     accountId,
+    //     counterFactualInfo,
+    //   })
+    //   // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    // } catch (error) {
+    //   throw error
+    // }
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey).result
     if (counterFactualInfo) {
@@ -2217,8 +2246,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
@@ -2277,7 +2308,7 @@ export class UserAPI extends BaseAPI {
           counterFactualInfo,
         )
       )?.ecdsaSig
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
       console.log('EcDSASig error try sign WithoutDataStruct')
       throw error
@@ -2573,8 +2604,10 @@ export class UserAPI extends BaseAPI {
         accountId,
         counterFactualInfo,
       })
-      ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    } catch (error) {}
+      // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
+    } catch (error) {
+      throw error
+    }
 
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
