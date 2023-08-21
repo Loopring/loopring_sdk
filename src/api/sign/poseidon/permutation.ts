@@ -18,7 +18,7 @@ import { modulo } from './field'
 
 import { TextEncoder } from 'web-encoding'
 
-import * as blake2b from 'blake2b'
+import blake2b from 'blake2b'
 
 export class PoseidonParams {
   public p: BigNumber
@@ -76,7 +76,8 @@ export class permunation {
     const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)
     // console.log(`message ${message}`)
-    blake2b(buf.length, null).update(message).final(buf)
+    // @ts-ignore
+    blake2b(buf.length, undefined).update(message).final(buf)
     const items = buf.toJSON().data
     // console.log(`H items ${items}`)
 
@@ -99,7 +100,8 @@ export class permunation {
 
     const buf = Buffer.alloc(outputLength)
     // console.log(`hashOfSize32Bytes ${buf.toString()}`)
-    blake2b(buf.length, null).update(message).final(buf)
+    // @ts-ignore
+    blake2b(buf.length, undefined).update(message).final(buf)
     const items = buf.toJSON().data
     // console.log(`H_Bigint items ${items}`)
 

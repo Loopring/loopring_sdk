@@ -2287,6 +2287,11 @@
   dependencies:
     bignumber.js "*"
 
+"@types/blake2b@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/blake2b/-/blake2b-2.1.0.tgz#d906320255d84f9c05fc6f3a28db81c952ee989b"
+  integrity sha512-Mv8N0qtdb72iW1XJR/4Yp01frtibnv8BpFUZDROnzd7hVEX4cEN/xHgU2ZfsnOnTDt+fHJVc0uRIWcNz6uIB2A==
+
 "@types/bluebird@*":
   version "3.5.36"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.36.tgz#00d9301d4dc35c2f6465a8aec634bb533674c652"

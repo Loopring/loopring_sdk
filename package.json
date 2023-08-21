@@ -102,6 +102,7 @@
     "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/bignumber.js": "^5.0.0",
+    "@types/blake2b": "^2.1.0",
     "@types/classnames": "^2.2.11",
     "@types/collections": "^5.1.2",
     "@types/crypto-js": "^4.0.1",
