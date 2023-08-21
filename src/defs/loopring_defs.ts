@@ -4159,6 +4159,7 @@ export interface CreateContactRequest {
   contactAddress: string;
   contactName: string;
   contactMemo?: string;
+  network?: string;
 }
 
 export interface UpdateContactRequest {
