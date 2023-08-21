@@ -1,4 +1,6 @@
-import sha256 from 'crypto-js/sha256'
+// import sha256 from 'crypto-js/sha256'
+import crypto from 'crypto-js'
+
 import * as abi from 'ethereumjs-abi'
 import * as sigUtil from 'eth-sig-util'
 
@@ -275,7 +277,7 @@ export function getEdDSASig(
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
   myLog('getEdDSASig', message)
-  let _hash: any = new BigInteger(sha256(message).toString(), 16)
+  let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
@@ -315,7 +317,7 @@ export function creatEdDSASigHasH({
   // LOG: for signature
   myLog('getEdDSASig', message)
 
-  let _hash: any = new BigInteger(sha256(message).toString(), 16)
+  let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature

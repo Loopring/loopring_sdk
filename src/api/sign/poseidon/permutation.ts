@@ -12,27 +12,36 @@
   - https://github.com/dusk-network/poseidon252
  */
 
-import { BigNumber } from "ethers";
-import { SignatureScheme } from "./eddsa";
-import { modulo } from './field';
+import { BigNumber } from 'ethers'
+import { SignatureScheme } from './eddsa'
+import { modulo } from './field'
 
-import { TextEncoder } from "web-encoding";
+import { TextEncoder } from 'web-encoding'
 
-// @ts-ignore
-var blake2b = require('blake2b')
+import blake2b from 'blake2b'
 
 export class PoseidonParams {
-  public p: BigNumber;
-  public t: number;
-  public nRoundsF: number;
-  public nRoundsP: number;
-  public seed: string;
-  public e: BigNumber;
+  public p: BigNumber
+  public t: number
+  public nRoundsF: number
+  public nRoundsP: number
+  public seed: string
+  public e: BigNumber
   public constants_C: [BigNumber]
   public constants_M: [[BigNumber]]
   public security_target: number
 
-  constructor(p: BigNumber, t: number, nRoundsF: number, nRoundsP: number, seed: string, e: BigNumber, constants_C: [BigNumber] | null, constants_M: [[BigNumber]] | null, security_target: number) {
+  constructor(
+    p: BigNumber,
+    t: number,
+    nRoundsF: number,
+    nRoundsP: number,
+    seed: string,
+    e: BigNumber,
+    constants_C: [BigNumber] | null,
+    constants_M: [[BigNumber]] | null,
+    security_target: number,
+  ) {
     this.p = p
     this.t = t
     this.nRoundsF = nRoundsF
@@ -54,30 +63,29 @@ export class PoseidonParams {
 
     this.security_target = security_target
   }
-
 }
 
 export class permunation {
-
   static H(arg: string) {
     const outputLength = 32
 
-    const enc = new TextEncoder();    
+    const enc = new TextEncoder()
     const message = enc.encode(arg)
     // console.log(`message ${message}`)
 
     const buf = Buffer.alloc(outputLength)
-    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
-    // console.log(`message ${message}`)    
-    blake2b(buf.length, null).update(message).final(buf)
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)
+    // console.log(`message ${message}`)
+    // @ts-ignore
+    blake2b(buf.length, undefined).update(message).final(buf)
     const items = buf.toJSON().data
     // console.log(`H items ${items}`)
 
-    let sum = BigNumber.from("0")
+    let sum = BigNumber.from('0')
     var i = 0
     for (var i = 0; i < items.length; i++) {
       const itemBigInt = BigNumber.from(items[i])
-      const tmp = itemBigInt.mul((BigNumber.from("256").pow(BigNumber.from(i))))
+      const tmp = itemBigInt.mul(BigNumber.from('256').pow(BigNumber.from(i)))
       sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
@@ -91,22 +99,22 @@ export class permunation {
     // console.log(`message ${message}`)
 
     const buf = Buffer.alloc(outputLength)
-    // console.log(`hashOfSize32Bytes ${buf.toString()}`)    
-    blake2b(buf.length, null).update(message).final(buf)
+    // console.log(`hashOfSize32Bytes ${buf.toString()}`)
+    // @ts-ignore
+    blake2b(buf.length, undefined).update(message).final(buf)
     const items = buf.toJSON().data
     // console.log(`H_Bigint items ${items}`)
 
-    let sum = BigNumber.from("0")
+    let sum = BigNumber.from('0')
     var i = 0
     for (var i = 0; i < items.length; i++) {
       const itemBigInt = BigNumber.from(items[i])
-      const tmp = itemBigInt.mul((BigNumber.from("256").pow(BigNumber.from(i))))
+      const tmp = itemBigInt.mul(BigNumber.from('256').pow(BigNumber.from(i)))
       sum = sum.add(tmp)
     }
     // console.log(`sum ${sum}`)
     return sum
   }
-
 
   static poseidon_constants(p: BigNumber, seed: string, n: number) {
     let c: any
@@ -114,7 +122,7 @@ export class permunation {
     let seedBigInt = this.H(seed)
     const result = seedBigInt.mod(p)
     c.push(result)
-    for (let i = 0; i < n-1; i++) {
+    for (let i = 0; i < n - 1; i++) {
       seedBigInt = this.H_Bigint(seedBigInt)
       const result = seedBigInt.mod(p)
       c.push(result)
@@ -123,7 +131,7 @@ export class permunation {
   }
 
   static poseidon_matrix(p: BigNumber, seed: string, t: number) {
-    const c = this.poseidon_constants(p, seed, t*2)
+    const c = this.poseidon_constants(p, seed, t * 2)
     let matrix: any
     matrix = []
     for (let i = 0; i < t; i++) {
@@ -131,7 +139,7 @@ export class permunation {
       row = []
       for (let j = 0; j < t; j++) {
         const c_i = c[i]
-        const c_t_j = c[t+j]
+        const c_t_j = c[t + j]
         const p_c = p
         const c_t_j_p = c_t_j.mod(p_c)
         const left = c_i.sub(c_t_j_p)
@@ -155,7 +163,7 @@ export class permunation {
     */
     const half_F = params.nRoundsF / 2
 
-    if (i < half_F || i >= (half_F + params.nRoundsP)) {
+    if (i < half_F || i >= half_F + params.nRoundsP) {
       for (let j = 0; j < state.length; j++) {
         const element_c = state[j]
         const e_c = params.e
@@ -184,13 +192,12 @@ export class permunation {
       let sum = BigNumber.from(0)
       for (let j = 0; j < state.length; j++) {
         const element = state[j]
-        sum = sum.add((M[i][j].mul(element)))
+        sum = sum.add(M[i][j].mul(element))
       }
       newState.push(sum.mod(p))
     }
     return newState
   }
-
 
   // poseidon
   /*
@@ -248,5 +255,4 @@ export class permunation {
     // console.log(`hash is ${state[0]}`)
     return state[0]
   }
-
 }

@@ -13,8 +13,8 @@ import {
 import Web3 from 'web3'
 import * as sdk from '../index'
 import { providers } from 'ethers'
+import * as PrivateKeyProvider from 'truffle-privatekey-provider'
 
-const PrivateKeyProvider = require('truffle-privatekey-provider')
 /***
  * LoopringAPIClass
  */

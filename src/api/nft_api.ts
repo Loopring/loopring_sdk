@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BaseAPI } from './base_api'
+import CID from 'cids'
 import { CollectionMeta, LOOPRING_URLs, RESULT_INFO } from '../defs'
 import {
   ChainId,
@@ -318,7 +319,6 @@ export class NFTAPI extends BaseAPI {
   }
   public ipfsCid0ToNftID(cidV0Str: string): string {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const CID = require('cids')
     const cid = new CID(cidV0Str)
     const hashHex = Buffer.from(cid.multihash.slice(2)).toString('hex')
     const hashBN = new BN(hashHex, 16)
@@ -330,7 +330,6 @@ export class NFTAPI extends BaseAPI {
    * @param nftId  16
    */
   public ipfsNftIDToCid(nftId: string) {
-    const CID = require('cids')
     const hashBN = new BN(nftId.replace('0x', ''), 16)
     const hex = hashBN.toString(16, 64)
     const buf = Buffer.from('1220' + hex, 'hex')
