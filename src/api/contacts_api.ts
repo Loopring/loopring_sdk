@@ -12,10 +12,11 @@ import {
   SIG_FLAG,
   UpdateContactRequest,
 } from "../defs";
+import * as loopring_defs from "../defs/loopring_defs";
 
 export class ContactAPI extends BaseAPI {
 
-  public async getContacts(
+  public async getContacts<R = GetContactsResponse>(
     request: GetContactsRequest,
     apiKey: string,
     // url: string = LOOPRING_URLs.GET_CONTACTS
@@ -29,8 +30,17 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    console.log(raw_data)
-    return raw_data as GetContactsResponse
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    } as {
+      raw_data:R,
+    }&R
   }
 
   public async createContact(
@@ -46,7 +56,15 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data   
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    }
   }
 
   public async updateContact(
@@ -62,7 +80,15 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data  
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    }
   }
   public async deleteContact(
     request: DeleteContactRequest,
@@ -78,7 +104,15 @@ export class ContactAPI extends BaseAPI {
     };
 
     const raw_data = (await this.makeReq().request(reqParams)).data;
-    return raw_data 
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    }
   }
 
 }
