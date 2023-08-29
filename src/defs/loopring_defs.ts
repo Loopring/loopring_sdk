@@ -1,4 +1,4 @@
-import { ChainId, ConnectorNames } from "./web3_defs";
+import {ChainId, ConnectorNames} from "./web3_defs";
 
 import Web3 from "web3";
 
@@ -29,10 +29,10 @@ import {
   UserTxTypes,
   WithdrawalTypes,
 } from "./loopring_enums";
-import { RESULT_INFO } from "./error_codes";
-import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from "./loopring_constants";
-import { CounterFactualInfo, NFTCounterFactualInfo } from "./account_defs";
-import { NFTType } from "../api";
+import {RESULT_INFO} from "./error_codes";
+import {HEBAO_LOCK_STATUS, HEBAO_META_TYPE} from "./loopring_constants";
+import {CounterFactualInfo, NFTCounterFactualInfo} from "./account_defs";
+import {NFTType} from "../api";
 
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = T | U extends { [key: string]: any }
@@ -761,11 +761,11 @@ export interface GetCandlestickRequest {
 
 export type GetAccountRequest =
   | {
-      owner: string;
-    }
+  owner: string;
+}
   | {
-      accountId: number;
-    };
+  accountId: number;
+};
 
 export interface GetCounterFactualInfoRequest {
   accountId: number;
@@ -789,35 +789,35 @@ export interface UpdateUserApiKeyRequest {
 
 export type GetOffchainFeeAmtRequest =
   | ({
-      accountId: number;
-      amount?: string;
-    } & {
-      requestType: Omit<
-        OffchainFeeReqType,
-        | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
-        | OffchainFeeReqType.AMM_JOIN
-        | OffchainFeeReqType.AMM_EXIT
-        | OffchainFeeReqType.ORDER
-        | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
-      >;
-    })
+  accountId: number;
+  amount?: string;
+} & {
+  requestType: Omit<
+    OffchainFeeReqType,
+    | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
+    | OffchainFeeReqType.AMM_JOIN
+    | OffchainFeeReqType.AMM_EXIT
+    | OffchainFeeReqType.ORDER
+    | OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL
+  >;
+})
   | {
-      requestType:
-        | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
-        | OffchainFeeReqType.AMM_JOIN
-        | OffchainFeeReqType.AMM_EXIT
-        | OffchainFeeReqType.ORDER;
-      tokenSymbol: string;
-    }
+  requestType:
+    | OffchainFeeReqType.OFFCHAIN_WITHDRAWAL
+    | OffchainFeeReqType.AMM_JOIN
+    | OffchainFeeReqType.AMM_EXIT
+    | OffchainFeeReqType.ORDER;
+  tokenSymbol: string;
+}
   | {
-      requestType: OffchainFeeReqType.DEFI_EXIT | OffchainFeeReqType.DEFI_JOIN;
-      market: string;
-    }
+  requestType: OffchainFeeReqType.DEFI_EXIT | OffchainFeeReqType.DEFI_JOIN;
+  market: string;
+}
   | {
-      requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL;
-      tokenSymbol: string;
-      amount: string;
-    }
+  requestType: OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL;
+  tokenSymbol: string;
+  amount: string;
+}
   | { requestType: OffchainFeeReqType.EXTRA_TYPES; extraType: any };
 
 /**
@@ -840,14 +840,14 @@ export type GetNFTOffchainFeeAmtRequest = {
     >;
   },
   | {
-      requestType: OffchainNFTFeeReqType.NFT_MINT;
-      tokenAddress: string;
-    }
+  requestType: OffchainNFTFeeReqType.NFT_MINT;
+  tokenAddress: string;
+}
   | {
-      requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL;
-      tokenAddress: string;
-      deployInWithdraw?: boolean;
-    }
+  requestType: OffchainNFTFeeReqType.NFT_WITHDRAWAL;
+  tokenAddress: string;
+  deployInWithdraw?: boolean;
+}
   | { requestType: OffchainNFTFeeReqType.EXTRA_TYPES; extraType: any }
 >;
 
@@ -2263,7 +2263,7 @@ export interface NFTMintRequestV3 {
  * @export
  * @interface NFTOrderRequestV3
  */
-export type NFTOrderRequestV3 = {
+export type NFTOrderRequestV3<R = 'Taker'|'Maker'> = {
   /**
    * exchange address
    * @type {string}
@@ -2346,6 +2346,7 @@ export type NFTOrderRequestV3 = {
 } & XOR<
   {
     /**
+     * maker order
      * sell token info
      * @type {NFTTokenAmountInfo}
      * @memberof NFTOrderRequestV3
@@ -2360,12 +2361,14 @@ export type NFTOrderRequestV3 = {
   },
   {
     /**
+     * taker order
      * sell token info
      * @type {TokenVolumeV5}
      * @memberof NFTOrderRequestV3
      */
     sellToken: TokenVolumeV5;
     /**
+     * maker Order
      * buy token info
      * @type {NFTTokenAmountInfo}
      * @memberof NFTOrderRequestV3
@@ -3918,18 +3921,18 @@ export type LuckyTokenItemForSendV3 = {
   validUntil: number;
 } & (
   | {
-      luckyToken: OriginTransfer3RequestV3;
-      /**
-       * nftData
-       * @type {string}  NFT required
-       * @memberof LuckyTokenItemForSend
-       */
-      nftData: string;
-    }
+  luckyToken: OriginTransfer3RequestV3;
+  /**
+   * nftData
+   * @type {string}  NFT required
+   * @memberof LuckyTokenItemForSend
+   */
+  nftData: string;
+}
   | {
-      luckyToken: OriginTransfer3RequestV3;
-    }
-);
+  luckyToken: OriginTransfer3RequestV3;
+}
+  );
 
 export interface OriginLuckTokenSendRequestV3WithPatch {
   request: LuckyTokenItemForSendV3;
@@ -4114,33 +4117,32 @@ export interface GetContactsRequest {
   offset?: number;
 }
 
-export const AddressType  = {
-  UNKNOWN_ADDRESS : 0,
-  LOOPRING_HEBAO_CF : 100,
+export const AddressType = {
+  UNKNOWN_ADDRESS: 0,
+  LOOPRING_HEBAO_CF: 100,
   // hebao
-  LOOPRING_HEBAO_CONTRACT_1_1_6 : 2000,
-  LOOPRING_HEBAO_CONTRACT_1_2_0 : 2001,
-  LOOPRING_HEBAO_CONTRACT_2_0_0 : 2002,
-  LOOPRING_HEBAO_CONTRACT_2_1_0 : 2003,
-  LOOPRING_HEBAO_CONTRACT_2_2_0 : 2004,
-  LOOPRING_DEX_EOA : 300,
+  LOOPRING_HEBAO_CONTRACT_1_1_6: 2000,
+  LOOPRING_HEBAO_CONTRACT_1_2_0: 2001,
+  LOOPRING_HEBAO_CONTRACT_2_0_0: 2002,
+  LOOPRING_HEBAO_CONTRACT_2_1_0: 2003,
+  LOOPRING_HEBAO_CONTRACT_2_2_0: 2004,
+  LOOPRING_DEX_EOA: 300,
   //exchange
-  EXCHANGE_OTHER : 4000,
-  EXCHANGE_BINANCE : 4001,
-  EXCHANGE_OKX : 4002,
-  EXCHANGE_HUOBI : 4003,
-  EXCHANGE_COINBASE : 4004,
+  EXCHANGE_OTHER: 4000,
+  EXCHANGE_BINANCE: 4001,
+  EXCHANGE_OKX: 4002,
+  EXCHANGE_HUOBI: 4003,
+  EXCHANGE_COINBASE: 4004,
 
-  EOA : 5000,
-  EOA_METAMASK : 5001,
-  EOA_COINBASE : 5002,
-  EOA_LEDGER : 5003,
+  EOA: 5000,
+  EOA_METAMASK: 5001,
+  EOA_COINBASE: 5002,
+  EOA_LEDGER: 5003,
 
-  CONTRACT : 600,
-  OFFICIAL : 200,
+  CONTRACT: 600,
+  OFFICIAL: 200,
 }
 export type AddressTypeKeys = keyof typeof AddressType
-
 
 export interface GetContactsResponse {
   contacts: {
@@ -4285,10 +4287,10 @@ export type BtradeResult = {
   amountS: string | undefined;
   amountBSlipped:
     | {
-        minReceived: string;
-        minReceivedVal: string;
-        minimumDecimal: number;
-      }
+    minReceived: string;
+    minReceivedVal: string;
+    minimumDecimal: number;
+  }
     | undefined;
   // amountBMiniReceiveCutFee: string | undefined;
 
@@ -4346,3 +4348,156 @@ export type ClaimItem = {
     claimType: CLAIM_TYPE;
   }>;
 };
+export const VTokenPrefix = "VAULT"
+export const VMarketPrefix = "VAULT-"
+
+export type VaultToken = {
+  type: "Vault",
+  interestRate: string
+  /**
+   VaultToken Token ID
+   * @type number
+   * @memberof VaultToken
+   */
+  vaultTokenId: null
+  /**
+   *  ERC20 Token ID
+   * @type number
+   * @memberof VaultToken
+   */
+  tokenId: number,
+  symbol: string,
+  name: string,
+  address: string,
+  decimals: number,
+  precision: number,
+  precisionForOrder: number,
+  orderAmounts: {
+    minimum: string,
+    maximum: string,
+    dust: string
+  },
+  luckyTokenAmounts: any
+  fastWithdrawLimit: any
+  gasAmounts: any,
+  enabled: boolean,
+  btradeAmount: "",    // important for vault
+  vaultTokenAmounts: {   // important for vault
+    minAmount: string,
+    qtyStepScale: number,
+    // bit1:show
+    // bit2:join
+    // bit3:exit
+    // bit4:loan
+    // bit5:repay
+    status: 7
+  },
+}
+
+export type VaultMarket = {
+  market: string
+  baseTokenId: number
+  quoteTokenId: number
+  precisionForPrice: number
+  orderbookAggLevels: number
+  precisionForAmount: number
+  precisionForTotal: number
+  enabled: true,
+  accountId: number
+  address: string
+  feeBips: number,
+  minAmount: {
+    base: string
+    quote: string
+  },
+  btradeAmount: {
+    base: string
+    quote: string
+  },
+  l2Amount: {
+    base: string
+    quote: string
+  },
+  // cefiMarket: LRCUSDT,
+  riskThreshold: number
+  interestThreshold: number
+  priceTolerance: number
+  qtyStepScale: number
+}
+
+export type VaultAvaiableNFT = {
+  nftTokenInfo: NFTTokenInfo,
+  accountId: null,
+  tokenId: null,
+  nftData: string
+  broker: string
+  brokerId: null
+}
+
+export type VaultBalance = {
+  accountId: null,
+  tokenId: null,
+  symbol: string,
+  total: string,
+  borrowed: string,
+  netAsset:string,
+  interest: string,
+}
+export type CollateralInfo = {
+  nftHash:string
+  orderHash:string
+  collateralTokenId:number
+  collateralTokenAmount:string
+  openDate:number
+}
+
+export type VaultAccountInfo ={
+  marginLevel:string
+  totalBalanceOfUsd:string
+  totalDebtOfUsd:string
+  totalEquityOfUsd:string
+  collateralInfo:CollateralInfo
+  userAssets:VaultBalance[]
+}
+
+export type Operation ={
+  hash: string,
+  operateType: string,
+  operateSubType:string,
+  Status: string,
+  tokenIn: number,
+  amountIn:string,
+  tokenOut: number,
+  amountOut: string,
+  totalBalance: string,
+  Collateral: string,
+  totalDebt: string,
+  totalEquity:string,
+  createdAt: number,
+  updatedAt: number
+}
+export type  Order = {
+  hash: string
+  clientOrderId:string
+  status: string
+  tokenS: 1,
+  amountS: string
+  fillAmountS: string
+  tokenB: number,
+  amountB: string
+  fillAmountB: string
+  price:string
+  fee: string
+  createdAt: number,
+  updatedAt: number
+}
+//Taker order
+export type  VaultJoinRequest = NFTOrderRequestV3 &{joinHash:string}
+//Maker order
+export type VaultExitRequest = {
+  accountId: number,
+  joinHash: string,
+  timestamp: number
+}
+
+export type  VaultOrderRequest = OriginBTRADEV3OrderRequest
