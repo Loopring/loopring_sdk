@@ -469,6 +469,7 @@ export async function getEcDSASig(
               if (error || result?.error) {
                 // return error || result.error;
                 reject(error || result?.error)
+                return
               }
               myLog('eth_signTypedData_v4', result)
               let _result
@@ -478,7 +479,7 @@ export async function getEcDSASig(
               } else {
                 _result = result?.result
               }
-              resolve(_result.slice(0, 132))
+              resolve(_result?.slice(0, 132))
             },
           )
         })
@@ -743,7 +744,7 @@ export async function offchainWithdrawWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
@@ -907,7 +908,7 @@ export async function signHebaoApproveWrap(
       return result.ecdsaSig
     }
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
