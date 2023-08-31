@@ -3680,6 +3680,7 @@ export enum LuckyTokenAmountType {
 export enum LuckyTokenViewType {
   PUBLIC = 0,
   PRIVATE = 1,
+  TARGET = 2,
 }
 
 export enum LuckyTokenClaimType {
