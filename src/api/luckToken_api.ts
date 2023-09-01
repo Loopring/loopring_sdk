@@ -736,4 +736,79 @@ export class LuckTokenAPI extends BaseAPI {
       count: raw_data?.count,
     }
   }
+
+  public async getLuckTokenUserLuckyTokenTargets<R>(
+    request: {
+      statuses?: number[],
+      fromId?: number,
+      limit?: number,
+      offset?: number,
+      isAll?: number, // 0-all, 1-unexpired
+    },
+    apiKey: string,
+  ): Promise<{
+    raw_data: R
+    totalNum: number,
+    list: loopring_defs.LuckyTokenItemForReceive[]
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_LUCK_TOKEN_LUCKYTOKENTARGETS,
+      queryParams: {
+        ...request,
+        statuses: request.statuses 
+          ? request.statuses.join(',') 
+          : undefined
+      },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      raw_data,
+      totalNum: raw_data?.totalNum as number,
+      list: raw_data?.list as loopring_defs.LuckyTokenItemForReceive[]
+    }
+  }
+  public async sendLuckTokenSubmitAddTarget<R>(
+    request: {
+      claimer: string[],
+      hash: string,
+      notifyType: number, // 0-red dot, 1-pop
+    },
+    eddsaSignKey: string,
+    apiKey: string,
+  ): Promise<{
+    raw_data: R
+  }> {
+    const dataToSig: Map<string, any> = sortObjDictionary(request)
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.POST_LUCK_TOKEN_SUBMITADDTARGET,
+      bodyParams: request,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaSignKey,
+      },
+    }
+    
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      raw_data,
+    }
+  }
 }

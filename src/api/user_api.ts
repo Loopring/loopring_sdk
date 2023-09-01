@@ -2310,7 +2310,7 @@ export class UserAPI extends BaseAPI {
       )?.ecdsaSig
       // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
     } catch (error) {
-      console.log('EcDSASig error try sign WithoutDataStruct')
+      // console.log('EcDSASig error try sign WithoutDataStruct')
       throw error
     }
 

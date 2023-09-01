@@ -469,6 +469,7 @@ export async function getEcDSASig(
               if (error || result?.error) {
                 // return error || result.error;
                 reject(error || result?.error)
+                return
               }
               myLog('eth_signTypedData_v4', result)
               let _result
@@ -483,8 +484,8 @@ export async function getEcDSASig(
           )
         })
       } catch (error) {
-        myLog('eth_signTypedData_v4 error', error)
-        throw error?.message ?? error //new Error(response["error"]["message"]);
+        console.log('eth_signTypedData_v4 error', error)
+        throw error
       }
       return {
         ecdsaSig: response,
@@ -514,7 +515,13 @@ export async function getEcDSASig(
           counterFactualInfo: signature.counterFactualInfo,
         }
       }
-      throw new Error(signature.error)
+      console.log('WithoutDataStruct error', signature.error)
+      if (typeof signature.error == 'string') {
+        throw new Error(signature.error)
+      } else {
+        throw signature.error
+      }
+
     // case GetEcDSASigType.Contract:
     //   signEip712Result = await signEip712WalletConnect(
     //     web3,
@@ -907,7 +914,7 @@ export async function signHebaoApproveWrap(
       return result.ecdsaSig
     }
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
@@ -1123,7 +1130,7 @@ export async function withdrawNFTWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
@@ -1220,7 +1227,7 @@ export async function mintNFTWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
@@ -1364,7 +1371,7 @@ export async function transferWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
@@ -1399,7 +1406,7 @@ export async function transferNFTWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
