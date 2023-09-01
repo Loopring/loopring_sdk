@@ -181,29 +181,26 @@ export function ecRecover(
     const result2 = ethUtil.pubToAddress(result)
     const recAddress = toHex(result2)
     myLog('ecRecover recAddress', result, result2, recAddress)
+    if (recAddress.toLowerCase() === account.toLowerCase()) {
+      return {
+        result: true,
+      }
+    }
+    const bufferHash = toBuffer(msg)
+    const resultB = ethUtil.ecrecover(bufferHash, signature.v, signature.r, signature.s)
+    const resultB2 = ethUtil.pubToAddress(resultB)
+    const recBAddress = toHex(resultB2)
+    if (recBAddress.toLowerCase() === account.toLowerCase()) {
+      return {
+        result: true,
+      }
+    }
     return {
-      result: recAddress.toLowerCase() === account.toLowerCase(),
+      result: false,
     }
   } catch (error) {
     return { error }
   }
-
-  // resolve();
-  // return await Promise.race([
-  //   new Promise((_r, rej) => (timer = setTimeout(rej, time))),
-  //   new Promise((resolve) => {
-  //     // web3.eth.personal.ecRecover();
-  //
-  //   }),
-  // ])
-  //   .catch((error) => {
-  //     console.log("ecRecover 2:", error);
-  //     return { error: ("ecRecover 2:" + error) as any };
-  //   })
-  //   .finally(() => {
-  //     console.log("ecRecover 2: timeout");
-  //     return "ecRecover 2: timeout";
-  //   });
 }
 
 export async function contractWalletValidate32(web3: any, account: string, msg: string, sig: any) {
