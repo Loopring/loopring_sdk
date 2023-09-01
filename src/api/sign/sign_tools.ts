@@ -515,11 +515,11 @@ export async function getEcDSASig(
           counterFactualInfo: signature.counterFactualInfo,
         }
       }
-      console.log('WithoutDataStruct error', signature.error)
-      if (typeof signature.error == 'string') {
+      console.log('WithoutDataStruct error', signature?.error)
+      if (typeof signature?.error == 'string') {
         throw new Error(signature.error)
       } else {
-        throw signature.error
+        throw signature?.error
       }
 
     // case GetEcDSASigType.Contract:
