@@ -3683,6 +3683,7 @@ export enum LuckyTokenAmountType {
 export enum LuckyTokenViewType {
   PUBLIC = 0,
   PRIVATE = 1,
+  TARGET = 2,
 }
 
 export enum LuckyTokenClaimType {
@@ -4454,13 +4455,14 @@ export enum VaultAccountStatus {
   FREE = 0,
   IN_STAKING = 1,
   IN_REDEEM = 2,
+  UNDEFINED = 'UNDEFINED',
 }
 export type VaultAccountInfo = {
   accountStatus: VaultAccountStatus
   marginLevel: string
   totalBalanceOfUsd: string
   totalDebtOfUsd: string
-  totalEquityOfUsd: z
+  totalEquityOfUsd: string
   collateralInfo: CollateralInfo
   userAssets: VaultBalance[]
 }

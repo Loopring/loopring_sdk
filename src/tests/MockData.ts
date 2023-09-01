@@ -13,8 +13,8 @@ import {
 import Web3 from 'web3'
 import * as sdk from '../index'
 import { providers } from 'ethers'
-import * as PrivateKeyProvider from 'truffle-privatekey-provider'
-
+// import * as PrivateKeyProvider from 'truffle-privatekey-provider'
+const PrivateKeyProvider = require('truffle-privatekey-provider')
 /***
  * LoopringAPIClass
  */
@@ -47,21 +47,22 @@ import * as PrivateKeyProvider from 'truffle-privatekey-provider'
 // LoopringAPIClass.InitApi({sdk.ChainId.GOERLI})
 
 export const DEFAULT_TIMEOUT = 30000
-
+// @ts-ignore
+global.ethereum = {}
 const chainId = sdk.ChainId.GOERLI
-
+const baseUrl = 'https://dev.loopring.io' // 'uat2.loopring.io'
 export const LoopringAPI = {
   // second params is http request timeout default is 6000
-  userAPI: new UserAPI({ chainId }, 6000),
-  exchangeAPI: new ExchangeAPI({ chainId }),
-  globalAPI: new GlobalAPI({ chainId }),
-  ammpoolAPI: new AmmpoolAPI({ chainId }),
-  walletAPI: new WalletAPI({ chainId }),
-  wsAPI: new WsAPI({ chainId }),
-  whitelistedUserAPI: new WhitelistedUserAPI({ chainId }),
-  nftAPI: new NFTAPI({ chainId }),
-  defiAPI: new DefiAPI({ chainId }),
-  delegate: new DelegateAPI({ chainId }),
+  userAPI: new UserAPI({ chainId, baseUrl }, 6000),
+  exchangeAPI: new ExchangeAPI({ chainId, baseUrl }),
+  globalAPI: new GlobalAPI({ chainId, baseUrl }),
+  ammpoolAPI: new AmmpoolAPI({ chainId, baseUrl }),
+  walletAPI: new WalletAPI({ chainId, baseUrl }),
+  wsAPI: new WsAPI({ chainId, baseUrl }),
+  whitelistedUserAPI: new WhitelistedUserAPI({ chainId, baseUrl }),
+  nftAPI: new NFTAPI({ chainId, baseUrl }),
+  defiAPI: new DefiAPI({ chainId, baseUrl }),
+  delegate: new DelegateAPI({ chainId, baseUrl }),
   __chainId__: chainId,
 }
 export const LOOPRING_EXPORTED_ACCOUNT = {
@@ -69,7 +70,7 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   devNFTFactory: '0x85829dD619f11129e8ea08764F0E1A021aD579B9',
   address: '0x727e0fa09389156fc803eaf9c7017338efd76e7f',
   privateKey: '491aecdb1d5f6400a6b62fd12a41a86715bbab675c37a4060ba115fecf94083c',
-  accountId: 10037,
+  accountId: 10149, //UAT   10037,
   address2: '0xb6d8c39D5528357dBCe6BEd82aC71c74e9D19079',
   privateKey2: 'e020ed769032ba95d9a5207687a663d6198fe2f5cedf28a250f7cbd8c81a5263',
   accountId2: 10395,
@@ -77,18 +78,23 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   accountIdCF: 11632,
   addressContractWallet: '0xD4BD7c71B6d4A09217ccc713f740d6ed8f4EA0cd',
   depositAddress: '0x4E8e6a86762546cCfCBaa8A259c7d442383c5127',
-  exchangeAddress: '0x12b7cccF30ba360e5041C6Ce239C9a188B709b2B',
+  exchangeAddress: '0xC7CcB943782aBC702C014EfA9F99cF84FaDE6Cb9', //UAT '0x12b7cccF30ba360e5041C6Ce239C9a188B709b2B',
   whitelistedAddress: '0x35405E1349658BcA12810d0f879Bf6c5d89B512C',
   whitelistedEddkey: '0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33',
   // const eddkeyWhitelisted =
   //   "0x27a5b716c7309a30703ede3f1a218cdec857e424a31543f8a658e7d2208db33";
   //   apiKey: "2PYgTOZwXHkPXtJMlOMG06ZX1QKJInpoky6iYIbtMgmkbfdL4PvxyEOj0LPOfgYX",
   chainId: 5,
-  nftTokenAddress: '0x1e29fd62ee556ee6bb9494faab32b6f269ebb4bf',
+  nftTokenAddress: '0x202a3057310f33d9ae4d2b0c650e93d2b2172d6b',
   nftTokenId: 32768,
-  nftId: '0xfed3c4c4e2e1471c3f457a7ee9780ae3c77ee7e05ac77bf573ccd5145db7c674',
-  nftData: '0x0e5542cc682fae472f0f9909573244551e56ad25da62a82a1e18f28d0f392147',
-  testNotOx: '727e0fa09389156fc803eaf9c7017338efd76e7f',
+  nftId: '0x8590625e520c6da9a84b261332ce4c9ccc46955f3eb0f5e5fd5a5973efa4c7d1',
+  nftData: '0x249df421b4b2f3ec2efb3f16614c04695217509ef442e54c87b7dd065b7f1955',
+  testNotOx: '60412713752920209836220633720062444896781011774580807407425243696918755067857n',
+  // nftTokenAddress: '0x1e29fd62ee556ee6bb9494faab32b6f269ebb4bf',
+  // nftTokenId: 32768,
+  // nftId: '0xfed3c4c4e2e1471c3f457a7ee9780ae3c77ee7e05ac77bf573ccd5145db7c674',     //UAT
+  // nftData: '0x0e5542cc682fae472f0f9909573244551e56ad25da62a82a1e18f28d0f392147',
+  // testNotOx: '727e0fa09389156fc803eaf9c7017338efd76e7f',
   tradeLRCValue: 80000000000000,
   tradeETHValue: 0.0001, //same as UI
   gasPrice: 20, // for test
@@ -481,17 +487,18 @@ export const testTypedData = {
 export async function signatureKeyPairMock(accInfo: sdk.AccountInfo, _web3: Web3 = web3) {
   //@ts-ignore
   global.ethereum = providers?.EtherscanProvider
+  // console.log('accInfo', accInfo)
   //@ts-ignore
-  global.window = { ...global }
   const eddsaKey = await sdk.generateKeyPair({
     web3: _web3,
     address: accInfo.owner,
     keySeed:
-      accInfo.keySeed ??
-      sdk.GlobalAPI.KEY_MESSAGE.replace(
-        '${exchangeAddress}',
-        LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
-      ).replace('${nonce}', (accInfo.nonce - 1).toString()),
+      !accInfo.keySeed && accInfo.keySeed == ''
+        ? sdk.GlobalAPI.KEY_MESSAGE.replace(
+            '${exchangeAddress}',
+            LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
+          ).replace('${nonce}', (accInfo.nonce - 1).toString())
+        : accInfo.keySeed,
     walletType: sdk.ConnectorNames.MetaMask,
     chainId: sdk.ChainId.GOERLI,
   })

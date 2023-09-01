@@ -11,7 +11,6 @@ import {
   SEP,
   SIG_FLAG,
   SigPatchField,
-  SigSuffix,
   SoursURL,
 } from '../defs'
 import { makeMarkets, sortObjDictionary } from '../utils'

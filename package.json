@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.5.24-vault.3",
+  "version": "3.5.25",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -36,6 +36,7 @@
     "blake2b": "^2.1.3",
     "bn.js": "^5.2.1",
     "buffer": "^6.0.3",
+    "core-js": "^3.32.1",
     "crypto-js": "4.1.1",
     "eth-sig-util": "2.3.0",
     "ethereumjs-abi": "0.6.8",
@@ -136,6 +137,7 @@
     "rimraf": "^5.0.1",
     "rollup": "^3.25.3",
     "truffle-privatekey-provider": "1.5.0",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.0.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.0",

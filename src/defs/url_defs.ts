@@ -173,6 +173,8 @@ export enum LOOPRING_URLs {
   POST_LUCK_TOKEN_CLAIMBLINDBOX = '/api/v3/luckyToken/claimBlindBox',
   POST_LUCK_TOKEN_WITHDRAWALS = '/api/v3/luckyToken/user/withdrawals',
   POST_LUCK_TOKEN_UNCLAIMNFTANDBLINDCNT = '/api/v3/luckyToken/user/unclaimNftAndBlindCnt',
+  GET_LUCK_TOKEN_LUCKYTOKENTARGETS = '/api/v3/luckyToken/user/luckyTokenTargets',
+  POST_LUCK_TOKEN_SUBMITADDTARGET = '/api/v3/luckyToken/submitAddTarget',
 
   GET_BANXA_API_KEY = '/api/v3/hmacAuthentication',
   GET_STAKE_PRODUCTS = '/api/v3/stake/products',
