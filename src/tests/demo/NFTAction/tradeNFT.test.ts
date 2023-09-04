@@ -4,7 +4,6 @@ import {
   LoopringAPI,
   web3,
   signatureKeyPairMock,
-  web3_2,
   TOKEN_INFO,
 } from '../../MockData'
 import * as sdk from '../../../index'

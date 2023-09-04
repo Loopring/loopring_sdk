@@ -65,7 +65,7 @@ export class VaultAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       }
     }
-    return { raw_data }
+    return { raw_data, ...raw_data }
   }
   public async getVaultInfoAndBalance<R = VaultAccountInfo>(
     request: {
@@ -167,11 +167,14 @@ export class VaultAPI extends BaseAPI {
     apiKey,
   }: VaultOrderNFTRequestV3WithPatch): Promise<{ raw_data: R }> {
     const takerOrderEddsaSignature = sdk.get_EddsaSig_NFT_Order(request, eddsaKey).result
-    request.eddsaSignature = takerOrderEddsaSignature
-    const dataToSig: Map<string, any> = sortObjDictionary(request)
+    const _request = {
+      ...request,
+      eddsaSignature: takerOrderEddsaSignature,
+    }
+    const dataToSig: Map<string, any> = sortObjDictionary(_request)
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.POST_VAULT_JOIN,
-      bodyParams: request,
+      bodyParams: _request,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {

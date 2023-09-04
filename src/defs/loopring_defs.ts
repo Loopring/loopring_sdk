@@ -4276,7 +4276,7 @@ export interface OriginBTRADEV3OrderRequest {
   fastMode: boolean
 }
 
-export type BtradeResult = {
+export type BtradeResult<R> = {
   exceedDepth: boolean
   isAtoB: boolean
   isReverse: boolean
@@ -4298,7 +4298,7 @@ export type BtradeResult = {
    *  with decimals
    */
   amountB: string | undefined
-  info: BTRADE_MARKET
+  info: R
   // view
   sellVol: string | undefined
   // view
@@ -4391,7 +4391,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
     // bit3:exit
     // bit4:loan
     // bit5:repay
-    status: 7
+    status: number
   }
 }
 
@@ -4450,11 +4450,13 @@ export type CollateralInfo = {
   collateralTokenId: number
   collateralTokenAmount: string
   openDate: number
+  nftTokenId: number
+  nftData: string
 }
 export enum VaultAccountStatus {
-  FREE = 0,
-  IN_STAKING = 1,
-  IN_REDEEM = 2,
+  FREE = 'FREE',
+  IN_STAKING = 'IN_STAKING',
+  IN_REDEEM = 'IN_REDEEM',
   UNDEFINED = 'UNDEFINED',
 }
 export type VaultAccountInfo = {
