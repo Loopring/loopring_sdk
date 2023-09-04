@@ -20,7 +20,7 @@ let mockData: any = {
 let accInfoC: any = undefined
 let eddsaKeyC: any = undefined
 
-describe('tradeNFT', function () {
+describe('tradeNFT group', function () {
   beforeEach(async () => {
     // console.log('tradeNFT before all', LoopringAPI.exchangeAPI)
     // Step 1. getAccount
