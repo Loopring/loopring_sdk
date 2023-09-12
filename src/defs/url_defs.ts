@@ -209,10 +209,12 @@ export enum LOOPRING_URLs {
   GET_VAULT_GETOPERATIONBY_HASH = '/api/v3/vault/getOperationByHash',
   GET_VAULT_INFOS = '/api/v3/vault/infos',
   GET_VAULT_DEPTH = '/api/v3/vault/depth',
+  GET_VAULT_BALANCE = '/api/v3/vault/balances',
   POST_VAULT_JOIN = '/api/v3/vault/join',
   POST_VAULT_ORDER = '/api/v3/vault/order',
   POST_VAULT_EXIT = '/api/v3/vault/exit',
   POST_VAULT_TRANSFER = '/api/v3/vault/transfer',
+
   //   GET_VAULT_TOKENS= "/api/v3/vault/tokens",
   // GET_VAULT_MARKETS= "/api/v3/vault/markets",
   //   GET_VAULT_account ="/api/v3/vault/account"
