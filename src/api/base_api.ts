@@ -181,22 +181,8 @@ export function ecRecover(
     const result2 = ethUtil.pubToAddress(result)
     const recAddress = toHex(result2)
     myLog('ecRecover recAddress', result, result2, recAddress)
-    if (recAddress.toLowerCase() === account.toLowerCase()) {
-      return {
-        result: true,
-      }
-    }
-    const bufferHash = toBuffer(msg)
-    const resultB = ethUtil.ecrecover(bufferHash, signature.v, signature.r, signature.s)
-    const resultB2 = ethUtil.pubToAddress(resultB)
-    const recBAddress = toHex(resultB2)
-    if (recBAddress.toLowerCase() === account.toLowerCase()) {
-      return {
-        result: true,
-      }
-    }
     return {
-      result: false,
+      result: recAddress.toLowerCase() === account.toLowerCase(),
     }
   } catch (error) {
     return { error }

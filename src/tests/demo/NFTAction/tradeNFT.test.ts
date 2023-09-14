@@ -4,6 +4,7 @@ import {
   LoopringAPI,
   web3,
   signatureKeyPairMock,
+  web3_2,
   TOKEN_INFO,
 } from '../../MockData'
 import * as sdk from '../../../index'
@@ -31,16 +32,14 @@ describe('tradeNFT group', function () {
 
     const accInfo2 = (
       await LoopringAPI.exchangeAPI.getAccount({
-        // owner: LOOPRING_EXPORTED_ACCOUNT.address2,
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
+        owner: LOOPRING_EXPORTED_ACCOUNT.address2,
       })
     ).accInfo
     // console.log(accInfo, accInfo2)
 
     // Step 2. eddsaKey
     const eddsaKey = await signatureKeyPairMock(accInfo)
-    const eddsaKey2 = await signatureKeyPairMock(accInfo)
-    //accInfoawait signatureKeyPairMock(accInfo2, web3_2)
+    const eddsaKey2 = await signatureKeyPairMock(accInfo2, web3_2)
     accInfoC = accInfo
     eddsaKeyC = eddsaKey
 
@@ -145,11 +144,11 @@ describe('tradeNFT group', function () {
         //   await LoopringAPI.exchangeAPI.getAccount({
         //     owner: LOOPRING_EXPORTED_ACCOUNT.address,
         //   })
-        // ).accInfo
-        //
-        // // Step 2. eddsaKeyC
-        // const eddsaKeyC = await signatureKeyPairMock(accInfoC, web3)
-        // myLog('accInfoC.accountId', accInfoC.accountId, 'eddsaKeyC', eddsaKeyC)
+        // ).accInfo;
+
+        // Step 2. eddsaKeyC
+        // const eddsaKeyC = await signatureKeyPairMock(accInfoC, web3);
+        myLog('accInfoC.accountId', accInfoC.accountId, 'eddsaKeyC', eddsaKeyC)
         // Step 3. apiKey
         const apiKeyC = (
           await LoopringAPI.userAPI.getUserApiKey(
