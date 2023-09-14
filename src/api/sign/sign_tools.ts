@@ -479,7 +479,7 @@ export async function getEcDSASig(
               } else {
                 _result = result?.result
               }
-              resolve(_result.slice(0, 132))
+              resolve(_result?.slice(0, 132))
             },
           )
         })
@@ -750,7 +750,7 @@ export async function offchainWithdrawWrap({
     )
     return result.ecdsaSig
   } catch (error) {
-    console.log('EcDSASig error try sign WithoutDataStruct')
+    // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }

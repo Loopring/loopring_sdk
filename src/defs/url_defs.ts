@@ -201,4 +201,23 @@ export enum LOOPRING_URLs {
   GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
   GET_TOTAL_CLAIM_INFO = '/api/v3/claim/totalClaimInfo',
   POST_TOTAL_CLAIM = '/api/v3/claim/claim',
+  GET_VAULT_TOKENS = '/api/v3/vault/tokens',
+  GET_VAULT_MARKETS = '/api/v3/vault/markets',
+  GET_VAULT_GETAVAILABLENFT = '/api/v3/vault/getAvailableNft',
+  GET_VAULT_ACCOUNT = '/api/v3/vault/account',
+  GET_VAULT_GETOPERATIONS = '/api/v3/vault/getOperations',
+  GET_VAULT_GETOPERATIONBY_HASH = '/api/v3/vault/getOperationByHash',
+  GET_VAULT_INFOS = '/api/v3/vault/infos',
+  GET_VAULT_DEPTH = '/api/v3/vault/depth',
+  GET_VAULT_BALANCE = '/api/v3/vault/balances',
+  POST_VAULT_JOIN = '/api/v3/vault/join',
+  POST_VAULT_ORDER = '/api/v3/vault/order',
+  POST_VAULT_EXIT = '/api/v3/vault/exit',
+  POST_VAULT_TRANSFER = '/api/v3/vault/transfer',
+  POST_VAULT_LOAN = '/api/v3/vault/loan',
+  POST_VAULT_REPAY = '/api/v3/vault/repay',
+
+  //   GET_VAULT_TOKENS= "/api/v3/vault/tokens",
+  // GET_VAULT_MARKETS= "/api/v3/vault/markets",
+  //   GET_VAULT_account ="/api/v3/vault/account"
 }
