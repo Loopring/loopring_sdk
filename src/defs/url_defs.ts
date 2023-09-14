@@ -214,6 +214,8 @@ export enum LOOPRING_URLs {
   POST_VAULT_ORDER = '/api/v3/vault/order',
   POST_VAULT_EXIT = '/api/v3/vault/exit',
   POST_VAULT_TRANSFER = '/api/v3/vault/transfer',
+  POST_VAULT_LOAN = '/api/v3/vault/loan',
+  POST_VAULT_REPAY = '/api/v3/vault/repay',
 
   //   GET_VAULT_TOKENS= "/api/v3/vault/tokens",
   // GET_VAULT_MARKETS= "/api/v3/vault/markets",

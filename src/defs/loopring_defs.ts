@@ -4365,20 +4365,6 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    * @type number
    * @memberof VaultToken
    */
-  // tokenId: number
-  // symbol: string
-  // name: string
-  // address: string
-  // decimals: number
-  // precision: number
-  // precisionForOrder: number
-  // orderAmounts: {
-  //   minimum: string
-  //   maximum: string
-  //   dust: string
-  // }
-  // luckyTokenAmounts: any
-  // fastWithdrawLimit: any
   gasAmounts: any
   // enabled: boolean
   btradeAmount: '' // important for vault
@@ -4443,6 +4429,7 @@ export type VaultBalance = {
   borrowed: string
   netAsset: string
   interest: string
+  creditLimit: string
 }
 export type CollateralInfo = {
   nftHash: string
@@ -4538,4 +4525,22 @@ export interface VaultOrderNFTRequestV3WithPatch {
   eddsaKey: string
   apiKey: string
   isHWAddr?: boolean
+}
+
+export interface VaultLoadRequest {
+  accountId: number
+  token: {
+    tokenId: number
+    volume: string
+  }
+  timestamp: number
+}
+
+export interface VaultRepayRequest {
+  accountId: number
+  token: {
+    tokenId: number
+    volume: string
+  }
+  timestamp: number
 }
