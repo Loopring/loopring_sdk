@@ -155,6 +155,7 @@ export enum LOOPRING_URLs {
   GET_DUAL_RULE = '/api/v3/dual/rules',
   POST_DUAL_ORDER = '/api/v3/dual/order',
   GET_DUAL_USER_LOCKED = '/api/v3/dual/lockRecordAmount',
+  POST_DUAL_EDIT = '/api/v3/dual/order/reinvest',
 
   GET_LUCK_TOKEN_AGENTS = '/api/v3/luckyToken/agents',
   GET_LUCK_TOKEN_AUTHORIZEDSIGNERS = '/api/v3/luckyToken/authorizedSigners',

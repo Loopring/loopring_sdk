@@ -3522,6 +3522,19 @@ export interface GetUserDualTxRequest {
   end: number
   limit: number
 }
+export enum DUAL_RETRY_STATUS {
+  NO_RETRY = 'NO_RETRY',
+  RETRYING = 'RETRYING',
+  RETRY_SUCCESS = 'RETRY_SUCCESS',
+  RETRY_FAILED = 'RETRY_FAILED',
+}
+
+export type DUAL_REINVEST_INFO = {
+  isRecursive: boolean
+  maxDuration: string
+  newStrike: number
+  retryStatus: DUAL_RETRY_STATUS
+}
 
 export interface UserDualTxsHistory {
   id: string
@@ -3552,6 +3565,7 @@ export interface UserDualTxsHistory {
   }
   investmentStatus: LABEL_INVESTMENT_STATUS
   settlementStatus: SETTLEMENT_STATUS
+  dualReinvestInfo?: DUAL_REINVEST_INFO
   createdAt: number
   updatedAt: number
 }
@@ -3626,6 +3640,27 @@ export interface DualOrderRequest {
   productId: string
   settleRatio: string
   expireTime: number
+  /**
+   * If this dual order is recursive
+   * @memberof DefiOrderRequest
+   * @type {boolean}
+   */
+  isRecursive?: boolean
+  /**
+   * If this dual order is recursive, max expire time of next dual product (1-10days in millieseconds)
+   * @memberof DefiOrderRequest
+   * @type {numbwe}
+   */
+  maxRecurseProductDuration?: number
+}
+
+export type DualEditRequest = {
+  newOrder: Omit<DualOrderRequest, 'isRecursive' | 'maxRecurseProductDuration'>
+  currentDualHash: string
+  isRecursive: boolean
+  maxDuration: number
+  newStrike: string
+  accountId: null
 }
 
 export type CalDualResult = {

@@ -2,7 +2,7 @@
 import { BaseAPI } from './base_api'
 
 import * as loopring_defs from '../defs/loopring_defs'
-import { BTRADENAME, DepthData, GetOrdersRequest } from '../defs/loopring_defs'
+import { BTRADENAME, DepthData, DualEditRequest, GetOrdersRequest } from '../defs/loopring_defs'
 import {
   LOOPRING_URLs,
   ReqMethod,
@@ -17,6 +17,7 @@ import { makeMarkets, sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
 import { getMidPrice } from './exchange_api'
+import { getEdDSASigWithPoseidon } from './sign/sign_tools'
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -455,6 +456,43 @@ export class DefiAPI extends BaseAPI {
       sigObj: {
         dataToSig,
         sigPatch: SigPatchField.EddsaSignature,
+        PrivateKey: privateKey,
+      },
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return this.returnTxHash(raw_data)
+  }
+
+  public async editDual(
+    request: loopring_defs.DualEditRequest,
+    privateKey: string,
+    apiKey: string,
+  ) {
+    const { newOrder } = request
+    const dataToSig = [
+      newOrder.exchange,
+      newOrder.storageId,
+      newOrder.accountId,
+      newOrder.sellToken.tokenId,
+      newOrder.buyToken.tokenId,
+      newOrder.sellToken.volume,
+      newOrder.buyToken.volume,
+      newOrder.validUntil,
+      newOrder.maxFeeBips,
+      newOrder.fillAmountBOrS ? 1 : 0,
+      0,
+    ]
+    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
+    const bodyParams = { ...request, newOrder: { ...newOrder, eddsaSignature } }
+    const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams)
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_DUAL_EDIT,
+      bodyParams,
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig: _dataToSig,
         PrivateKey: privateKey,
       },
     }
