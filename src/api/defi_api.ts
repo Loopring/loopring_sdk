@@ -89,7 +89,7 @@ export class DefiAPI extends BaseAPI {
   }> {
     const reqParams: ReqParams = {
       url,
-      queryParams: {}, //request
+      queryParams: {},
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     }
@@ -469,21 +469,25 @@ export class DefiAPI extends BaseAPI {
     apiKey: string,
   ) {
     const { newOrder } = request
-    const dataToSig = [
-      newOrder.exchange,
-      newOrder.storageId,
-      newOrder.accountId,
-      newOrder.sellToken.tokenId,
-      newOrder.buyToken.tokenId,
-      newOrder.sellToken.volume,
-      newOrder.buyToken.volume,
-      newOrder.validUntil,
-      newOrder.maxFeeBips,
-      newOrder.fillAmountBOrS ? 1 : 0,
-      0,
-    ]
-    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
-    const bodyParams = { ...request, newOrder: { ...newOrder, eddsaSignature } }
+    let bodyParams = { ...request }
+    if (newOrder) {
+      const dataToSig = [
+        newOrder.exchange,
+        newOrder.storageId,
+        newOrder.accountId,
+        newOrder.sellToken.tokenId,
+        newOrder.buyToken.tokenId,
+        newOrder.sellToken.volume,
+        newOrder.buyToken.volume,
+        newOrder.validUntil,
+        newOrder.maxFeeBips,
+        newOrder.fillAmountBOrS ? 1 : 0,
+        0,
+      ]
+      const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
+      bodyParams = { ...bodyParams, newOrder: { ...newOrder, eddsaSignature } }
+    }
+
     const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_DUAL_EDIT,

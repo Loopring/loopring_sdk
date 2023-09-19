@@ -374,6 +374,7 @@ export interface DefiMarketInfo {
   quoteLimitAmount: string
   baseLimitAmount: string
   quoteAlias: string
+  stepLength: string
 }
 
 export interface MarketsResponse {
@@ -3515,11 +3516,12 @@ export enum SETTLEMENT_STATUS {
 export interface GetUserDualTxRequest {
   accountId: number
   dualTypes: DUAL_TYPE
+  hashes: string
   investmentStatuses?: LABEL_INVESTMENT_STATUS
   settlementStatuses?: SETTLEMENT_STATUS
-  offset: number
-  start: number
-  end: number
+  offset?: number
+  start?: number
+  end?: number
   limit: number
 }
 export enum DUAL_RETRY_STATUS {
@@ -3655,7 +3657,7 @@ export interface DualOrderRequest {
 }
 
 export type DualEditRequest = {
-  newOrder: Omit<DualOrderRequest, 'isRecursive' | 'maxRecurseProductDuration'>
+  newOrder?: Omit<DualOrderRequest, 'isRecursive' | 'maxRecurseProductDuration'>
   currentDualHash: string
   isRecursive: boolean
   maxDuration: number
