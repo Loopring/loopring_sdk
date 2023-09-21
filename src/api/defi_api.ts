@@ -2,7 +2,7 @@
 import { BaseAPI } from './base_api'
 
 import * as loopring_defs from '../defs/loopring_defs'
-import { BTRADENAME, DepthData, DualEditRequest, GetOrdersRequest } from '../defs/loopring_defs'
+import { BTRADENAME, DepthData, GetOrdersRequest } from '../defs/loopring_defs'
 import {
   LOOPRING_URLs,
   ReqMethod,
@@ -13,7 +13,7 @@ import {
   SigPatchField,
   SoursURL,
 } from '../defs'
-import { makeMarkets, sortObjDictionary } from '../utils'
+import { makeInvestMarkets, makeMarkets, sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
 import { getMidPrice } from './exchange_api'
@@ -100,75 +100,10 @@ export class DefiAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       }
     }
-    const markets: loopring_defs.LoopringMap<loopring_defs.DefiMarketInfo> = {}
 
-    const pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo> = {}
-
-    // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
-
-    if (raw_data?.markets instanceof Array) {
-      const types = request?.defiType?.toString()?.split(',')
-      let _markets = []
-      if (types) {
-        _markets = raw_data.markets.filter((item: loopring_defs.DefiMarketInfo) =>
-          types.includes(item.type?.toUpperCase()),
-        )
-      } else {
-        _markets = raw_data.markets
-      }
-      _markets.forEach((item: any) => {
-        const marketInfo: loopring_defs.DefiMarketInfo = {
-          ...item,
-        }
-
-        markets[item.market] = marketInfo
-
-        if (item.enabled) {
-          const [_markets, type, base, quote] = item.market.match(/^(\w+-)?(\w+)-(\w+)$/i)
-          if (type === 'DUAL-' && base && quote) {
-            if (!pairs[base]) {
-              pairs[base] = {
-                tokenId: item.baseTokenId,
-                tokenList: [quote],
-              }
-            } else {
-              pairs[base].tokenList = [...pairs[base].tokenList, quote]
-            }
-            if (!pairs[quote]) {
-              pairs[quote] = {
-                tokenId: item.baseTokenId,
-                tokenList: [base],
-              }
-            } else {
-              pairs[quote].tokenList = [...pairs[quote].tokenList, base]
-            }
-          } else if (base && quote) {
-            const market: string = item.market
-            // const ind = market.indexOf("-");
-            // const base = market.substring(0, ind);
-            // const quote = market.substring(ind + 1, market.length);
-
-            if (!pairs[base]) {
-              pairs[base] = {
-                tokenId: item.baseTokenId,
-                tokenList: [quote],
-              }
-            } else {
-              pairs[base].tokenList = [...pairs[base].tokenList, quote]
-            }
-          }
-        }
-      })
-    }
-    const marketArr: string[] = Reflect.ownKeys(markets) as string[]
-    const tokenArr: string[] = Reflect.ownKeys(pairs) as string[]
+    const types = request?.defiType?.toString()?.split(',')
     return {
-      markets,
-      pairs,
-      tokenArr,
-      tokenArrStr: tokenArr.join(SEP),
-      marketArr,
-      marketArrStr: marketArr.join(SEP),
+      ...makeInvestMarkets(raw_data, types),
       raw_data,
     }
   }
