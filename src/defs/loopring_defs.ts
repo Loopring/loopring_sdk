@@ -4396,7 +4396,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    * @type number
    * @memberof VaultToken
    */
-  vaultTokenId: null
+  vaultTokenId: number
   /**
    *  ERC20 Token ID
    * @type number
@@ -4404,7 +4404,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    */
   gasAmounts: any
   // enabled: boolean
-  btradeAmount: '' // important for vault
+  btradeAmount: string // important for vault
   vaultTokenAmounts: {
     // important for vault
     minAmount: string
