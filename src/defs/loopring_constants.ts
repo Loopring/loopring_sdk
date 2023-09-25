@@ -10,7 +10,8 @@ export enum HEBAO_LOCK_STATUS {
 export enum HEBAO_META_TYPE {
   recovery = 16,
   transfer = 18,
-  add_guardian = 34,
+  // add_guardian = 34,
+  approve_token = 23,
   remove_guardian = 35,
   unlock_wallet = 37,
   upgrade_contract = 201,

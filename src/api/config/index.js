@@ -1,124 +1,118 @@
-import { toBig, toFixed } from "../../utils/formatter";
+import { toBig, toFixed } from '../../utils/formatter'
 // eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
-import config from "./config";
+import config from './config'
 function getMaintenanceMode() {
-  return config.maintenanceMode;
+  return config.maintenanceMode
 }
 
 function getChannelId() {
-  return config.defaultChannelId;
+  return config.defaultChannelId
 }
 
 function getLabel() {
-  return config.label;
+  return config.label
 }
 
 function getMaxFeeBips() {
-  return config.maxFeeBips;
+  return config.maxFeeBips
 }
 
 function getTokenBySymbol(symbol, tokens) {
-  if (typeof symbol === "undefined") {
-    return {};
+  if (typeof symbol === 'undefined') {
+    return {}
   }
-  return (
-    tokens.find(
-      (token) => token.symbol.toLowerCase() === symbol.toLowerCase()
-    ) || {}
-  );
+  return tokens.find((token) => token.symbol.toLowerCase() === symbol.toLowerCase()) || {}
 }
 
 function fromWEI(symbol, valueInWEI, tokens, { precision, ceil } = {}) {
   try {
-    const token = getTokenBySymbol(symbol, tokens);
-    const precisionToFixed = precision ? precision : token.precision;
-    const value = toBig(valueInWEI).div("1e" + token.decimals);
-    return toFixed(value, precisionToFixed, ceil);
+    const token = getTokenBySymbol(symbol, tokens)
+    const precisionToFixed = precision ? precision : token.precision
+    const value = toBig(valueInWEI).div('1e' + token.decimals)
+    return toFixed(value, precisionToFixed, ceil)
   } catch (err) {
-    return undefined;
+    return undefined
   }
 }
 
 function feeFromWei(symbol, valueInWEI, tokens) {
   try {
-    const token = getTokenBySymbol(symbol, tokens);
+    const token = getTokenBySymbol(symbol, tokens)
     return toBig(valueInWEI)
-      .div("1e" + token.decimals)
+      .div('1e' + token.decimals)
       .toNumber()
-      .toString();
+      .toString()
   } catch (error) {
-    return undefined;
+    return undefined
   }
 }
 
 function toWEI(symbol, value, tokens, rm = 3) {
-  const token = getTokenBySymbol(symbol, tokens);
-  if (typeof token === "undefined") {
-    return 0;
+  const token = getTokenBySymbol(symbol, tokens)
+  if (typeof token === 'undefined') {
+    return 0
   }
   return toBig(value)
-    .times("1e" + token.decimals)
-    .toFixed(0, rm);
+    .times('1e' + token.decimals)
+    .toFixed(0, rm)
 }
 
 function getMarketByPair(pair, markets) {
   if (pair) {
-    return markets.find((m) => m.market === pair);
+    return markets.find((m) => m.market === pair)
   }
 }
 
 function isSupportedMarket(market, markets) {
-  return !!getMarketByPair(market, markets);
+  return !!getMarketByPair(market, markets)
 }
 
 function getMarketsByTokenR(token, markets) {
-  return markets.filter((item) => item.split("-")[1] === token);
+  return markets.filter((item) => item.split('-')[1] === token)
 }
 
 function getMarketsByTokenL(token, markets) {
-  return markets.filter((item) => item.split("-")[0] === token);
+  return markets.filter((item) => item.split('-')[0] === token)
 }
 
 function getTokenSupportedMarkets(token) {
-  const leftMarket = getMarketsByTokenL(token);
-  const rightMarket = getMarketsByTokenR(token);
-  return [...leftMarket, ...rightMarket];
+  const leftMarket = getMarketsByTokenL(token)
+  const rightMarket = getMarketsByTokenR(token)
+  return [...leftMarket, ...rightMarket]
 }
 
 function getDepositGas(token) {
   if (token) {
-    const data = config.deposits.find(
-      (d) => d.token.toUpperCase() === token.toUpperCase()
-    );
+    const data = config.deposits.find((d) => d.token.toUpperCase() === token.toUpperCase())
     if (data) {
-      return data;
+      return data
     }
   }
-  return getGasLimitByType("depositTo");
+  return getGasLimitByType('depositTo')
 }
 
 function getGasLimitByType(type) {
   if (type) {
-    return config.txs.find((tx) => type === tx.type);
+    return config.txs.find((tx) => type === tx.type)
   }
 }
 
 function getFeeByType(type, fees) {
   if (type) {
-    return fees.find((fee) => type === fee.type);
+    return fees.find((fee) => type === fee.type)
   }
 }
 
 function getMaxAmountInWEI() {
-  return config.maxAmount;
+  return config.maxAmount
 }
 
 function getLocalTokens() {
-  return config.localTokens;
+  return config.localTokens
 }
 
 function getFeeByToken(token, fees) {
-  return fees.find((fee) => fee.token.toLowerCase() === token.toLowerCase());
+  return fees.find((fee) => fee.token.toLowerCase() === token.toLowerCase())
 }
 
 export default {
@@ -140,4 +134,5 @@ export default {
   getLocalTokens,
   getFeeByToken,
   feeFromWei,
-};
+}
+export * from './guardianTypeData'

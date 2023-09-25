@@ -5,7 +5,6 @@ import {
   ChainId,
   ConnectorNames,
   ContractType,
-  GetUserTradesRequest,
   Guardian,
   HEBAO_META_TYPE,
   HebaoOperationLog,
@@ -23,10 +22,10 @@ import {
 } from '../defs'
 import api from './ethereum/contracts'
 import * as sign_tools from './sign/sign_tools'
-import * as ethUtil from 'ethereumjs-util'
 import { sortObjDictionary, toHex } from '../utils'
 import { myLog } from '../utils/log_tools'
 import { AxiosResponse } from 'axios'
+import { signHebaoApproveWrap } from './config'
 
 export class WalletAPI extends BaseAPI {
   /*
@@ -118,16 +117,6 @@ export class WalletAPI extends BaseAPI {
     }
   }
 
-  public encodeAddressesPacked(addrs: string[]) {
-    const addrsBs = Buffer.concat(
-      addrs.map((a) => {
-        return Buffer.from('00'.repeat(12) + a.slice(2), 'hex')
-      }),
-    )
-    myLog('addrsBs', addrsBs.toString())
-    return addrsBs
-  }
-
   public async submitApproveSignature<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.SubmitApproveSignatureRequestWithPatch,
     guardians: string[] = [],
@@ -146,35 +135,19 @@ export class WalletAPI extends BaseAPI {
     } = req
     const isHWAddr = !!isHWAddrOld
     let ecdsaSignature = undefined
-    let newOwner = undefined,
-      newGuardians = []
-
-    if (
-      guardian.businessDataJson &&
-      guardian.businessDataJson.value &&
-      guardian.businessDataJson.value.value
-    ) {
-      newOwner = guardian.businessDataJson.value.value.newOwner
-      newGuardians = guardian.businessDataJson.value.value.newGuardians
-    }
-    let guardiansBs, guardiansHash
-    if (newOwner && newGuardians) {
-      guardiansBs = this.encodeAddressesPacked(newGuardians)
-      guardiansHash = ethUtil.keccak(guardiansBs)
-    }
-
-    ecdsaSignature = await sign_tools.signHebaoApproveWrap({
+    myLog('backend hash', guardian.messageHash)
+    ecdsaSignature = await signHebaoApproveWrap({
       chainId,
       web3,
       owner: request.signer,
       isHWAddr,
       wallet: guardian.signedRequest.wallet,
       validUntil: guardian.signedRequest.validUntil,
-      newOwner,
-      newGuardians: isContract1XAddress ? undefined : guardiansHash,
+      messageData: guardian?.businessDataJson?.value?.value ?? {},
       masterCopy: isContract1XAddress ? undefined : masterCopy,
       forwarderModuleAddress,
-      messageHash: guardian.messageHash,
+      type: guardian.type,
+      guardian,
     })
     ecdsaSignature += SigSuffix.Suffix03
     request.signature = ecdsaSignature

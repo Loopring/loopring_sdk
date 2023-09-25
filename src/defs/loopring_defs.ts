@@ -3089,7 +3089,7 @@ export type HebaoOperationLog = {
 export type Guardian = {
   ens: string
   address: string
-  type: keyof typeof HEBAO_META_TYPE
+  type: HEBAO_META_TYPE
   id: string
   messageHash: string
   businessDataJson: any

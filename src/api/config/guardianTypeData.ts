@@ -1,30 +1,54 @@
-import { ChainId, ConnectorNames, CounterFactualInfo } from '../../defs'
+import { ChainId, ConnectorNames, HEBAO_META_TYPE } from '../../defs'
 
 import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
-import { HEBAO_META_TYPE } from '../../../dist'
+import * as ethUtil from 'ethereumjs-util'
+import { personalSign } from '../base_api'
+
 const EIP712Domain = [
   { name: 'name', type: 'string' },
   { name: 'version', type: 'string' },
   { name: 'chainId', type: 'uint256' },
   { name: 'verifyingContract', type: 'address' },
 ]
-const domain = (chainId: ChainId, guardiaContractAddress: any) => {
+
+function encodeAddressesPacked(addrs: string[]) {
+  const addrsBs = Buffer.concat(
+    addrs.map((a) => {
+      return Buffer.from('00'.repeat(12) + a.slice(2), 'hex')
+    }),
+  )
+  myLog('addrsBs', addrsBs.toString())
+  return addrsBs
+}
+
+const domain = (chainId: ChainId, guardiaContractAddress: any, name: string) => {
   return {
-    name: 'GuardianModule',
+    name,
     version: '1.2.0',
     chainId: chainId,
     verifyingContract: guardiaContractAddress,
   }
 }
-function getApproveRecoverTypedData(
-  chainId: ChainId,
-  guardiaContractAddress: any,
-  wallet: any,
-  validUntil: any,
-  newOwner: any,
-  newGuardians?: Buffer | any,
-) {
+
+function getApproveRecoverTypedData({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  newGuardians,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  // newOwner: any,
+  newGuardians?: Buffer | any
+  message?: {
+    [key: string]: any
+  }
+}) {
   const typedData = {
     types: {
       EIP712Domain,
@@ -35,27 +59,239 @@ function getApproveRecoverTypedData(
         ...(newGuardians ? [{ name: 'newGuardians', type: 'string' }] : []),
       ],
     },
-    domain: domain(chainId, guardiaContractAddress),
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
     primaryType: 'recover',
     message: {
       wallet: wallet,
       validUntil: validUntil,
-      newOwner: newOwner,
+      ...message,
+      // newOwner: newOwner,
     },
   }
   return typedData
 }
-function getApproveTransferTypedData(
-  chainId: ChainId,
-  guardiaContractAddress: any,
-  wallet: any,
-  validUntil: any,
-  // newOwner: any,
-  newGuardians?: Buffer | any,
-  message?: {
-    [key: string]: any
-  },
-) {
+function getApproveTransferTypedData({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  newGuardians,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  newGuardians?: Buffer | any
+  message?: { [key: string]: any }
+}) {
+  const typedData = {
+    types: {
+      EIP712Domain,
+      transferToken: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'token', type: 'address' },
+        { name: 'to', type: 'address' },
+        { name: 'amount', type: 'uint256' },
+        { name: 'logdata', type: 'bytes' },
+      ],
+    },
+    domain: domain(chainId, guardiaContractAddress, 'TransferModule'),
+    primaryType: 'transferToken',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      // newOwner: newOwner,
+      ...(newGuardians ? { newGuardians } : {}),
+      ...message,
+    },
+  }
+  return typedData
+}
+
+// function getAddGuardianTypedData({
+//   chainId,
+//   guardiaContractAddress,
+//   wallet,
+//   validUntil,
+//   message,
+// }: {
+//   chainId: ChainId
+//   guardiaContractAddress: any
+//   wallet: any
+//   validUntil: any
+//   message?: { [key: string]: any }
+// }) {
+//   const typedData = {
+//     types: {
+//       EIP712Domain,
+//       addGuardian: [
+//         { name: 'wallet', type: 'address' },
+//         { name: 'validUntil', type: 'uint256' },
+//         { name: 'guardian', type: 'address' },
+//       ],
+//     },
+//     domain: domain(chainId, guardiaContractAddress),
+//     primaryType: 'addGuardian',
+//     message: {
+//       wallet: wallet,
+//       validUntil: validUntil,
+//       ...message,
+//     },
+//   }
+//   return typedData
+// }
+
+function getRemoveGuardianTypedData({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  message?: { [key: string]: any }
+}) {
+  const typedData = {
+    types: {
+      EIP712Domain,
+      removeGuardian: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'guardian', type: 'address' },
+      ],
+    },
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    primaryType: 'removeGuardian',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      ...message,
+    },
+  }
+  return typedData
+}
+function getUnlockWalletTypedData({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  // message?: { [key: string]: any }
+}) {
+  const typedData = {
+    types: {
+      EIP712Domain,
+      unlock: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+      ],
+    },
+    // EIP712.hash(
+    //   EIP712.Domain("LoopringWallet", "2.0.0", address(this))
+    // )
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    primaryType: 'unlock',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+    },
+  }
+  return typedData
+}
+function getApproveChangeMasterCopy({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  newGuardians,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  newGuardians?: Buffer | any
+  message?: { [key: string]: any }
+}) {
+  const typedData = {
+    types: {
+      EIP712Domain,
+      changeMasterCopy: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'masterCopy', type: 'address' },
+      ],
+    },
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    primaryType: 'changeMasterCopy',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      ...message,
+    },
+  }
+  return typedData
+}
+function getDepositWalletTypedData({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  newGuardians,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  newGuardians?: Buffer | any
+  message?: { [key: string]: any }
+}) {
+  const typedData = {
+    types: {
+      EIP712Domain,
+      approveThenCallContract: [
+        { name: 'wallet', type: 'address' },
+        { name: 'validUntil', type: 'uint256' },
+        { name: 'to', type: 'address' },
+        { name: 'value', type: 'uint256' },
+        { name: 'data', type: 'bytes' },
+      ],
+    },
+    domain: domain(chainId, guardiaContractAddress, 'LoopringWallet'),
+    primaryType: 'approveThenCallContract',
+    message: {
+      wallet: wallet,
+      validUntil: validUntil,
+      ...message,
+    },
+  }
+  return typedData
+}
+
+function getApproveTokenCopy({
+  chainId,
+  guardiaContractAddress,
+  wallet,
+  validUntil,
+  message,
+}: {
+  chainId: ChainId
+  guardiaContractAddress: any
+  wallet: any
+  validUntil: any
+  newGuardians?: Buffer | any
+  message?: { [key: string]: any }
+}) {
   const typedData = {
     types: {
       EIP712Domain,
@@ -67,13 +303,12 @@ function getApproveTransferTypedData(
         { name: 'amount', type: 'uint256' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress),
+    domain: domain(chainId, guardiaContractAddress, 'TransferModule'),
     primaryType: 'approveToken',
     message: {
       wallet: wallet,
       validUntil: validUntil,
-      // newOwner: newOwner,
-      ...(newGuardians ? [{ name: 'newGuardians', type: 'string' }] : []),
+      ...message,
     },
   }
   return typedData
@@ -85,18 +320,17 @@ export async function signHebaoApproveWrap(
     owner: string
     isHWAddr: boolean
     type: HEBAO_META_TYPE
-  } & (
-    | { messageHash: string }
-    | ({
-        counterFactualInfo?: CounterFactualInfo
-        wallet: string
-        validUntil: number
-        newOwner: string
-      } & (
-        | { forwarderModuleAddress?: undefined | string }
-        | { newGuardians?: any; masterCopy?: string }
-      ))
-  ),
+  } & {
+    newGuardians?: any
+    masterCopy?: string
+    wallet: string
+    validUntil: number
+    forwarderModuleAddress?: string
+    messageData?: {
+      [key: string]: any
+    }
+    guardian: any
+  },
 ) {
   let typedData: any
   try {
@@ -109,107 +343,149 @@ export async function signHebaoApproveWrap(
       wallet,
       validUntil,
       forwarderModuleAddress,
-      newOwner,
       masterCopy,
-      newGuardians,
-      messageHash,
+      messageData,
+      guardian,
     } = props as any
-    let typedData
+    let typedData, messageHash
+
     switch (type) {
       case HEBAO_META_TYPE.recovery:
-        typedData = getApproveRecoverTypedData(
+        let newOwner = undefined
+        let guardiansHash
+        if (!messageData?.newOwner) {
+          throw 'no newOwner'
+        }
+        if (newOwner && messageData.newGuardians) {
+          let guardiansBs = encodeAddressesPacked(messageData.newGuardians)
+          guardiansHash = ethUtil.keccak(guardiansBs)
+        }
+        typedData = getApproveRecoverTypedData({
           chainId,
-          newGuardians ? forwarderModuleAddress : masterCopy,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
           validUntil, // guardian.signedRequest.validUntil,
-          newOwner,
-          newGuardians ? newGuardians : undefined,
-        )
+          newGuardians: guardiansHash ? guardiansHash : undefined,
+          message: {
+            newOwner: messageData.newOwner,
+          },
+        })
         break
       case HEBAO_META_TYPE.transfer:
-      case HEBAO_META_TYPE.add_guardian:
+        typedData = getApproveTransferTypedData({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            token: messageData.token,
+            to: messageData.to,
+            amount: messageData.amount,
+            logdata: messageData.logdata,
+            // newOwner: messageData.newOwner,
+          },
+        })
+        break
       case HEBAO_META_TYPE.remove_guardian:
+        typedData = getRemoveGuardianTypedData({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            guardian: messageData.guardian,
+          },
+        })
+        break
 
       case HEBAO_META_TYPE.unlock_wallet:
+        typedData = getUnlockWalletTypedData({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          // message: {
+          //   guardian: messageData.guardian,
+          // },
+        })
+        break
       case HEBAO_META_TYPE.deposit_wallet:
-      case HEBAO_META_TYPE.add_guardian:
+        typedData = getDepositWalletTypedData({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            to: messageData.to,
+            value: messageData.value,
+            data: messageData.data,
+          },
+        })
+        break
+      case HEBAO_META_TYPE.approve_token:
+        typedData = getApproveTokenCopy({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            token: messageData.token,
+            to: messageData.to,
+            amount: messageData.amount,
+            // logdata: messageData.logdata,
+            // masterCopy: messageData.newMasterCopy,
+          },
+        })
+        break
+      case HEBAO_META_TYPE.upgrade_contract:
+        typedData = getApproveChangeMasterCopy({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            masterCopy: messageData.newMasterCopy,
+          },
+        })
+        break
+      default:
+        messageHash = guardian?.messageHash
+      //changeMasterCopy
+      // case HEBAO_META_TYPE.add_guardian:
     }
 
     myLog('typedData', typedData)
+    if (typedData) {
+      const result = await getEcDSASig(
+        web3,
+        typedData,
+        owner,
+        isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
+        chainId,
+        undefined,
+        '',
+        ConnectorNames.Unknown,
+        // counterFactualInfo
+      )
+      return result.ecdsaSig
+    } else {
+      // const messageHash =
+      const signature: any = await personalSign(
+        web3,
+        owner,
+        '',
+        messageHash,
+        ConnectorNames.Unknown,
+        chainId,
+      )
+      if (signature?.sig) {
+        return signature.sig
+      }
+    }
 
-    const result = await getEcDSASig(
-      web3,
-      typedData,
-      owner,
-      isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
-      chainId,
-      undefined,
-      '',
-      ConnectorNames.Unknown,
-      // counterFactualInfo
-    )
-    return result.ecdsaSig
     // }
   } catch (error) {
     // console.log('EcDSASig error try sign WithoutDataStruct')
     throw error
   }
 }
-
-// export async function getApproveRecoverTypedData(
-//   chainId: ChainId,
-//   guardiaContractAddress: any,
-//   wallet: any,
-//   validUntil: any,
-//   newOwner: any,
-//   newGuardians?: Buffer | any,
-// ) {
-//   const typedData = {
-//     types: {
-//       EIP712Domain,
-//       recover: [
-//         { name: 'wallet', type: 'address' },
-//         { name: 'validUntil', type: 'uint256' },
-//         { name: 'newOwner', type: 'address' },
-//         ...(newGuardians ? [{ name: 'newGuardians', type: 'string' }] : []),
-//       ],
-//     },
-//     domain: domain(chainId, guardiaContractAddress),
-//     primaryType: 'recover',
-//     message: {
-//       wallet: wallet,
-//       validUntil: validUntil,
-//       newOwner: newOwner,
-//     },
-//   }
-//   return typedData
-// }
-// export async function getApproveRecoverV2TypedData(
-//   chainId: ChainId,
-//   guardiaContractAddress: any,
-//   wallet: any,
-//   validUntil: any,
-//   newOwner: any,
-//   newGuardians?: Buffer | any,
-// ) {
-//   const typedData = {
-//     types: {
-//       EIP712Domain,
-//       recover: [
-//         { name: 'wallet', type: 'address' },
-//         { name: 'validUntil', type: 'uint256' },
-//         { name: 'newOwner', type: 'address' },
-//         { name: 'newGuardians', type: 'string' },
-//       ],
-//     },
-//     domain: domain(chainId, guardiaContractAddress),
-//     primaryType: 'recover',
-//     message: {
-//       wallet: wallet,
-//       validUntil: validUntil,
-//       newOwner: newOwner,
-//       newGuardians: newGuardians,
-//     },
-//   }
-//   return typedData
-// }
