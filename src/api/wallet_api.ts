@@ -148,6 +148,7 @@ export class WalletAPI extends BaseAPI {
       forwarderModuleAddress,
       type: guardian.type,
       guardian,
+      walletVersion: isContract1XAddress ? 1 : 2,
     })
     ecdsaSignature += SigSuffix.Suffix03
     request.signature = ecdsaSignature

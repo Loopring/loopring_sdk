@@ -22,10 +22,10 @@ function encodeAddressesPacked(addrs: string[]) {
   return addrsBs
 }
 
-const domain = (chainId: ChainId, guardiaContractAddress: any, name: string) => {
+const domain = (chainId: ChainId, guardiaContractAddress: any, name: string, version: string) => {
   return {
     name,
-    version: '1.2.0',
+    version: version,
     chainId: chainId,
     verifyingContract: guardiaContractAddress,
   }
@@ -59,7 +59,7 @@ function getApproveRecoverTypedData({
         ...(newGuardians ? [{ name: 'newGuardians', type: 'string' }] : []),
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule', '1.2.0'),
     primaryType: 'recover',
     message: {
       wallet: wallet,
@@ -77,6 +77,7 @@ function getApproveTransferTypedData({
   validUntil,
   newGuardians,
   message,
+  walletVersion,
 }: {
   chainId: ChainId
   guardiaContractAddress: any
@@ -84,6 +85,7 @@ function getApproveTransferTypedData({
   validUntil: any
   newGuardians?: Buffer | any
   message?: { [key: string]: any }
+  walletVersion: 2 | 1
 }) {
   const typedData = {
     types: {
@@ -97,7 +99,12 @@ function getApproveTransferTypedData({
         { name: 'logdata', type: 'bytes' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'TransferModule'),
+    domain: domain(
+      chainId,
+      guardiaContractAddress,
+      walletVersion == 1 ? 'TransferModule' : 'LoopringWallet',
+      walletVersion == 1 ? '1.2.0' : '2.0.0',
+    ),
     primaryType: 'transferToken',
     message: {
       wallet: wallet,
@@ -165,7 +172,7 @@ function getRemoveGuardianTypedData({
         { name: 'guardian', type: 'address' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule', '1.2.0'),
     primaryType: 'removeGuardian',
     message: {
       wallet: wallet,
@@ -198,7 +205,7 @@ function getUnlockWalletTypedData({
     // EIP712.hash(
     //   EIP712.Domain("LoopringWallet", "2.0.0", address(this))
     // )
-    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule', '1.2.0'),
     primaryType: 'unlock',
     message: {
       wallet: wallet,
@@ -231,7 +238,7 @@ function getApproveChangeMasterCopy({
         { name: 'masterCopy', type: 'address' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'GuardianModule'),
+    domain: domain(chainId, guardiaContractAddress, 'GuardianModule', '1.2.0'),
     primaryType: 'changeMasterCopy',
     message: {
       wallet: wallet,
@@ -267,7 +274,7 @@ function getDepositWalletTypedData({
         { name: 'data', type: 'bytes' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'LoopringWallet'),
+    domain: domain(chainId, guardiaContractAddress, 'LoopringWallet', '2.0.0'),
     primaryType: 'approveThenCallContract',
     message: {
       wallet: wallet,
@@ -284,6 +291,7 @@ function getApproveTokenCopy({
   wallet,
   validUntil,
   message,
+  walletVersion,
 }: {
   chainId: ChainId
   guardiaContractAddress: any
@@ -291,6 +299,7 @@ function getApproveTokenCopy({
   validUntil: any
   newGuardians?: Buffer | any
   message?: { [key: string]: any }
+  walletVersion: 2 | 1
 }) {
   const typedData = {
     types: {
@@ -303,7 +312,12 @@ function getApproveTokenCopy({
         { name: 'amount', type: 'uint256' },
       ],
     },
-    domain: domain(chainId, guardiaContractAddress, 'TransferModule'),
+    domain: domain(
+      chainId,
+      guardiaContractAddress,
+      walletVersion == 1 ? 'TransferModule' : 'LoopringWallet',
+      walletVersion == 1 ? '1.2.0' : '2.0.0',
+    ),
     primaryType: 'approveToken',
     message: {
       wallet: wallet,
@@ -330,6 +344,7 @@ export async function signHebaoApproveWrap(
       [key: string]: any
     }
     guardian: any
+    walletVersion: 1 | 2
   },
 ) {
   let typedData: any
@@ -346,6 +361,7 @@ export async function signHebaoApproveWrap(
       masterCopy,
       messageData,
       guardian,
+      walletVersion,
     } = props as any
     let typedData, messageHash
 
@@ -384,6 +400,7 @@ export async function signHebaoApproveWrap(
             logdata: messageData.logdata,
             // newOwner: messageData.newOwner,
           },
+          walletVersion,
         })
         break
       case HEBAO_META_TYPE.remove_guardian:
@@ -435,6 +452,7 @@ export async function signHebaoApproveWrap(
             // logdata: messageData.logdata,
             // masterCopy: messageData.newMasterCopy,
           },
+          walletVersion,
         })
         break
       case HEBAO_META_TYPE.upgrade_contract:
