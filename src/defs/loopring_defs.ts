@@ -3501,6 +3501,12 @@ export enum LABEL_INVESTMENT_STATUS {
   // INVESTMENT_SUCCEEDED = "INVESTMENT_SUCCEEDED",
   // INVESTMENT_FAILED = "INVESTMENT_FAILED",
   // INVESTMENT_RECEIVED = "INVESTMENT_RECEIVED",
+  PAID = 'paid',
+  UNSETTLED = 'unsettled',
+  SETTLED = 'settled',
+  REJECTED = 'rejected',
+  SUCCESS = 'success',
+  RECEIVED = 'received',
   PROCESSED = 'processed',
   FAILED = 'failed',
   PROCESSING = 'processing',
@@ -3513,6 +3519,13 @@ export enum SETTLEMENT_STATUS {
   PAID = 'PAID',
 }
 
+export enum DUAL_RETRY_STATUS {
+  NO_RETRY = 'NO_RETRY',
+  RETRYING = 'RETRYING',
+  RETRY_SUCCESS = 'RETRY_SUCCESS',
+  RETRY_FAILED = 'RETRY_FAILED',
+}
+
 export interface GetUserDualTxRequest {
   accountId: number
   dualTypes: DUAL_TYPE
@@ -3523,12 +3536,7 @@ export interface GetUserDualTxRequest {
   start?: number
   end?: number
   limit: number
-}
-export enum DUAL_RETRY_STATUS {
-  NO_RETRY = 'NO_RETRY',
-  RETRYING = 'RETRYING',
-  RETRY_SUCCESS = 'RETRY_SUCCESS',
-  RETRY_FAILED = 'RETRY_FAILED',
+  retryStatus?: DUAL_RETRY_STATUS[]
 }
 
 export type DUAL_REINVEST_INFO = {

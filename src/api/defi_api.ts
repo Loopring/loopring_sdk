@@ -272,32 +272,6 @@ export class DefiAPI extends BaseAPI {
     }
   }
 
-  // public async getDualRule<R>(request :loopring_defs.GetDualRuleRequest): Promise<RESULT_INFO | {
-  //
-  // 	raw_data: R,
-  // }> {
-  // 	const reqParams: loopring_defs.ReqParams = {
-  // 		url: LOOPRING_URLs.GET_DUAL_RULE,
-  // 		queryParams: request,
-  // 		method: ReqMethod.GET,
-  // 		sigFlag: SIG_FLAG.NO_SIG,
-  // 	};
-  // 	const raw_data = (await this.makeReq().request(reqParams)).data;
-  // 	if (raw_data?.resultInfo) {
-  // 		return {
-  // 			...raw_data?.resultInfo,
-  // 		};
-  // 	}
-  //
-  //
-  // 	return {
-  // 		raw_data,
-  // 		dualBalanceMap: [...raw_data].reduce((item, prev) => {
-  // 			return {...prev, [ item.coin ]: item};
-  // 		}, {} as loopring_defs.loopring_defs.LoopringMap<loopring_defs.DualBalance>)
-  // 	}
-  // }
-
   public async getDualPrices(request: loopring_defs.GetDualPricesRequest) {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_DUAL_PRICES,
@@ -343,7 +317,10 @@ export class DefiAPI extends BaseAPI {
   public async getDualTransactions(request: loopring_defs.GetUserDualTxRequest, apiKey: string) {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
-      queryParams: request,
+      queryParams: {
+        ...request,
+        ...(request.retryStatus ? { retryStatus: request.retryStatus.join(',') } : {}),
+      },
       apiKey,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -357,6 +334,7 @@ export class DefiAPI extends BaseAPI {
 
     return {
       totalNum: raw_data?.totalNum,
+      indexes: raw_data?.indexes,
       userDualTxs: raw_data.transactions as loopring_defs.UserDualTxsHistory[],
       raw_data,
     }
