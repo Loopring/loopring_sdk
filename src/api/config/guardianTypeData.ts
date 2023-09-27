@@ -511,7 +511,7 @@ export async function signHebaoApproveWrap(
         messageHash = guardian?.messageHash
     }
 
-    myLog('typedData', typedData)
+    // myLog('typedData', typedData)
     if (typedData) {
       const result = await getEcDSASig(
         web3,
