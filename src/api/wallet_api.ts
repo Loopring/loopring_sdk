@@ -150,8 +150,7 @@ export class WalletAPI extends BaseAPI {
       guardian,
       walletVersion: isContract1XAddress ? 1 : 2,
     })
-    ecdsaSignature += SigSuffix.Suffix03
-    request.signature = ecdsaSignature
+    request.signature = ecdsaSignature?.toString()
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
       bodyParams: request,
