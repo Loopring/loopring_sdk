@@ -459,6 +459,7 @@ export async function getEcDSASig(
     case GetEcDSASigType.HasDataStruct:
       try {
         response = await new Promise((resolve, reject) => {
+          myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
           web3.currentProvider.sendAsync(
             {
               method: 'eth_signTypedData_v4',

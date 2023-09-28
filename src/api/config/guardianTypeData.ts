@@ -459,7 +459,7 @@ export async function signHebaoApproveWrap(
           wallet, // guardian.signedRequest.wallet,
           validUntil, // guardian.signedRequest.validUntil,
           message: {
-            guardian: messageData.guardian,
+            guardian: messageData?.guardianAddress,
           },
           walletVersion,
         })
@@ -524,7 +524,6 @@ export async function signHebaoApproveWrap(
     }
 
     if (typedData) {
-      myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
       const result = await getEcDSASig(
         web3,
         typedData,
