@@ -1,10 +1,10 @@
 import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from '../../defs'
-
 import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
-import * as ethUtil from 'ethereumjs-util'
 import { personalSign } from '../base_api'
-import { ethers } from 'ethers'
+import * as fm from '../../utils/formatter'
+import * as sigUtil from 'eth-sig-util'
+// import { toBuffer } from '../../utils'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -58,7 +58,7 @@ function getApproveRecoverTypedData({
         { name: 'wallet', type: 'address' },
         { name: 'validUntil', type: 'uint256' },
         { name: 'newOwner', type: 'address' },
-        ...(walletVersion == 1 ? [] : [{ name: 'newGuardians', type: 'string' }]),
+        ...(walletVersion == 1 ? [] : [{ name: 'newGuardians', type: 'address[]' }]),
       ],
     },
     domain: domain(
@@ -75,6 +75,7 @@ function getApproveRecoverTypedData({
       // newOwner: newOwner,
     },
   }
+  // myLog('typedData message', ethUtil.keccak256(toBuffer(typedData.message)))
   return typedData
 }
 function getApproveTransferTypedData({
@@ -116,8 +117,6 @@ function getApproveTransferTypedData({
     message: {
       wallet: wallet,
       validUntil: validUntil,
-      // newOwner: newOwner,
-      ...(newGuardians ? { newGuardians } : {}),
       ...message,
     },
   }
@@ -400,18 +399,14 @@ export async function signHebaoApproveWrap(
       walletVersion,
     } = props as any
     let typedData, messageHash
+    myLog('backend hash', guardian?.messageHash)
 
     switch (type) {
       case HEBAO_META_TYPE.recovery:
         let newOwner = messageData?.newOwner
-        let guardiansHash
         if (!newOwner) {
           throw 'no newOwner'
         }
-        // if (newOwner && messageData?.newGuardians !== undefined) {
-        //   let guardiansBs = encodeAddressesPacked(messageData.newGuardians)
-        //   guardiansHash = ethUtil.keccak(guardiansBs)
-        // }
         typedData = getApproveRecoverTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
@@ -422,10 +417,20 @@ export async function signHebaoApproveWrap(
             ...(walletVersion == 1
               ? {}
               : {
-                  newGuardians: ethers.utils.solidityKeccak256(
-                    ['address'],
-                    messageData?.newGuardians,
-                  ),
+                  newGuardians: messageData?.newGuardians,
+                  //   : ethers.utils.solidityKeccak256(
+                  //   Array(messageData?.newGuardians?.length).fill('address'),
+                  //   messageData?.newGuardians,
+                  // ),
+                  //   ethUtil.keccak256(
+                  //   messageData?.newGuardians
+                  //     .map((address: string) => address.toLowerCase().replace('0x', ''))
+                  //     .join(''),
+                  // ),
+                  //   ethers.utils.solidityKeccak256(
+                  //   Array(messageData?.newGuardians?.length).fill('address'),
+                  //   messageData?.newGuardians,
+                  // ),
                 }),
           },
           walletVersion,
@@ -518,8 +523,8 @@ export async function signHebaoApproveWrap(
         messageHash = guardian?.messageHash
     }
 
-    // myLog('typedData', typedData)
     if (typedData) {
+      myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
       const result = await getEcDSASig(
         web3,
         typedData,

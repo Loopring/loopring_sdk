@@ -135,7 +135,6 @@ export class WalletAPI extends BaseAPI {
     } = req
     const isHWAddr = !!isHWAddrOld
     let ecdsaSignature = undefined
-    myLog('backend hash', guardian.messageHash)
     ecdsaSignature = await signHebaoApproveWrap({
       chainId,
       web3,
