@@ -4,6 +4,7 @@ import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
 import * as ethUtil from 'ethereumjs-util'
 import { personalSign } from '../base_api'
+import { ethers } from 'ethers'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -36,7 +37,6 @@ function getApproveRecoverTypedData({
   guardiaContractAddress,
   wallet,
   validUntil,
-  newGuardians,
   message,
   walletVersion,
 }: {
@@ -58,7 +58,7 @@ function getApproveRecoverTypedData({
         { name: 'wallet', type: 'address' },
         { name: 'validUntil', type: 'uint256' },
         { name: 'newOwner', type: 'address' },
-        ...(newGuardians ? [{ name: 'newGuardians', type: 'string' }] : []),
+        ...(walletVersion == 1 ? [] : [{ name: 'newGuardians', type: 'string' }]),
       ],
     },
     domain: domain(
@@ -403,23 +403,30 @@ export async function signHebaoApproveWrap(
 
     switch (type) {
       case HEBAO_META_TYPE.recovery:
-        let newOwner = undefined
+        let newOwner = messageData?.newOwner
         let guardiansHash
-        if (!messageData?.newOwner) {
+        if (!newOwner) {
           throw 'no newOwner'
         }
-        if (newOwner && messageData.newGuardians) {
-          let guardiansBs = encodeAddressesPacked(messageData.newGuardians)
-          guardiansHash = ethUtil.keccak(guardiansBs)
-        }
+        // if (newOwner && messageData?.newGuardians !== undefined) {
+        //   let guardiansBs = encodeAddressesPacked(messageData.newGuardians)
+        //   guardiansHash = ethUtil.keccak(guardiansBs)
+        // }
         typedData = getApproveRecoverTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
           validUntil, // guardian.signedRequest.validUntil,
-          newGuardians: guardiansHash ? guardiansHash : undefined,
           message: {
-            newOwner: messageData.newOwner,
+            newOwner,
+            ...(walletVersion == 1
+              ? {}
+              : {
+                  newGuardians: ethers.utils.solidityKeccak256(
+                    ['address'],
+                    messageData?.newGuardians,
+                  ),
+                }),
           },
           walletVersion,
         })
