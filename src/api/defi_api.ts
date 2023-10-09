@@ -319,7 +319,7 @@ export class DefiAPI extends BaseAPI {
       url: LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
       queryParams: {
         ...request,
-        ...(request.retryStatuses ? { retryStatus: request.retryStatuses.join(',') } : {}),
+        ...(request.retryStatuses ? { retryStatuses: request.retryStatuses.join(',') } : {}),
       },
       apiKey,
       method: ReqMethod.GET,
