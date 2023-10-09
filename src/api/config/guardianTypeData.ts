@@ -447,7 +447,6 @@ export async function signHebaoApproveWrap(
             to: messageData.to,
             amount: messageData.amount,
             logdata: messageData.logdata,
-            // newOwner: messageData.newOwner,
           },
           walletVersion,
         })
