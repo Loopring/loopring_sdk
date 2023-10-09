@@ -3536,7 +3536,7 @@ export interface GetUserDualTxRequest {
   start?: number
   end?: number
   limit: number
-  retryStatus?: DUAL_RETRY_STATUS[]
+  retryStatuses?: DUAL_RETRY_STATUS[]
 }
 
 export type DUAL_REINVEST_INFO = {
