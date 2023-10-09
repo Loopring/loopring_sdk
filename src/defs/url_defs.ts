@@ -88,6 +88,9 @@ export enum LOOPRING_URLs {
   GET_WS_KEY = '/v3/ws/key',
   GET_LATEST_TOKEN_PRICES = '/api/v3/datacenter/getLatestTokenPrices',
   GET_USER_TRADE_AMOUNT = '/api/v3/datacenter/getUserTradeAmount',
+  GET_SUPPORT_TOKENS = '/api/v3/datacenter/getSupportTokens',
+  GET_QUOTE_TREND = '/api/v3/datacenter/getTokenQuoteTrend',
+  GET_QUOTE_TOKEN_INFO = '/api/v3/datacenter/getTokenInfo',
 
   GET_USER_ASSETS = '/api/wallet/v3/userAssets',
   GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',

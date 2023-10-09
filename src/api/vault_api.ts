@@ -160,7 +160,7 @@ export class VaultAPI extends BaseAPI {
       hash: string // OperationHash
     },
     apiKey: string,
-  ): Promise<{ raw_data: R }> {
+  ): Promise<R & { raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_VAULT_GETOPERATIONBY_HASH,
       queryParams: request,
@@ -174,7 +174,7 @@ export class VaultAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       }
     }
-    return { raw_data }
+    return { raw_data, ...raw_data }
   }
 
   public async getVaultDepth<R>({

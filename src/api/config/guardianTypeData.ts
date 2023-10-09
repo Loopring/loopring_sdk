@@ -78,6 +78,7 @@ function getApproveRecoverTypedData({
   // myLog('typedData message', ethUtil.keccak256(toBuffer(typedData.message)))
   return typedData
 }
+
 function getApproveTransferTypedData({
   chainId,
   guardiaContractAddress,
@@ -436,22 +437,6 @@ export async function signHebaoApproveWrap(
           walletVersion,
         })
         break
-      case HEBAO_META_TYPE.transfer:
-        typedData = getApproveTransferTypedData({
-          chainId,
-          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
-          wallet, // guardian.signedRequest.wallet,
-          validUntil, // guardian.signedRequest.validUntil,
-          message: {
-            token: messageData.token,
-            to: messageData.to,
-            amount: messageData.amount,
-            logdata: messageData.logdata,
-            // newOwner: messageData.newOwner,
-          },
-          walletVersion,
-        })
-        break
       case HEBAO_META_TYPE.remove_guardian:
         typedData = getRemoveGuardianTypedData({
           chainId,
@@ -474,6 +459,21 @@ export async function signHebaoApproveWrap(
           // message: {
           //   guardian: messageData.guardian,
           // },
+          walletVersion,
+        })
+        break
+      case HEBAO_META_TYPE.transfer:
+        typedData = getApproveTransferTypedData({
+          chainId,
+          guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
+          wallet, // guardian.signedRequest.wallet,
+          validUntil, // guardian.signedRequest.validUntil,
+          message: {
+            token: messageData.token,
+            to: messageData.to,
+            amount: messageData.amount,
+            logdata: messageData.logdata,
+          },
           walletVersion,
         })
         break

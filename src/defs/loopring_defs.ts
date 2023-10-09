@@ -4502,18 +4502,26 @@ export type VaultAccountInfo = {
 }
 
 export enum VaultOperationType {
-  VAULT_OPEN_POSITION = 0,
-  VAULT_MARGIN_CALL = 1,
-  VAULT_BORROW = 2,
-  VAULT_REPAY = 3,
-  VAULT_TRADE = 4,
-  VAULT_CLOSE_OUT = 5,
+  VAULT_OPEN_POSITION = 'VAULT_OPEN_POSITION',
+  VAULT_MARGIN_CALL = 'VAULT_MARGIN_CALL',
+  VAULT_BORROW = 'VAULT_BORROW',
+  VAULT_REPAY = 'VAULT_REPAY',
+  VAULT_TRADE = 'VAULT_TRADE',
+  VAULT_CLOSE_OUT = 'VAULT_CLOSE_OUT',
 }
+export enum VaultOperationStatus {
+  VAULT_STATUS_RECEIVED = 'VAULT_STATUS_RECEIVED',
+  VAULT_STATUS_PROCESSING = 'VAULT_STATUS_PROCESSING',
+  VAULT_STATUS_SUCCEED = 'VAULT_STATUS_SUCCEED',
+  VAULT_STATUS_FAILED = 'VAULT_STATUS_FAILED',
+  VAULT_STATUS_PENDING = 'VAULT_STATUS_PENDING',
+}
+
 export type VaultOperation = {
   hash: string
   operateType: string
   operateSubType: VaultOperationType
-  Status: string
+  status: VaultOperationStatus
   tokenIn: number
   amountIn: string
   tokenOut: number
@@ -4589,3 +4597,81 @@ export interface VaultRepayRequest {
   }
   timestamp: number
 }
+
+export interface DatacenterTokenQuote {
+  price: string
+  volume24H: string
+  volumeChange24H: string
+  percentChange1H: string
+  percentChange24H: string
+  percentChange7D: string
+  percentChange30D: string
+  marketCap: string
+  fullyDilutedMarketCap: string
+}
+
+export interface GetDatacenterTokenInfoRequest {
+  tokens?: string[]
+  currency: 'USD'
+}
+export interface DatacenterTokenInfoSimple {
+  tokenAddress: string
+  symbol: string
+  price: string
+  marketCap: string
+  volume24H: string
+  volumeChange24H: string
+  percentChange24H: string
+  percentChange7D: string
+  tokenId: number
+  cmcRank: number
+  timestamp: number
+}
+export interface DatacenterTokenInfo {
+  tokenId: number
+  tokenAddress: string
+  name: string
+  symbol: string
+  description: string
+  slug: string
+  logo: string
+  cmcRank: number
+  website: string
+  explorer: string
+  platform: string
+  dateAdded: string
+  dateLaunched: string
+  selfReportedCirculatingSupply: string
+  selfReportedMarketCap: string
+  infiniteSupply: boolean
+  circulatingSupply: string
+  totalSupply: string
+  maxSupply: string
+  quote: DatacenterTokenQuote
+  timestamp: number
+}
+export enum DatacenterRange {
+  RANGE_ONE_HOUR = 'RANGE_ONE_HOUR',
+  RANGE_ONE_DAY = 'RANGE_ONE_DAY',
+  RANGE_ONE_WEEK = 'RANGE_ONE_WEEK',
+  RANGE_ONE_MONTH = 'RANGE_ONE_MONTH',
+}
+
+export interface GetDatacenterTokenQuoteTrendRequest {
+  token: string
+  rang?: DatacenterRange[]
+  currency: 'USD'
+}
+export enum GetDatacenterTokenQuoteTrend {
+  timestamp,
+  price,
+  volume24H,
+  volumeChange24H,
+  percentChange1H,
+  percentChange24H,
+  percentChange7D,
+  percentChange30D,
+  marketCap,
+}
+
+//
