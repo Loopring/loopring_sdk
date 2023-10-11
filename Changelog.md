@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## JS SDK Version ChangeLog
+#### 3.6.14
+    1) Guardian approve
 #### v3.5.0
     1）ecdsaSignature update to `eth_signTypedData_v4`  use method `sendAsync`
 #### v3.4.15
