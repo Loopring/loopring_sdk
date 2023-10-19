@@ -125,6 +125,7 @@ export enum UserTxTypes {
   DUAL_INVESTMENT = 'dual_investment',
   L2_STAKING = 'l2_staking',
   UNIFIED_CLAIM = 'unified_claim',
+  CHANGE_PWD = 'change_pwd',
 }
 
 export enum UserBillTypes {
