@@ -365,16 +365,14 @@ export class VaultAPI extends BaseAPI {
     apiKey: string
   }): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
-
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_VAULT_LOAN,
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }
@@ -402,10 +400,9 @@ export class VaultAPI extends BaseAPI {
       bodyParams: request,
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }

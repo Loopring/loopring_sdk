@@ -4497,8 +4497,11 @@ export type VaultAccountInfo = {
   totalBalanceOfUsd: string
   totalDebtOfUsd: string
   totalEquityOfUsd: string
+  totalCollateralOfUsd: string
   collateralInfo: CollateralInfo
+  maxBorrowableOfUsd: string
   userAssets: VaultBalance[]
+  openDate: number
 }
 
 export enum VaultOperationType {
