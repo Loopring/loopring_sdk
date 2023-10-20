@@ -406,7 +406,7 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
-      eddsaSignature,
+      ecdsaSignature: undefined,
     }
 
     let raw_data
@@ -458,7 +458,6 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
-      eddsaSignature,
       ecdsaSignature: undefined,
     }
     let raw_data
