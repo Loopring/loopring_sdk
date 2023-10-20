@@ -4592,13 +4592,14 @@ export interface VaultLoadRequest {
   timestamp: number
 }
 
-export interface VaultRepayRequest {
-  accountId: number
-  token: {
-    tokenId: number
-    volume: string
-  }
-  timestamp: number
+export interface VaultRepayRequestV3WithPatch {
+  request: OriginTransferRequestV3
+  web3: Web3
+  chainId: ChainId
+  walletType: ConnectorNames
+  eddsaKey: string
+  apiKey: string
+  isHWAddr?: boolean
 }
 
 export interface DatacenterTokenQuote {
