@@ -4540,7 +4540,7 @@ export type VaultOrder = {
   hash: string
   clientOrderId: string
   status: string
-  tokens: number
+  tokenS: number
   amountS: string
   fillAmountS: string
   tokenB: number

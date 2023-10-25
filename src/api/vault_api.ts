@@ -134,7 +134,7 @@ export class VaultAPI extends BaseAPI {
       limit: number
     },
     apiKey: string,
-  ): Promise<{ raw_data: { data: R[]; total: number; list: R[]; totalNum: number } }> {
+  ): Promise<{ raw_data: { data: R[]; total: number } } & { list: R[]; totalNum: number }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_VAULT_GETOPERATIONS,
       queryParams: request,
@@ -148,7 +148,7 @@ export class VaultAPI extends BaseAPI {
         ...raw_data?.resultInfo,
       }
     }
-    return { raw_data }
+    return { raw_data, list: raw_data.data as R[], totalNum: raw_data.total }
   }
   public async getVaultGetOperationByHash<
     R = {
@@ -243,7 +243,7 @@ export class VaultAPI extends BaseAPI {
     request,
     eddsaKey,
     apiKey,
-  }: loopring_defs.VaultOrderNFTRequestV3WithPatch): Promise<{ raw_data: R }> {
+  }: loopring_defs.VaultOrderNFTRequestV3WithPatch) {
     const takerOrderEddsaSignature = get_EddsaSig_NFT_Order(request, eddsaKey).result
     const _request = {
       ...request,
@@ -261,13 +261,12 @@ export class VaultAPI extends BaseAPI {
       },
       apiKey,
     }
-    const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      return {
-        ...raw_data?.resultInfo,
-      }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return this.returnTxHash(raw_data)
+    } catch (error) {
+      throw error as AxiosResponse
     }
-    return { raw_data }
   }
   public async submitVaultOrder<R>({
     request,
@@ -277,7 +276,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultOrderRequest
     privateKey: string
     apiKey: string
-  }): Promise<{ raw_data: R }> {
+  }) {
     const dataToSig = [
       request.exchange,
       request.storageId,
@@ -304,13 +303,12 @@ export class VaultAPI extends BaseAPI {
         PrivateKey: privateKey,
       },
     }
-    const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      return {
-        ...raw_data?.resultInfo,
-      }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return this.returnTxHash(raw_data)
+    } catch (error) {
+      throw error as AxiosResponse
     }
-    return { raw_data }
   }
   public async submitVaultExit<R>({
     request,
@@ -320,7 +318,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultExitRequest
     privateKey: string
     apiKey: string
-  }): Promise<{ raw_data: R }> {
+  }) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_VAULT_EXIT,
@@ -333,16 +331,15 @@ export class VaultAPI extends BaseAPI {
         PrivateKey: privateKey,
       },
     }
-    const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      return {
-        ...raw_data?.resultInfo,
-      }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return this.returnTxHash(raw_data)
+    } catch (error) {
+      throw error as AxiosResponse
     }
-    return { raw_data, ...raw_data }
   }
 
-  public async submitVaultTransfer<R>(): Promise<{ raw_data: R }> {
+  public async submitVaultTransfer<R>() {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_VAULT_TRANSFER,
       method: ReqMethod.POST,
@@ -364,7 +361,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultLoadRequest
     privateKey: string
     apiKey: string
-  }): Promise<{ raw_data: R }> {
+  }) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_VAULT_LOAN,
@@ -377,19 +374,18 @@ export class VaultAPI extends BaseAPI {
         PrivateKey: privateKey,
       },
     }
-    const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
-      return {
-        ...raw_data?.resultInfo,
-      }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return this.returnTxHash(raw_data)
+    } catch (error) {
+      throw error as AxiosResponse
     }
-    return { raw_data }
   }
 
   public async submitVaultRepay<R>(
     req: loopring_defs.VaultRepayRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<{ raw_data: R }> {
+  ) {
     let { request, eddsaKey, apiKey } = req
     const { counterFactualInfo }: any = options ? options : { accountId: 0 }
     let eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)?.result
@@ -409,15 +405,9 @@ export class VaultAPI extends BaseAPI {
       ecdsaSignature: undefined,
     }
 
-    let raw_data
     try {
-      raw_data = (await this.makeReq().request(reqParams)).data
-      if (raw_data?.resultInfo) {
-        return {
-          ...raw_data?.resultInfo,
-        }
-      }
-      return { raw_data, ...raw_data }
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return this.returnTxHash(raw_data)
     } catch (error) {
       throw error as AxiosResponse
     }

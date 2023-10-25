@@ -1224,7 +1224,7 @@ export class ExchangeAPI extends BaseAPI {
   }
   public async getTokenInfo<R = DatacenterTokenInfo>(
     request: { token: string; currency: 'USD' },
-    url: string = LOOPRING_URLs.GET_QUOTE_TREND,
+    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_INFO,
   ): Promise<R & { raw_data: R }> {
     const reqParams: ReqParams = {
       url,
@@ -1269,7 +1269,7 @@ export class ExchangeAPI extends BaseAPI {
   }
   public async getQuoteTokenInfo<R = [][], _X = GetDatacenterTokenQuoteTrend>(
     request: GetDatacenterTokenQuoteTrendRequest,
-    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_INFO,
+    url: string = LOOPRING_URLs.GET_QUOTE_TREND,
   ): Promise<{ list: R; raw_data: R }> {
     const reqParams: ReqParams = {
       url,
