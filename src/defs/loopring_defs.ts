@@ -375,6 +375,14 @@ export interface DefiMarketInfo {
   baseLimitAmount: string
   quoteAlias: string
   stepLength: string
+  extra: {
+    depositFeeBips: number
+    withdrawFeeBips: number
+    orderbookAggLevels: number
+    isLeverage: number
+    baseAssetSymbol: string
+    quoteAssetSymbol: string
+  }
 }
 
 export interface MarketsResponse {
@@ -3476,14 +3484,6 @@ export type DualProductAndPrice = {
   ratio: number
   profit: string
   baseSize: string
-  extra: {
-    depositFeeBips: number
-    withdrawFeeBips: number
-    orderbookAggLevels: number
-    isLeverage: number
-    baseAssetSymbol: string
-    quoteAssetSymbol: string
-  }
 }
 
 export type DualRulesCoinsInfo = {
