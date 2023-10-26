@@ -1080,7 +1080,12 @@ export function calcDual({
     feeTokenSymbol,
     quota,
     maxFeeBips
-  const { base, currency } = info
+  let { base, currency } = info
+  let { quote } = index
+  if (quote) {
+    currency = quote
+  }
+
   const settleRatio = fm.toBig(info.profit).times(info.ratio).toFixed(6, BigNumber.ROUND_DOWN)
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
     lessEarnVol = toBig(settleRatio).plus(1).times(sellVol) //dualViewInfo.strike);
