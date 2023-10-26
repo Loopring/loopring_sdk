@@ -1080,11 +1080,10 @@ export function calcDual({
     feeTokenSymbol,
     quota,
     maxFeeBips
-  let { base, currency } = info
-  let { quote } = index
-  if (quote) {
-    currency = quote
-  }
+  let {
+    base,
+    extra: { quoteAssetSymbol },
+  } = info
 
   const settleRatio = fm.toBig(info.profit).times(info.ratio).toFixed(6, BigNumber.ROUND_DOWN)
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
@@ -1131,7 +1130,7 @@ export function calcDual({
     ) // rule.baseMin;
     quota = BigNumber.min(
       toBig(info.baseSize).times(info.strike).toString(),
-      balance[currency].free,
+      balance[quoteAssetSymbol].free,
     )
     maxSellAmount = BigNumber.min(rule.currencyMax, quota)
     /** calc current maxFeeBips **/
