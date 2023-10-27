@@ -1287,7 +1287,30 @@ export class ExchangeAPI extends BaseAPI {
 
     return {
       raw_data,
-      list: raw_data,
+      list: raw_data?.data,
+    }
+  }
+
+  public async getQuoteTokenOhlv<R = [][], _X = GetDatacenterTokenQuoteTrend>(
+    request: GetDatacenterTokenQuoteTrendRequest,
+    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_OHLCV_Trend,
+  ): Promise<{ list: R; raw_data: R }> {
+    const reqParams: ReqParams = {
+      url,
+      queryParams: { ...request, rang: request.rang?.join(',') ?? '' },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      raw_data,
+      list: raw_data?.data,
     }
   }
 }

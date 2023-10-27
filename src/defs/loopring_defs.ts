@@ -4668,10 +4668,22 @@ export enum DatacenterRange {
   RANGE_ONE_WEEK = 'RANGE_ONE_WEEK',
   RANGE_ONE_MONTH = 'RANGE_ONE_MONTH',
 }
+export enum OHLCVDatacenterRange {
+  OHLCV_RANGE_ONE_DAY = 'OHLCV_RANGE_ONE_DAY',
+  OHLCV_RANGE_ONE_WEEK = 'OHLCV_RANGE_ONE_WEEK',
+  OHLCV_RANGE_ONE_MONTH = 'OHLCV_RANGE_ONE_MONTH',
+  OHLCV_RANGE_ONE_YEAR = 'OHLCV_RANGE_ONE_YEAR',
+  OHLCV_RANGE_ALL = 'OHLCV_RANGE_ALL',
+}
 
 export interface GetDatacenterTokenQuoteTrendRequest {
   token: string
   rang?: DatacenterRange[]
+  currency: 'USD'
+}
+export interface GetDatacenterTokenQuoteTrendRequest {
+  token: string
+  rang?: OHLCVDatacenterRange[]
   currency: 'USD'
 }
 export enum GetDatacenterTokenQuoteTrend {

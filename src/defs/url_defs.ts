@@ -91,6 +91,7 @@ export enum LOOPRING_URLs {
   GET_SUPPORT_TOKENS = '/api/v3/datacenter/getSupportTokens',
   GET_QUOTE_TREND = '/api/v3/datacenter/getTokenQuoteTrend',
   GET_QUOTE_TOKEN_INFO = '/api/v3/datacenter/getTokenInfo',
+  GET_QUOTE_TOKEN_OHLCV_Trend = '/api/v3/datacenter/getTokenOHLCVTrend',
 
   GET_USER_ASSETS = '/api/wallet/v3/userAssets',
   GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',
