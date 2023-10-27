@@ -4681,7 +4681,7 @@ export interface GetDatacenterTokenQuoteTrendRequest {
   rang?: DatacenterRange[]
   currency: 'USD'
 }
-export interface GetDatacenterTokenQuoteTrendRequest {
+export interface GetDatacenterTokenOhlcvQuoteTrendRequest {
   token: string
   rang?: OHLCVDatacenterRange[]
   currency: 'USD'

@@ -46,6 +46,7 @@ import {
   GetDatacenterTokenQuoteTrend,
   GetDatacenterTokenQuoteTrendRequest,
   DatacenterTokenInfoSimple,
+  GetDatacenterTokenOhlcvQuoteTrendRequest,
 } from '../defs'
 
 import BigNumber from 'bignumber.js'
@@ -1291,9 +1292,9 @@ export class ExchangeAPI extends BaseAPI {
     }
   }
 
-  public async getQuoteTokenOhlv<R = [][], _X = GetDatacenterTokenQuoteTrend>(
+  public async getQuoteTokenOhlcv<R = [][], _X = GetDatacenterTokenOhlcvQuoteTrendRequest>(
     request: GetDatacenterTokenQuoteTrendRequest,
-    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_OHLCV_Trend,
+    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_OHLCV_TREND,
   ): Promise<{ list: R; raw_data: R }> {
     const reqParams: ReqParams = {
       url,
