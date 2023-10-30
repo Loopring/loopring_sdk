@@ -4,7 +4,7 @@ import { LOOPRING_URLs, ReqMethod, SIG_FLAG, SigPatchField } from '../defs'
 import { get_EddsaSig_NFT_Order, getMidPrice, sortObjDictionary } from '../index'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
-import { VaultRepayRequestV3WithPatch } from '../defs/loopring_defs'
+import { VaultOperationEnum, VaultRepayRequestV3WithPatch } from '../defs/loopring_defs'
 
 export class VaultAPI extends BaseAPI {
   public async getVaultTokens<R = loopring_defs.VaultToken[]>(): Promise<{
@@ -127,7 +127,7 @@ export class VaultAPI extends BaseAPI {
   >(
     request: {
       accountId: number
-      operateTypes: string //  VaultOperationType seperate by ',',
+      operateTypes: VaultOperationEnum[] | string //  VaultOperationType seperate by ',',
       offset: number
       start?: number
       end?: number
@@ -137,7 +137,13 @@ export class VaultAPI extends BaseAPI {
   ): Promise<{ raw_data: { data: R[]; total: number } } & { list: R[]; totalNum: number }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_VAULT_GETOPERATIONS,
-      queryParams: request,
+      queryParams: {
+        ...request,
+        operateTypes:
+          typeof request.operateTypes === 'string'
+            ? request.operateTypes
+            : request.operateTypes.join(','),
+      },
       method: ReqMethod.GET,
       apiKey,
       sigFlag: SIG_FLAG.NO_SIG,

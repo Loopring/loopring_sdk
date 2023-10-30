@@ -4520,6 +4520,14 @@ export enum VaultOperationType {
   VAULT_TRADE = 'VAULT_TRADE',
   VAULT_CLOSE_OUT = 'VAULT_CLOSE_OUT',
 }
+export enum VaultOperationEnum {
+  VAULT_OPEN_POSITION,
+  VAULT_MARGIN_CALL,
+  VAULT_BORROW,
+  VAULT_REPAY,
+  VAULT_TRADE,
+  VAULT_CLOSE_OUT,
+}
 export enum VaultOperationStatus {
   VAULT_STATUS_RECEIVED = 'VAULT_STATUS_RECEIVED',
   VAULT_STATUS_PROCESSING = 'VAULT_STATUS_PROCESSING',
@@ -4678,12 +4686,12 @@ export enum OHLCVDatacenterRange {
 
 export interface GetDatacenterTokenQuoteTrendRequest {
   token: string
-  rang?: DatacenterRange[]
+  range?: DatacenterRange
   currency: 'USD'
 }
 export interface GetDatacenterTokenOhlcvQuoteTrendRequest {
   token: string
-  rang?: OHLCVDatacenterRange[]
+  range?: OHLCVDatacenterRange
   currency: 'USD'
 }
 export enum GetDatacenterTokenQuoteTrend {

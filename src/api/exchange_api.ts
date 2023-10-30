@@ -51,6 +51,7 @@ import {
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote, makeMarket, makeMarkets } from '../utils'
+import { isArray } from 'lodash'
 
 const checkAmt = (rawStr: string) => {
   if (rawStr.trim() === '') {
@@ -1274,7 +1275,7 @@ export class ExchangeAPI extends BaseAPI {
   ): Promise<{ list: R; raw_data: R }> {
     const reqParams: ReqParams = {
       url,
-      queryParams: { ...request, rang: request.rang?.join(',') ?? '' },
+      queryParams: { ...request },
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     }
@@ -1298,7 +1299,9 @@ export class ExchangeAPI extends BaseAPI {
   ): Promise<{ list: R; raw_data: R }> {
     const reqParams: ReqParams = {
       url,
-      queryParams: { ...request, rang: request.rang?.join(',') ?? '' },
+      queryParams: {
+        ...request,
+      },
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     }
