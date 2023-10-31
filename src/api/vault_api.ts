@@ -359,12 +359,12 @@ export class VaultAPI extends BaseAPI {
     }
     return { raw_data }
   }
-  public async submitVaultLoad<R>({
+  public async submitVaultBorrow<R>({
     request,
     privateKey,
     apiKey,
   }: {
-    request: loopring_defs.VaultLoadRequest
+    request: loopring_defs.VaultBorrowRequest
     privateKey: string
     apiKey: string
   }) {

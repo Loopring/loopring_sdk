@@ -4599,7 +4599,7 @@ export interface VaultOrderNFTRequestV3WithPatch {
   isHWAddr?: boolean
 }
 
-export interface VaultLoadRequest {
+export interface VaultBorrowRequest {
   accountId: number
   token: {
     tokenId: number
