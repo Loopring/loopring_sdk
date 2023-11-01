@@ -22,7 +22,7 @@ when using for browser make sure set up `NODE_ENV=production|development`
 Please see the [documentation page](https://loopring.github.io/loopring_sdk/) for information about getting started and developing with the Loopring SDK.
 
 - [JS SDK](https://loopring.github.io/loopring_sdk)
-- [APIs](https://docs.loopring.io/en/)
+- [APIs](https://docs-protocol.loopring.io)
 
 ## ✨ Changelog
 
