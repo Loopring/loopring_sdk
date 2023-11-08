@@ -19,7 +19,7 @@ import {
   SIG_FLAG,
   SigPatchField,
   TradeChannel,
-  SigSuffix,
+  NetworkWallet,
 } from '../defs'
 
 import * as loopring_defs from '../defs/loopring_defs'
@@ -2657,6 +2657,150 @@ export class UserAPI extends BaseAPI {
       queryParams: { ...request },
       apiKey,
       method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    }
+  }
+
+  public async getNotificationAll<R = loopring_defs.UserNotification>(
+    request: {
+      walletAddress?: string
+      offset?: number
+      limit?: number
+      network?: NetworkWallet
+      notRead: boolean | undefined
+    },
+    apiKey?: string,
+  ): Promise<{
+    raw_data: any
+    totalNum: number
+    notifications: R[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.GET_NOTIFICATION_ALL,
+      queryParams: { ...request },
+      apiKey,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+
+    return {
+      ...raw_data,
+      totalNum: raw_data.totalNum,
+      notifications: raw_data.notifications,
+      raw_data,
+    }
+  }
+  public async submitNotificationClear<R>(
+    request: {
+      walletAddress: string
+      network?: NetworkWallet
+    },
+    apiKey?: string,
+  ): Promise<{
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NOTIFICATION_CLEAR,
+      bodyParams: { ...request },
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    }
+  }
+  public async submitNotificationReadAll<R>(
+    request: {
+      walletAddress: string
+      network?: NetworkWallet
+    },
+    apiKey?: string,
+  ): Promise<{
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NOTIFICATION_READ_ALL,
+      bodyParams: { ...request },
+      apiKey,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data.resultInfo,
+      }
+    }
+
+    return {
+      ...raw_data,
+      raw_data,
+    }
+  }
+  public async submitNotificationReadOne<R>(
+    request: {
+      walletAddress: string
+      id: number
+    },
+    apiKey?: string,
+  ): Promise<{
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: LOOPRING_URLs.POST_NOTIFICATION_READ_ONE,
+      bodyParams: { ...request },
+      apiKey,
+      method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
     }
     let raw_data

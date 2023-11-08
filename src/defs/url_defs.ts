@@ -43,6 +43,23 @@ export enum LOOPRING_URLs {
   GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
   GET_USER_BILLS = '/api/v3/user/bills',
 
+  // Contacts
+  GET_CONTACTS = '/api/v3/user/contact',
+  CREATE_CONTACT = '/api/v3/user/contact/add',
+  UPDATE_CONTACT = '/api/v3/user/contact/update',
+  DELETE_CONTACT = '/api/v3/user/contact',
+
+  // Refer
+  GET_REFER_DOWNSIDES = '/api/v3/user/refer/profit/downsides',
+  GET_REFER_SELF = '/api/v3/user/refer/profit/self',
+  GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
+
+  // Notification
+  GET_NOTIFICATION_ALL = '/api/v3/user/notification',
+  POST_NOTIFICATION_CLEAR = '/api/v3/user/notification',
+  POST_NOTIFICATION_READ_ALL = '/api/v3/user/notification/readAll',
+  POST_NOTIFICATION_READ_ONE = '/api/v3/user/notification/read',
+
   GET_ALLOWANCES = '/api/v3/eth/allowances',
   GET_ETH_NONCE = '/api/v3/eth/nonce',
   GET_ETH_BALANCES = '/api/v3/eth/balances',
@@ -189,21 +206,12 @@ export enum LOOPRING_URLs {
   GET_STAKE_SUMMARY = '/api/v3/stake/user/summary',
   GET_STAKE_TRANSACTIONS = '/api/v3/stake/user/transactions',
 
-  // Contacts
-  GET_CONTACTS = '/api/v3/user/contact',
-  CREATE_CONTACT = '/api/v3/user/contact/add',
-  UPDATE_CONTACT = '/api/v3/user/contact/update',
-  DELETE_CONTACT = '/api/v3/user/contact',
-
   // CEFI_MARKETS
   GET_BTRATE_MARKETS = '/api/v3/btrade/markets',
   GET_BTRATE_DEPTH = '/api/v3/btrade/depth',
   GET_BTRATE_ORDERS = '/api/v3/btrade/orders',
   POST_BTRATE_ORDER = '/api/v3/btrade/order',
 
-  GET_REFER_DOWNSIDES = '/api/v3/user/refer/profit/downsides',
-  GET_REFER_SELF = '/api/v3/user/refer/profit/self',
-  GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
   GET_TOTAL_CLAIM_INFO = '/api/v3/claim/totalClaimInfo',
   POST_TOTAL_CLAIM = '/api/v3/claim/claim',
   GET_VAULT_TOKENS = '/api/v3/vault/tokens',

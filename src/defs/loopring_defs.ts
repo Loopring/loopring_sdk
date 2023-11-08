@@ -4705,5 +4705,20 @@ export enum GetDatacenterTokenQuoteTrend {
   percentChange30D,
   marketCap,
 }
+export enum NotificationMessageType {
+  L2Receive = 4,
+  DepositedFromL1 = 6,
+  L1Receive = 2,
+}
+export type UserNotification = {
+  id: number
+  walletAddress: string
+  network: NetworkWallet
+  messageType: NotificationMessageType | number
+  message: string
+  read: boolean
+  createAt: number
+  redirectionContext: string
+}
 
 //

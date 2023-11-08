@@ -251,10 +251,6 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
 
 export async function ecRecover2(account: string, message: string, signature: any) {
   const messageBuffer = Buffer.from(message, 'utf8')
-
-  // myLog('message:', message)
-  // myLog('signature raw:', signature)
-
   signature = signature.split('x')[1]
 
   const parts = [
@@ -277,9 +273,9 @@ export async function ecRecover2(account: string, message: string, signature: an
 
   const recoveredAddress = '0x' + ethUtil.pubToAddress(pub).toString('hex')
 
-  if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
-    myLog('v:', v, 'old_v:', old_v, ' recoveredAddress:', recoveredAddress)
-  }
+  // if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
+  //   myLog('v:', v, 'old_v:', old_v, ' recoveredAddress:', recoveredAddress)
+  // }
 
   return new Promise((resolve) =>
     resolve({
@@ -348,7 +344,7 @@ export async function personalSign(
       web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
         if (!err) {
           // LOG: for signature
-          myLog('ecRecover before', 'msg', msg, 'result', result, counterFactualInfo)
+          console.log('ecRecover before', 'msg', msg, 'result', result, counterFactualInfo)
           // Valid:1. counter Factual signature Valid
           if (counterFactualInfo && accountId) {
             myLog('fcWalletValid counterFactualInfo accountId:')
@@ -373,10 +369,11 @@ export async function personalSign(
           // Valid: 2. webview directory signature Valid
           // @ts-ignore
           if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected) {
-            myLog('ecRecover before', result)
+            // LOG: for signature
+            console.log('ecRecover before', result)
             const valid: any = ecRecover(account, msg, result)
             // LOG: for signature
-            myLog('ecRecover after', valid.result)
+            console.log('ecRecover after', valid.result)
             if (valid.result) {
               return resolve({ sig: result })
             }
@@ -385,11 +382,11 @@ export async function personalSign(
           // Valid: 3. contractWallet no recover
           // signature Valid `isValidSignature(bytes32,bytes)`
           // LOG: for signature
-          myLog('Valid: 3. contractWallet before')
+          console.log('Valid: 3. contractWallet before')
           const isContractCheck = await isContract(web3, account)
           if (isContractCheck) {
             // LOG: for signature
-            myLog('Valid: 5 failed isContract. no ecrecover')
+            console.log('Valid: 5 failed isContract. no ecrecover')
             return resolve({ sig: result })
           }
 
@@ -436,7 +433,7 @@ export async function personalSign(
       })
     } catch (err) {
       // LOG: for signature
-      myLog('personalSign callback err', (err as unknown as any)?.message)
+      console.log('personalSign callback err', (err as unknown as any)?.message)
       resolve({ error: err as any })
     }
   })

@@ -127,8 +127,7 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined,
 ) {
   // LOG: for signature
-
-  myLog(
+  console.log(
     'personalSign ->',
     'counterFactualInfo',
     counterFactualInfo,
@@ -167,7 +166,7 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split('')).join('')
       let newValue = generatePrivateKey(result)
       // LOG: for signature
-      myLog(
+      console.log(
         'personalSign ->',
         'publicKey calc by sign',
         'x',
@@ -242,9 +241,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
     const padding = new Array(64 - signatureS_Hex.length).fill(0)
     signatureS_Hex = padding.join('').toString() + signatureS_Hex
   }
-
   const result = '0x' + signatureRx_Hex + signatureRy_Hex + signatureS_Hex
-  // myLog("signature result", result)
   return result
 }
 
@@ -276,12 +273,12 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog('getEdDSASig', message)
+  console.log('getEdDSASig', message)
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  console.log('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -315,13 +312,13 @@ export function creatEdDSASigHasH({
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog('getEdDSASig', message)
+  console.log('getEdDSASig', message)
 
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  console.log('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
   return { hash, hashRaw: toHex(_hash) }
 }
 
@@ -352,7 +349,6 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
     bigIntInputs.push(BigNumber.from(input))
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams)
-  // myLog("getEdDSASigWithPoseidon", hash.toHexString(), bigIntInputs);
   return {
     hash,
     result: genSigWithPadding(PrivateKey, hash),
@@ -425,17 +421,17 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
         )
       })
       // LOG: for signature
-      myLog('eth_signTypedData', result)
+      console.log('eth_signTypedData', result)
       response = result?.result
     } else {
       response = await web3.currentProvider?.send('eth_signTypedData', [account, typedData])
     }
     // LOG: for signature
-    myLog('eth_signTypedData success', response)
+    console.log('eth_signTypedData success', response)
     return response
   } catch (err) {
     // LOG: for signature
-    myLog('eth_signTypedData error', err)
+    console.log('eth_signTypedData error', err)
     return { error: err as any }
   }
 }
@@ -459,7 +455,8 @@ export async function getEcDSASig(
     case GetEcDSASigType.HasDataStruct:
       try {
         response = await new Promise((resolve, reject) => {
-          myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
+          // LOG: for signature
+          // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
           web3.currentProvider.sendAsync(
             {
               method: 'eth_signTypedData_v4',
@@ -472,7 +469,6 @@ export async function getEcDSASig(
                 reject(error || result?.error)
                 return
               }
-              myLog('eth_signTypedData_v4', result)
               let _result
               if (typeof result === 'string') {
                 // resolve(result);
@@ -826,7 +822,6 @@ export function getNftData(request: NFTMintRequestV3) {
     bigIntInputs.push(BigNumber.from(input))
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams)
-  // myLog("get hasher *16 hash:", hash);
   return hash
 }
 
@@ -1345,13 +1340,9 @@ export function getNFTTransferTypedData(
 }
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
-  const hash = fm.toHex(
-    sigUtil.TypedDataUtils.sign(
-      typedData,
-      // sigUtil.SignTypedDataVersion.V4
-    ),
-  )
-  myLog('eddsaSign', hash)
+  const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData))
+  // LOG: for signature
+  // myLog('eddsaSign', hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
   const signature = EDDSAUtil.sign(eddsaKey, sigHash)
   return {
@@ -1395,7 +1386,6 @@ export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoo
     validUntil: data.validUntil,
   }
 
-  // myLog('message:', message)
   const typedData = {
     types: {
       EIP712Domain: [
