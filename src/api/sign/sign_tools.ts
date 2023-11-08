@@ -58,7 +58,6 @@ import { myLog } from '../../utils/log_tools'
 import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { isContract } from '../contract_api'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -127,7 +126,7 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined,
 ) {
   // LOG: for signature
-  console.log(
+  myLog(
     'personalSign ->',
     'counterFactualInfo',
     counterFactualInfo,
@@ -166,7 +165,7 @@ export async function generateKeyPair(
       result.sig = value.concat(end.split('')).join('')
       let newValue = generatePrivateKey(result)
       // LOG: for signature
-      console.log(
+      myLog(
         'personalSign ->',
         'publicKey calc by sign',
         'x',
@@ -273,12 +272,12 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  console.log('getEdDSASig', message)
+  myLog('getEdDSASig', message)
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  console.log('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -312,13 +311,13 @@ export function creatEdDSASigHasH({
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  console.log('getEdDSASig', message)
+  myLog('getEdDSASig', message)
 
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  console.log('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
   return { hash, hashRaw: toHex(_hash) }
 }
 
@@ -421,17 +420,17 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
         )
       })
       // LOG: for signature
-      console.log('eth_signTypedData', result)
+      myLog('eth_signTypedData', result)
       response = result?.result
     } else {
       response = await web3.currentProvider?.send('eth_signTypedData', [account, typedData])
     }
     // LOG: for signature
-    console.log('eth_signTypedData success', response)
+    myLog('eth_signTypedData success', response)
     return response
   } catch (err) {
     // LOG: for signature
-    console.log('eth_signTypedData error', err)
+    myLog('eth_signTypedData error', err)
     return { error: err as any }
   }
 }

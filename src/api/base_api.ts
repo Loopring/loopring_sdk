@@ -344,7 +344,7 @@ export async function personalSign(
       web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
         if (!err) {
           // LOG: for signature
-          console.log('ecRecover before', 'msg', msg, 'result', result, counterFactualInfo)
+          myLog('ecRecover before', 'msg', msg, 'result', result, counterFactualInfo)
           // Valid:1. counter Factual signature Valid
           if (counterFactualInfo && accountId) {
             myLog('fcWalletValid counterFactualInfo accountId:')
@@ -370,10 +370,10 @@ export async function personalSign(
           // @ts-ignore
           if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected) {
             // LOG: for signature
-            console.log('ecRecover before', result)
+            myLog('ecRecover before', result)
             const valid: any = ecRecover(account, msg, result)
             // LOG: for signature
-            console.log('ecRecover after', valid.result)
+            myLog('ecRecover after', valid.result)
             if (valid.result) {
               return resolve({ sig: result })
             }
@@ -382,11 +382,11 @@ export async function personalSign(
           // Valid: 3. contractWallet no recover
           // signature Valid `isValidSignature(bytes32,bytes)`
           // LOG: for signature
-          console.log('Valid: 3. contractWallet before')
+          myLog('Valid: 3. contractWallet before')
           const isContractCheck = await isContract(web3, account)
           if (isContractCheck) {
             // LOG: for signature
-            console.log('Valid: 5 failed isContract. no ecrecover')
+            myLog('Valid: 5 failed isContract. no ecrecover')
             return resolve({ sig: result })
           }
 
@@ -433,7 +433,7 @@ export async function personalSign(
       })
     } catch (err) {
       // LOG: for signature
-      console.log('personalSign callback err', (err as unknown as any)?.message)
+      myLog('personalSign callback err', (err as unknown as any)?.message)
       resolve({ error: err as any })
     }
   })
