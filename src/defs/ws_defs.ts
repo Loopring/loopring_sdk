@@ -1,4 +1,5 @@
 import { OrderStatus, Side } from './loopring_enums'
+import { NetworkWallet } from './loopring_defs'
 
 export interface WsProps {
   topics: any[]
@@ -23,6 +24,7 @@ export enum WsTopicType {
   mixorder = 'mixorder',
   btradedepth = 'btradedepth',
   crawlTokenPrices = 'crawltokenprices',
+  notification = 'notification',
 }
 
 export const getCrawlTokenPrices = ({
@@ -152,5 +154,19 @@ export const getAmmpoolArg = (poolAddress: string) => {
     topic: WsTopicType.ammpool,
     snapshot: true,
     poolAddress,
+  }
+}
+
+export const getNotificationArg = ({
+  address,
+  network,
+}: {
+  address: string
+  network: NetworkWallet
+}) => {
+  return {
+    topic: WsTopicType.notification,
+    address,
+    network,
   }
 }
