@@ -4,9 +4,11 @@
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
-  "main": "dist/index.js",
+  "exports": {
+    "import": "./dist/loopring-sdk.esm.js",
+    "require": "./dist/index.js"
+  },
   "typings": "dist/index.d.ts",
-  "module": "dist/loopring-sdk.esm.js",
   "files": [
     "dist",
     "!tests",
