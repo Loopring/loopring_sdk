@@ -1,5 +1,5 @@
 /* eslint-disable camelcase  */
-import { BaseAPI } from "./base_api";
+import { BaseAPI } from './base_api'
 
 import {
   CreateContactRequest,
@@ -11,11 +11,9 @@ import {
   ReqParams,
   SIG_FLAG,
   UpdateContactRequest,
-} from "../defs";
-import * as loopring_defs from "../defs/loopring_defs";
+} from '../defs'
 
 export class ContactAPI extends BaseAPI {
-
   public async getContacts<R = GetContactsResponse>(
     request: GetContactsRequest,
     apiKey: string,
@@ -26,10 +24,10 @@ export class ContactAPI extends BaseAPI {
       queryParams: request, //request
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
-      apiKey
-    };
+      apiKey,
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
@@ -39,23 +37,20 @@ export class ContactAPI extends BaseAPI {
       ...raw_data,
       raw_data,
     } as {
-      raw_data:R,
-    }&R
+      raw_data: R
+    } & R
   }
 
-  public async createContact(
-    request: CreateContactRequest,
-    apiKey: string,
-  ) {
+  public async createContact(request: CreateContactRequest, apiKey: string) {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.CREATE_CONTACT,
       bodyParams: request, //request
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       apiKey,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
@@ -67,19 +62,16 @@ export class ContactAPI extends BaseAPI {
     }
   }
 
-  public async updateContact(
-    request: UpdateContactRequest,
-    apiKey: string,
-  ) {
+  public async updateContact(request: UpdateContactRequest, apiKey: string) {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.UPDATE_CONTACT,
       bodyParams: request, //request
       method: ReqMethod.POST,
       sigFlag: SIG_FLAG.NO_SIG,
       apiKey,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
@@ -101,9 +93,9 @@ export class ContactAPI extends BaseAPI {
       method: ReqMethod.DELETE,
       sigFlag: SIG_FLAG.NO_SIG,
       apiKey,
-    };
+    }
 
-    const raw_data = (await this.makeReq().request(reqParams)).data;
+    const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
         ...raw_data.resultInfo,
@@ -114,7 +106,6 @@ export class ContactAPI extends BaseAPI {
       raw_data,
     }
   }
-
 }
 
 // ContactAPI.get

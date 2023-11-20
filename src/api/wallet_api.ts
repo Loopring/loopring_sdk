@@ -20,7 +20,7 @@ import {
   SigSuffix,
   WalletType,
 } from '../defs'
-import api from './ethereum/contracts'
+import { contracts as abi } from './ethereum/contracts'
 import * as sign_tools from './sign/sign_tools'
 import { sortObjDictionary, toHex } from '../utils'
 import { myLog } from '../utils/log_tools'
@@ -315,7 +315,7 @@ export class WalletAPI extends BaseAPI {
   }: // sendByMetaMask = true,
   LockHebaoHebaoParam) {
     if (isVersion1) {
-      const data = api.Contracts.HeBao.encodeInputs('lock', {
+      const data = abi.Contracts.HeBao.encodeInputs('lock', {
         wallet,
       })
 
@@ -332,7 +332,6 @@ export class WalletAPI extends BaseAPI {
         true,
       )
     } else {
-      // const data = api.Contracts.HeBao.encodeInputs("lock", {});
       return await sendRawTx(
         web3,
         from,

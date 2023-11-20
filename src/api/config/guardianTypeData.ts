@@ -2,9 +2,6 @@ import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from '../../defs'
 import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
 import { personalSign } from '../base_api'
-import * as fm from '../../utils/formatter'
-import * as sigUtil from 'eth-sig-util'
-// import { toBuffer } from '../../utils'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -12,16 +9,6 @@ const EIP712Domain = [
   { name: 'chainId', type: 'uint256' },
   { name: 'verifyingContract', type: 'address' },
 ]
-
-function encodeAddressesPacked(addrs: string[]) {
-  const addrsBs = Buffer.concat(
-    addrs.map((a) => {
-      return Buffer.from('00'.repeat(12) + a.slice(2), 'hex')
-    }),
-  )
-  myLog('addrsBs', addrsBs.toString())
-  return addrsBs
-}
 
 const domain = (chainId: ChainId, guardiaContractAddress: any, name: string, version: string) => {
   return {
@@ -383,7 +370,6 @@ export async function signHebaoApproveWrap(
     walletVersion: 1 | 2
   },
 ) {
-  let typedData: any
   try {
     const {
       chainId,

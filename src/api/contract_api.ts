@@ -7,9 +7,8 @@ import { TokenInfo } from '../defs/loopring_defs'
 
 import * as fm from '../utils/formatter'
 
-import Contracts from './ethereum/contracts/Contracts'
-
 import { addHexPrefix, toHex, toNumber } from '../utils/formatter'
+import { Contracts } from './ethereum/contracts'
 
 export enum ERC20Method {
   Approve = 'approve',

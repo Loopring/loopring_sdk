@@ -1,53 +1,52 @@
-// const replace = require();
-// const babel = require();
-// const  = require("@rollup/plugin-node-resolve");
-// import merge from "deepmerge";
-import merge  from "deepmerge";
-
-import replace from "@rollup/plugin-replace";
-import resolve from "@rollup/plugin-node-resolve";
-import {createBasicConfig} from '@open-wc/building-rollup';
+import babel from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from "@rollup/plugin-typescript";
-import json from  "@rollup/plugin-json";
+import json from '@rollup/plugin-json';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
-export default merge(createBasicConfig({ rootDir:"./src",outputDir:"dist"}),{
-  input: "./src/index.ts",
-  preserveModules: true,
+
+const extensions = ['.js', '.ts' ,'.json'];
+
+export default  {
+  input: 'src/index.ts',
+  output: [
+    {
+      file: 'dist/lib/bundles/bundle.esm.js',
+      format: 'esm',
+      sourcemap: true
+    },
+    {
+      file: 'dist/lib/bundles/bundle.esm.min.js',
+      format: 'esm',
+      plugins: [terser()],
+      sourcemap: true
+    },
+    {
+      file: 'lib/bundles/bundle.umd.js',
+      format: 'umd',
+      name: 'myLibrary',
+      sourcemap: true
+    },
+    {
+      file: 'lib/bundles/bundle.umd.min.js',
+      format: 'umd',
+      name: 'myLibrary',
+      plugins: [terser()],
+      sourcemap: true
+    }
+  ],
   plugins: [
-   json(),
-
-  // babel(),
-  replace({
-    "process.env.NODE_ENV": JSON.stringify('production'),
-    preventAssignment: true,
-  }),
-  resolve(),
-  typescript({ tsconfig: "./tsconfig.json" }),
-  commonjs({
-    defaultIsModuleExports: 'auto',
-  }),
-
-],})
-// const baseConfig = createBasicConfig({
-  // input: "./src/index.ts",
-
-
-
-  // rollup(config, options) {
-  //   config.output.esModule = true;
-  //   config.plugins = config.plugins.map((p) =>
-  //       p.name === "replace"
-  //           ? replace({
-  //             "process.env.NODE_ENV": JSON.stringify(options.env),
-  //             preventAssignment: true,
-  //           })
-  //           : p
-  //   );
-  //   config.plugins.push(resolve());
-  //   config.plugins.push(babel());
-  //   return config;
-  // },
-// });
-// export default baseConfig;
-
+    json(),
+    commonjs({
+      include: 'node_modules/**'  ,
+      defaultIsModuleExports:true
+    }),
+    nodeResolve({
+      exportConditions:[ "import", "default",'require' ],
+      mainFields: [ "module", "main",'browser' ],
+      modulesOnly: true,
+      preferBuiltins: false
+    }),
+    babel({ babelHelpers: 'bundled', include: ['src/**/*.ts'], extensions, exclude: './node_modules/**'})
+  ]
+}

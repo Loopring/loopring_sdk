@@ -15,7 +15,6 @@ import {
   TokenInfo,
   TOKENMAPLIST,
   TokenRelatedInfo,
-  VaultToken,
 } from '../defs'
 import * as loopring_defs from '../defs/loopring_defs'
 
@@ -42,13 +41,13 @@ export function addHexPrefix(input: any) {
  * @param mixed Buffer|number|string (hex string must be with '0x' prefix)
  * @returns {Buffer}
  */
-export function toBuffer(mixed: any) {
+export function toBuffer(mixed: any): Buffer {
   if (mixed instanceof Buffer) {
     return mixed
   } else if (typeof mixed === 'string' && !mixed.startsWith('0x')) {
     return Buffer.from(mixed)
   } else {
-    return ethUtil.toBuffer(mixed)
+    return ethUtil.toBuffer(mixed) as Buffer
   }
 }
 
@@ -68,7 +67,10 @@ export function zeroPad(num: any, places: any) {
  * @returns {string}
  */
 export function toHex(mixed: number | BigNumber | BN | Buffer | string | Uint8Array | BigInt) {
-  if (typeof mixed === 'number' || mixed instanceof BigNumber || mixed instanceof BN) {
+  if (typeof mixed === 'number') {
+    return addHexPrefix(toBig(mixed).toString(16))
+  }
+  if (mixed instanceof BigNumber || mixed instanceof BN) {
     return addHexPrefix(mixed.toString(16))
   }
 

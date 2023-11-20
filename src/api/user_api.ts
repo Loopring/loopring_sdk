@@ -2680,7 +2680,7 @@ export class UserAPI extends BaseAPI {
 
   public async getNotificationAll<R = loopring_defs.UserNotification>(
     request: {
-      walletAddress?: string
+      accountId?: number
       offset?: number
       limit?: number
       network?: NetworkWallet
@@ -2691,6 +2691,7 @@ export class UserAPI extends BaseAPI {
     raw_data: any
     totalNum: number
     notifications: R[]
+    notRead: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.GET_NOTIFICATION_ALL,
@@ -2715,25 +2716,33 @@ export class UserAPI extends BaseAPI {
     return {
       ...raw_data,
       totalNum: raw_data.totalNum,
+      notRead: raw_data.notRead,
       notifications: raw_data.notifications,
       raw_data,
     }
   }
   public async submitNotificationClear<R>(
     request: {
-      walletAddress: string
+      accountId: number
       network?: NetworkWallet
     },
+    privateKey: string,
     apiKey?: string,
   ): Promise<{
     raw_data: R
   }> {
+    const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
+
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NOTIFICATION_CLEAR,
       bodyParams: { ...request },
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: privateKey,
+      },
     }
     let raw_data
     try {
@@ -2755,19 +2764,26 @@ export class UserAPI extends BaseAPI {
   }
   public async submitNotificationReadAll<R>(
     request: {
-      walletAddress: string
+      accountId: number
       network?: NetworkWallet
     },
+    privateKey: string,
     apiKey?: string,
   ): Promise<{
     raw_data: R
   }> {
+    const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
+
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NOTIFICATION_READ_ALL,
       bodyParams: { ...request },
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: privateKey,
+      },
     }
     let raw_data
     try {
@@ -2789,19 +2805,25 @@ export class UserAPI extends BaseAPI {
   }
   public async submitNotificationReadOne<R>(
     request: {
-      walletAddress: string
+      accountId: number
       id: number
     },
+    privateKey: string,
     apiKey?: string,
   ): Promise<{
     raw_data: R
   }> {
+    const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
     const reqParams: loopring_defs.ReqParams = {
       url: LOOPRING_URLs.POST_NOTIFICATION_READ_ONE,
       bodyParams: { ...request },
       apiKey,
       method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: privateKey,
+      },
     }
     let raw_data
     try {

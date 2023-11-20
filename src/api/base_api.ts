@@ -16,7 +16,7 @@ import {
 import { Request } from './request'
 import { addHexPrefix, toBuffer, toHex } from '../utils'
 import { myLog } from '../utils/log_tools'
-import ABI from './ethereum/contracts'
+import { contracts as abi } from './ethereum/contracts'
 import { AxiosResponse } from 'axios'
 import * as ethUtil from 'ethereumjs-util'
 import { isContract } from './contract_api'
@@ -192,7 +192,7 @@ export function ecRecover(
 export async function contractWalletValidate32(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const hash = ethUtil.hashPersonalMessage(toBuffer(msg))
-    const data = ABI.Contracts.ContractWallet.encodeInputs('isValidSignature(bytes32,bytes)', {
+    const data = abi.Contracts.ContractWallet.encodeInputs('isValidSignature(bytes32,bytes)', {
       _data: hash,
       _signature: toBuffer(sig),
     })
@@ -204,7 +204,7 @@ export async function contractWalletValidate32(web3: any, account: string, msg: 
       },
       function (err: any, result: any) {
         if (!err) {
-          const valid = ABI.Contracts.ContractWallet.decodeOutputs(
+          const valid = abi.Contracts.ContractWallet.decodeOutputs(
             'isValidSignature(bytes32,bytes)',
             result,
           )
@@ -223,7 +223,7 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
     web3.eth.call(
       {
         to: myKeyContract,
-        data: ABI.Contracts.ContractWallet.encodeInputs('getKeyData', {
+        data: abi.Contracts.ContractWallet.encodeInputs('getKeyData', {
           _account: account,
           _index: 3,
         }),
@@ -233,7 +233,7 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
           const signature = ethUtil.fromRpcSig(sig)
           const hash = ethUtil.hashPersonalMessage(ethUtil.keccak256(toBuffer(msg)))
           const address = addHexPrefix(
-            ABI.Contracts.ContractWallet.decodeOutputs('getKeyData', res)[0],
+            abi.Contracts.ContractWallet.decodeOutputs('getKeyData', res)[0],
           )
           const recAddress = toHex(
             ethUtil.pubToAddress(ethUtil.ecrecover(hash, signature.v, signature.r, signature.s)),

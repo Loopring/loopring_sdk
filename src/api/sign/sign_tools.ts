@@ -1,5 +1,5 @@
 // import sha256 from 'crypto-js/sha256'
-import crypto from 'crypto-js'
+import * as crypto from 'crypto-js'
 
 import * as abi from 'ethereumjs-abi'
 import * as sigUtil from 'eth-sig-util'

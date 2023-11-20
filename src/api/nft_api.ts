@@ -16,7 +16,7 @@ import {
 import { myLog } from '../utils/log_tools'
 import * as ethUtil from 'ethereumjs-util'
 import { genExchangeData, sendRawTx } from './contract_api'
-import contracts from './ethereum/contracts'
+import { contracts } from './ethereum/contracts'
 import {
   ApproveParam,
   CallRefreshNFT,

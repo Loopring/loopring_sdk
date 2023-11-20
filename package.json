@@ -1,12 +1,15 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.7.3",
+  "version": "3.7.4",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
   "module": "dist/loopring-sdk.esm.js",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist/loopring-sdk.esm.js"
+  },
   "files": [
     "dist",
     "!tests",
@@ -60,7 +63,10 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist && tsdx build",
+    "build:esm": "cross-env BABEL_ENV=esmUnbundled babel src --extensions '.ts' --out-dir '/lib/esm' --source-maps",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions '.ts' --out-dir '/lib/cjs' --source-maps",
+    "build:bundles": "cross-env BABEL_ENV=esmBundled rollup -c",
+    "build": "rimraf dist && cross-env BABEL_ENV=esmBundled  tsdx build",
     "start": "yarn link; tsdx watch",
     "test": "tsdx test",
     "test_calc": "tsdx test",
@@ -100,6 +106,7 @@
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/bignumber.js": "^5.0.0",
     "@types/blake2b": "^2.1.0",
@@ -127,6 +134,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
     "gh-pages": "^3.2.3",
     "honkit": "^3.6.20",
     "jest": "^26.6.3",

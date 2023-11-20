@@ -4419,10 +4419,8 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    * @memberof VaultToken
    */
   gasAmounts: any
-  // enabled: boolean
-  btradeAmount: string // important for vault
+  maxAmount: string
   vaultTokenAmounts: {
-    // important for vault
     minAmount: string
     qtyStepScale: number
     // bit1:show
@@ -4436,6 +4434,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
 
 export type VaultMarket = {
   market: string
+  wsMarket: string
   baseTokenId: number
   quoteTokenId: number
   precisionForPrice: number
@@ -4718,6 +4717,7 @@ export enum NotificationMessageType {
   REQUEST_UPDATED = 9,
   GUARDIAN_ADDITION = 10,
   EVENT = 11,
+  L1_CREATING = 12,
   GUARDIAN_COMMON = 13,
   PROTECTED_ADD_GUARDIAN_SUCCESS = 14,
   PROTECTED_ADD_GUARDIAN_REJECTED = 15,
@@ -4734,6 +4734,7 @@ export enum NotificationMessageType {
   GUARDIAN_SAFETY_CHECK_NOTIFICATION = 35,
   TAIKO_A3_CREATE = 36,
   FACING_FORCED_SETTLEMENT = 40,
+  DUAL_SETTLED = 50,
 }
 export type UserNotification = {
   id: number
