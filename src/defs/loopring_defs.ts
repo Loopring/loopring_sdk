@@ -4419,8 +4419,8 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    * @memberof VaultToken
    */
   gasAmounts: any
-  maxAmount: string
   vaultTokenAmounts: {
+    maxAmount: string
     minAmount: string
     qtyStepScale: number
     // bit1:show
@@ -4449,7 +4449,7 @@ export type VaultMarket = {
     base: string
     quote: string
   }
-  btradeAmount: {
+  maxAmount: {
     base: string
     quote: string
   }

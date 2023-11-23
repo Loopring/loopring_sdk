@@ -4,7 +4,7 @@ import { LOOPRING_URLs, ReqMethod, SIG_FLAG, SigPatchField } from '../defs'
 import { get_EddsaSig_NFT_Order, getMidPrice, sortObjDictionary } from '../index'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
-import { VaultOperationEnum, VaultRepayRequestV3WithPatch } from '../defs/loopring_defs'
+import { VaultOperationEnum } from '../defs/loopring_defs'
 
 export class VaultAPI extends BaseAPI {
   public async getVaultTokens<R = loopring_defs.VaultToken[]>(): Promise<{

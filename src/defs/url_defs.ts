@@ -56,7 +56,7 @@ export enum LOOPRING_URLs {
 
   // Notification
   GET_NOTIFICATION_ALL = '/api/v3/user/notification',
-  POST_NOTIFICATION_CLEAR = '/api/v3/user/notification',
+  POST_NOTIFICATION_CLEAR = '/api/v3/user/notification/clearAll',
   POST_NOTIFICATION_READ_ALL = '/api/v3/user/notification/readAll',
   POST_NOTIFICATION_READ_ONE = '/api/v3/user/notification/read',
 

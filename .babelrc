@@ -11,9 +11,23 @@
         ["@babel/env", {
         "modules":"commonjs"
       }], "@babel/typescript"]
-    }
+    },
+   "prod": {
+     "presets": [
+       [
+         "@babel/env",
+         {
+           "targets": { "node": "18" },
+           "useBuiltIns": "usage",
+           "corejs": 3
+         }
+       ],
+       "@babel/typescript"
+     ]
+   }
   },
   "plugins": [
+    "@babel/plugin-transform-optional-chaining",
     "@babel/plugin-transform-typescript",
     "transform-class-properties"
   ]

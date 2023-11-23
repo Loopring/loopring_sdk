@@ -12,7 +12,7 @@ module.exports = {
   rollup(config, options) {
     config.output.esModule = true;
     config.output.format='esm'
-      config.output.plugins = [terser()],
+    config.output.plugins = [terser()],
       // input: 'src/index.ts',
           // output: [
           // {
