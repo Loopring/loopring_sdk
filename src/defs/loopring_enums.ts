@@ -1,3 +1,5 @@
+import { RESULT_INFO } from './error_codes'
+
 export enum ReqMethod {
   GET = 'GET',
   POST = 'POST',
@@ -213,4 +215,52 @@ export enum AssetType {
 export enum IntervalType {
   HOUR = 0,
   DAY = 1,
+}
+
+export type TX_HASH_API = { hash?: string; resultInfo?: RESULT_INFO }
+export interface ReqParams {
+  url: string
+  method: ReqMethod
+  sigFlag: SIG_FLAG
+
+  queryParams?: any
+  bodyParams?: any
+
+  apiKey?: string
+
+  sigObj?: {
+    dataToSig?: any
+    sig?: string
+    sigPatch?: string
+
+    PrivateKey?: string
+
+    owner?: string
+    pwd?: string
+    web3?: any
+    hasDataStruct?: boolean
+  }
+  eddsaSignature?: string
+  ecdsaSignature?: string
+  eddsaSignatureREFER?: boolean
+}
+export interface PublicKey {
+  /**
+   * The public keys x part.
+   * @type {string}
+   * @memberof PublicKey
+   */
+  x: string
+  /**
+   * The public keys y part.
+   * @type {string}
+   * @memberof PublicKey
+   */
+  y: string
+}
+export enum NetworkWallet {
+  ETHEREUM = 'ETHEREUM',
+  ARBITRUM = 'ARBITRUM',
+  GOERLI = 'GOERLI',
+  TAIKO = 'TAIKO',
 }

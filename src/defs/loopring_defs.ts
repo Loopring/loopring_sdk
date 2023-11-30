@@ -10,11 +10,13 @@ import {
   Currency,
   IntervalType,
   MarketStatus,
+  NetworkWallet,
   OffchainFeeReqType,
   OffchainNFTFeeReqType,
   OrderStatus,
   OrderType,
   OrderTypeResp,
+  PublicKey,
   ReqMethod,
   RuleType,
   Side,
@@ -47,7 +49,6 @@ export interface VipFeeRateInfo {
 
 export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo }
 
-export type TX_HASH_API = { hash?: string; resultInfo?: RESULT_INFO }
 export type TX_HASH_RESULT<T> = T & { raw_data: T }
 
 export interface ReqOptions {
@@ -56,40 +57,6 @@ export interface ReqOptions {
   signature?: string
 
   url?: string
-}
-
-export enum NetworkWallet {
-  ETHEREUM = 'ETHEREUM',
-  ARBITRUM = 'ARBITRUM',
-  GOERLI = 'GOERLI',
-  TAIKO = 'TAIKO',
-}
-
-export interface ReqParams {
-  url: string
-  method: ReqMethod
-  sigFlag: SIG_FLAG
-
-  queryParams?: any
-  bodyParams?: any
-
-  apiKey?: string
-
-  sigObj?: {
-    dataToSig?: any
-    sig?: string
-    sigPatch?: string
-
-    PrivateKey?: string
-
-    owner?: string
-    pwd?: string
-    web3?: any
-    hasDataStruct?: boolean
-  }
-  eddsaSignature?: string
-  ecdsaSignature?: string
-  eddsaSignatureREFER?: boolean
 }
 
 export interface LoopringMap<T> {
@@ -2515,20 +2482,6 @@ export interface OffChainWithdrawalRequestV3 {
  * @export
  * @interface PublicKey
  */
-export interface PublicKey {
-  /**
-   * The public keys x part.
-   * @type {string}
-   * @memberof PublicKey
-   */
-  x: string
-  /**
-   * The public keys y part.
-   * @type {string}
-   * @memberof PublicKey
-   */
-  y: string
-}
 
 export interface UpdateAccountRequestV3 {
   /**
@@ -4528,6 +4481,7 @@ export enum VaultOperationEnum {
   VAULT_CLOSE_OUT,
 }
 export enum VaultOperationStatus {
+  VAULT_STATUS_EARNING = 'VAULT_STATUS_EARNING',
   VAULT_STATUS_RECEIVED = 'VAULT_STATUS_RECEIVED',
   VAULT_STATUS_PROCESSING = 'VAULT_STATUS_PROCESSING',
   VAULT_STATUS_SUCCEED = 'VAULT_STATUS_SUCCEED',
@@ -4630,7 +4584,7 @@ export interface DatacenterTokenQuote {
 }
 
 export interface GetDatacenterTokenInfoRequest {
-  tokens?: string[]
+  cmcTokenIds?: number[] | string
   currency: 'USD'
 }
 export interface DatacenterTokenInfoSimple {
@@ -4688,6 +4642,11 @@ export interface GetDatacenterTokenQuoteTrendRequest {
   range?: DatacenterRange
   currency: 'USD'
 }
+
+export interface GetCmcTokenRelationsRequest {
+  tokenAddresses?: string[] | string
+  cmcTokenIds?: string[] | string
+}
 export interface GetDatacenterTokenOhlcvQuoteTrendRequest {
   token: string
   range?: OHLCVDatacenterRange
@@ -4735,6 +4694,9 @@ export enum NotificationMessageType {
   TAIKO_A3_CREATE = 36,
   FACING_FORCED_SETTLEMENT = 40,
   DUAL_SETTLED = 50,
+  DUAL_RECURES_ORDER_SWAP = 51,
+  DUAL_RECURES_RETRY_FAILED = 51,
+  DUAL_RECURES_RETRY_SUCCESS = 53,
 }
 export type UserNotification = {
   id: number

@@ -116,7 +116,7 @@ export class CoworkerAPI extends BaseAPI {
       start?: number
       end?: number
       network?: NetworkWallet
-      investmentStatuses?: string | ProductType[]
+      investmentStatuses?: string | Layer1DualInvestmentStatus[]
     },
     apiKey?: string,
     url = '/api/v3/mainnet/defi/dual/products',
@@ -124,6 +124,7 @@ export class CoworkerAPI extends BaseAPI {
     raw_data: { totalNum: number; products: R[] }
     totalNum: number
     products: R[]
+    indexes: []
   }> {
     const reqParams = {
       url,
@@ -152,9 +153,10 @@ export class CoworkerAPI extends BaseAPI {
     }
 
     return {
-      ...raw_data,
+      raw_data,
       totalNum: raw_data.totalNum,
-      products: raw_data.notifications,
+      products: raw_data.products,
+      indexes: raw_data?.indexes,
     }
   }
 
@@ -198,9 +200,9 @@ export class CoworkerAPI extends BaseAPI {
     }
 
     return {
-      ...raw_data,
+      raw_data,
       totalNum: raw_data.totalNum,
-      transactions: raw_data.notifications,
+      transactions: raw_data.transactions,
     }
   }
 
@@ -246,9 +248,9 @@ export class CoworkerAPI extends BaseAPI {
     }
 
     return {
-      ...raw_data,
+      raw_data,
       totalNum: raw_data.totalNum,
-      transactions: raw_data.notifications,
+      transactions: raw_data.transactions,
     }
   }
 }
