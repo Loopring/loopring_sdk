@@ -1,17 +1,13 @@
 /* eslint-disable camelcase  */
-
 import { BaseAPI } from './base_api'
-
 import {
   LOOPRING_URLs,
   SIG_FLAG,
   ReqMethod,
   Side,
-  MarketStatus,
   VipCatergory,
   TradingInterval,
   ReqParams,
-  TokenInfo,
   MarketTradeInfo,
   FiatPriceInfo,
   LoopringMap,
@@ -37,7 +33,6 @@ import {
   VipFeeRateInfoMap,
   AccountInfo,
   TokenAddress,
-  SoursURL,
   SEP,
   GetALLTokenBalancesRequest,
   TOKENMAPLIST,
@@ -52,7 +47,6 @@ import {
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote, makeMarket, makeMarkets } from '../utils'
-import { isArray } from 'lodash'
 
 const checkAmt = (rawStr: string) => {
   if (rawStr.trim() === '') {

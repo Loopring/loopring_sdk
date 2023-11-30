@@ -1,5 +1,4 @@
-import { OrderStatus, Side } from './loopring_enums'
-import { NetworkWallet } from './loopring_defs'
+import { OrderStatus, Side, NetworkWallet } from './'
 
 export interface WsProps {
   topics: any[]

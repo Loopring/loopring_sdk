@@ -1,25 +1,6 @@
 import { BaseAPI, personalSign } from './base_api'
 import { sendRawTx } from './contract_api'
-import * as loopring_defs from '../defs/loopring_defs'
-import {
-  ChainId,
-  ConnectorNames,
-  ContractType,
-  Guardian,
-  HEBAO_META_TYPE,
-  HebaoOperationLog,
-  LockHebaoHebaoParam,
-  LOOPRING_URLs,
-  ModuleType,
-  NetworkWallet,
-  Protector,
-  ReqMethod,
-  ReqParams,
-  RESULT_INFO,
-  SIG_FLAG,
-  SigSuffix,
-  WalletType,
-} from '../defs'
+import * as loopring_defs from '../defs'
 import { contracts as abi } from './ethereum/contracts'
 import * as sign_tools from './sign/sign_tools'
 import { sortObjDictionary, toHex } from '../utils'
@@ -32,11 +13,11 @@ export class WalletAPI extends BaseAPI {
    * Get user assets
    */
   public async getUserAssets(request: loopring_defs.GetUserAssetsRequest) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_USER_ASSETS,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_USER_ASSETS,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -75,9 +56,9 @@ export class WalletAPI extends BaseAPI {
     const { web3, address, request, chainId } = req
     const dataToSig = sortObjDictionary(request)
     const { hashRaw } = sign_tools.creatEdDSASigHasH({
-      method: ReqMethod.POST,
+      method: loopring_defs.ReqMethod.POST,
       basePath: this.baseUrl,
-      api_url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
+      api_url: loopring_defs.LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
       requestInfo: dataToSig,
     })
     myLog('signHash', hashRaw)
@@ -86,17 +67,17 @@ export class WalletAPI extends BaseAPI {
       address,
       '',
       toHex(hashRaw),
-      ConnectorNames.Unknown,
+      loopring_defs.ConnectorNames.Unknown,
       chainId,
     )
 
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.REJECT_APPROVE_SIGNATURE,
       queryParams: {},
-      method: ReqMethod.POST,
+      method: loopring_defs.ReqMethod.POST,
       bodyParams: request,
       apiKey: '',
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       sigObj: {
         sig: result?.sig.slice(0, 132),
       },
@@ -123,7 +104,7 @@ export class WalletAPI extends BaseAPI {
     isContract1XAddress?: boolean,
     masterCopy?: string,
     forwarderModuleAddress: string = '',
-  ): Promise<loopring_defs.TX_HASH_RESULT<T> | RESULT_INFO> {
+  ): Promise<loopring_defs.TX_HASH_RESULT<T> | loopring_defs.RESULT_INFO> {
     const {
       request,
       web3,
@@ -151,11 +132,11 @@ export class WalletAPI extends BaseAPI {
     })
     request.signature = ecdsaSignature?.toString()
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
+      url: loopring_defs.LOOPRING_URLs.SUBMIT_APPROVE_SIGNATURE,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     let raw_data
@@ -173,11 +154,11 @@ export class WalletAPI extends BaseAPI {
     address: string | undefined
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.RESOLVE_ENS,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.RESOLVE_ENS,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let address: T | undefined
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -197,16 +178,16 @@ export class WalletAPI extends BaseAPI {
   public async getWalletType<T extends any>(
     request: loopring_defs.GET_WALLET_TYPE,
   ): Promise<{
-    walletType: WalletType | undefined
+    walletType: loopring_defs.WalletType | undefined
     raw_data: T
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_WALLET_TYPE,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_WALLET_TYPE,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
-    let walletType: WalletType | undefined
+    let walletType: loopring_defs.WalletType | undefined
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
@@ -221,17 +202,17 @@ export class WalletAPI extends BaseAPI {
     }
   }
 
-  public async getContractType<T = ContractType>(
+  public async getContractType<T = loopring_defs.ContractType>(
     request: loopring_defs.GET_WALLET_TYPE,
   ): Promise<{
     contractType: T | undefined
     raw_data: T
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_WALLET_CONTRACTVERSION,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_WALLET_CONTRACTVERSION,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     let contractType: T | undefined
@@ -248,17 +229,17 @@ export class WalletAPI extends BaseAPI {
     }
   }
 
-  public async getWalletModules<T = ModuleType>(
+  public async getWalletModules<T = loopring_defs.ModuleType>(
     request: loopring_defs.GET_WALLET_TYPE,
   ): Promise<{
     walletModule: T | undefined
     raw_data: T
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_WALLET_MODULES,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_WALLET_MODULES,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     let walletModule: T | undefined
@@ -281,11 +262,11 @@ export class WalletAPI extends BaseAPI {
     ensName: string | undefined
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.RESOLVE_NAME,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.RESOLVE_NAME,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let ensName: T | undefined
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -313,7 +294,7 @@ export class WalletAPI extends BaseAPI {
     nonce,
     isVersion1,
   }: // sendByMetaMask = true,
-  LockHebaoHebaoParam) {
+  loopring_defs.LockHebaoHebaoParam) {
     if (isVersion1) {
       const data = abi.Contracts.HeBao.encodeInputs('lock', {
         wallet,
@@ -325,7 +306,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         data,
-        chainId as ChainId,
+        chainId as loopring_defs.ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),
@@ -338,7 +319,7 @@ export class WalletAPI extends BaseAPI {
         contractAddress,
         0,
         '0xf83d08ba',
-        chainId as ChainId,
+        chainId as loopring_defs.ChainId,
         nonce,
         gasPrice,
         Number(gasLimit),
@@ -347,12 +328,12 @@ export class WalletAPI extends BaseAPI {
     }
   }
 
-  public async getHebaoConfig(request: { network?: NetworkWallet }) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_HEBAO_CONFIG,
+  public async getHebaoConfig(request: { network?: loopring_defs.NetworkWallet }) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_HEBAO_CONFIG,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -369,11 +350,11 @@ export class WalletAPI extends BaseAPI {
   ): Promise<{
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.SEND_META_TX,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.SEND_META_TX,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       bodyParams: request,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -385,17 +366,17 @@ export class WalletAPI extends BaseAPI {
     return { raw_data }
   }
 
-  public async getGuardianApproveList<R extends any, T extends Guardian>(
+  public async getGuardianApproveList<R extends any, T extends loopring_defs.Guardian>(
     request: loopring_defs.GetGuardianApproveListRequest,
   ): Promise<{
     guardiansArray: Array<T>
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_GUARDIAN_APPROVE_LIST,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_GUARDIAN_APPROVE_LIST,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let guardiansArray: Array<T> = []
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -408,7 +389,7 @@ export class WalletAPI extends BaseAPI {
         raw_data?.data?.guardians?.map((r: any) => ({
           ens: r.ens ? r.ens : '',
           address: r.wallet,
-          type: HEBAO_META_TYPE[r.metaTxType],
+          type: loopring_defs.HEBAO_META_TYPE[r.metaTxType],
           id: r.approveId,
           messageHash: r.txAwareHash,
           businessDataJson: r.businessDataJson,
@@ -429,7 +410,7 @@ export class WalletAPI extends BaseAPI {
    * @param {GetUserTradesRequest} request
    * @param apiKey
    */
-  public async getProtectors<R extends any, T extends Protector>(
+  public async getProtectors<R extends any, T extends loopring_defs.Protector>(
     request: loopring_defs.GetProtectorRequest,
     apiKey: string,
   ): Promise<{
@@ -437,12 +418,12 @@ export class WalletAPI extends BaseAPI {
 
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_PROTECTORS,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_PROTECTORS,
       apiKey: apiKey,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let protectorArray: Array<T> = []
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -467,17 +448,17 @@ export class WalletAPI extends BaseAPI {
   /*
    * Get user trade amount
    */
-  public async getHebaoOperationLogs<R extends any, T extends HebaoOperationLog>(
+  public async getHebaoOperationLogs<R extends any, T extends loopring_defs.HebaoOperationLog>(
     request: loopring_defs.HebaoOperationLogs,
   ): Promise<{
     operationArray: Array<T>
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_OPERATION_LOGS,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_OPERATION_LOGS,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -495,11 +476,11 @@ export class WalletAPI extends BaseAPI {
    * Get user trade amount
    */
   public async getUserTradeAmount(request: loopring_defs.GetUserTradeAmount) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_USER_TRADE_AMOUNT,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_USER_TRADE_AMOUNT,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -517,11 +498,11 @@ export class WalletAPI extends BaseAPI {
    * e.g. http://api3.loopring.io/api/wallet/v3/tokenPrices?token=0xdac17f958d2ee523a2206206994597c13d831ec7&intervalType=1&limit=30&currency=CNY
    */
   public async getTokenPrices(request: loopring_defs.GetTokenPricesRequest) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_TOKEN_PRICES,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TOKEN_PRICES,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -553,11 +534,11 @@ export class WalletAPI extends BaseAPI {
    * response: { [key: string]: <price> }  key is token address
    */
   public async getLatestTokenPrices(request?: loopring_defs.getLatestTokenPricesRequest) {
-    const reqParams: ReqParams = {
+    const reqParams: loopring_defs.ReqParams = {
       queryParams: request,
-      url: LOOPRING_URLs.GET_LATEST_TOKEN_PRICES,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_LATEST_TOKEN_PRICES,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data

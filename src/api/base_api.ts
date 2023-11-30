@@ -1,18 +1,4 @@
-import {
-  ChainId,
-  ConnectorError,
-  ConnectorNames,
-  CounterFactualInfo,
-  GetAvailableBrokerRequest,
-  GetCounterFactualInfoRequest,
-  LOOPRING_URLs,
-  LoopringErrorCode,
-  ReqMethod,
-  ReqParams,
-  RESULT_INFO,
-  SIG_FLAG,
-  TX_HASH_API,
-} from '../defs'
+import * as loopring_defs from '../defs'
 import { Request } from './request'
 import { addHexPrefix, toBuffer, toHex } from '../utils'
 import { myLog } from '../utils/log_tools'
@@ -29,33 +15,36 @@ export const KEY_MESSAGE =
 export class BaseAPI {
   static KEY_MESSAGE: string = KEY_MESSAGE
   protected baseUrl = ''
-  protected chainId: ChainId = ChainId.MAINNET
-  public genErr(err: Error | (AxiosResponse & Error)): RESULT_INFO {
+  protected chainId: loopring_defs.ChainId = loopring_defs.ChainId.MAINNET
+  public genErr(err: Error | (AxiosResponse & Error)): loopring_defs.RESULT_INFO {
     if (err.hasOwnProperty('request')) {
       // const axiosError = errorInfo as AxiosResponse;
       return {
         // @ts-ignore;
-        message: ConnectorError.HTTP_ERROR,
+        message: loopring_defs.ConnectorError.HTTP_ERROR,
         ...err,
-        msg: ConnectorError.HTTP_ERROR,
-        code: LoopringErrorCode.HTTP_ERROR,
-      } as RESULT_INFO
+        msg: loopring_defs.ConnectorError.HTTP_ERROR,
+        code: loopring_defs.LoopringErrorCode.HTTP_ERROR,
+      } as loopring_defs.RESULT_INFO
       err?.message
     } else if (!err || !err?.message) {
       return {
         message: 'unKnown',
-        code: LoopringErrorCode.SKD_UNKNOW,
+        code: loopring_defs.LoopringErrorCode.SKD_UNKNOW,
       }
     } else {
-      const key = Reflect.ownKeys(ConnectorError).find(
-        (key) => err?.message.search(ConnectorError[key as keyof typeof ConnectorError]) !== -1,
+      const key = Reflect.ownKeys(loopring_defs.ConnectorError).find(
+        (key) =>
+          err?.message.search(
+            loopring_defs.ConnectorError[key as keyof typeof loopring_defs.ConnectorError],
+          ) !== -1,
       )
       if (key) {
         return {
           ...err,
-          message: key as keyof typeof ConnectorError,
-          code: LoopringErrorCode[key as keyof typeof ConnectorError],
-        } as RESULT_INFO
+          message: key as keyof typeof loopring_defs.ConnectorError,
+          code: loopring_defs.LoopringErrorCode[key as keyof typeof loopring_defs.ConnectorError],
+        } as loopring_defs.RESULT_INFO
       }
       return {
         ...(err instanceof Error
@@ -64,13 +53,13 @@ export class BaseAPI {
               return { ...prev, [item]: err[item.toString()] }
             }, {})
           : err),
-        code: LoopringErrorCode.SKD_UNKNOW,
+        code: loopring_defs.LoopringErrorCode.SKD_UNKNOW,
       }
     }
   }
-  protected returnTxHash<T extends TX_HASH_API>(
+  protected returnTxHash<T extends loopring_defs.TX_HASH_API>(
     raw_data: T,
-  ): (Omit<T, 'resultInfo'> & { raw_data: Omit<T, 'resultInfo'> }) | RESULT_INFO {
+  ): (Omit<T, 'resultInfo'> & { raw_data: Omit<T, 'resultInfo'> }) | loopring_defs.RESULT_INFO {
     if (raw_data?.resultInfo) {
       return {
         ...raw_data.resultInfo,
@@ -90,8 +79,8 @@ export class BaseAPI {
     param: InitParam,
     timeout: number = 6000,
     baseUrlMap = {
-      [ChainId.MAINNET]: 'https://api3.loopring.io',
-      [ChainId.GOERLI]: 'https://uat2.loopring.io',
+      [loopring_defs.ChainId.MAINNET]: 'https://api3.loopring.io',
+      [loopring_defs.ChainId.GOERLI]: 'https://uat2.loopring.io',
     },
   ) {
     if (param.baseUrl) {
@@ -99,48 +88,50 @@ export class BaseAPI {
     } else if (param.chainId !== undefined) {
       this.setChainId(param.chainId)
     } else {
-      this.setChainId(ChainId.GOERLI)
+      this.setChainId(loopring_defs.ChainId.GOERLI)
     }
     this.baseUrlMap = baseUrlMap
     this.timeout = timeout
   }
 
-  public async getAvailableBroker(request: GetAvailableBrokerRequest): Promise<{ broker: string }> {
-    const reqParams: ReqParams = {
-      sigFlag: SIG_FLAG.NO_SIG,
+  public async getAvailableBroker(
+    request: loopring_defs.GetAvailableBrokerRequest,
+  ): Promise<{ broker: string }> {
+    const reqParams: loopring_defs.ReqParams = {
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       queryParams: request,
-      url: LOOPRING_URLs.GET_AVAILABLE_BROKER,
-      method: ReqMethod.GET,
+      url: loopring_defs.LOOPRING_URLs.GET_AVAILABLE_BROKER,
+      method: loopring_defs.ReqMethod.GET,
     }
     const result = (await this.makeReq().request(reqParams)).data
     return result
   }
 
   public async getCounterFactualInfo<T extends any>(
-    request: GetCounterFactualInfoRequest,
+    request: loopring_defs.GetCounterFactualInfoRequest,
   ): Promise<{
     raw_data: T
-    counterFactualInfo: CounterFactualInfo | undefined
-    error?: RESULT_INFO
+    counterFactualInfo: loopring_defs.CounterFactualInfo | undefined
+    error?: loopring_defs.RESULT_INFO
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.COUNTER_FACTUAL_INFO,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.COUNTER_FACTUAL_INFO,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
 
-    let counterFactualInfo: CounterFactualInfo | undefined
-    let error: RESULT_INFO | undefined = undefined
+    let counterFactualInfo: loopring_defs.CounterFactualInfo | undefined
+    let error: loopring_defs.RESULT_INFO | undefined = undefined
 
     if (raw_data && raw_data?.resultInfo) {
       error = raw_data?.resultInfo
     } else {
       counterFactualInfo = {
         ...raw_data,
-      } as CounterFactualInfo
+      } as loopring_defs.CounterFactualInfo
     }
 
     return {
@@ -150,7 +141,7 @@ export class BaseAPI {
     }
   }
 
-  public setChainId(chainId: ChainId) {
+  public setChainId(chainId: loopring_defs.ChainId) {
     this.baseUrl =
       this.baseUrlMap && this.baseUrlMap[0]
         ? getBaseUrlByChainId(chainId, this.baseUrlMap as any)
@@ -285,19 +276,19 @@ export async function ecRecover2(account: string, message: string, signature: an
 }
 
 const getBaseUrlByChainId = (
-  id: ChainId,
+  id: loopring_defs.ChainId,
   baseUrlMap = {
-    [ChainId.MAINNET]: 'https://api3.loopring.io',
-    [ChainId.GOERLI]: 'https://uat2.loopring.io',
+    [loopring_defs.ChainId.MAINNET]: 'https://api3.loopring.io',
+    [loopring_defs.ChainId.GOERLI]: 'https://uat2.loopring.io',
   },
 ) => {
   let baseUrl = ''
   switch (id) {
-    case ChainId.MAINNET:
-      baseUrl = baseUrlMap[ChainId.MAINNET]
+    case loopring_defs.ChainId.MAINNET:
+      baseUrl = baseUrlMap[loopring_defs.ChainId.MAINNET]
       break
     default:
-      baseUrl = baseUrlMap[ChainId.GOERLI]
+      baseUrl = baseUrlMap[loopring_defs.ChainId.GOERLI]
       break
   }
   return baseUrl
@@ -307,7 +298,7 @@ const getBaseUrlByChainId = (
  * @default keySeed `Sign this message to access Loopring exchange: ${exchangeAddress} with key nonce: ${nonce}`
  */
 export interface InitParam {
-  chainId?: ChainId
+  chainId?: loopring_defs.ChainId
   baseUrl?: string
 }
 
@@ -330,10 +321,10 @@ export async function personalSign(
   account: string | undefined,
   pwd: string,
   msg: string,
-  walletType: ConnectorNames,
-  chainId: ChainId,
+  walletType: loopring_defs.ConnectorNames,
+  chainId: loopring_defs.ChainId,
   accountId?: number,
-  counterFactualInfo?: CounterFactualInfo,
+  counterFactualInfo?: loopring_defs.CounterFactualInfo,
   isMobile?: boolean,
 ) {
   if (!account) {
@@ -445,10 +436,10 @@ export async function fcWalletValid(
   msg: string,
   result: any,
   accountId: number,
-  chainId: ChainId,
-  counterFactualInfo?: CounterFactualInfo,
+  chainId: loopring_defs.ChainId,
+  counterFactualInfo?: loopring_defs.CounterFactualInfo,
 ): Promise<{
-  counterFactualInfo?: CounterFactualInfo
+  counterFactualInfo?: loopring_defs.CounterFactualInfo
   error?: any
   result?: boolean
 }> {

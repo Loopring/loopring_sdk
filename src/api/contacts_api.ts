@@ -1,29 +1,19 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from './base_api'
 
-import {
-  CreateContactRequest,
-  DeleteContactRequest,
-  GetContactsRequest,
-  GetContactsResponse,
-  LOOPRING_URLs,
-  ReqMethod,
-  ReqParams,
-  SIG_FLAG,
-  UpdateContactRequest,
-} from '../defs'
+import * as loopring_defs from '../defs'
 
 export class ContactAPI extends BaseAPI {
-  public async getContacts<R = GetContactsResponse>(
-    request: GetContactsRequest,
+  public async getContacts<R = loopring_defs.GetContactsResponse>(
+    request: loopring_defs.GetContactsRequest,
     apiKey: string,
-    // url: string = LOOPRING_URLs.GET_CONTACTS
+    // url: string = loopring_defs.LOOPRING_URLs.GET_CONTACTS
   ) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_CONTACTS,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_CONTACTS,
       queryParams: request, //request
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       apiKey,
     }
 
@@ -41,12 +31,12 @@ export class ContactAPI extends BaseAPI {
     } & R
   }
 
-  public async createContact(request: CreateContactRequest, apiKey: string) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.CREATE_CONTACT,
+  public async createContact(request: loopring_defs.CreateContactRequest, apiKey: string) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.CREATE_CONTACT,
       bodyParams: request, //request
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       apiKey,
     }
 
@@ -62,12 +52,12 @@ export class ContactAPI extends BaseAPI {
     }
   }
 
-  public async updateContact(request: UpdateContactRequest, apiKey: string) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.UPDATE_CONTACT,
+  public async updateContact(request: loopring_defs.UpdateContactRequest, apiKey: string) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.UPDATE_CONTACT,
       bodyParams: request, //request
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       apiKey,
     }
 
@@ -83,15 +73,15 @@ export class ContactAPI extends BaseAPI {
     }
   }
   public async deleteContact(
-    request: DeleteContactRequest,
+    request: loopring_defs.DeleteContactRequest,
     apiKey: string,
-    // url: string = LOOPRING_URLs.GET_CONTACTS
+    // url: string = loopring_defs.LOOPRING_URLs.GET_CONTACTS
   ) {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.DELETE_CONTACT,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.DELETE_CONTACT,
       bodyParams: request, //request
-      method: ReqMethod.DELETE,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.DELETE,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       apiKey,
     }
 

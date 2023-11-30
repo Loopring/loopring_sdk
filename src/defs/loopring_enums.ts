@@ -217,6 +217,13 @@ export enum IntervalType {
   DAY = 1,
 }
 
+export interface ReqOptions {
+  baseUrl?: string
+  apiKey?: string
+  signature?: string
+
+  url?: string
+}
 export type TX_HASH_API = { hash?: string; resultInfo?: RESULT_INFO }
 export interface ReqParams {
   url: string

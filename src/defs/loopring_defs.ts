@@ -51,14 +51,6 @@ export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo }
 
 export type TX_HASH_RESULT<T> = T & { raw_data: T }
 
-export interface ReqOptions {
-  baseUrl?: string
-  apiKey?: string
-  signature?: string
-
-  url?: string
-}
-
 export interface LoopringMap<T> {
   [key: string]: T
 }

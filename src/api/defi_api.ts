@@ -1,18 +1,6 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from './base_api'
-
-import * as loopring_defs from '../defs/loopring_defs'
-import { BTRADENAME, DepthData, GetOrdersRequest } from '../defs/loopring_defs'
-import {
-  LOOPRING_URLs,
-  ReqMethod,
-  ReqParams,
-  RESULT_INFO,
-  SEP,
-  SIG_FLAG,
-  SigPatchField,
-  SoursURL,
-} from '../defs'
+import * as loopring_defs from '../defs'
 import { makeInvestMarkets, makeMarkets, sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
@@ -29,10 +17,10 @@ export class DefiAPI extends BaseAPI {
     idIndex: loopring_defs.LoopringMap<string>
     addressIndex: loopring_defs.LoopringMap<loopring_defs.TokenAddress>
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.GET_DEFI_TOKENS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_DEFI_TOKENS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -55,7 +43,7 @@ export class DefiAPI extends BaseAPI {
         tokensMap[item.symbol] = item
 
         const coinInfo = {
-          icon: SoursURL + `ethereum/assets/${item.address}/logo.png`,
+          icon: loopring_defs.SoursURL + `ethereum/assets/${item.address}/logo.png`,
           name: item.symbol,
           simpleName: item.symbol,
           description: item.type,
@@ -77,7 +65,7 @@ export class DefiAPI extends BaseAPI {
 
   public async getDefiMarkets<R>(
     request: loopring_defs.GetDefiMarketRequest,
-    url: string = LOOPRING_URLs.GET_DEFI_MARKETS,
+    url: string = loopring_defs.LOOPRING_URLs.GET_DEFI_MARKETS,
   ): Promise<{
     markets: loopring_defs.LoopringMap<loopring_defs.DefiMarketInfo>
     pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo>
@@ -87,11 +75,11 @@ export class DefiAPI extends BaseAPI {
     marketArrStr: string
     raw_data: R
   }> {
-    const reqParams: ReqParams = {
+    const reqParams: loopring_defs.ReqParams = {
       url,
       queryParams: {},
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -112,7 +100,9 @@ export class DefiAPI extends BaseAPI {
     request: loopring_defs.DefiOrderRequest,
     privateKey: string,
     apiKey: string,
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const dataToSig = [
       request.exchange,
       request.storageId,
@@ -127,15 +117,15 @@ export class DefiAPI extends BaseAPI {
       0,
     ]
 
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.POST_DEFI_ORDER,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.POST_DEFI_ORDER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
+        sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }
@@ -155,14 +145,14 @@ export class DefiAPI extends BaseAPI {
         lastDayRewards: string
         rewards: []
       }
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
   > {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DEFI_REWARDS,
+      url: loopring_defs.LOOPRING_URLs.GET_DEFI_REWARDS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -188,14 +178,14 @@ export class DefiAPI extends BaseAPI {
         totalNum: number
         userDefiTxs: loopring_defs.UserDefiTxsHistory[]
       }
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
   > {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DEFI_TRANSACTIONS,
+      url: loopring_defs.LOOPRING_URLs.GET_DEFI_TRANSACTIONS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -214,7 +204,7 @@ export class DefiAPI extends BaseAPI {
   }
 
   public async getDualInfos<R>(request: loopring_defs.GetDualInfosRequest): Promise<
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
     | {
         totalNum: number
         dualInfo: {
@@ -227,10 +217,10 @@ export class DefiAPI extends BaseAPI {
       }
   > {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_INFOS,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_INFOS,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -252,10 +242,10 @@ export class DefiAPI extends BaseAPI {
 
   public async getDualBalance<R>(request = undefined) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_BALANCE,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_BALANCE,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -274,10 +264,10 @@ export class DefiAPI extends BaseAPI {
 
   public async getDualPrices(request: loopring_defs.GetDualPricesRequest) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_PRICES,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_PRICES,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -296,10 +286,10 @@ export class DefiAPI extends BaseAPI {
 
   public async getDualIndex(request: { baseSymbol: string; quoteSymbol: string }) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_INDEX,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_INDEX,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -316,14 +306,14 @@ export class DefiAPI extends BaseAPI {
 
   public async getDualTransactions(request: loopring_defs.GetUserDualTxRequest, apiKey: string) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_TRANSACTIONS,
       queryParams: {
         ...request,
         ...(request.retryStatuses ? { retryStatuses: request.retryStatuses.join(',') } : {}),
       },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -361,14 +351,14 @@ export class DefiAPI extends BaseAPI {
     ]
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_DUAL_ORDER,
+      url: loopring_defs.LOOPRING_URLs.POST_DUAL_ORDER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
+        sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }
@@ -403,11 +393,11 @@ export class DefiAPI extends BaseAPI {
 
     const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_DUAL_EDIT,
+      url: loopring_defs.LOOPRING_URLs.POST_DUAL_EDIT,
       bodyParams,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig: _dataToSig,
         PrivateKey: privateKey,
@@ -425,11 +415,11 @@ export class DefiAPI extends BaseAPI {
     apiKey: string,
   ) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DUAL_USER_LOCKED,
+      url: loopring_defs.LOOPRING_URLs.GET_DUAL_USER_LOCKED,
       queryParams: { ...request, lockTag: lockTag.join(',') },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -482,11 +472,11 @@ export class DefiAPI extends BaseAPI {
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_STAKE_CLAIM,
+      url: loopring_defs.LOOPRING_URLs.POST_STAKE_CLAIM,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -520,11 +510,11 @@ export class DefiAPI extends BaseAPI {
   ) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_STAKE_REDEEM,
+      url: loopring_defs.LOOPRING_URLs.POST_STAKE_REDEEM,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -551,11 +541,11 @@ export class DefiAPI extends BaseAPI {
   ) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_STAKE,
+      url: loopring_defs.LOOPRING_URLs.POST_STAKE,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -576,9 +566,9 @@ export class DefiAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_STAKE_PRODUCTS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_STAKE_PRODUCTS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -612,14 +602,14 @@ export class DefiAPI extends BaseAPI {
         totalClaimableRewards: string
         list: loopring_defs.StakeInfoOrigin[]
       }
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
   > {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_STAKE_SUMMARY,
+      url: loopring_defs.LOOPRING_URLs.GET_STAKE_SUMMARY,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -648,11 +638,11 @@ export class DefiAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_STAKE_TRANSACTIONS,
+      url: loopring_defs.LOOPRING_URLs.GET_STAKE_TRANSACTIONS,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -677,9 +667,9 @@ export class DefiAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams = {
-      url: LOOPRING_URLs.GET_BTRATE_MARKETS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_BTRATE_MARKETS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -691,7 +681,7 @@ export class DefiAPI extends BaseAPI {
 
     const pairs: loopring_defs.LoopringMap<loopring_defs.TokenRelatedInfo> = {}
 
-    // const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS;
+    // const isMix = url === loopring_defs.LOOPRING_URLs.GET_MIX_MARKETS;
 
     if (raw_data instanceof Array) {
       const reformat = raw_data.reduce((prev, ele: loopring_defs.BTRADE_MARKET) => {
@@ -701,7 +691,7 @@ export class DefiAPI extends BaseAPI {
             {
               ...ele,
               btradeMarket: ele.market,
-              market: ele.market.replace(BTRADENAME, ''),
+              market: ele.market.replace(loopring_defs.BTRADENAME, ''),
               // enabled: true,
             } as loopring_defs.BTRADE_MARKET,
           ]
@@ -737,10 +727,10 @@ export class DefiAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_BTRATE_DEPTH,
+      url: loopring_defs.LOOPRING_URLs.GET_BTRATE_DEPTH,
       queryParams: { ...request },
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -757,7 +747,7 @@ export class DefiAPI extends BaseAPI {
       _bids: raw_data.bids,
     })
 
-    const depth: DepthData = {
+    const depth: loopring_defs.DepthData = {
       symbol,
       // @ts-ignore
       market: raw_data.market,
@@ -788,15 +778,15 @@ export class DefiAPI extends BaseAPI {
     request,
     apiKey,
   }: {
-    request: GetOrdersRequest
+    request: loopring_defs.GetOrdersRequest
     apiKey: string
   }) {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_BTRATE_ORDERS,
+      url: loopring_defs.LOOPRING_URLs.GET_BTRATE_ORDERS,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -836,14 +826,14 @@ export class DefiAPI extends BaseAPI {
       0,
     ]
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_BTRATE_ORDER,
+      url: loopring_defs.LOOPRING_URLs.POST_BTRATE_ORDER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
+        sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }

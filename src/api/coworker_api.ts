@@ -1,6 +1,6 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from './base_api'
-import { ReqMethod, SIG_FLAG, NetworkWallet } from '../defs'
+import * as loopring_defs from '../defs'
 
 import { AxiosResponse } from 'axios'
 export enum Layer1DualInvestmentStatus {
@@ -115,7 +115,7 @@ export class CoworkerAPI extends BaseAPI {
       limit?: number
       start?: number
       end?: number
-      network?: NetworkWallet
+      network?: loopring_defs.NetworkWallet
       investmentStatuses?: string | Layer1DualInvestmentStatus[]
     },
     apiKey?: string,
@@ -136,8 +136,8 @@ export class CoworkerAPI extends BaseAPI {
             : request?.investmentStatuses?.join(','),
       },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -168,7 +168,7 @@ export class CoworkerAPI extends BaseAPI {
       start?: number
       end?: number
       txTypes: TransactionType[] | string
-      network?: NetworkWallet
+      network?: loopring_defs.NetworkWallet
     },
     url = '/api/v3/mainnet/defi/dual/transactions',
   ): Promise<{
@@ -183,8 +183,8 @@ export class CoworkerAPI extends BaseAPI {
         txTypes:
           typeof request?.txTypes === 'string' ? request?.txTypes : request?.txTypes?.join(','),
       },
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -231,8 +231,8 @@ export class CoworkerAPI extends BaseAPI {
       queryParams: {
         ...request,
       },
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {

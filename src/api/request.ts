@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ReqParams, ReqOptions } from '../defs/loopring_defs'
-import { SIG_FLAG } from '../defs/loopring_enums'
+import { SIG_FLAG, ReqParams, ReqOptions } from '../defs/loopring_enums'
 import { getEdDSASig, getEdDSASigWithPoseidon } from './sign/sign_tools'
 import { sortObject } from '../utils/obj_tools'
 

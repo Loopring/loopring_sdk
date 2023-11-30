@@ -1,29 +1,7 @@
 /* eslint-disable camelcase  */
 
 import { BaseAPI } from './base_api'
-
-import {
-  ChainId,
-  ClaimItem,
-  ConnectorError,
-  ConnectorNames,
-  CounterFactualInfo,
-  EXTRAORDER_TYPE,
-  LOOPRING_URLs,
-  LoopringErrorCode,
-  NFTFactory,
-  NFTFactory_Collection,
-  ReferStatistic,
-  ReqMethod,
-  RESULT_INFO,
-  SIG_FLAG,
-  SigPatchField,
-  TradeChannel,
-  NetworkWallet,
-} from '../defs'
-
-import * as loopring_defs from '../defs/loopring_defs'
-
+import * as loopring_defs from '../defs'
 import * as sign_tools from './sign/sign_tools'
 import {
   generateKeyPair,
@@ -52,11 +30,11 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('accountId', request.accountId)
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.API_KEY_ACTION,
+      url: loopring_defs.LOOPRING_URLs.API_KEY_ACTION,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -85,11 +63,11 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
   ): Promise<{ raw_data: R; orderId: number; offchainId: number }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_NEXT_STORAGE_ID,
+      url: loopring_defs.LOOPRING_URLs.GET_NEXT_STORAGE_ID,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -114,11 +92,11 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
   ): Promise<{ raw_data: R; orderDetail: loopring_defs.OrderDetail }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_ACTION,
+      url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -143,14 +121,14 @@ export class UserAPI extends BaseAPI {
     orders: loopring_defs.OrderDetail[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_MULTI_ORDERS,
+      url: loopring_defs.LOOPRING_URLs.GET_MULTI_ORDERS,
       queryParams: {
         ...request,
         status: request.status ? request.status.join(',') : '',
       },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -174,14 +152,14 @@ export class UserAPI extends BaseAPI {
    */
   public async submitOrder(
     {
-      extraOrderType = EXTRAORDER_TYPE.TRADITIONAL_ORDER,
+      extraOrderType = loopring_defs.EXTRAORDER_TYPE.TRADITIONAL_ORDER,
       ...orderRequest
     }: loopring_defs.SubmitOrderRequestV3,
     privateKey: string,
     apiKey: string,
   ) {
     if (!orderRequest.tradeChannel) {
-      orderRequest.tradeChannel = TradeChannel.MIXED
+      orderRequest.tradeChannel = loopring_defs.TradeChannel.MIXED
     }
 
     const dataToSig = [
@@ -199,14 +177,14 @@ export class UserAPI extends BaseAPI {
     ]
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_ACTION,
+      url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,
       bodyParams: orderRequest,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
+        sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }
@@ -218,7 +196,7 @@ export class UserAPI extends BaseAPI {
 
   public async submitStopOrder(
     {
-      extraOrderType = EXTRAORDER_TYPE.STOP_LIMIT,
+      extraOrderType = loopring_defs.EXTRAORDER_TYPE.STOP_LIMIT,
       stopSide, // = STOP_SIDE.NO_CONDITION,
       ...orderRequest
     }: RequiredPart<
@@ -229,7 +207,7 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
   ) {
     if (!orderRequest.tradeChannel) {
-      orderRequest.tradeChannel = TradeChannel.MIXED
+      orderRequest.tradeChannel = loopring_defs.TradeChannel.MIXED
     }
 
     const dataToSig = [
@@ -254,11 +232,11 @@ export class UserAPI extends BaseAPI {
     }
     const _dataToSig: Map<string, any> = sortObjDictionary(bodyParams)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_ACTION,
+      url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,
       bodyParams: bodyParams,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig: _dataToSig,
         PrivateKey: privateKey,
@@ -285,11 +263,11 @@ export class UserAPI extends BaseAPI {
     if (request.clientOrderId) dataToSig.set('clientOrderId', request.clientOrderId)
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_ACTION,
+      url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.DELETE,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.DELETE,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey,
@@ -319,11 +297,11 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('accountId', request.accountId)
     dataToSig.set('orderHash', request.orderHash)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_CANCEL_HASH_LIST,
+      url: loopring_defs.LOOPRING_URLs.ORDER_CANCEL_HASH_LIST,
       queryParams: request,
       apiKey,
-      method: ReqMethod.DELETE,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.DELETE,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey,
@@ -353,11 +331,11 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('accountId', request.accountId)
     dataToSig.set('clientOrderId', request.clientOrderId)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ORDER_CANCEL_CLIENT_ORDER_ID_LIST,
+      url: loopring_defs.LOOPRING_URLs.ORDER_CANCEL_CLIENT_ORDER_ID_LIST,
       queryParams: request,
       apiKey,
-      method: ReqMethod.DELETE,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.DELETE,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey,
@@ -387,11 +365,11 @@ export class UserAPI extends BaseAPI {
     userRegTxs: loopring_defs.UserRegTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_REG_TXS,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_REG_TXS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -420,11 +398,11 @@ export class UserAPI extends BaseAPI {
     userPwdResetTxs: loopring_defs.UserPwdResetTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_PWD_RESET_TXS,
+      url: loopring_defs.LOOPRING_URLs.GET_PWD_RESET_TXS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -452,11 +430,11 @@ export class UserAPI extends BaseAPI {
     userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_EXCHANGE_BALANCES,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -487,11 +465,11 @@ export class UserAPI extends BaseAPI {
     userBalances: loopring_defs.LoopringMap<loopring_defs.UserBalanceInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_ASSET_LOCK_RECORDS,
+      url: loopring_defs.LOOPRING_URLs.GET_ASSET_LOCK_RECORDS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -526,11 +504,11 @@ export class UserAPI extends BaseAPI {
     userDepositHistory: loopring_defs.UserDepositHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_DEPOSITS_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -558,11 +536,11 @@ export class UserAPI extends BaseAPI {
     userOnchainWithdrawalHistory: loopring_defs.UserOnchainWithdrawalHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.WITHDRAWALS_ACTION,
+      url: loopring_defs.LOOPRING_URLs.WITHDRAWALS_ACTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -591,11 +569,11 @@ export class UserAPI extends BaseAPI {
     userTransfers: loopring_defs.UserTransferRecord[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_TRANSFERS_LIST,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_TRANSFERS_LIST,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -623,11 +601,11 @@ export class UserAPI extends BaseAPI {
     userTxs: loopring_defs.UserTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_TXS,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_TXS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -663,11 +641,11 @@ export class UserAPI extends BaseAPI {
     userTrades: loopring_defs.UserTrade[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_TRADE_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_TRADE_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -712,11 +690,11 @@ export class UserAPI extends BaseAPI {
     userFreeRateMap: loopring_defs.LoopringMap<loopring_defs.UserFeeRateInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_FEE_RATE,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_FEE_RATE,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -752,11 +730,11 @@ export class UserAPI extends BaseAPI {
     gasPrice: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_ORDER_FEE_RATE,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_ORDER_FEE_RATE,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -788,11 +766,11 @@ export class UserAPI extends BaseAPI {
     cacheOverdueAt: any
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
+      url: loopring_defs.LOOPRING_URLs.GET_MINIMUM_TOKEN_AMT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -834,11 +812,11 @@ export class UserAPI extends BaseAPI {
     gasPrice: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
+      url: loopring_defs.LOOPRING_URLs.GET_OFFCHAIN_FEE_AMT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -875,11 +853,11 @@ export class UserAPI extends BaseAPI {
     fees: loopring_defs.LoopringMap<loopring_defs.OffchainFeeInfo>
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_NFT_OFFCHAIN_FEE_AMT,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_OFFCHAIN_FEE_AMT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -907,17 +885,19 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTValidateOrder<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTValidateOrderRequestV3WithPatch,
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, eddsaKey, apiKey } = req
 
     request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(request, eddsaKey).result
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     // myLog("NFTAction Validate Order request", request);
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -930,7 +910,9 @@ export class UserAPI extends BaseAPI {
    */
   public async submitNFTTrade<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTradeRequestV3WithPatch,
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, apiKey, eddsaKey } = req
 
     const dataToSig: Map<string, any> = new Map()
@@ -943,14 +925,14 @@ export class UserAPI extends BaseAPI {
     //   eddsaKey
     // );
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_TRADE,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_TRADE,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
-        // sigPatch: SigPatchField.EddsaSignature,
+        // sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: eddsaKey,
       },
     }
@@ -965,11 +947,11 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
   ) {
     const reqParams = {
-      url: LOOPRING_URLs.GET_NFT_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_COLLECTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -998,11 +980,11 @@ export class UserAPI extends BaseAPI {
     apiKey: string,
   ) {
     const reqParams = {
-      url: LOOPRING_URLs.GET_NFT_LEGACY_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_LEGACY_COLLECTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -1028,11 +1010,11 @@ export class UserAPI extends BaseAPI {
 
   async getUserNFTCollection(request: loopring_defs.GetUserNFTCollectionRequest, apiKey: string) {
     const reqParams = {
-      url: LOOPRING_URLs.GET_NFT_COLLECTION_HASNFT,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_COLLECTION_HASNFT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -1058,11 +1040,11 @@ export class UserAPI extends BaseAPI {
 
   async getUserNFTLegacyTokenAddress(request: { accountId: number }, apiKey: string) {
     const reqParams = {
-      url: LOOPRING_URLs.GET_NFT_LEGACY_TOKENADDRESS,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_LEGACY_TOKENADDRESS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -1090,11 +1072,11 @@ export class UserAPI extends BaseAPI {
     userNFTDepositHistory: loopring_defs.UserNFTDepositHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_DEPOSIT_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_DEPOSIT_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1122,11 +1104,11 @@ export class UserAPI extends BaseAPI {
     userNFTWithdrawalHistory: loopring_defs.UserNFTWithdrawalHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_WITHDRAW_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1154,11 +1136,11 @@ export class UserAPI extends BaseAPI {
     userNFTTransfers: loopring_defs.UserNFTTransferHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_TRANSFER_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1188,11 +1170,11 @@ export class UserAPI extends BaseAPI {
     userNFTMints: loopring_defs.UserNFTMintHistoryTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_MINT_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_MINT_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
@@ -1220,11 +1202,11 @@ export class UserAPI extends BaseAPI {
     userNFTTxs: loopring_defs.UserNFTTxsHistory[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_TRANSACTION_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_TRANSACTION_HISTORY,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1272,14 +1254,14 @@ export class UserAPI extends BaseAPI {
         totalNum: number
         trades: loopring_defs.UserNFTTradeHistory[]
       }
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
   > {
     const reqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_TRADE_HISTORY,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_TRADE_HISTORY,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -1310,10 +1292,10 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('referrer', request.referrer)
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.SET_REFERRER,
+      url: loopring_defs.LOOPRING_URLs.SET_REFERRER,
       bodyParams: request,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -1343,11 +1325,11 @@ export class UserAPI extends BaseAPI {
     userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_BALANCES,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_BALANCES,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1399,11 +1381,11 @@ export class UserAPI extends BaseAPI {
     userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_NFT_BALANCES_BY_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_BALANCES_BY_COLLECTION,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1455,11 +1437,11 @@ export class UserAPI extends BaseAPI {
     userNFTBalances: loopring_defs.UserNFTBalanceInfo[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_NFT_LEGACY_BALANCE,
+      url: loopring_defs.LOOPRING_URLs.GET_NFT_LEGACY_BALANCE,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1506,10 +1488,10 @@ export class UserAPI extends BaseAPI {
     request: loopring_defs.getUserVIPAssetsRequest,
   ): Promise<{ raw_data: { data: R }; vipAsset: R }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_VIP_ASSETS,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_VIP_ASSETS,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1537,11 +1519,11 @@ export class UserAPI extends BaseAPI {
     }
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_VIP_INFO,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_VIP_INFO,
       queryParams: request,
-      method: ReqMethod.GET,
+      method: loopring_defs.ReqMethod.GET,
       apiKey: apiKey,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -1574,7 +1556,7 @@ export class UserAPI extends BaseAPI {
     publicKey: { x: string; y: string } | undefined = undefined,
   ): Promise<
     | AxiosResponse
-    | RESULT_INFO
+    | loopring_defs.RESULT_INFO
     | {
         raw_data: R
         eddsaKey: {
@@ -1582,7 +1564,7 @@ export class UserAPI extends BaseAPI {
           formatedPx: string
           formatedPy: string
           sk: string
-          counterFactualInfo: CounterFactualInfo
+          counterFactualInfo: loopring_defs.CounterFactualInfo
         }
         apiKey: string
       }
@@ -1596,11 +1578,11 @@ export class UserAPI extends BaseAPI {
     if (eddsaKey) {
       const dataToSig: Map<string, any> = sortObjDictionary(request)
       const reqParams: loopring_defs.ReqParams = {
-        url: LOOPRING_URLs.API_KEY_ACTION,
+        url: loopring_defs.LOOPRING_URLs.API_KEY_ACTION,
         queryParams: request,
         bodyParams: request,
-        method: ReqMethod.GET,
-        sigFlag: SIG_FLAG.EDDSA_SIG,
+        method: loopring_defs.ReqMethod.GET,
+        sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
         sigObj: {
           dataToSig,
           PrivateKey: eddsaKey.sk,
@@ -1625,8 +1607,8 @@ export class UserAPI extends BaseAPI {
       }
     } else {
       throw {
-        code: LoopringErrorCode.NO_EDDSA_KEY,
-        message: ConnectorError.NO_EDDSA_KEY,
+        code: loopring_defs.LoopringErrorCode.NO_EDDSA_KEY,
+        message: loopring_defs.ConnectorError.NO_EDDSA_KEY,
       }
     }
   }
@@ -1637,7 +1619,9 @@ export class UserAPI extends BaseAPI {
   public async submitOffchainWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OffChainWithdrawalRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const isHWAddr = !!isHWAddrOld
@@ -1663,11 +1647,11 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.WITHDRAWALS_ACTION,
+      url: loopring_defs.LOOPRING_URLs.WITHDRAWALS_ACTION,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature,
     }
     let raw_data
@@ -1685,7 +1669,9 @@ export class UserAPI extends BaseAPI {
   public async submitInternalTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
@@ -1711,11 +1697,11 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
+      url: loopring_defs.LOOPRING_URLs.POST_INTERNAL_TRANSFER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature,
     }
 
@@ -1734,7 +1720,9 @@ export class UserAPI extends BaseAPI {
   public async submitForceWithdrawals<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginForcesWithdrawalsRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const { transfer } = request
@@ -1774,11 +1762,11 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('transfer', request.transfer)
     dataToSig.set('withdrawAddress', request.withdrawAddress)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
+      url: loopring_defs.LOOPRING_URLs.POST_FORCE_WITHDRAWALS,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -1800,7 +1788,9 @@ export class UserAPI extends BaseAPI {
   public async submitDeployNFT<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployNFTRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const { transfer } = request
@@ -1841,11 +1831,11 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('tokenAddress', request.tokenAddress)
     dataToSig.set('transfer', request.transfer)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
+      url: loopring_defs.LOOPRING_URLs.GET_DEPLOY_TOKEN_ADDRESS,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -1867,7 +1857,9 @@ export class UserAPI extends BaseAPI {
   public async submitNFTInTransfer<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
@@ -1893,11 +1885,11 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_INTERNAL_TRANSFER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature,
     }
 
@@ -1916,7 +1908,9 @@ export class UserAPI extends BaseAPI {
   public async submitNFTWithdraw<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginNFTWithdrawRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
@@ -1942,11 +1936,11 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_WITHDRAWALS,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_WITHDRAWALS,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature,
     }
 
@@ -1969,12 +1963,14 @@ export class UserAPI extends BaseAPI {
       counterFactualInfo?: any
       _noEcdsa?: boolean
     },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     if (request.counterFactualNftInfo === undefined) {
       request.counterFactualNftInfo = {
-        nftFactory: NFTFactory[chainId],
+        nftFactory: loopring_defs.NFTFactory[chainId],
         nftOwner: request.minterAddress,
         nftBaseUri: '',
       }
@@ -2003,11 +1999,11 @@ export class UserAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NFT_MINT,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_MINT,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       // ecdsaSignature,
     }
     let raw_data
@@ -2021,18 +2017,20 @@ export class UserAPI extends BaseAPI {
 
   async submitNFTCollection<R>(
     req: loopring_defs.CollectionBasicMeta,
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
-    const _req = req.nftFactory ? req : { ...req, nftFactory: NFTFactory_Collection[chainId] }
+  ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; contractAddress: string }> {
+    const _req = req.nftFactory
+      ? req
+      : { ...req, nftFactory: loopring_defs.NFTFactory_Collection[chainId] }
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
-      url: LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2054,17 +2052,17 @@ export class UserAPI extends BaseAPI {
 
   async deleteNFTCollection<R>(
     req: loopring_defs.CollectionDelete,
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
   ): Promise<{ raw_data: R }> {
     const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.DELETE_NFT_CREATE_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.DELETE_NFT_CREATE_COLLECTION,
       queryParams: req,
       apiKey,
-      method: ReqMethod.DELETE,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.DELETE,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2083,20 +2081,20 @@ export class UserAPI extends BaseAPI {
 
   async submitNFTLegacyCollection<R>(
     req: loopring_defs.CollectionLegacyMeta,
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+  ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; result: boolean }> {
     // const _req = req.nftFactory
     //   ? req
-    //   : { ...req, nftFactory: NFTFactory_Collection[chainId] };
+    //   : { ...req, nftFactory: loopring_defs.NFTFactory_Collection[chainId] };
     const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams = {
-      url: LOOPRING_URLs.POST_NFT_CREATE_LEGACY_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_CREATE_LEGACY_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2121,18 +2119,18 @@ export class UserAPI extends BaseAPI {
       collectionId: string
       accountId: number
     },
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R; contractAddress: string }> {
-    // const _req = req.nftFactory ? req : {...req, nftFactory: NFTFactory_Collection[ chainId ]}
+  ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; contractAddress: string }> {
+    // const _req = req.nftFactory ? req : {...req, nftFactory: loopring_defs.NFTFactory_Collection[ chainId ]}
     const dataToSig: Map<string, any> = sortObjDictionary(req)
     const reqParams = {
-      url: LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_EDIT_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2154,18 +2152,18 @@ export class UserAPI extends BaseAPI {
 
   async submitUpdateNFTLegacyCollection<R>(
     req: loopring_defs.UpdateNFTLegacyCollectionRequest,
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+  ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; result: boolean }> {
     const _req = { ...req, nftHashes: req.nftHashes.join(',') }
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
-      url: LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_LEGACY_UPDATE_COLLECTION,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2187,18 +2185,18 @@ export class UserAPI extends BaseAPI {
 
   async submitUpdateNFTGroup<R>(
     req: loopring_defs.UpdateNFTGroupRequest,
-    chainId: ChainId,
+    chainId: loopring_defs.ChainId,
     apiKey: string,
     eddsaKey: string,
-  ): Promise<RESULT_INFO | { raw_data: R; result: boolean }> {
+  ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; result: boolean }> {
     const _req = { ...req, nftHashes: req.nftHashes.join(',') }
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
-      url: LOOPRING_URLs.POST_NFT_UPDATE_NFT_GROUP,
+      url: loopring_defs.LOOPRING_URLs.POST_NFT_UPDATE_NFT_GROUP,
       bodyParams: Object.fromEntries(dataToSig),
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2224,7 +2222,9 @@ export class UserAPI extends BaseAPI {
   public async submitDeployCollection<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.OriginDeployCollectionRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, eddsaKey, apiKey, isHWAddr: isHWAddrOld } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
     const { transfer } = request
@@ -2261,11 +2261,11 @@ export class UserAPI extends BaseAPI {
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_DEPLOY_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.POST_DEPLOY_COLLECTION,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2287,7 +2287,9 @@ export class UserAPI extends BaseAPI {
   public async updateAccount<T extends loopring_defs.TX_HASH_API>(
     req: loopring_defs.UpdateAccountRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
-  ): Promise<(Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | RESULT_INFO> {
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
     const { request, web3, chainId, walletType, isHWAddr: isHWAddrOld, privateKey } = req
     const { accountId, counterFactualInfo }: any = options ? options : { accountId: 0 }
 
@@ -2304,7 +2306,7 @@ export class UserAPI extends BaseAPI {
           chainId,
           accountId,
           '',
-          ConnectorNames.Unknown,
+          loopring_defs.ConnectorNames.Unknown,
           counterFactualInfo,
         )
       )?.ecdsaSig
@@ -2322,10 +2324,10 @@ export class UserAPI extends BaseAPI {
       ecdsaSignature: ecdsaSignature,
     })
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.ACCOUNT_ACTION,
+      url: loopring_defs.LOOPRING_URLs.ACCOUNT_ACTION,
       bodyParams: request,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature,
       ...(privateKey && request.recommenderAccountId
         ? {
@@ -2359,10 +2361,10 @@ export class UserAPI extends BaseAPI {
     dataToSig.set('accountId', request.accountId)
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.API_KEY_ACTION,
+      url: loopring_defs.LOOPRING_URLs.API_KEY_ACTION,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2399,11 +2401,11 @@ export class UserAPI extends BaseAPI {
     userTxs: loopring_defs.UserTx[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_BILLS,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_BILLS,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -2436,11 +2438,11 @@ export class UserAPI extends BaseAPI {
     records: loopring_defs.ReferDownsides[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_REFER_DOWNSIDES,
+      url: loopring_defs.LOOPRING_URLs.GET_REFER_DOWNSIDES,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -2465,11 +2467,11 @@ export class UserAPI extends BaseAPI {
     records: loopring_defs.ReferSelf[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_REFER_SELF,
+      url: loopring_defs.LOOPRING_URLs.GET_REFER_SELF,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -2485,16 +2487,16 @@ export class UserAPI extends BaseAPI {
     }
   }
 
-  public async getReferStatistic<R = ReferStatistic>(
+  public async geReferStatistic<R = loopring_defs.ReferStatistic>(
     request: loopring_defs.GetReferStatistic,
     apiKey: string,
   ): Promise<{ raw_data: R } & R> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_REFER_STATISTIC,
+      url: loopring_defs.LOOPRING_URLs.GET_REFER_STATISTIC,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -2520,11 +2522,11 @@ export class UserAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_PROTOCOL_REWARDS,
+      url: loopring_defs.LOOPRING_URLs.GET_PROTOCOL_REWARDS,
       queryParams: { ...request, size: request?.size ?? 200 },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -2557,11 +2559,11 @@ export class UserAPI extends BaseAPI {
     }
   > {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_USER_LOCKSUMMAR,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_LOCKSUMMAR,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -2619,11 +2621,11 @@ export class UserAPI extends BaseAPI {
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_TOTAL_CLAIM,
+      url: loopring_defs.LOOPRING_URLs.POST_TOTAL_CLAIM,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -2650,14 +2652,14 @@ export class UserAPI extends BaseAPI {
   ): Promise<{
     raw_data: R
     accountId: number
-    items: ClaimItem[]
+    items: loopring_defs.ClaimItem[]
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_TOTAL_CLAIM_INFO,
+      url: loopring_defs.LOOPRING_URLs.GET_TOTAL_CLAIM_INFO,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -2683,7 +2685,7 @@ export class UserAPI extends BaseAPI {
       accountId?: number
       offset?: number
       limit?: number
-      network?: NetworkWallet
+      network?: loopring_defs.NetworkWallet
       notRead: boolean | undefined
     },
     apiKey?: string,
@@ -2694,11 +2696,11 @@ export class UserAPI extends BaseAPI {
     notRead: number
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_NOTIFICATION_ALL,
+      url: loopring_defs.LOOPRING_URLs.GET_NOTIFICATION_ALL,
       queryParams: { ...request },
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     let raw_data
     try {
@@ -2724,7 +2726,7 @@ export class UserAPI extends BaseAPI {
   public async submitNotificationClear<R>(
     request: {
       accountId: number
-      network?: NetworkWallet
+      network?: loopring_defs.NetworkWallet
     },
     privateKey: string,
     apiKey?: string,
@@ -2734,11 +2736,11 @@ export class UserAPI extends BaseAPI {
     const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NOTIFICATION_CLEAR,
+      url: loopring_defs.LOOPRING_URLs.POST_NOTIFICATION_CLEAR,
       bodyParams: { ...request },
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -2765,7 +2767,7 @@ export class UserAPI extends BaseAPI {
   public async submitNotificationReadAll<R>(
     request: {
       accountId: number
-      network?: NetworkWallet
+      network?: loopring_defs.NetworkWallet
     },
     privateKey: string,
     apiKey?: string,
@@ -2775,11 +2777,11 @@ export class UserAPI extends BaseAPI {
     const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NOTIFICATION_READ_ALL,
+      url: loopring_defs.LOOPRING_URLs.POST_NOTIFICATION_READ_ALL,
       bodyParams: { ...request },
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -2815,11 +2817,11 @@ export class UserAPI extends BaseAPI {
   }> {
     const dataToSig: Map<string, any> = sortObjDictionary({ ...request })
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_NOTIFICATION_READ_ONE,
+      url: loopring_defs.LOOPRING_URLs.POST_NOTIFICATION_READ_ONE,
       bodyParams: { ...request },
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,

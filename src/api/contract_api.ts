@@ -1,9 +1,7 @@
 import Web3 from 'web3'
 import { Transaction } from '@ethereumjs/tx'
 
-import { ChainId } from '../defs/web3_defs'
-
-import { TokenInfo } from '../defs/loopring_defs'
+import * as loopring_defs from '../defs'
 
 import * as fm from '../utils/formatter'
 
@@ -61,7 +59,7 @@ export async function signEthereumTx(
   web3: any,
   account: string,
   rawTx: any,
-  chainId: ChainId,
+  chainId: loopring_defs.ChainId,
 ): Promise<{ result: string; rawTx: object } | { error: any }> {
   const ethTx = Transaction.fromSerializedTx(rawTx)
   const hash = toHex(ethTx.hash())
@@ -96,7 +94,7 @@ export async function sendRawTx(
   to: string,
   value: any,
   data: any,
-  chainId: ChainId,
+  chainId: loopring_defs.ChainId,
   nonce: number | undefined | null,
   gasPrice: any,
   gasLimit: number | undefined,
@@ -148,7 +146,7 @@ export async function approve(
   to: string,
   depositAddress: string,
   _value: string,
-  chainId: ChainId,
+  chainId: loopring_defs.ChainId,
   nonce: number,
   gasPrice: number,
   gasLimit: number,
@@ -188,7 +186,7 @@ export async function approveZero(
   depositAddress: string,
   gasPrice: number,
   gasLimit: number,
-  chainId: ChainId = ChainId.GOERLI,
+  chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
   nonce: number,
   sendByMetaMask = false,
 ) {
@@ -221,7 +219,7 @@ export async function approveMax(
   depositAddress: string,
   gasPrice: number,
   gasLimit: number,
-  chainId: ChainId = ChainId.GOERLI,
+  chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
   nonce: number,
   sendByMetaMask = false,
 ) {
@@ -247,12 +245,12 @@ export async function deposit(
   web3: any,
   from: string,
   exchangeAddress: string,
-  token: TokenInfo,
+  token: loopring_defs.TokenInfo,
   value: number,
   fee: number,
   gasPrice: number,
   gasLimit: number,
-  chainId: ChainId = ChainId.GOERLI,
+  chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
   nonce: number,
   sendByMetaMask = true,
   to?: string,
@@ -297,11 +295,11 @@ export async function forceWithdrawal(
   from: string,
   accountID: number,
   exchangeAddress: string,
-  token: TokenInfo,
+  token: loopring_defs.TokenInfo,
   fee: number,
   gasPrice: number,
   gasLimit: number,
-  chainId: ChainId = ChainId.GOERLI,
+  chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
   nonce: number,
   sendByMetaMask = false,
 ) {
