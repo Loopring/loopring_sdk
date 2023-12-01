@@ -996,7 +996,7 @@ export function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: str
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
-    request.sellToken?.tokenId ? request.sellToken.tokenId : '',
+    request.sellToken?.tokenId !== undefined ? request.sellToken.tokenId : '',
     (request.buyToken as any)?.nftData
       ? (request.buyToken as NFTTokenAmountInfo).nftData
       : request.buyToken.tokenId,

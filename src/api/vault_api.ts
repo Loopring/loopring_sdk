@@ -14,7 +14,6 @@ export class VaultAPI extends BaseAPI {
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
-
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {

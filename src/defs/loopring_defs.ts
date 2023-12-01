@@ -4311,6 +4311,7 @@ export enum LOCK_TYPE {
   BTRADE = 'BTRADE',
   L2STAKING = 'L2STAKING',
   STOP_LIMIT = 'STOP_LIMIT',
+  VAULT_COLLATERAL = 'VAULT_COLLATERAL',
 }
 
 export type getUserLockSummaryRequest = {
@@ -4446,12 +4447,12 @@ export enum VaultAccountStatus {
 export type VaultAccountInfo = {
   accountStatus: VaultAccountStatus
   marginLevel: string
-  totalBalanceOfUsd: string
-  totalDebtOfUsd: string
-  totalEquityOfUsd: string
-  totalCollateralOfUsd: string
+  totalBalanceOfUsdt: string
+  totalDebtOfUsdt: string
+  totalEquityOfUsdt: string
+  totalCollateralOfUsdt: string
   collateralInfo: CollateralInfo
-  maxBorrowableOfUsd: string
+  maxBorrowableOfUsdt: string
   userAssets: VaultBalance[]
   openDate: number
 }
@@ -4689,6 +4690,7 @@ export enum NotificationMessageType {
   DUAL_RECURES_ORDER_SWAP = 51,
   DUAL_RECURES_RETRY_FAILED = 51,
   DUAL_RECURES_RETRY_SUCCESS = 53,
+  DUAL_PRICE_ALERT = 54,
 }
 export type UserNotification = {
   id: number
