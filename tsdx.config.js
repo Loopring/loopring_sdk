@@ -10,10 +10,28 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 module.exports = {
   rollup(config, options) {
+    options.format ='esm'
     config.output.esModule = true;
-    config.output.format='esm'
+    // config.output.format='esm'
     config.output.plugins = [terser()],
-      // input: 'src/index.ts',
+    config.output.preserveModules = true
+    console.log('output config',config.output,options)
+    config.plugins = [
+      json(),
+      commonjs({
+        include: 'node_modules/**'  ,
+        defaultIsModuleExports:true
+      }),
+      nodeResolve({
+        exportConditions:[ "import", "default",'require' ],
+        mainFields: [ "module", "main",'browser' ],
+        modulesOnly: true,
+        preferBuiltins: false
+      }),
+      babel({ babelHelpers: 'bundled', include: ['src/**/*.ts'], extensions, exclude: './node_modules/**'})
+    ]
+
+    // input: 'src/index.ts',
           // output: [
           // {
           //     file: 'dist/lib/bundles/bundle.esm.js',
@@ -53,20 +71,6 @@ module.exports = {
     // }))
     // config.plugins.push(resolve());
     // config.plugins.push(json);
-      config.plugins = [
-          json(),
-          commonjs({
-              include: 'node_modules/**'  ,
-              defaultIsModuleExports:true
-          }),
-          nodeResolve({
-              exportConditions:[ "import", "default",'require' ],
-              mainFields: [ "module", "main",'browser' ],
-              modulesOnly: true,
-              preferBuiltins: false
-          }),
-          babel({ babelHelpers: 'bundled', include: ['src/**/*.ts'], extensions, exclude: './node_modules/**'})
-      ]
 
     return config;
   },

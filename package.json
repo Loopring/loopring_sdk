@@ -1,14 +1,15 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.7.13",
+  "version": "3.8.1",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
-  "main": "dist/index.js",
-  "module": "dist/loopring-sdk.esm.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.esm.js",
+  "source": "src/index.ts",
   "exports": {
-    "require": "./dist/index.js",
-    "import": "./dist/loopring-sdk.esm.js"
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.esm.js"
   },
   "files": [
     "dist",
@@ -64,16 +65,13 @@
     }
   },
   "scripts": {
-    "build:esm": "cross-env BABEL_ENV=esmUnbundled babel src --extensions '.ts' --out-dir '/lib/esm' --source-maps",
-    "build:cjs": "cross-env BABEL_ENV=cjs babel src --extensions '.ts' --out-dir '/lib/cjs' --source-maps",
-    "build:bundles": "cross-env BABEL_ENV=esmBundled rollup -c",
-    "build": "rimraf dist && NODE_ENV=production cross-env BABEL_ENV=prod tsdx build",
+    "build": "rimraf dist && NODE_ENV=production cross-env BABEL_ENV=prod rollup -c --bundleConfigAsCjs",
     "start": "yarn link; tsdx watch",
     "test": "tsdx test",
     "test_calc": "tsdx test",
     "lint": "eslint . --fix --quiet --ext .ts",
-    "prepublishDev": "NODE_ENV=dev tsdx build",
-    "prepublishOnly": "tsdx build",
+    "prepublishDev": "NODE_ENV=dev build build",
+    "prepublishOnly": "yarn build",
     "doc": "typedoc --out docs/detail src\\/",
     "proxy": "export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;",
     "build-book": "npx honkit build",
@@ -145,6 +143,7 @@
     "request-promise": "^4.2.6",
     "rimraf": "^5.0.1",
     "rollup": "^3.25.3",
+    "rollup-plugin-typescript2": "^0.36.0",
     "truffle-privatekey-provider": "1.5.0",
     "ts-node": "^10.0.0",
     "tsdx": "^0.14.1",
