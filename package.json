@@ -146,7 +146,6 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "truffle-privatekey-provider": "1.5.0",
     "ts-node": "^10.0.0",
-    "tsdx": "^0.14.1",
     "tslib": "^2.3.0",
     "typedoc": "^0.22.9",
     "typedoc-plugin-markdown": "^3.11.7",

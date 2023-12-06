@@ -466,4 +466,29 @@ export class VaultAPI extends BaseAPI {
       throw error as AxiosResponse
     }
   }
+
+  public async getVaultPrice(request: { tokenIds: string | number[] }) {
+    // let { request, eddsaKey, apiKey } = req
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_PRICE,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...request,
+        tokenIds:
+          typeof request.tokenIds === 'string' ? request?.tokenIds : request.tokenIds?.join(','),
+      },
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    } else {
+      return {
+        list: [...raw_data],
+        raw_data,
+      }
+    }
+  }
 }

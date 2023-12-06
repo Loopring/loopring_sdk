@@ -6,6 +6,7 @@ import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
 import { getMidPrice } from './exchange_api'
 import { getEdDSASigWithPoseidon } from './sign/sign_tools'
+import * as string_decoder from 'string_decoder'
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -845,5 +846,44 @@ export class DefiAPI extends BaseAPI {
       }
     }
     return { raw_data, ...raw_data }
+  }
+
+  public async getDefiApys<
+    R = {
+      product: string
+      defiType: string
+      apys: {
+        apy: string
+        createdAt: string
+      }[]
+    },
+  >({
+    request,
+  }: {
+    request: {
+      start?: number
+      end?: number
+      defiType: 'LIDO' | 'ROCKETPOOL' | 'L2STAKING' | 'CIAN' | string
+      product: string
+    }
+  }): Promise<{
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_DEFI_APYS,
+      queryParams: { ...request },
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    }
   }
 }
