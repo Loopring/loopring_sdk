@@ -975,7 +975,8 @@ export function calcDefi({
   isInputSell,
   sellAmount,
   buyAmount,
-  feeVol,
+  // feeVol,
+  maxFeeBips,
   marketInfo,
   tokenSell,
   tokenBuy,
@@ -983,15 +984,18 @@ export function calcDefi({
 }: {
   isJoin: boolean
   isInputSell: boolean
-  feeVol: string
+  maxFeeBips: number
+  // feeVol: string
   marketInfo: DefiMarketInfo
   tokenSell: TokenInfo
   tokenBuy: TokenInfo
   buyTokenBalanceVol: string
+  // feeVol
 } & XOR<{ sellAmount: string }, { buyAmount: string }>): {
   sellVol: string
   buyVol: string
   maxSellVol: string
+  feeVol: string
   maxFeeBips: number
   miniSellVol: string
   isJoin: boolean
@@ -999,13 +1003,8 @@ export function calcDefi({
 } {
   /** isDeposit calc sellPrice & buyPrice */
   const [sellPrice] = isJoin ? [marketInfo.depositPrice] : [marketInfo.withdrawPrice]
-
   /** calc MiniSellVol & MaxSellVol**/
   const dustToken = tokenBuy
-
-  const minVolBuy = BigNumber.max(fm.toBig(feeVol).times(2), dustToken.orderAmounts.dust)
-
-  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice), tokenSell.orderAmounts.dust)
   const maxSellVol = fm.toBig(buyTokenBalanceVol).div(sellPrice)
   /** calc MiniSellVol & MaxSellVol END**/
   // debugger;
@@ -1021,12 +1020,18 @@ export function calcDefi({
   /** View input calc sellVol & buyVol END */
 
   /** calc current maxFeeBips **/
-  const maxFeeBips = Math.ceil(fm.toBig(feeVol).times(10000).div(buyVol).toNumber())
-
+  // const maxFeeBips = Math.ceil(fm.toBig(feeVol).times(10000).div(buyVol).toNumber())
+  const feeVol = fm
+    .toBig(maxFeeBips / 1000)
+    .times(buyVol)
+    .toString()
+  const minVolBuy = BigNumber.max(fm.toBig(feeVol).times(2), dustToken.orderAmounts.dust)
+  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice), tokenSell.orderAmounts.dust)
   return {
     sellVol: sellVol.toString(),
     buyVol: buyVol.toString(),
     maxSellVol: maxSellVol.toString(),
+    feeVol,
     isJoin,
     isInputSell,
     maxFeeBips,
