@@ -232,4 +232,5 @@ export enum LOOPRING_URLs {
   POST_VAULT_REPAY = '/api/v3/vault/repay',
   GET_VAULT_PRICE = '/api/v3/vault/tokenPrice',
   GET_DEFI_APYS = '/api/v3/datacenter/getDefiApys',
+  GET_DEFI_STAKE_TRANSACTIONS = '/api/v3/defi/stake/transactions',
 }

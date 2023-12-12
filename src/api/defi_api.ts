@@ -886,4 +886,44 @@ export class DefiAPI extends BaseAPI {
       raw_data,
     }
   }
+
+  public async getDefiDepositList<R = any>(
+    {
+      types,
+      markets,
+      number = 10,
+      ...request
+    }: {
+      accountId: number
+      number: number //
+      markets: Array<string> | string
+      types: Array<'LIDO' | 'ROCKETPOOL' | 'L2STAKING' | 'CIAN' | string> | string
+      product: string
+    },
+    apiKey: string,
+  ): Promise<{
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_DEFI_STAKE_TRANSACTIONS,
+      apiKey,
+      queryParams: {
+        ...request,
+        markets: typeof markets === 'string' ? markets : markets?.join(','),
+        types: typeof types === 'string' ? types : types?.join(','),
+      },
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      raw_data,
+    }
+  }
 }
