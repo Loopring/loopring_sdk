@@ -4631,7 +4631,8 @@ export enum OHLCVDatacenterRange {
 }
 
 export interface GetDatacenterTokenQuoteTrendRequest {
-  token: string
+  token?: string
+  cmcTokenId?: number
   range?: DatacenterRange
   currency: 'USD'
 }
@@ -4641,7 +4642,8 @@ export interface GetCmcTokenRelationsRequest {
   cmcTokenIds?: string[] | string
 }
 export interface GetDatacenterTokenOhlcvQuoteTrendRequest {
-  token: string
+  token?: string
+  cmcTokenId?: number
   range?: OHLCVDatacenterRange
   currency: 'USD'
 }
