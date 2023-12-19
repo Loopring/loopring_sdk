@@ -909,6 +909,7 @@ export class DefiAPI extends BaseAPI {
       apiKey,
       queryParams: {
         ...request,
+        number,
         markets: typeof markets === 'string' ? markets : markets?.join(','),
         types: typeof types === 'string' ? types : types?.join(','),
       },

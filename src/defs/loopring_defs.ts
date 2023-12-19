@@ -4369,6 +4369,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
     maxAmount: string
     minAmount: string
     qtyStepScale: number
+    minLoanAmount: string
     // bit1:show
     // bit2:join
     // bit3:exit
@@ -4690,7 +4691,7 @@ export enum NotificationMessageType {
   FACING_FORCED_SETTLEMENT = 40,
   DUAL_SETTLED = 50,
   DUAL_RECURES_ORDER_SWAP = 51,
-  DUAL_RECURES_RETRY_FAILED = 51,
+  DUAL_RECURES_RETRY_FAILED = 52,
   DUAL_RECURES_RETRY_SUCCESS = 53,
   DUAL_PRICE_ALERT = 54,
 }

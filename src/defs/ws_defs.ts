@@ -24,6 +24,8 @@ export enum WsTopicType {
   btradedepth = 'btradedepth',
   crawlTokenPrices = 'crawltokenprices',
   notification = 'notification',
+  vaultAccount = 'vaultAccount',
+  l2Common = 'l2Common',
 }
 
 export const getCrawlTokenPrices = ({
@@ -168,4 +170,21 @@ export const getNotificationArg = ({
     address,
     network,
   }
+}
+
+export const getL2Common = ({ address, network }: { address: string; network: NetworkWallet }) => {
+  return {
+    topic: WsTopicType.l2Common,
+    address,
+    network,
+  }
+}
+
+export enum WS_ACTIONT_YPE {
+  VAULT_ACCOUNT_UPDATE = 'VAULT_ACCOUNT_UPDATE',
+}
+export interface WsL2Common {
+  accountId: number
+  address: string
+  isUpdated: true
 }
