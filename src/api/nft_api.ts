@@ -26,6 +26,12 @@ const CREATION_CODE = {
   [ChainId.MAINNET]:
     '3d602d80600a3d3981f3363d3d373d3d3d363d73b25f6d711aebf954fb0265a3b29f7b9beba7e55d5af43d82803e903d91602b57fd5bf3',
 }
+const {
+  Contracts: {
+    erc721Abi: { erc721 },
+    erc1155Abi: { erc1155 },
+  },
+} = contracts
 
 export enum NFTType {
   ERC1155 = 0,
@@ -75,10 +81,7 @@ export class NFTAPI extends BaseAPI {
   }
 
   private _genContract(web3: any, contractAddress: string, type: NFTType = NFTType.ERC1155) {
-    return new web3.eth.Contract(
-      type === NFTType.ERC1155 ? contracts.Contracts.erc1155Abi : contracts.Contracts.erc721Abi,
-      contractAddress,
-    )
+    return new web3.eth.Contract(type === NFTType.ERC1155 ? erc1155 : erc721, contractAddress)
   }
 
   /**
