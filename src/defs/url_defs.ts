@@ -166,6 +166,8 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRADE_HISTORY_OLD = '/api/v3/user/nft/trades',
   GET_USER_NFT_TRADE_HISTORY = '/api/v3/new/user/nft/trades',
   GET_USER_NFT_MINT_HISTORY = '/api/v3/user/nft/mints',
+  GET_USER_NFT_BURN_ADDRESS = '/api/v3/datacenter/getNftBurnAddress',
+
   GET_DEPLOY_TOKEN_ADDRESS = '/api/v3/nft/deployTokenAddress',
   IPFS_META_URL = 'https://ipfs.loopring.io/ipfs/',
 
