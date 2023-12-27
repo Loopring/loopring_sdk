@@ -5,16 +5,16 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
+} from '../../test.MockData'
+import * as sdk from '../../../index'
 
-describe("Withdraw", function () {
+describe('Withdraw', function () {
   beforeEach(async () => {
-    jest.setTimeout(DEFAULT_TIMEOUT * 3);
-  }, DEFAULT_TIMEOUT);
+    jest.setTimeout(DEFAULT_TIMEOUT * 3)
+  }, DEFAULT_TIMEOUT)
 
   it(
-    "submitWithdraw",
+    'submitWithdraw',
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
@@ -23,42 +23,42 @@ describe("Withdraw", function () {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          sellTokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
         },
-        apiKey
-      );
-      console.log("storageId:", storageId);
+        apiKey,
+      )
+      console.log('storageId:', storageId)
 
       // Step 5. fee
       const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
-          tokenSymbol: TOKEN_INFO.tokenMap["LRC"].symbol,
+          tokenSymbol: TOKEN_INFO.tokenMap['LRC'].symbol,
         },
-        apiKey
-      );
-      console.log("fee:", fee);
+        apiKey,
+      )
+      console.log('fee:', fee)
 
       // Step 6. withdraw
       const response = await LoopringAPI.userAPI.submitOffchainWithdraw({
@@ -67,10 +67,10 @@ describe("Withdraw", function () {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
           counterFactualInfo: undefined,
           fastWithdrawalMode: false,
-          hashApproved: "",
+          hashApproved: '',
           maxFee: {
-            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-            volume: fee.fees["LRC"].fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
+            volume: fee.fees['LRC'].fee ?? '9400000000000000000',
           },
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -87,9 +87,9 @@ describe("Withdraw", function () {
         walletType: sdk.ConnectorNames.Unknown, //sdk.ConnectorNames.MetaMask UT only support perosonal sign, no V4
         eddsaKey: eddsaKey.sk,
         apiKey,
-      });
-      console.log("response:", response);
+      })
+      console.log('response:', response)
     },
-    DEFAULT_TIMEOUT * 3
-  );
-});
+    DEFAULT_TIMEOUT * 3,
+  )
+})

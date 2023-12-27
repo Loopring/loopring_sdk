@@ -555,29 +555,23 @@ export class NFTAPI extends BaseAPI {
       }
     }
     return raw_data
-    // if (raw_data.nftTokenInfos.length) {
-    //   raw_data.nftTokenInfos = raw_data.nftTokenInfos.reduce(
-    //     (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
-    //       if (item.nftId && item.nftId.startsWith('0x')) {
-    //         const hashBN = new BN(item.nftId.replace('0x', ''), 16)
-    //         item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
-    //         if (
-    //           request.metadata === true &&
-    //           item.metadata &&
-    //           item.metadata.nftId &&
-    //           item.metadata.nftId.startsWith('0x')
-    //         ) {
-    //           // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-    //           item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
-    //         }
-    //       }
-    //       return [...prev, item]
-    //     },
-    //     [],
-    //   )
-    //   // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
-    //   // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
-    // }
-    // return {}
+  }
+  async getUserNFTBurnAddress<R>(request: {
+    accountId: number
+    tokenId: number
+  }): Promise<boolean> {
+    const reqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_BURN_ADDRESS,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return raw_data
   }
 }

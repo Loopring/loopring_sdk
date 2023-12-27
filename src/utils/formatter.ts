@@ -545,3 +545,9 @@ export function makeInvestMarkets<C extends loopring_defs.DefiMarketInfo>(
     marketArrStr: marketArr.join(SEP),
   }
 }
+
+export function type(value: any) {
+  var matches = Object.prototype.toString.call(value).match(/^\[object (\w+?)\]$/) || []
+
+  return (matches[1] || 'undefined').toLowerCase()
+}

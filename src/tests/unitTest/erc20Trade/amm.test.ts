@@ -4,150 +4,135 @@ import {
   LoopringAPI,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../MockData";
+} from '../../test.MockData'
 
-describe("AmmpoolAPI test", function () {
+describe('AmmpoolAPI test', function () {
   it(
-    "getAmmPoolConf",
+    'getAmmPoolConf',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolConf();
-      console.log(response.ammpools);
-      console.log(response.pairs);
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolConf()
+      console.log(response.ammpools)
+      console.log(response.pairs)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolUserRewards",
+    'getAmmPoolUserRewards',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
-        any[]
-      >({
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<any[]>({
         owner: LOOPRING_EXPORTED_ACCOUNT.accountId,
-      });
-      console.log("getAmmPoolUserRewards:", response);
+      })
+      console.log('getAmmPoolUserRewards:', response)
+      console.log('getAmmPoolUserRewards feeRewards:', response.ammUserRewardMap)
       console.log(
-        "getAmmPoolUserRewards feeRewards:",
-        response.ammUserRewardMap
-      );
-      console.log(
-        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        'getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:',
         response.raw_data[0].feeRewards,
         response.raw_data[0].extraRewards,
-        response.raw_data[0].currentRewards
-      );
+        response.raw_data[0].currentRewards,
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolUserRewards-LRC-ETH",
+    'getAmmPoolUserRewards-LRC-ETH',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
-        any[]
-      >({
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<any[]>({
         owner: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        ammPoolMarkets: "AMM-LRC-ETH",
-      });
-      console.log("getAmmPoolUserRewards:", response);
+        ammPoolMarkets: 'AMM-LRC-ETH',
+      })
+      console.log('getAmmPoolUserRewards:', response)
+      console.log('getAmmPoolUserRewards feeRewards:', response.ammUserRewardMap)
       console.log(
-        "getAmmPoolUserRewards feeRewards:",
-        response.ammUserRewardMap
-      );
-      console.log(
-        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        'getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:',
         response.raw_data[0].feeRewards,
         response.raw_data[0].extraRewards,
-        response.raw_data[0].currentRewards
-      );
+        response.raw_data[0].currentRewards,
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
     'getAmmPoolUserRewards-LRC-ETH_ETH-USDT"',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
-        any[]
-      >({
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<any[]>({
         owner: LOOPRING_EXPORTED_ACCOUNT.accountId,
-        ammPoolMarkets: "AMM-LRC-ETH,AMM-ETH-USDT",
-      });
-      console.log("getAmmPoolUserRewards:", response);
+        ammPoolMarkets: 'AMM-LRC-ETH,AMM-ETH-USDT',
+      })
+      console.log('getAmmPoolUserRewards:', response)
+      console.log('getAmmPoolUserRewards feeRewards:', response.ammUserRewardMap)
       console.log(
-        "getAmmPoolUserRewards feeRewards:",
-        response.ammUserRewardMap
-      );
-      console.log(
-        "getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:",
+        'getAmmPoolUserRewards feeRewards,extraRewards,currentRewards:',
         response.raw_data[0].feeRewards,
         response.raw_data[0].extraRewards,
-        response.raw_data[0].currentRewards
-      );
+        response.raw_data[0].currentRewards,
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolGameRank",
+    'getAmmPoolGameRank',
     async () => {
       const response: any = await LoopringAPI.ammpoolAPI.getAmmPoolGameRank({
-        ammPoolMarket: "UNI-ETH",
-      });
-      console.log("getAmmPoolGameRank:", response.raw_data);
-      console.log("totalRewards:", response.totalRewards);
-      console.log("userRankList 1:", response.userRankList[0]);
+        ammPoolMarket: 'UNI-ETH',
+      })
+      console.log('getAmmPoolGameRank:', response.raw_data)
+      console.log('totalRewards:', response.totalRewards)
+      console.log('userRankList 1:', response.userRankList[0])
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmAssetHistory",
+    'getAmmAssetHistory',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmAssetHistory({
-        poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
-      });
-      console.log("getAmmAssetHistory dataSeries:", response);
+        poolAddress: TOKEN_INFO.tokenMap['LP-LRC-ETH'].address,
+      })
+      console.log('getAmmAssetHistory dataSeries:', response)
       // console.log('getAmmAssetHistory:', response.raw_data.data[0].tokens)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolGameUserRank",
+    'getAmmPoolGameUserRank',
     async () => {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. getAmmPoolGameUserRank
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolGameUserRank(
-        { owner: LOOPRING_EXPORTED_ACCOUNT.address, ammPoolMarket: "LRC-ETH" },
-        apiKey
-      );
-      console.log("getAmmPoolGameUserRank:", response.raw_data);
-      console.log("userRank:", response.userRank);
+        { owner: LOOPRING_EXPORTED_ACCOUNT.address, ammPoolMarket: 'LRC-ETH' },
+        apiKey,
+      )
+      console.log('getAmmPoolGameUserRank:', response.raw_data)
+      console.log('userRank:', response.userRank)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolActivityRules",
+    'getAmmPoolActivityRules',
     async () => {
       const {
         activityInProgressRules,
@@ -156,90 +141,89 @@ describe("AmmpoolAPI test", function () {
         groupByActivityStatus,
         groupByRuleTypeAndStatus,
         raw_data,
-      } = await LoopringAPI.ammpoolAPI.getAmmPoolActivityRules();
-      console.log("activityInProgressRules", activityInProgressRules);
-      console.log("activityDateMap", activityDateMap);
-      console.log("groupByRuleType", groupByRuleType);
-      console.log("groupByActivityStatus", groupByActivityStatus);
+      } = await LoopringAPI.ammpoolAPI.getAmmPoolActivityRules()
+      console.log('activityInProgressRules', activityInProgressRules)
+      console.log('activityDateMap', activityDateMap)
+      console.log('groupByRuleType', groupByRuleType)
+      console.log('groupByActivityStatus', groupByActivityStatus)
       console.log(
-        "groupByRuleTypeAndStatus",
+        'groupByRuleTypeAndStatus',
         groupByRuleTypeAndStatus,
-        JSON.stringify(groupByRuleTypeAndStatus)
-      );
+        JSON.stringify(groupByRuleTypeAndStatus),
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolStats",
+    'getAmmPoolStats',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolStats();
-      console.log("ammPoolStats:", response.ammPoolStats);
-      console.log("rewards:", response.ammPoolStats["AMM-BCDT-ETH"]?.rewards);
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolStats()
+      console.log('ammPoolStats:', response.ammPoolStats)
+      console.log('rewards:', response.ammPoolStats['AMM-BCDT-ETH']?.rewards)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolSnapshot",
+    'getAmmPoolSnapshot',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
-        poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
-      });
-      console.log(response);
-      console.log(response.raw_data.pooled);
+        poolAddress: TOKEN_INFO.tokenMap['LP-LRC-ETH'].address,
+      })
+      console.log(response)
+      console.log(response.raw_data.pooled)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getLiquidityMining",
+    'getLiquidityMining',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       const response = await LoopringAPI.ammpoolAPI.getLiquidityMining(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          market: "LRC-ETH",
+          market: 'LRC-ETH',
           size: 120,
         },
-        apiKey
-      );
-      console.log(response);
+        apiKey,
+      )
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getLiquidityMiningUserHistory",
+    'getLiquidityMiningUserHistory',
     async () => {
-      const response =
-        await LoopringAPI.ammpoolAPI.getLiquidityMiningUserHistory({
-          accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-          start: 0,
-          end: new Date().getTime(),
-        });
-      console.log(response);
+      const response = await LoopringAPI.ammpoolAPI.getLiquidityMiningUserHistory({
+        accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
+        start: 0,
+        end: new Date().getTime(),
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   // it(
   //   "getLiquidityMiningUserHistory_No_data",
@@ -257,89 +241,89 @@ describe("AmmpoolAPI test", function () {
   // );
 
   it(
-    "getAmmPoolSnapshot",
+    'getAmmPoolSnapshot',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
-        poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
-      });
-      console.log(response);
-      console.log(response.raw_data.pooled);
+        poolAddress: TOKEN_INFO.tokenMap['LP-LRC-ETH'].address,
+      })
+      console.log(response)
+      console.log(response.raw_data.pooled)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolBalances",
+    'getAmmPoolBalances',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolBalances();
-      console.log(response.ammpoolsbalances);
-      console.log(response.ammpoolsbalances["AMM-LRC-ETH"].poolAddress);
-      console.log(response.ammpoolsbalances["AMM-LRC-ETH"].pooled);
-      console.log(response.ammpoolsbalances["AMM-LRC-ETH"].lp);
-      console.log(response.ammpoolsbalances["AMM-LRC-ETH"].pooledMap);
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolBalances()
+      console.log(response.ammpoolsbalances)
+      console.log(response.ammpoolsbalances['AMM-LRC-ETH'].poolAddress)
+      console.log(response.ammpoolsbalances['AMM-LRC-ETH'].pooled)
+      console.log(response.ammpoolsbalances['AMM-LRC-ETH'].lp)
+      console.log(response.ammpoolsbalances['AMM-LRC-ETH'].pooledMap)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolTrades",
+    'getAmmPoolTrades',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolTrades<any>({
-        ammPoolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
-      });
-      console.log(response);
-      console.log(response.raw_data.trades[0]);
+        ammPoolAddress: TOKEN_INFO.tokenMap['LP-LRC-ETH'].address,
+      })
+      console.log(response)
+      console.log(response.raw_data.trades[0])
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAmmPoolTxs",
+    'getAmmPoolTxs',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolTxs({
-        poolAddress: TOKEN_INFO.tokenMap["LP-LRC-ETH"].address,
-      });
+        poolAddress: TOKEN_INFO.tokenMap['LP-LRC-ETH'].address,
+      })
       console.log(
-        "getAmmPoolTxs",
+        'getAmmPoolTxs',
         response.transactions[0]?.lpToken,
-        response.transactions[0]?.poolTokens
-      );
+        response.transactions[0]?.poolTokens,
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getUserAmmPoolTxs",
+    'getUserAmmPoolTxs',
     async () => {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. getUserAmmPoolTxs
       const response = await LoopringAPI.ammpoolAPI.getUserAmmPoolTxs<any>(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
         },
-        apiKey
-      );
-      console.log(response);
-      console.log(response.raw_data.transactions[0]);
+        apiKey,
+      )
+      console.log(response)
+      console.log(response.raw_data.transactions[0])
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

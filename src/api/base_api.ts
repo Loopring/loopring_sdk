@@ -332,6 +332,7 @@ export async function personalSign(
   }
   return new Promise((resolve) => {
     try {
+      myLog('personalSign', msg, account, pwd)
       web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
         if (!err) {
           // LOG: for signature

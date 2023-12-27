@@ -5,26 +5,26 @@ import {
   web3,
   signatureKeyPairMock,
   TOKEN_INFO,
-} from "../../MockData";
-import * as sdk from "../../../index";
+} from '../../test.MockData'
+import * as sdk from '../../../index'
 
 /*
  * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
-describe("AccountDemo", function () {
+describe('AccountDemo', function () {
   it(
-    "getAccount",
+    'getAccount',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
-  it("getWalletType", async () => {
+  it('getWalletType', async () => {
     const [
       { walletType: CFWalletType },
       { walletType: EOAWalletType },
@@ -39,49 +39,49 @@ describe("AccountDemo", function () {
       LoopringAPI.walletAPI.getWalletType({
         wallet: LOOPRING_EXPORTED_ACCOUNT.addressContractWallet,
       }),
-    ]);
+    ])
     console.log(
-      "CFWalletType, EOAWalletType, ContractWalletType",
+      'CFWalletType, EOAWalletType, ContractWalletType',
       CFWalletType,
       EOAWalletType,
-      ContractWalletType
-    );
-  });
+      ContractWalletType,
+    )
+  })
 
   it(
-    "getUserApiKey",
+    'getUserApiKey',
     async () => {
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      const eddsaKey = await signatureKeyPairMock(accInfo);
+      })
+      const eddsaKey = await signatureKeyPairMock(accInfo)
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
     },
-    DEFAULT_TIMEOUT * 10
-  );
+    DEFAULT_TIMEOUT * 10,
+  )
 
   it(
-    "getEthNonce",
+    'getEthNonce',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getEthNonce({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("getEthNonce:", response);
+      })
+      console.log('getEthNonce:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "approveMax_LRC",
+    'approveMax_LRC',
     async () => {
-      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address)
       const response = await sdk.approveMax(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
@@ -91,18 +91,18 @@ describe("AccountDemo", function () {
         LOOPRING_EXPORTED_ACCOUNT.gasLimit,
         sdk.ChainId.GOERLI,
         nonce,
-        true
-      );
+        true,
+      )
 
-      console.log(`nonce: ${nonce} approveMax: ${JSON.stringify(response)}`);
+      console.log(`nonce: ${nonce} approveMax: ${JSON.stringify(response)}`)
     },
-    DEFAULT_TIMEOUT * 2
-  );
+    DEFAULT_TIMEOUT * 2,
+  )
 
   it(
-    "approveZero_LRC",
+    'approveZero_LRC',
     async () => {
-      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address)
       const response = await sdk.approveZero(
         web3,
         LOOPRING_EXPORTED_ACCOUNT.address,
@@ -113,125 +113,125 @@ describe("AccountDemo", function () {
         sdk.ChainId.GOERLI,
         // @ts-ignor
         nonce,
-        true
-      );
+        true,
+      )
 
-      console.log(`nonce: ${nonce} approveZero: ${response}`);
+      console.log(`nonce: ${nonce} approveZero: ${response}`)
     },
-    DEFAULT_TIMEOUT * 2
-  );
+    DEFAULT_TIMEOUT * 2,
+  )
 
   it(
-    "Layer1_ETH_Balance",
+    'Layer1_ETH_Balance',
     async () => {
       const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log(`Layer1 ethBalance: ${ethBalance}`);
+      })
+      console.log(`Layer1 ethBalance: ${ethBalance}`)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "Layer1_ERC20_Balance",
+    'Layer1_ERC20_Balance',
     async () => {
       const { tokenBalances } = await LoopringAPI.exchangeAPI.getTokenBalances({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
         token: [TOKEN_INFO.tokenMap.LRC.address],
-      });
+      })
       console.log(
         `Layer1 ERC20 Balance LRC: ${tokenBalances.get(
-          TOKEN_INFO.tokenMap.LRC.address as unknown as sdk.TokenAddress
-        )}`
-      );
+          TOKEN_INFO.tokenMap.LRC.address as unknown as sdk.TokenAddress,
+        )}`,
+      )
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
-  it("Layer1_getNFTBalance", async () => {
+  it('Layer1_getNFTBalance', async () => {
     const response = await LoopringAPI.nftAPI.getNFTBalance({
       web3,
       account: LOOPRING_EXPORTED_ACCOUNT.address,
       tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
       nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
       nftType: sdk.NFTType.ERC1155,
-    });
-    console.log(response);
-  });
+    })
+    console.log(response)
+  })
 
   it(
-    "Layer2_getUserBalances",
+    'Layer2_getUserBalances',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. getUserBalances
       const { userBalances } = await LoopringAPI.userAPI.getUserBalances(
-        { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId, tokens: "" },
-        apiKey
-      );
+        { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId, tokens: '' },
+        apiKey,
+      )
 
-      console.log(`Layer2 ERC20 Balance: ${userBalances}`);
+      console.log(`Layer2 ERC20 Balance: ${userBalances}`)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "Layer2_getUserNFTBalances",
+    'Layer2_getUserNFTBalances',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. getUserNFTBalances
       const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
         { accountId: accInfo.accountId, limit: 20 },
-        apiKey
-      );
-      console.log(`Layer2 NFT Balance: ${userNFTBalances}`);
+        apiKey,
+      )
+      console.log(`Layer2 NFT Balance: ${userNFTBalances}`)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getCounterFactualInfo",
+    'getCounterFactualInfo',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getCounterFactualInfo({
         accountId: LOOPRING_EXPORTED_ACCOUNT.accountIdCF,
-      });
-      console.log("getCounterFactualInfo", response);
+      })
+      console.log('getCounterFactualInfo', response)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

@@ -14,6 +14,8 @@ import {
 import BN from 'bn.js'
 import { RequiredPart, sortObjDictionary } from '../utils'
 import { AxiosResponse } from 'axios'
+import { myLog } from '../utils/log_tools'
+import { webAssemblySign } from './sign/webAssemblySign'
 
 export class UserAPI extends BaseAPI {
   /*
@@ -175,6 +177,9 @@ export class UserAPI extends BaseAPI {
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
     ]
+
+    const { hash, result } = await webAssemblySign.getEdDSASigWithPoseidon(dataToSig, privateKey)
+    myLog('webAssemblySign', hash, result)
 
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,

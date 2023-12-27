@@ -5,7 +5,7 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from '../../MockData'
+} from '../../test.MockData'
 import * as sdk from '../../../index'
 import { CollectionMeta, NFTCounterFactualInfo } from '../../../defs'
 const mockData = {

@@ -3,20 +3,20 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
-let apiKey = "";
-describe("historyRecord", function () {
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+let apiKey = ''
+describe('historyRecord', function () {
   beforeEach(async () => {
     // Step 1. getAccount
     const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
       owner: LOOPRING_EXPORTED_ACCOUNT.address,
-    });
-    console.log("accInfo:", accInfo);
+    })
+    console.log('accInfo:', accInfo)
 
     // Step 2. eddsaKey
-    const eddsaKey = await signatureKeyPairMock(accInfo);
-    console.log("eddsaKey:", eddsaKey.sk);
+    const eddsaKey = await signatureKeyPairMock(accInfo)
+    console.log('eddsaKey:', eddsaKey.sk)
 
     // Step 3. apiKey
     apiKey = (
@@ -24,14 +24,14 @@ describe("historyRecord", function () {
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
+        eddsaKey.sk,
       )
-    ).apiKey;
-    console.log("apiKey:", apiKey);
-  }, DEFAULT_TIMEOUT);
+    ).apiKey
+    console.log('apiKey:', apiKey)
+  }, DEFAULT_TIMEOUT)
 
   it(
-    "getUserTrades",
+    'getUserTrades',
     async () => {
       const result = await LoopringAPI.userAPI.getUserTrades(
         {
@@ -40,14 +40,14 @@ describe("historyRecord", function () {
           limit: 20,
           fillTypes: sdk.TradesFillTypes.dex,
         },
-        apiKey
-      );
-      console.log("getUserTrades:", result);
+        apiKey,
+      )
+      console.log('getUserTrades:', result)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getUserTxs",
+    'getUserTxs',
     async () => {
       const result = await LoopringAPI.userAPI.getUserTxs(
         {
@@ -58,14 +58,14 @@ describe("historyRecord", function () {
             sdk.UserTxTypes.OFFCHAIN_WITHDRAWAL,
           ],
         },
-        apiKey
-      );
-      console.log("getUserTxs:", result);
+        apiKey,
+      )
+      console.log('getUserTxs:', result)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getUserNFTTransactionHistory",
+    'getUserNFTTransactionHistory',
     async () => {
       const result = await LoopringAPI.userAPI.getUserNFTTransactionHistory(
         {
@@ -77,25 +77,25 @@ describe("historyRecord", function () {
             sdk.UserNFTTxTypes.MINT,
           ],
         },
-        apiKey
-      );
-      console.log("getUserNFTTransactionHistory:", result);
+        apiKey,
+      )
+      console.log('getUserNFTTransactionHistory:', result)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getOrders",
+    'getOrders',
     async () => {
       const result = await LoopringAPI.userAPI.getOrders(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
           orderTypes: sdk.OrderType.LimitOrder,
         },
-        apiKey
-      );
+        apiKey,
+      )
 
-      console.log("getOrders:", result);
+      console.log('getOrders:', result)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

@@ -5,13 +5,13 @@ import {
   TOKEN_INFO,
   signatureKeyPairMock,
   web3,
-} from "../../MockData";
-import * as sdk from "../../../index";
-import * as sign_tools from "../../../api/sign/sign_tools";
-import { myLog } from "../../../utils/log_tools";
-describe("Transfer", function () {
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+import * as sign_tools from '../../../api/sign/sign_tools'
+import { myLog } from '../../../utils/log_tools'
+describe('Transfer', function () {
   it(
-    "submitInternalTransfer",
+    'submitInternalTransfer',
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
@@ -20,31 +20,31 @@ describe("Transfer", function () {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. get storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
+          sellTokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
         },
-        apiKey
-      );
-      console.log("storageId:", storageId);
+        apiKey,
+      )
+      console.log('storageId:', storageId)
 
       // Step 5. get fee
       const fee = await LoopringAPI.userAPI.getOffchainFeeAmt(
@@ -52,9 +52,9 @@ describe("Transfer", function () {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.TRANSFER,
         },
-        apiKey
-      );
-      console.log("fee:", fee);
+        apiKey,
+      )
+      console.log('fee:', fee)
       const request = {
         exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         payerAddr: accInfo.owner,
@@ -67,8 +67,8 @@ describe("Transfer", function () {
           volume: LOOPRING_EXPORTED_ACCOUNT.tradeLRCValue.toString(),
         },
         maxFee: {
-          tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-          volume: fee.fees["LRC"].fee ?? "9400000000000000000",
+          tokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
+          volume: fee.fees['LRC'].fee ?? '9400000000000000000',
         },
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
         /*
@@ -83,9 +83,9 @@ describe("Transfer", function () {
          * );
          */
         payPayeeUpdateAccount: false,
-      };
-      const hash = sign_tools.get_EddsaSig_Transfer(request, "").hash;
-      myLog("hash", hash);
+      }
+      const hash = sign_tools.get_EddsaSig_Transfer(request, '').hash
+      myLog('hash', hash)
       // Step 6. transfer
       const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({
         request,
@@ -94,9 +94,9 @@ describe("Transfer", function () {
         walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
-      });
-      console.log("transferResult:", transferResult);
+      })
+      console.log('transferResult:', transferResult)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

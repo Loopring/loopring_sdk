@@ -6,7 +6,7 @@ import {
   signatureKeyPairMock,
   web3_2,
   TOKEN_INFO,
-} from '../../MockData'
+} from '../../test.MockData'
 import * as sdk from '../../../index'
 import { myLog } from '../../../utils/log_tools'
 let mockData: any = {
@@ -129,7 +129,7 @@ describe('tradeNFT group', function () {
   it(
     'tradeNFT',
     async () => {
-      jest.useFakeTimers('legacy')
+      jest.useFakeTimers({ legacyFakeTimers: true })
       // private or third account can signature and approve this order
       try {
         myLog(

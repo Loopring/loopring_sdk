@@ -2,7 +2,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel'
 import terser from '@rollup/plugin-terser'
 import json from '@rollup/plugin-json';
+import wasm from '@rollup/plugin-wasm';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+
 import typescript from 'rollup-plugin-typescript2';
 import { builtinModules } from 'module';
 import pkg from  './package.json'  assert { type: "json" };
@@ -24,6 +26,7 @@ module.exports = {
   },
   plugins: [
     json(),
+    wasm(),
     typescript({
           abortOnError: process.env.NODE_ENV === 'production',
           tsconfig:'./tsconfig.json',
@@ -34,6 +37,7 @@ module.exports = {
               '**/*.test.ts',
               '**/*.spec.ts',
               '**/*.test.ts',
+              'tests',
               // TS defaults below
               'node_modules',
               'bower_components',

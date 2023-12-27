@@ -5,321 +5,297 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
-import {
-  LoopringMap,
-  MarketInfo,
-  TokenAddress,
-  TokenInfo,
-  TokenRelatedInfo,
-} from "../../../index";
-import { concatSig } from "eth-sig-util";
-describe("exchangeMain", function () {
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+import { LoopringMap, MarketInfo, TokenAddress, TokenInfo, TokenRelatedInfo } from '../../../index'
+import { concatSig } from 'eth-sig-util'
+describe('exchangeMain', function () {
   it(
-    "getExchangeInfo",
+    'getExchangeInfo',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getExchangeInfo();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getExchangeInfo()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getTokens",
+    'getTokens',
     async () => {
       const { tokensMap, coinMap, totalCoinMap, idIndex, addressIndex } =
-        await LoopringAPI.exchangeAPI.getTokens<any>();
-      console.log(
-        "tokenMap:",
-        tokensMap,
-        coinMap,
-        totalCoinMap,
-        idIndex,
-        addressIndex
-      );
+        await LoopringAPI.exchangeAPI.getTokens<any>()
+      console.log('tokenMap:', tokensMap, coinMap, totalCoinMap, idIndex, addressIndex)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getMixMarkets",
+    'getMixMarkets',
     async () => {
       const { markets, pairs, tokenArr, tokenArrStr, marketArr, marketArrStr } =
-        await LoopringAPI.exchangeAPI.getMixMarkets();
-      console.log("markets:", markets);
-      console.log("pairs:", pairs);
-      console.log("tokenArr:", tokenArr);
-      console.log("tokenArrStr:", tokenArrStr);
-      console.log("marketArr", marketArr);
-      console.log("marketArrStr", marketArrStr);
+        await LoopringAPI.exchangeAPI.getMixMarkets()
+      console.log('markets:', markets)
+      console.log('pairs:', pairs)
+      console.log('tokenArr:', tokenArr)
+      console.log('tokenArrStr:', tokenArrStr)
+      console.log('marketArr', marketArr)
+      console.log('marketArrStr', marketArrStr)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getAmmPoolConf",
+    'getAmmPoolConf',
     async () => {
-      const response = await LoopringAPI.ammpoolAPI.getAmmPoolConf();
-      console.log(response.ammpools);
-      console.log(response.pairs);
+      const response = await LoopringAPI.ammpoolAPI.getAmmPoolConf()
+      console.log(response.ammpools)
+      console.log(response.pairs)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getAvailableBroker",
+    'getAvailableBroker',
     async () => {
       const result = await LoopringAPI.exchangeAPI.getAvailableBroker({
         type: 0,
-      });
-      console.log(result);
+      })
+      console.log(result)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getTokenPrices",
+    'getTokenPrices',
     async () => {
       const response = await LoopringAPI.walletAPI.getTokenPrices({
         token: TOKEN_INFO.tokenMap.LRC.address,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getLatestTokenPrices",
+    'getLatestTokenPrices',
     async () => {
-      const response = await LoopringAPI.walletAPI.getLatestTokenPrices();
-      console.log(response);
+      const response = await LoopringAPI.walletAPI.getLatestTokenPrices()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getLatestTokenPrices_cny",
+    'getLatestTokenPrices_cny',
     async () => {
       const response = await LoopringAPI.walletAPI.getLatestTokenPrices({
         currency: sdk.Currency.cny,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getWithdrawalAgents",
+    'getWithdrawalAgents',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getWithdrawalAgents({
         tokenId: 1,
-        amount: "10000000000",
-      });
-      console.log(response);
+        amount: '10000000000',
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getCandlestick",
+    'getCandlestick',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getCandlestick({
-        market: "LRC-ETH",
+        market: 'LRC-ETH',
         interval: sdk.TradingInterval.min15,
         limit: 96,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAccountServices",
+    'getAccountServices',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getAccountServices({});
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getAccountServices({})
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getExchangeFeeInfo",
+    'getExchangeFeeInfo',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getExchangeFeeInfo<any>();
-      console.log(response);
-      console.log(
-        response.raw_data[sdk.VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN]
-      );
+      const response = await LoopringAPI.exchangeAPI.getExchangeFeeInfo<any>()
+      console.log(response)
+      console.log(response.raw_data[sdk.VipCatergory.ORDERBOOK_TRADING_FEES_STABLECOIN])
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getProtocolPortrait",
+    'getProtocolPortrait',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getProtocolPortrait();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getProtocolPortrait()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getRecommendedMarkets",
+    'getRecommendedMarkets',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getRecommendedMarkets();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getRecommendedMarkets()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getGasPrice",
+    'getGasPrice',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getGasPrice();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getGasPrice()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getGasPriceRange",
+    'getGasPriceRange',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getGasPriceRange();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getGasPriceRange()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getMarketTrades",
+    'getMarketTrades',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getMarketTrades<any>({
-        market: "ETH-USDT",
-      });
-      console.log(response.raw_data.trades);
+        market: 'ETH-USDT',
+      })
+      console.log(response.raw_data.trades)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getRelayerCurrentTime",
+    'getRelayerCurrentTime',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getRelayerCurrentTime();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getRelayerCurrentTime()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getFiatPriceUSD",
-    async () => {
-      const response = await LoopringAPI.exchangeAPI.getFiatPrice({
-        legal: "USD",
-      });
-      console.log(response);
-    },
-    DEFAULT_TIMEOUT
-  );
-
-  it(
-    "getFiatPriceCNY",
+    'getFiatPriceUSD',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getFiatPrice({
-        legal: "CNY",
-      });
-      console.log(response);
+        legal: 'USD',
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getMarkets",
+    'getFiatPriceCNY',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getMarkets();
-      console.log(response);
-      console.log(response.pairs.LRC.tokenList);
-
-      console.log(
-        "hasMarket LRC-ETH:",
-        sdk.hasMarket(response.marketArr, "LRC-ETH")
-      );
-      console.log(
-        "market 1:",
-        sdk.getExistedMarket(response.marketArr, "LRC", "ETH")
-      );
-      console.log(
-        "market 2:",
-        sdk.getExistedMarket(response.marketArr, "ETH", "LRC")
-      );
+      const response = await LoopringAPI.exchangeAPI.getFiatPrice({
+        legal: 'CNY',
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getDepth",
+    'getMarkets',
+    async () => {
+      const response = await LoopringAPI.exchangeAPI.getMarkets()
+      console.log(response)
+      console.log(response.pairs.LRC.tokenList)
+
+      console.log('hasMarket LRC-ETH:', sdk.hasMarket(response.marketArr, 'LRC-ETH'))
+      console.log('market 1:', sdk.getExistedMarket(response.marketArr, 'LRC', 'ETH'))
+      console.log('market 2:', sdk.getExistedMarket(response.marketArr, 'ETH', 'LRC'))
+    },
+    DEFAULT_TIMEOUT,
+  )
+
+  it(
+    'getDepth',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getDepth({
-        market: "LRC-ETH",
-      });
-      console.log(response);
+        market: 'LRC-ETH',
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getTicker",
+    'getTicker',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getTicker({
-        market: "LRC-ETH",
-      });
-      console.log(response);
+        market: 'LRC-ETH',
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getAllTickers",
+    'getAllTickers',
     async () => {
-      const response = await LoopringAPI.exchangeAPI.getAllTickers();
-      console.log(response);
+      const response = await LoopringAPI.exchangeAPI.getAllTickers()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getMixDepth",
+    'getMixDepth',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getMixDepth({
-        market: "LRC-ETH",
-      });
-      console.log(response);
-      console.log(response.depth.bids);
+        market: 'LRC-ETH',
+      })
+      console.log(response)
+      console.log(response.depth.bids)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getMixTicker",
+    'getMixTicker',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getMixTicker({
-        market: ["LRC-ETH", "ETH-USDC", "DAI-USDT"].join(","),
-      });
-      console.log(response.tickMap["DAI-USDT"]);
+        market: ['LRC-ETH', 'ETH-USDC', 'DAI-USDT'].join(','),
+      })
+      console.log(response.tickMap['DAI-USDT'])
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getAllMixTickers",
+    'getAllMixTickers',
     async () => {
-      const response: any = await LoopringAPI.exchangeAPI.getAllMixTickers();
-      console.log(response?.tickMap);
+      const response: any = await LoopringAPI.exchangeAPI.getAllMixTickers()
+      console.log(response?.tickMap)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getMixCandlestickAMM",
+    'getMixCandlestickAMM',
     async () => {
       const response = await LoopringAPI.exchangeAPI.getMixCandlestick({
-        market: "AMM-LRC-ETH",
+        market: 'AMM-LRC-ETH',
         interval: sdk.TradingInterval.min15,
         limit: 96,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

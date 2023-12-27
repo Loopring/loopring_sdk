@@ -1,20 +1,16 @@
-import {
-  DEFAULT_TIMEOUT,
-  LOOPRING_EXPORTED_ACCOUNT,
-  LoopringAPI,
-} from "../../MockData";
+import { DEFAULT_TIMEOUT, LOOPRING_EXPORTED_ACCOUNT, LoopringAPI } from '../../test.MockData'
 
-describe("Transfer UT", function () {
+describe('Transfer UT', function () {
   it(
-    "getAccountWhitelisted",
+    'getAccountWhitelisted',
     async () => {
       const response = LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.whitelistedAddress,
-      });
-      console.log(response);
+      })
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   // it(
   //   "get_EddsaSig_NFT_Transfer",
   //   async () => {
@@ -135,4 +131,4 @@ describe("Transfer UT", function () {
   //   },
   //   DEFAULT_TIMEOUT
   // );
-});
+})

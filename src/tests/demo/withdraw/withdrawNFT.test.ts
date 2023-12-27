@@ -5,13 +5,13 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
-import { DEPLOYMENT_STATUS } from "../../../index";
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+import { DEPLOYMENT_STATUS } from '../../../index'
 
-describe("WithdrawNFT", function () {
+describe('WithdrawNFT', function () {
   it(
-    "submitNFTWithdraw",
+    'submitNFTWithdraw',
     async () => {
       /*
        * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddress
@@ -20,21 +20,21 @@ describe("WithdrawNFT", function () {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
@@ -42,23 +42,23 @@ describe("WithdrawNFT", function () {
           accountId: accInfo.accountId,
           sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
-        apiKey
-      );
-      console.log("storageId:", storageId);
+        apiKey,
+      )
+      console.log('storageId:', storageId)
 
       //Step 5. getUserNFTBalances
       const { userNFTBalances } = await LoopringAPI.userAPI.getUserNFTBalances(
         { accountId: LOOPRING_EXPORTED_ACCOUNT.accountId },
-        apiKey
-      );
+        apiKey,
+      )
       const tokenInfo = userNFTBalances.find(
         (item) =>
           item.tokenAddress?.toLowerCase() ===
             LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress.toLowerCase() &&
           item.nftId &&
           web3.utils.hexToNumberString(item.nftId) ===
-            LOOPRING_EXPORTED_ACCOUNT.nftTokenId.toString()
-      );
+            LOOPRING_EXPORTED_ACCOUNT.nftTokenId.toString(),
+      )
 
       // Step 6. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
@@ -66,12 +66,11 @@ describe("WithdrawNFT", function () {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
           tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-          deployInWithdraw:
-            tokenInfo?.deploymentStatus === DEPLOYMENT_STATUS.NOT_DEPLOYED, // when token is not deploy the fee is diff
+          deployInWithdraw: tokenInfo?.deploymentStatus === DEPLOYMENT_STATUS.NOT_DEPLOYED, // when token is not deploy the fee is diff
         },
-        apiKey
-      );
-      console.log("fee:", fee);
+        apiKey,
+      )
+      console.log('fee:', fee)
 
       // Step 6. withdraw
       const response = await LoopringAPI.userAPI.submitNFTWithdraw({
@@ -79,10 +78,10 @@ describe("WithdrawNFT", function () {
           exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
           counterFactualInfo: undefined,
-          hashApproved: "",
+          hashApproved: '',
           maxFee: {
-            tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-            amount: fee.fees["LRC"].fee ?? "9400000000000000000",
+            tokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
+            amount: fee.fees['LRC'].fee ?? '9400000000000000000',
           },
           minGas: 0,
           owner: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -91,7 +90,7 @@ describe("WithdrawNFT", function () {
           token: {
             tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
             nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-            amount: "1",
+            amount: '1',
           },
           validUntil: 0,
         },
@@ -100,9 +99,9 @@ describe("WithdrawNFT", function () {
         walletType: sdk.ConnectorNames.MetaMask,
         eddsaKey: eddsaKey.sk,
         apiKey,
-      });
-      console.log("response:", response);
+      })
+      console.log('response:', response)
     },
-    DEFAULT_TIMEOUT * 3
-  );
-});
+    DEFAULT_TIMEOUT * 3,
+  )
+})

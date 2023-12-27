@@ -5,7 +5,7 @@ import {
   signatureKeyPairMock,
   testTypedData,
   web3,
-} from '../../MockData'
+} from '../../test.MockData'
 import * as sdk from '../../../index'
 import {
   AccountInfo,

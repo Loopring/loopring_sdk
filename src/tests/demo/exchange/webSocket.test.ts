@@ -1,5 +1,5 @@
-import * as sdk from "../../../index";
-import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
+import * as sdk from '../../../index'
+import { DEFAULT_TIMEOUT, LoopringAPI } from '../../test.MockData'
 
 /**
  * @define WsTopicType
@@ -13,30 +13,30 @@ import { DEFAULT_TIMEOUT, LoopringAPI } from "../../MockData";
  *   `ammpool`,
  *
  */
-describe("websocket", function () {
+describe('websocket', function () {
   it(
-    "getWsKey",
+    'getWsKey',
     async () => {
-      const response = await LoopringAPI.wsAPI.getWsKey();
-      console.log(response);
+      const response = await LoopringAPI.wsAPI.getWsKey()
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getOrderBookArg",
+    'getOrderBookArg',
     async () => {
-      const arg1 = sdk.getMixOrderArg({ market: "LRC-ETH", level: 50 });
-      console.log(arg1);
+      const arg1 = sdk.getMixOrderArg({ market: 'LRC-ETH', level: 50 })
+      console.log(arg1)
 
       const arg2 = sdk.getOrderBookArg({
-        market: "LRC-ETH",
+        market: 'LRC-ETH',
         level: 50,
         count: 40,
         snapshot: false,
-      });
-      console.log(arg2);
+      })
+      console.log(arg2)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

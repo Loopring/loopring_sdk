@@ -17,10 +17,8 @@ import {
   OrderType,
   OrderTypeResp,
   PublicKey,
-  ReqMethod,
   RuleType,
   Side,
-  SIG_FLAG,
   TradeChannel,
   TradingInterval,
   TransferType,
@@ -31,7 +29,6 @@ import {
   UserTxTypes,
   WithdrawalTypes,
 } from './loopring_enums'
-import { RESULT_INFO } from './error_codes'
 import { HEBAO_LOCK_STATUS, HEBAO_META_TYPE } from './loopring_constants'
 import { CounterFactualInfo, NFTCounterFactualInfo } from './account_defs'
 import { NFTType } from '../api'

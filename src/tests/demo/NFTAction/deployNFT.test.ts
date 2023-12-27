@@ -5,55 +5,55 @@ import {
   web3,
   TOKEN_INFO,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
-describe("deployNFT", function () {
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+describe('deployNFT', function () {
   it(
-    "submitDeployNFT",
+    'submitDeployNFT',
     async () => {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. fee
       const fee = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_DEPLOY,
-          amount: "0",
+          amount: '0',
         },
-        apiKey
-      );
-      console.log(fee);
+        apiKey,
+      )
+      console.log(fee)
 
       // Step 5. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
         {
           accountId: accInfo.accountId,
-          sellTokenId: TOKEN_INFO.tokenMap["LRC"].tokenId, // same as Step 7. transfer->token->tokenId
+          sellTokenId: TOKEN_INFO.tokenMap['LRC'].tokenId, // same as Step 7. transfer->token->tokenId
         },
-        apiKey
-      );
+        apiKey,
+      )
 
       // Step 6. broker
       const { broker } = await LoopringAPI.exchangeAPI.getAvailableBroker({
         type: 0,
-      });
+      })
 
       // Step 7. Build transfer & Deploy
       const transfer = {
@@ -64,11 +64,11 @@ describe("deployNFT", function () {
         // payeeAddr: LOOPRING_EXPORTED_ACCOUNT.address2,
         storageId: storageId.offchainId,
         token: {
-          tokenId: TOKEN_INFO.tokenMap["LRC"].tokenId,
-          volume: fee.fees["LRC"].fee ?? "9400000000000000000",
+          tokenId: TOKEN_INFO.tokenMap['LRC'].tokenId,
+          volume: fee.fees['LRC'].fee ?? '9400000000000000000',
         },
         validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
-      };
+      }
 
       const response = await LoopringAPI.userAPI.submitDeployNFT({
         request: {
@@ -81,10 +81,10 @@ describe("deployNFT", function () {
         walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
-      });
+      })
 
-      console.log(response);
+      console.log(response)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

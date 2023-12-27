@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { SIG_FLAG, ReqParams, ReqOptions } from '../defs/loopring_enums'
 import { getEdDSASig, getEdDSASigWithPoseidon } from './sign/sign_tools'
 import { sortObject } from '../utils/obj_tools'
+import { webAssemblySign } from './sign/webAssemblySign'
 
 /**
  *
@@ -129,12 +130,25 @@ export class Request {
     }
 
     if (params?.eddsaSignatureREFER && params.sigObj?.PrivateKey) {
-      const sig = getEdDSASig(
+      // const sig = getEdDSASig(
+      //   params.method,
+      //   this.baseOptions.baseURL,
+      //   params.url,
+      //   params.sigObj?.dataToSig,
+      //   params.sigObj?.PrivateKey,
+      // )
+      webAssemblySign.signRequest(
+        // privateKey: string,
+        // method: string,
+        // baseUrl: string,
+        // path: string,
+        // data: string,
+        params.sigObj?.PrivateKey,
         params.method,
         this.baseOptions.baseURL,
         params.url,
         params.sigObj?.dataToSig,
-        params.sigObj?.PrivateKey,
+        // params.sigObj?.PrivateKey,
       )
       headers['X-API-SIG-REFER'] = sig
     }

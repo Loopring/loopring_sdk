@@ -4,31 +4,31 @@ import {
   LoopringAPI,
   web3,
   signatureKeyPairMock,
-} from "../../MockData";
-import * as sdk from "../../../index";
+} from '../../test.MockData'
+import * as sdk from '../../../index'
 
-describe("validateNFTOrder", function () {
+describe('validateNFTOrder', function () {
   it(
-    "sellNFTByERC20",
+    'sellNFTByERC20',
     async () => {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 4. storageId
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
@@ -36,9 +36,9 @@ describe("validateNFTOrder", function () {
           accountId: accInfo.accountId,
           sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
-        apiKey
-      );
-      console.log("storageId:", storageId);
+        apiKey,
+      )
+      console.log('storageId:', storageId)
       // let hash: any = new BN(nftId,'hex')
       // hash = toHex(hash);//new BigInteger(sha256(nftId.toString()).toString(), 16)
 
@@ -51,11 +51,11 @@ describe("validateNFTOrder", function () {
           sellToken: {
             tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
             nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-            amount: "1",
+            amount: '1',
           },
           buyToken: {
             tokenId: 1,
-            amount: "10000000000000",
+            amount: '10000000000000',
           },
           allOrNone: false,
           fillAmountBOrS: false,
@@ -67,33 +67,33 @@ describe("validateNFTOrder", function () {
         walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
-      });
+      })
 
-      console.log("sellNFT NFTOrderRequestV3:", response);
+      console.log('sellNFT NFTOrderRequestV3:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "buyNFTByERC20",
+    'buyNFTByERC20',
     async () => {
       // Step 1. getAccount
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. apiKey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
 
       // Step 5. submitNFTValidateOrder
       const storageId = await LoopringAPI.userAPI.getNextStorageId(
@@ -101,9 +101,9 @@ describe("validateNFTOrder", function () {
           accountId: accInfo.accountId,
           sellTokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
         },
-        apiKey
-      );
-      console.log("storageId:", storageId);
+        apiKey,
+      )
+      console.log('storageId:', storageId)
 
       const response = await LoopringAPI.userAPI.submitNFTValidateOrder({
         request: {
@@ -112,12 +112,12 @@ describe("validateNFTOrder", function () {
           storageId: storageId.orderId,
           sellToken: {
             tokenId: 1,
-            amount: "10000000000000",
+            amount: '10000000000000',
           },
           buyToken: {
             tokenId: LOOPRING_EXPORTED_ACCOUNT.nftTokenId,
             nftData: LOOPRING_EXPORTED_ACCOUNT.nftData,
-            amount: "1",
+            amount: '1',
           },
           fillAmountBOrS: true,
           allOrNone: false,
@@ -129,9 +129,9 @@ describe("validateNFTOrder", function () {
         walletType: sdk.ConnectorNames.Unknown,
         eddsaKey: eddsaKey.sk,
         apiKey: apiKey,
-      });
-      console.log("buyNFT NFTOrderRequestV3:", response);
+      })
+      console.log('buyNFT NFTOrderRequestV3:', response)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

@@ -1,11 +1,24 @@
 module.exports = {
   preset: 'ts-jest',
   verbose: true,
+  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': './node_modules/babel-jest',
+    '^.+\\.(ts|tsx)?$': 'ts-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest',
   },
-  "moduleNameMapper": {
-    "axios": "axios/dist/node/axios.cjs"
+  moduleNameMapper:{
+    '^(\\.{1,2}/.*/llhttp\\.wasm\\.js)$': '$1',
+    axios: require.resolve("axios"),
   },
-  "transformIgnorePatterns": ["node_modules\/(?!axios)"]
+  moduleFileExtensions: [
+    "ts",
+    "tsx",
+    "js",
+    "jsx",
+    "json",
+    "node",
+    "wasm"
+  ],
+  "transformIgnorePatterns": ["node_modules\/(?!axios)"],
+  setupFilesAfterEnv: ["./src/tests/test.setup.ts"],
 }

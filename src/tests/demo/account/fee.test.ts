@@ -4,405 +4,405 @@ import {
   signatureKeyPairMock,
   TOKEN_INFO,
   LoopringAPI,
-} from "../../MockData";
-import * as sdk from "../../../index";
+} from '../../test.MockData'
+import * as sdk from '../../../index'
 
 /*
  * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress = exchangeInfo.exchangeAddress
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
-describe("Fee", function () {
+describe('Fee', function () {
   it(
-    "fee:updateAccount",
+    'fee:updateAccount',
     async () => {
       // Step 1. get account info
-      console.log(LoopringAPI.exchangeAPI.getAccount);
+      console.log(LoopringAPI.exchangeAPI.getAccount)
 
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
 
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.UPDATE_ACCOUNT,
         },
-        apiKey
-      );
-      console.log("updateAccount:", response);
+        apiKey,
+      )
+      console.log('updateAccount:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "fee:transfer",
+    'fee:transfer',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.TRANSFER,
         },
-        apiKey
-      );
-      console.log("transfer:", response);
+        apiKey,
+      )
+      console.log('transfer:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "fee:withdraw",
+    'fee:withdraw',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
           requestType: sdk.OffchainFeeReqType.OFFCHAIN_WITHDRAWAL,
         },
-        apiKey
-      );
-      console.log("withdraw:", response);
+        apiKey,
+      )
+      console.log('withdraw:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "fee:fastWithdraw",
+    'fee:fastWithdraw',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.FAST_OFFCHAIN_WITHDRAWAL,
           tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
         },
-        apiKey
-      );
-      console.log("fastWithdraw:", response);
+        apiKey,
+      )
+      console.log('fastWithdraw:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "fee:order",
+    'fee:order',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.ORDER,
           tokenSymbol: TOKEN_INFO.tokenMap.LRC.symbol,
         },
-        apiKey
-      );
-      console.log("order:", response);
+        apiKey,
+      )
+      console.log('order:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "fee:amm_exit",
+    'fee:amm_exit',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.AMM_EXIT,
         },
-        apiKey
-      );
-      console.log("amm_exit:", response);
+        apiKey,
+      )
+      console.log('amm_exit:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "fee:amm_join",
+    'fee:amm_join',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainFeeReqType.AMM_JOIN,
         },
-        apiKey
-      );
-      console.log("amm_join:", response);
+        apiKey,
+      )
+      console.log('amm_join:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "fee:NFTTransfer",
+    'fee:NFTTransfer',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
-      return { accInfo, eddsaKey, apiKey };
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
+      return { accInfo, eddsaKey, apiKey }
       const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_TRANSFER,
         },
-        apiKey
-      );
-      console.log("NFTTransfer:", response);
+        apiKey,
+      )
+      console.log('NFTTransfer:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "fee:NFTWithdrawal",
+    'fee:NFTWithdrawal',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
       const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_WITHDRAWAL,
           tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         },
-        apiKey
-      );
-      console.log("NFTWithdrawal:", response);
+        apiKey,
+      )
+      console.log('NFTWithdrawal:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "fee:NFTMint",
+    'fee:NFTMint',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
       const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_MINT,
           tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         },
-        apiKey
-      );
-      console.log("NFTWithdrawal:", response);
+        apiKey,
+      )
+      console.log('NFTWithdrawal:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "fee:NFTDeploy",
+    'fee:NFTDeploy',
     async () => {
       // Step 1. get account info
       const { accInfo } = await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
-      console.log("accInfo:", accInfo);
+      })
+      console.log('accInfo:', accInfo)
 
       // Step 2. eddsaKey
-      const eddsaKey = await signatureKeyPairMock(accInfo);
-      console.log("eddsaKey:", eddsaKey.sk);
+      const eddsaKey = await signatureKeyPairMock(accInfo)
+      console.log('eddsaKey:', eddsaKey.sk)
 
       // Step 3. get apikey
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
-      );
-      console.log("apiKey:", apiKey);
+        eddsaKey.sk,
+      )
+      console.log('apiKey:', apiKey)
       const response = await LoopringAPI.userAPI.getNFTOffchainFeeAmt(
         {
           accountId: accInfo.accountId,
           requestType: sdk.OffchainNFTFeeReqType.NFT_DEPLOY,
         },
-        apiKey
-      );
-      console.log("NFTWithdrawal:", response);
+        apiKey,
+      )
+      console.log('NFTWithdrawal:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getActiveFeeInfo without apikey & accountId",
+    'getActiveFeeInfo without apikey & accountId',
     async () => {
-      const response = await LoopringAPI.globalAPI.getActiveFeeInfo({});
-      console.log("updateAccount without apikey & accountId:", response);
+      const response = await LoopringAPI.globalAPI.getActiveFeeInfo({})
+      console.log('updateAccount without apikey & accountId:', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "getActiveFeeInfo without apikey with accountId",
+    'getActiveFeeInfo without apikey with accountId',
     async () => {
       const response = await LoopringAPI.globalAPI.getActiveFeeInfo({
         accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
-      });
-      console.log("updateAccount without apikey with accountId:", response);
+      })
+      console.log('updateAccount without apikey with accountId:', response)
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

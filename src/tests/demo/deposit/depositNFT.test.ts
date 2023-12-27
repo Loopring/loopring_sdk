@@ -4,29 +4,27 @@ import {
   LoopringAPI,
   TOKEN_INFO,
   web3,
-} from "../../MockData";
-import * as sdk from "../../../index";
-describe("depositNFT", function () {
+} from '../../test.MockData'
+import * as sdk from '../../../index'
+describe('depositNFT', function () {
   beforeEach(async () => {
-    jest.setTimeout(DEFAULT_TIMEOUT * 3);
-    LOOPRING_EXPORTED_ACCOUNT.gasPrice = (
-      await LoopringAPI.exchangeAPI.getGasPrice()
-    ).gasPrice;
-  }, DEFAULT_TIMEOUT);
+    jest.setTimeout(DEFAULT_TIMEOUT * 3)
+    LOOPRING_EXPORTED_ACCOUNT.gasPrice = (await LoopringAPI.exchangeAPI.getGasPrice()).gasPrice
+  }, DEFAULT_TIMEOUT)
   it(
-    "deposit NFTAction ERC1155",
+    'deposit NFTAction ERC1155',
     async () => {
       // Step 1. getNFTBalance & getEthBalances
       const { ethBalance } = await LoopringAPI.exchangeAPI.getEthBalances({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      });
+      })
       const nftBalance = await LoopringAPI.nftAPI.getNFTBalance({
         web3,
         account: LOOPRING_EXPORTED_ACCOUNT.address,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
         nftId: LOOPRING_EXPORTED_ACCOUNT.nftId,
         nftType: sdk.NFTType.ERC1155,
-      });
+      })
 
       // Step 2. isApprovedForAll
       const isApprovedForAll = await LoopringAPI.nftAPI.isApprovedForAll({
@@ -35,15 +33,12 @@ describe("depositNFT", function () {
         exchangeAddress: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
         nftType: sdk.NFTType.ERC1155,
         tokenAddress: LOOPRING_EXPORTED_ACCOUNT.nftTokenAddress,
-      });
-      console.log(`check is approveNFT`, isApprovedForAll);
+      })
+      console.log(`check is approveNFT`, isApprovedForAll)
 
       // Step 3. approveNFT All
       if (!isApprovedForAll) {
-        const nonce = await sdk.getNonce(
-          web3,
-          LOOPRING_EXPORTED_ACCOUNT.address
-        );
+        const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address)
         const approveNFT = await LoopringAPI.nftAPI.approveNFT({
           web3,
           from: LOOPRING_EXPORTED_ACCOUNT.address,
@@ -55,16 +50,14 @@ describe("depositNFT", function () {
           chainId: sdk.ChainId.GOERLI,
           nonce,
           sendByMetaMask: true,
-        });
-        console.log(`nonce: ${nonce} approveNFT: ${approveNFT?.result}`);
+        })
+        console.log(`nonce: ${nonce} approveNFT: ${approveNFT?.result}`)
       }
 
       // Step 4. nonce
-      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
+      const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address)
 
-      console.log(
-        `deposit: NFT, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `
-      );
+      console.log(`deposit: NFT, gasPrice: ${LOOPRING_EXPORTED_ACCOUNT.gasPrice}, `)
       // Step 5. depositNFT
       const response = await LoopringAPI.nftAPI.depositNFT({
         web3,
@@ -79,12 +72,12 @@ describe("depositNFT", function () {
         chainId: sdk.ChainId.GOERLI,
         nonce,
         sendByMetaMask: true,
-      });
+      })
 
-      console.log(`nonce: ${nonce} deposit NFT ERC1155: `, response);
+      console.log(`nonce: ${nonce} deposit NFT ERC1155: `, response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   // it(
   //   "deposit NFTAction ERC721",
@@ -112,4 +105,4 @@ describe("depositNFT", function () {
   //   },
   //   DEFAULT_TIMEOUT
   // );
-});
+})

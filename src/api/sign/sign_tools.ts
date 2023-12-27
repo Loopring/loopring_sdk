@@ -251,8 +251,8 @@ const makeObjectStr = (request: Map<string, any>) => {
 
 export function getEdDSASig(
   method: string,
-  basePath: string,
-  api_url: string,
+  baseUrl: string,
+  path: string,
   requestInfo: any,
   PrivateKey: string | undefined,
 ) {
@@ -268,7 +268,7 @@ export function getEdDSASig(
     throw new Error(`${method} is not supported yet!`)
   }
 
-  const uri = encodeURIComponent(`${basePath}${api_url}`)
+  const uri = encodeURIComponent(`${baseUrl}${path}`)
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
@@ -1483,5 +1483,23 @@ export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoo
   } else {
     const typedData = getAmmExitEcdsaTypedData(data, patch)
     return eddsaSign(typedData, patch.eddsaKey)
+  }
+}
+
+export class WebAssemblySign {
+  async signRequest(
+    privateKey: string,
+    method: string,
+    baseUrl: string,
+    path: string,
+    data: any,
+  ): Promise<string> {
+    return await getEdDSASig(privateKey, method, baseUrl, path, data)
+  }
+  async getEdDSASigWithPoseidon(
+    inputs: (string | number)[],
+    privateKey: string | undefined,
+  ): Promise<{ hash: string; result: string }> {
+    return await getEdDSASigWithPoseidon(inputs, privateKey)
   }
 }

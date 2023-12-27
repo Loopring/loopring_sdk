@@ -3,25 +3,25 @@ import {
   LOOPRING_EXPORTED_ACCOUNT,
   LoopringAPI,
   signatureKeyPairMock,
-} from "../../MockData";
-import { AccountInfo, ChainId, NFTFactory_Collection } from "../../../index";
+} from '../../test.MockData'
+import { AccountInfo, ChainId, NFTFactory_Collection } from '../../../index'
 
 let mockData:
   | {
-      accInfo: AccountInfo;
-      apiKey: string;
-      eddsaKey: any;
+      accInfo: AccountInfo
+      apiKey: string
+      eddsaKey: any
     }
-  | undefined = undefined;
-describe("metaNFT", function () {
+  | undefined = undefined
+describe('metaNFT', function () {
   beforeEach(async () => {
     // Step 1. getAccount
     const accInfo = (
       await LoopringAPI.exchangeAPI.getAccount({
         owner: LOOPRING_EXPORTED_ACCOUNT.address,
       })
-    ).accInfo;
-    const eddsaKey = await signatureKeyPairMock(accInfo);
+    ).accInfo
+    const eddsaKey = await signatureKeyPairMock(accInfo)
 
     // Step 3. apiKey
     const apiKey = (
@@ -29,18 +29,18 @@ describe("metaNFT", function () {
         {
           accountId: accInfo.accountId,
         },
-        eddsaKey.sk
+        eddsaKey.sk,
       )
-    ).apiKey;
+    ).apiKey
 
     mockData = {
       apiKey,
       accInfo,
       eddsaKey,
-    };
-  }, DEFAULT_TIMEOUT * 3);
+    }
+  }, DEFAULT_TIMEOUT * 3)
   it(
-    "getUserOwnCollection",
+    'getUserOwnCollection',
     async () => {
       if (mockData) {
         const response = await LoopringAPI.userAPI
@@ -52,18 +52,18 @@ describe("metaNFT", function () {
               tokenAddress: undefined,
               isMintable: false, //false
             },
-            mockData.apiKey
+            mockData.apiKey,
           )
           .catch((_error) => {
-            throw _error;
-          });
-        console.log("getUserNFFByCollection", response);
+            throw _error
+          })
+        console.log('getUserNFFByCollection', response)
       }
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getUserNFFByCollection",
+    'getUserNFFByCollection',
     async () => {
       if (mockData) {
         const response = await LoopringAPI.userAPI
@@ -73,54 +73,51 @@ describe("metaNFT", function () {
               limit: 24,
               offset: 0,
             },
-            mockData.apiKey
+            mockData.apiKey,
           )
           .catch((_error) => {
-            throw _error;
-          });
-        console.log("getUserNFFByCollection", response);
+            throw _error
+          })
+        console.log('getUserNFFByCollection', response)
       }
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
   it(
-    "getCollectionWholeNFTs",
+    'getCollectionWholeNFTs',
     async () => {
       const response = await LoopringAPI.nftAPI.getCollectionWholeNFTs({
         id: 279,
         offset: 0,
         limit: 24,
         metadata: true,
-      });
-      console.log("getCollectionWholeNFTs", response);
+      })
+      console.log('getCollectionWholeNFTs', response)
     },
-    DEFAULT_TIMEOUT
-  );
+    DEFAULT_TIMEOUT,
+  )
 
   it(
-    "createCollection",
+    'createCollection',
     async () => {
       if (mockData) {
         const response = await LoopringAPI.userAPI.submitNFTCollection(
           {
-            name: "XXX" + Date.now(), //required, one account is not able to multiple
-            tileUri: "ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM", //required
-            description: "test",
+            name: 'XXX' + Date.now(), //required, one account is not able to multiple
+            tileUri: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM', //required
+            description: 'test',
             owner: mockData.accInfo.owner,
-            avatar: "ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM",
-            banner: "ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM",
-            nftFactory:
-              NFTFactory_Collection[
-                LOOPRING_EXPORTED_ACCOUNT.chainId as ChainId
-              ],
+            avatar: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM',
+            banner: 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM',
+            nftFactory: NFTFactory_Collection[LOOPRING_EXPORTED_ACCOUNT.chainId as ChainId],
           },
           LOOPRING_EXPORTED_ACCOUNT.chainId as ChainId,
           mockData.apiKey,
-          mockData.eddsaKey.sk
-        );
-        console.log("createCollection", response);
+          mockData.eddsaKey.sk,
+        )
+        console.log('createCollection', response)
       }
     },
-    DEFAULT_TIMEOUT
-  );
-});
+    DEFAULT_TIMEOUT,
+  )
+})

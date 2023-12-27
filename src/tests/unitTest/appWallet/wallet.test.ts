@@ -4,7 +4,7 @@ import {
   LoopringAPI,
   DEFAULT_TIMEOUT,
   web3,
-} from '../../MockData'
+} from '../../test.MockData'
 import * as sdk from '../../../index'
 import * as ethUtil from 'ethereumjs-util'
 import { myLog } from '../../../utils/log_tools'
