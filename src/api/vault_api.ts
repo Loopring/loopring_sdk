@@ -247,7 +247,7 @@ export class VaultAPI extends BaseAPI {
     eddsaKey,
     apiKey,
   }: loopring_defs.VaultOrderNFTRequestV3WithPatch) {
-    const takerOrderEddsaSignature = get_EddsaSig_NFT_Order(request, eddsaKey).result
+    const takerOrderEddsaSignature = (await get_EddsaSig_NFT_Order(request, eddsaKey)).result
     const _request = {
       ...request,
       eddsaSignature: takerOrderEddsaSignature,
@@ -391,7 +391,7 @@ export class VaultAPI extends BaseAPI {
   ) {
     let { request, eddsaKey, apiKey } = req
     const { counterFactualInfo }: any = options ? options : { accountId: 0 }
-    let eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)?.result
+    let eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(request, eddsaKey))?.result
     request = {
       ...request,
       eddsaSignature,
@@ -437,7 +437,7 @@ export class VaultAPI extends BaseAPI {
   ) {
     let { request, eddsaKey, apiKey } = req
     const { counterFactualInfo }: any = options ? options : { accountId: 0 }
-    let eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey)?.result
+    let eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(request, eddsaKey))?.result
     request = {
       ...request,
       eddsaSignature,

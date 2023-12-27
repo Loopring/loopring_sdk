@@ -5,8 +5,7 @@ import { makeInvestMarkets, makeMarkets, sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
 import { getMidPrice } from './exchange_api'
-import { getEdDSASigWithPoseidon } from './sign/sign_tools'
-import * as string_decoder from 'string_decoder'
+import {webAssemblySign} from "./sign/webAssemblySign";
 
 export class DefiAPI extends BaseAPI {
   /*
@@ -388,7 +387,7 @@ export class DefiAPI extends BaseAPI {
         newOrder.fillAmountBOrS ? 1 : 0,
         0,
       ]
-      const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
+      const eddsaSignature = (await webAssemblySign.getEdDSASigWithPoseidon(dataToSig, privateKey)).result
       bodyParams = { ...bodyParams, newOrder: { ...newOrder, eddsaSignature } }
     }
 
@@ -466,10 +465,10 @@ export class DefiAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    transfer.eddsaSignature =(await sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey,
-    ).result
+    )).result
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {

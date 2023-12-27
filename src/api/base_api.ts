@@ -171,7 +171,7 @@ export function ecRecover(
     const result = ethUtil.ecrecover(hash, signature.v, signature.r, signature.s)
     const result2 = ethUtil.pubToAddress(result)
     const recAddress = toHex(result2)
-    myLog('ecRecover recAddress', result, result2, recAddress)
+    // myLog('ecRecover recAddress', result, result2, recAddress)
     return {
       result: recAddress.toLowerCase() === account.toLowerCase(),
     }
@@ -332,7 +332,6 @@ export async function personalSign(
   }
   return new Promise((resolve) => {
     try {
-      myLog('personalSign', msg, account, pwd)
       web3.eth.personal.sign(msg, account, pwd, async function (err: any, result: any) {
         if (!err) {
           // LOG: for signature

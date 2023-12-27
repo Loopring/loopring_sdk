@@ -34,6 +34,7 @@
     "src/*"
   ],
   "exclude": [
+    "**/tests",
     "node_modules",
     "dist",
     ".idea"

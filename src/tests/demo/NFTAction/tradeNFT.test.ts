@@ -95,7 +95,7 @@ describe('tradeNFT group', function () {
       validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
       maxFeeBips: 1000,
     }
-    const makerOrderEddsaSignature = sdk.get_EddsaSig_NFT_Order(makerOrder, eddsaKey.sk).result
+    const makerOrderEddsaSignature = (await sdk.get_EddsaSig_NFT_Order(makerOrder, eddsaKey.sk)).result
 
     const takerOrder: sdk.NFTOrderRequestV3 = {
       exchange: LOOPRING_EXPORTED_ACCOUNT.exchangeAddress,
@@ -115,7 +115,7 @@ describe('tradeNFT group', function () {
       validUntil: LOOPRING_EXPORTED_ACCOUNT.validUntil,
       maxFeeBips: 100,
     }
-    const takerOrderEddsaSignature = sdk.get_EddsaSig_NFT_Order(takerOrder, eddsaKey2.sk).result
+    const takerOrderEddsaSignature = (await sdk.get_EddsaSig_NFT_Order(takerOrder, eddsaKey2.sk)).result
 
     mockData = {
       takerOrder,

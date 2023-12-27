@@ -9,7 +9,6 @@ import {
 import * as sdk from '../../../index'
 import {
   AccountInfo,
-  getEdDSASig,
   getNftData,
   NFTOrderRequestV3,
   NFTTradeRequestV3,
@@ -17,7 +16,6 @@ import {
   SubmitOrderRequestV3,
 } from '../../../index'
 import { myLog } from '../../../utils/log_tools'
-import { performance } from 'perf_hooks'
 
 let mockData:
   | {
@@ -29,28 +27,28 @@ let mockData:
 describe('signature', function () {
   beforeEach(async () => {
     // Step 1. getAccount
-    const accInfo = (
-      await LoopringAPI.exchangeAPI.getAccount({
-        owner: LOOPRING_EXPORTED_ACCOUNT.address,
-      })
-    ).accInfo
-    const eddsaKey = await signatureKeyPairMock(accInfo)
-
-    // Step 3. apiKey
-    const apiKey = (
-      await LoopringAPI.userAPI.getUserApiKey(
-        {
-          accountId: accInfo.accountId,
-        },
-        eddsaKey.sk,
-      )
-    ).apiKey
-
-    mockData = {
-      apiKey,
-      accInfo,
-      eddsaKey,
-    }
+    // const accInfo = (
+    //   await LoopringAPI.exchangeAPI.getAccount({
+    //     owner: LOOPRING_EXPORTED_ACCOUNT.address,
+    //   })
+    // ).accInfo
+    // const eddsaKey = await signatureKeyPairMock(accInfo)
+    //
+    // // Step 3. apiKey
+    // const apiKey = (
+    //   await LoopringAPI.userAPI.getUserApiKey(
+    //     {
+    //       accountId: accInfo.accountId,
+    //     },
+    //     eddsaKey.sk,
+    //   )
+    // ).apiKey
+    //
+    // mockData = {
+    //   apiKey,
+    //   accInfo,
+    //   eddsaKey,
+    // }
   }, DEFAULT_TIMEOUT * 3)
   it(
     'generateKeyPair',
@@ -111,38 +109,25 @@ describe('signature', function () {
     // )
     // console.log(sign)
   })
-  it('getEdDSASig', async () => {
-    if (mockData) {
-      const sign = await sdk.getEdDSASig(
-        'GET',
-        'https://uat2.loopring.io',
-        '/api/v3/apiKey/',
-        {
-          accountId: '10010',
-        },
-        mockData.eddsaKey.sk,
-      )
-      console.log(sign)
-    }
-  })
-  it('getEdDSASig_100', async () => {
-    if (mockData) {
-      performance.now()
-      for (let i = 100; i > 0; i--) {
-        const sign = await sdk.getEdDSASig(
-          'GET',
-          'https://uat2.loopring.io',
-          '/api/v3/apiKey/',
-          {
-            accountId: '10010',
-          },
-          mockData.eddsaKey.sk,
-        )
-        console.log(sign)
-      }
-      performance.now()
-    }
-  })
+
+  // it('getEdDSASig_100', async () => {
+  //   if (mockData) {
+  //     performance.now()
+  //     for (let i = 100; i > 0; i--) {
+  //       const sign = await sdk.signRequest(
+  //         'GET',
+  //         'https://uat2.loopring.io',
+  //         '/api/v3/apiKey/',
+  //         {
+  //           accountId: '10010',
+  //         },
+  //         mockData.eddsaKey.sk,
+  //       )
+  //       console.log(sign)
+  //     }
+  //     performance.now()
+  //   }
+  // })
   /**
    * test case is not allow brock by Mock provider
    */

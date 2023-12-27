@@ -84,7 +84,7 @@ describe('Transfer', function () {
          */
         payPayeeUpdateAccount: false,
       }
-      const hash = sign_tools.get_EddsaSig_Transfer(request, '').hash
+      const hash = (await sign_tools.get_EddsaSig_Transfer(request, '')).hash
       myLog('hash', hash)
       // Step 6. transfer
       const transferResult = await LoopringAPI.userAPI.submitInternalTransfer({

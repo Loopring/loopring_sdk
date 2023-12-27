@@ -515,10 +515,10 @@ export class LuckTokenAPI extends BaseAPI {
       amount: token.volume,
       token: token.tokenId,
       ecdsaAuth: ecdsaSignature,
-      eddsaSig: sign_tools.get_EddsaSig_Transfer(
+      eddsaSig: (await sign_tools.get_EddsaSig_Transfer(
         transfer as loopring_defs.OriginTransferRequestV3,
         eddsaKey,
-      ).result,
+      )).result,
     } as any
 
     request = {
@@ -602,7 +602,7 @@ export class LuckTokenAPI extends BaseAPI {
         } catch (error) {
           throw error
         }
-        eddsaSig = sign_tools.get_EddsaSig_NFT_Transfer(transfer, eddsaKey).result
+        eddsaSig =(await sign_tools.get_EddsaSig_NFT_Transfer(transfer, eddsaKey)).result
       } else {
         transfer = {
           ...rest,
@@ -634,11 +634,11 @@ export class LuckTokenAPI extends BaseAPI {
         if (counterFactualInfo) {
           transfer.counterFactualInfo = counterFactualInfo
         }
-        transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+        transfer.eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(
           transfer as loopring_defs.OriginTransferRequestV3,
           eddsaKey,
-        ).result
-        eddsaSig = sign_tools.get_EddsaSig_Transfer(transfer, eddsaKey).result
+        )).result
+        eddsaSig =(await sign_tools.get_EddsaSig_Transfer(transfer, eddsaKey)).result
       }
 
       request = {

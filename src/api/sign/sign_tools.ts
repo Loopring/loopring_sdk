@@ -58,6 +58,7 @@ import { myLog } from '../../utils/log_tools'
 import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
+import {webAssemblySign} from "./webAssemblySign";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -81,6 +82,31 @@ export interface KeyPairParams {
   accountId?: number
   counterFactualInfo?: CounterFactualInfo
   isMobile?: boolean
+}
+export const makeRequestParamStr = (request: Map<string, any>) => {
+  const arrObj = Array.from(request)
+  arrObj.sort(function (a, b) {
+    return a[0].localeCompare(b[0])
+  })
+  const orderedMap = new Map(arrObj.map((i) => [i[0], i[1]]))
+
+  const paramlist: Array<string> = []
+
+  const keys = Object.keys(Object.fromEntries(orderedMap))
+
+  if (keys) {
+    keys.forEach((key: string) => {
+      const value = request.get(key)
+      if (value !== undefined && value !== '') paramlist.push(`${key}=${value}`)
+    })
+  }
+
+  // force to change encode ',' due to different encode rules between server and client
+  return encodeURIComponent(paramlist.join('&')).replace(/%2C/g, '%252C')
+}
+export const makeObjectStr = (request: Map<string, any>) => {
+  const jsonTxt = JSON.stringify(Object.fromEntries(request))
+  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape) //replace(/'/ig, "%27")
 }
 
 export function generatePrivateKey(result: { sig: string; counterFactualInfo: any; error: any }) {
@@ -197,27 +223,6 @@ export async function generateKeyPair(
   }
 }
 
-const makeRequestParamStr = (request: Map<string, any>) => {
-  const arrObj = Array.from(request)
-  arrObj.sort(function (a, b) {
-    return a[0].localeCompare(b[0])
-  })
-  const orderedMap = new Map(arrObj.map((i) => [i[0], i[1]]))
-
-  const paramlist: Array<string> = []
-
-  const keys = Object.keys(Object.fromEntries(orderedMap))
-
-  if (keys) {
-    keys.forEach((key: string) => {
-      const value = request.get(key)
-      if (value !== undefined && value !== '') paramlist.push(`${key}=${value}`)
-    })
-  }
-
-  // force to change encode ',' due to different encode rules between server and client
-  return encodeURIComponent(paramlist.join('&')).replace(/%2C/g, '%252C')
-}
 
 //submitOrderV3
 const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
@@ -244,16 +249,13 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
   return result
 }
 
-const makeObjectStr = (request: Map<string, any>) => {
-  const jsonTxt = JSON.stringify(Object.fromEntries(request))
-  return encodeURIComponent(jsonTxt).replace(/[!'()]/g, escape) //replace(/'/ig, "%27")
-}
 
-export function getEdDSASig(
+
+export function signRequest(
   method: string,
   baseUrl: string,
   path: string,
-  requestInfo: any,
+  requestInfo:  Map<string, any>,
   PrivateKey: string | undefined,
 ) {
   let params = undefined
@@ -272,12 +274,13 @@ export function getEdDSASig(
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog('getEdDSASig', message)
+  myLog( 'makeRequestParam','params', params )
+
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  // myLog('signRequest hash', message, '_hash', _hash, 'hash', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -311,13 +314,13 @@ export function creatEdDSASigHasH({
 
   const message = `${method}&${uri}&${params}`
   // LOG: for signature
-  myLog('getEdDSASig', message)
+  myLog('signRequest', message)
 
   let _hash: any = new BigInteger(crypto.SHA256(message).toString(), 16)
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  myLog('signRequest hash', message, '_hash', _hash, 'hash', hash)
   return { hash, hashRaw: toHex(_hash) }
 }
 
@@ -328,7 +331,7 @@ export function verifyEdDSASig(
   return true
 }
 
-export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefined) => {
+export const  getEdDSASigWithPoseidon =async (inputs: any, PrivateKey: string | undefined) => {
   const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
@@ -594,7 +597,7 @@ export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, cha
 }
 
 // withdraw
-export function get_EddsaSig_OffChainWithdraw(
+export async function  get_EddsaSig_OffChainWithdraw(
   request: OffChainWithdrawalRequestV3,
   eddsaKey: string,
 ) {
@@ -623,7 +626,7 @@ export function get_EddsaSig_OffChainWithdraw(
     request.storageId,
   ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getOrderHash(request: SubmitOrderRequestV3) {
@@ -752,7 +755,7 @@ export async function offchainWithdrawWrap({
 }
 
 //NFT Withdraw
-export function get_EddsaSig_NFT_Withdraw(request: NFTWithdrawRequestV3, eddsaKey: string) {
+export async function get_EddsaSig_NFT_Withdraw(request: NFTWithdrawRequestV3, eddsaKey: string) {
   const onchainDataHash = abi
     .soliditySHA3(
       ['uint256', 'address', 'bytes'],
@@ -778,7 +781,7 @@ export function get_EddsaSig_NFT_Withdraw(request: NFTWithdrawRequestV3, eddsaKe
     request.storageId,
   ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getNftData(request: NFTMintRequestV3) {
@@ -967,7 +970,7 @@ export async function withdrawNFTWrap({
 }
 
 //NFT Mint
-export function get_EddsaSig_NFT_Mint(request: NFTMintRequestV3, eddsaKey: string) {
+export async function get_EddsaSig_NFT_Mint(request: NFTMintRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.minterId,
@@ -979,7 +982,7 @@ export function get_EddsaSig_NFT_Mint(request: NFTMintRequestV3, eddsaKey: strin
     request.validUntil,
     request.storageId,
   ]
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function get_Is_Nft_Token(tokenId: number) {
@@ -987,7 +990,7 @@ export function get_Is_Nft_Token(tokenId: number) {
 }
 
 // NFT Order
-export function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: string) {
+export async function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: string) {
   let fillAmountBOrS = 0
   if (request.fillAmountBOrS) {
     fillAmountBOrS = 1
@@ -1007,10 +1010,10 @@ export function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: str
     fillAmountBOrS,
     new BN(ethUtil.toBuffer(request.taker)).toString(),
   ]
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
-export function get_EddsaSig_Dual_Order(request: DualOrderRequest, eddsaKey: string) {
+export async function get_EddsaSig_Dual_Order(request: DualOrderRequest, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
@@ -1025,7 +1028,7 @@ export function get_EddsaSig_Dual_Order(request: DualOrderRequest, eddsaKey: str
     0,
   ]
 
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export async function mintNFTWrap({
@@ -1064,7 +1067,7 @@ export async function mintNFTWrap({
 }
 
 // transfer
-export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey: string) {
+export async function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.payerId,
@@ -1079,7 +1082,7 @@ export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey
     request.validUntil,
     request.storageId,
   ]
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getTransferOldTypedData(
@@ -1242,7 +1245,7 @@ export async function transferNFTWrap({
   }
 }
 
-export function get_EddsaSig_NFT_Transfer(request: OriginNFTTransferRequestV3, eddsaKey: string) {
+export async function get_EddsaSig_NFT_Transfer(request: OriginNFTTransferRequestV3, eddsaKey: string) {
   const inputs = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.fromAccountId,
@@ -1257,7 +1260,7 @@ export function get_EddsaSig_NFT_Transfer(request: OriginNFTTransferRequestV3, e
     request.validUntil,
     request.storageId,
   ]
-  return getEdDSASigWithPoseidon(inputs, eddsaKey)
+  return await webAssemblySign.getEdDSASigWithPoseidon(inputs, eddsaKey)
 }
 
 export function getNftTradeHash(request: NFTTradeRequestV3) {
@@ -1492,9 +1495,9 @@ export class WebAssemblySign {
     method: string,
     baseUrl: string,
     path: string,
-    data: any,
+    data: Map<string, any>,
   ): Promise<string> {
-    return await getEdDSASig(privateKey, method, baseUrl, path, data)
+    return await signRequest( method, baseUrl, path, data,privateKey,)
   }
   async getEdDSASigWithPoseidon(
     inputs: (string | number)[],

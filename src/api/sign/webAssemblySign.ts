@@ -1,18 +1,25 @@
-import { WebAssemblySign } from './sign_tools'
-import { type } from '../../utils'
-import { Go } from './wasm_exec'
+import {makeObjectStr, makeRequestParamStr, WebAssemblySign} from './sign_tools'
+import {sleep, type} from '../../utils'
+import {Go} from './wasm_exec'
+import {myLog} from "../../utils/log_tools";
 // @ts-ignore
 // import * as wasm from './wasm-release.wasm?url'
 // const wasmUrl = 'https://static.loopring.io/events/testEvents/wasm-release.wasm'
 const wasmUrl = './wasm-release.wasm'
+
+
 export class WebAssemblyHandler {
   #go
   #obj
-
+  #bridge
   #wasm: WebAssembly.Instance | undefined
   static wasm: WebAssembly.Instance | undefined
+
   constructor(_obj: any) {
     this.#obj = _obj
+    //@ts-ignore
+    this.#bridge = global?.__go_wasm__;
+    // this.#bridge.__wrapper__ = wrapper;
     //@ts-ignore
     this.#go = new Go()
     this.init()
@@ -41,7 +48,7 @@ export class WebAssemblyHandler {
         wasmInstance = new WebAssembly.Instance(wasmModule, this.#go.importObject)
       }
       //@ts-ignore
-      this.#go.run(wasmInstance, globalThis)
+      this.#go.run(wasmInstance, global)
       WebAssemblyHandler.wasm = wasmInstance
       //@ts-ignore
       globalThis.wasm = wasmInstance
@@ -56,45 +63,69 @@ export class WebAssemblyHandler {
 
     // WebAssemblySign.wasm = wasmInstance
   }
-
   get(target: WebAssemblySign, property: string, receiver: ThisType<any>) {
-    if (WebAssemblyHandler.wasm) {
-      // @ts-ignore
-      const func = this.#wasm[property]
-      if (typeof func == 'function')
-        try {
-          return async function (...args: any) {
+    console.log('target WebAssemblySign ', target)
+    const _arguments = [...arguments] ??[]
+    const _self = this;
+    try {
+      if (!_self.#go || _self.#go.exited) {
+        throw new Error('The Go instance is not active.');
+      }
+      return async function (...args: any) {
+        let i = 10
+        while (_self.#bridge.__ready__ !== true&&i) {
+          await sleep(200);
+          i--
+        }
+        const func = _self.#bridge[property]
+        try{
+          if (typeof func == 'function') {
             switch (property) {
               case 'signRequest':
                 if (args && args[4] !== undefined) {
-                  if (args[3] === 'GET' || args[3] === 'DELETE') {
-                    args[4] = new URLSearchParams(Object.fromEntries(args[4].toString()))
-                  } else if (args[3] === 'POST' || args[3] === 'PUT') {
-                    args[4] = JSON.stringify(Object.fromEntries(args[4]))
+                  if (args[1] === 'GET' || args[1] === 'DELETE') {
+                    args[4] = makeRequestParamStr(args[4])
+                  } else if (args[1] === 'POST' || args[1] === 'PUT') {
+                    args[4] = JSON.stringify(Object.fromEntries(args[4]))//makeObjectStr(args[4])
+
                   }
                 }
+                myLog( 'makeRequestParam','args[4]', args[4] )
+                return func.apply(_self,args)
                 break
               case 'getEdDSASigWithPoseidon':
                 if (args && args[0] !== undefined && type(args[0]) === 'array') {
-                  debugger
-                  let _args = [args[1] ?? '', ...args[0]]
-                  return await func.bind(_args)
+                  args[0] = args[0].map((item:any)=>{
+                    return item.toString()
+                  })
+                  let _args = [args[1].toString() ?? '', ...args[0]]
+                  // console.log('param',args[0])
+                  // const hash = await _self.#bridge['generateKeyPair']('0x1234')
+                  // const hash = await _self.#bridge['getEdDSASigWithPoseidonHash'].apply(undefined,args[0])
+                  // console.log('getEdDSASigWithPoseidonHash',hash,_args,sign)
+                  const result =await func.apply(_self,_args)
+                  return  JSON.parse(result)
                 } else {
                   throw 'wrong args'
                 }
               default:
             }
-            return await func.bind(args)
+          } else {
+            throw new Error('no fuc in bridge');
           }
-        } catch (error) {
+        } catch (error){
+          console.log(error)
           // @ts-ignore
-          return Reflect.get(...arguments)
+          return Reflect.get(..._arguments)
         }
-    } else {
+
+      }
+    } catch (error) {
       // @ts-ignore
       return Reflect.get(...arguments)
     }
   }
+
 }
 
 export const webAssemblySign = new Proxy(
@@ -103,31 +134,5 @@ export const webAssemblySign = new Proxy(
   new WebAssemblyHandler(WebAssemblySign),
 ) as unknown as WebAssemblySign
 
-// export function getEdDSASig(
-//   method: string,
-//   basePath: string,
-//   api_url: string,
-//   requestInfo: any,
-//   PrivateKey: string | undefined,
-// )
 
-// export class WebAssemblySign implements WebAssemblySignFun{
-//   #go
-//   static wasm: WebAssembly.Instance
-//   static new Proxy(signRequest, {
-// //     get(target, prop, receiver) {
-// //   // By default, it looks like Reflect.get(target, prop, receiver)
-// //   // which has a different value of `this`
-// //   return target[prop];
-// // },
-// // })
-//
-//   constructor() {
-//     //@ts-ignore
-//   this.#go = new (window || globalThis).Go()
-//     this.init()
-//   }
-//
-// }
 
-// Object.setPrototypeOf(WebAssemblySign, new Proxy({}, new Handler(User)))

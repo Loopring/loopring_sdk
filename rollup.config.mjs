@@ -62,6 +62,7 @@ module.exports = {
       mainFields: ['module', 'main', 'browser'],
       modulesOnly: true,
       preferBuiltins: false,
+      extensions: [".js", ".ts", ".wasm"]
     }),
     babel({
       babelHelpers: 'bundled',

@@ -14,8 +14,7 @@ import {
 import BN from 'bn.js'
 import { RequiredPart, sortObjDictionary } from '../utils'
 import { AxiosResponse } from 'axios'
-import { myLog } from '../utils/log_tools'
-import { webAssemblySign } from './sign/webAssemblySign'
+import {webAssemblySign} from "./sign/webAssemblySign";
 
 export class UserAPI extends BaseAPI {
   /*
@@ -178,9 +177,6 @@ export class UserAPI extends BaseAPI {
       0,
     ]
 
-    const { hash, result } = await webAssemblySign.getEdDSASigWithPoseidon(dataToSig, privateKey)
-    myLog('webAssemblySign', hash, result)
-
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.ORDER_ACTION,
       bodyParams: orderRequest,
@@ -228,7 +224,7 @@ export class UserAPI extends BaseAPI {
       orderRequest.fillAmountBOrS ? 1 : 0,
       0,
     ]
-    const eddsaSignature = getEdDSASigWithPoseidon(dataToSig, privateKey).result
+    const eddsaSignature = (await webAssemblySign.getEdDSASigWithPoseidon(dataToSig, privateKey)).result
     const bodyParams = {
       ...orderRequest,
       extraOrderType,
@@ -895,7 +891,7 @@ export class UserAPI extends BaseAPI {
   > {
     const { request, eddsaKey, apiKey } = req
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Order(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_NFT_Order(request, eddsaKey)).result
 
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.POST_NFT_VALIDATE_ORDER,
@@ -1646,7 +1642,7 @@ export class UserAPI extends BaseAPI {
       throw error
     }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_OffChainWithdraw(request, eddsaKey)).result
 
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
@@ -1697,7 +1693,7 @@ export class UserAPI extends BaseAPI {
       throw error
     }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_Transfer(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(request, eddsaKey)).result
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
@@ -1756,10 +1752,10 @@ export class UserAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    transfer.eddsaSignature =(await sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey,
-    ).result
+    )).result
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = new Map()
     dataToSig.set('requesterAddress', request.requesterAddress)
@@ -1826,10 +1822,10 @@ export class UserAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    transfer.eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey,
-    ).result
+    )).result
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = new Map()
     dataToSig.set('nftData', request.nftData)
@@ -1885,7 +1881,7 @@ export class UserAPI extends BaseAPI {
       throw error
     }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_NFT_Transfer(request, eddsaKey)).result
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
@@ -1936,7 +1932,7 @@ export class UserAPI extends BaseAPI {
       throw error
     }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_NFT_Withdraw(request, eddsaKey)).result
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
@@ -1999,7 +1995,7 @@ export class UserAPI extends BaseAPI {
     //   throw error
     // }
 
-    request.eddsaSignature = sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey).result
+    request.eddsaSignature = (await sign_tools.get_EddsaSig_NFT_Mint(request, eddsaKey)).result
     if (counterFactualInfo) {
       request.counterFactualInfo = counterFactualInfo
     }
@@ -2259,10 +2255,10 @@ export class UserAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    transfer.eddsaSignature =  (await sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey,
-    ).result
+    )).result
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
@@ -2619,10 +2615,10 @@ export class UserAPI extends BaseAPI {
     if (counterFactualInfo) {
       transfer.counterFactualInfo = counterFactualInfo
     }
-    transfer.eddsaSignature = sign_tools.get_EddsaSig_Transfer(
+    transfer.eddsaSignature = (await sign_tools.get_EddsaSig_Transfer(
       transfer as loopring_defs.OriginTransferRequestV3,
       eddsaKey,
-    ).result
+    )).result
     transfer.ecdsaSignature = ecdsaSignature
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {

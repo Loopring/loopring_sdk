@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { SIG_FLAG, ReqParams, ReqOptions } from '../defs/loopring_enums'
-import { getEdDSASig, getEdDSASigWithPoseidon } from './sign/sign_tools'
 import { sortObject } from '../utils/obj_tools'
 import { webAssemblySign } from './sign/webAssemblySign'
 
@@ -106,15 +105,16 @@ export class Request {
       case SIG_FLAG.NO_SIG:
         break
       case SIG_FLAG.EDDSA_SIG_POSEIDON:
-        sig = getEdDSASigWithPoseidon(params.sigObj?.dataToSig, params.sigObj?.PrivateKey).result
+        sig =(await  webAssemblySign.getEdDSASigWithPoseidon(params.sigObj?.dataToSig, params.sigObj?.PrivateKey)).result
         break
       case SIG_FLAG.EDDSA_SIG:
-        sig = getEdDSASig(
+        sig = webAssemblySign.signRequest(
+          params.sigObj?.PrivateKey??"",
           params.method,
           this.baseOptions.baseURL,
           params.url,
           params.sigObj?.dataToSig,
-          params.sigObj?.PrivateKey,
+
         )
         break
       default:
@@ -130,7 +130,7 @@ export class Request {
     }
 
     if (params?.eddsaSignatureREFER && params.sigObj?.PrivateKey) {
-      // const sig = getEdDSASig(
+      // const sig = signRequest(
       //   params.method,
       //   this.baseOptions.baseURL,
       //   params.url,

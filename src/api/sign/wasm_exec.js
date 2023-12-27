@@ -4,6 +4,8 @@
 //
 // This file has been modified for use by the TinyGo compiler.
 
+
+
 ;(() => {
   // Map multiple JavaScript environments to a single common API,
   // preferring web standards over Node.js API.
@@ -31,6 +33,13 @@
   if (!global.fs && global.require) {
     global.fs = require('fs')
   }
+
+  if (!global.__go_wasm__) {
+    global.__go_wasm__ = {
+      __wrapper__:  wrapper
+    };
+  }
+
 
   const enosys = () => {
     const err = new Error('not implemented')
@@ -363,7 +372,7 @@
           'syscall/js.finalizeRef': (v_ref) => {
             // Note: TinyGo does not support finalizers so this should never be
             // called.
-            console.error('syscall/js.finalizeRef not implemented')
+            // console.warn('syscall/js.finalizeRef not implemented',v_ref)
           },
 
           // func stringVal(value string) ref
@@ -513,7 +522,7 @@
       this.importObject.env = this.importObject.gojs
     }
 
-    async run(instance) {
+    async run(instance, globalRef) {
       this._inst = instance
       this._values = [
         // JS values that Go currently has references to, indexed by reference id
@@ -522,7 +531,7 @@
         null,
         true,
         false,
-        global,
+        globalRef,
         this,
       ]
       this._goRefCounts = [] // number of references that Go has to a JS value, indexed by reference id
@@ -549,25 +558,25 @@
       }
     }
 
-    // _resume() {
-    // 	if (this.exited) {
-    // 		throw new Error("Go program has already exited");
-    // 	}
-    // 	this._inst.exports.resume();
-    // 	if (this.exited) {
-    // 		this._resolveExitPromise();
-    // 	}
-    // }
+    _resume() {
+    	if (this.exited) {
+    		throw new Error("Go program has already exited");
+    	}
+    	this._inst.exports.resume();
+    	if (this.exited) {
+    		this._resolveExitPromise();
+    	}
+    }
 
-    // _makeFuncWrapper(id) {
-    // 	const go = this;
-    // 	return function () {
-    // 		const event = { id: id, this: this, args: arguments };
-    // 		go._pendingEvent = event;
-    // 		go._resume();
-    // 		return event.result;
-    // 	};
-    // }
+    _makeFuncWrapper(id) {
+    	const go = this;
+    	return function () {
+    		const event = { id: id, this: this, args: arguments };
+    		go._pendingEvent = event;
+    		go._resume();
+    		return event.result;
+    	};
+    }
   }
 
   // if (
@@ -591,5 +600,16 @@
   // 	});
   // }
 })()
+ function wrapper(goFunc) {
+  return (...args) => {
+    const result = goFunc.apply(undefined, args);
+    if (result.error instanceof Error) {
+      throw result.error;
+    }
+    return  result.result;
+  };
+}
+
 
 exports.Go = global.Go
+exports.wrapper = wrapper
