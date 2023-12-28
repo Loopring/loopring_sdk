@@ -1,0 +1,34 @@
+{
+  "name": "loopring-wasm",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/loopring-wasm",
+  "implicitDependencies": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/loopring-wasm",
+        "commands": [
+          {
+            "command": "tinygo build --no-debug -o ../loopring-sdk/src/lib/bridge/wasm-release.wasm -target wasm",
+            "forwardAllArgs": false
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/loopring-wasm",
+        "commands": [
+          {
+            "command": "go fmt ./...",
+            "forwardAllArgs": false
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["type:go"]
+}
