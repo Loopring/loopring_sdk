@@ -170,7 +170,8 @@ export class LuckTokenAPI extends BaseAPI {
       limit?: number
       hash: string
       fromId?: number
-      accountId?: number
+      accountId?: number,
+      serialNo?: number
     },
     apiKey: string,
   ): Promise<{
@@ -200,7 +201,8 @@ export class LuckTokenAPI extends BaseAPI {
       hash: string
       fromId?: number
       showHelper: boolean
-      accountId?: number
+      accountId?: number,
+      serialNo?: number
     },
     apiKey: string,
   ): Promise<{
@@ -408,7 +410,8 @@ export class LuckTokenAPI extends BaseAPI {
     request: {
       hash: string
       claimer: string
-      referrer: string
+      referrer: string,
+      serialNo?: number
     }
     eddsaKey: string
     apiKey: string
@@ -447,6 +450,7 @@ export class LuckTokenAPI extends BaseAPI {
       hash: string
       claimer: string
       referrer: string
+      serialNo?: number
     }
     eddsaKey: string
     apiKey: string

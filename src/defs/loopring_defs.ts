@@ -3750,6 +3750,8 @@ export type LuckyTokenItemForReceive = {
   isNft?: boolean
   isOfficial?: boolean
   nftExpireTime: number
+  notifyType?: string
+  serialNo?: number 
 }
 export type BlindBoxClaimInfo = {
   // 盲盒信息
@@ -3767,6 +3769,7 @@ export type BlindBoxClaimInfo = {
   openTime: string
   expireTime: string
   createdAt: number
+  serialNo?: number
 }
 export type LuckyTokenBlindBoxItemReceive = {
   luckyToken: LuckyTokenItemForReceive
@@ -3792,6 +3795,7 @@ export type LuckTokenClaim = {
   amount: number
   createdAt: number
   claimId: number
+  serialNo?: number
 }
 
 export type LuckyTokenSignerFlag = 0 | 1
@@ -3888,6 +3892,7 @@ export interface OriginLuckTokenWithdrawsRequestV3 {
   }
   nftData?: string
   luckyTokenHash?: string
+  serialNo?: number
 }
 
 export interface OriginLuckTokenWithdrawsRequestV3WithPatch {
