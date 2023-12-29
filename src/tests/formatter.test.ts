@@ -50,13 +50,14 @@ describe('formatter test', function () {
   it(
     'sign_request_test',
     async () => {
-      webAssemblySign.signRequest(
+       const sig = await  webAssemblySign.signRequest(
         LOOPRING_EXPORTED_ACCOUNT.privateKey,
         ReqMethod.GET,
         'https://api3.loopring.io/',
         LOOPRING_URLs.GET_RELAYER_CURRENT_TIME,
-        {},
+        new Map([]),
       )
+        console.log('sign_request_test',sig)
     },
     TIMEOUT,
   )

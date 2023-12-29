@@ -108,7 +108,7 @@ export class Request {
         sig =(await  webAssemblySign.getEdDSASigWithPoseidon(params.sigObj?.dataToSig, params.sigObj?.PrivateKey)).result
         break
       case SIG_FLAG.EDDSA_SIG:
-        sig = webAssemblySign.signRequest(
+        sig = await webAssemblySign.signRequest(
           params.sigObj?.PrivateKey??"",
           params.method,
           this.baseOptions.baseURL,
@@ -137,7 +137,7 @@ export class Request {
       //   params.sigObj?.dataToSig,
       //   params.sigObj?.PrivateKey,
       // )
-      webAssemblySign.signRequest(
+      const sig =  await webAssemblySign.signRequest(
         // privateKey: string,
         // method: string,
         // baseUrl: string,

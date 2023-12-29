@@ -32,6 +32,7 @@
 
   if (!global.fs && global.require) {
     global.fs = require('fs')
+    global.path = require('path')
   }
 
   if (!global.__go_wasm__) {

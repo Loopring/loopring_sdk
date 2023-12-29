@@ -73,6 +73,7 @@
     "test_calc": "tsdx test",
     "lint": "eslint . --fix --quiet --ext .ts",
     "prepublishDev": "NODE_ENV=dev build build",
+    "wasm": "cd wasm-go; tinygo build --no-debug -o ../wasm-release.wasm -target wasm",
     "prepublishOnly": "yarn build",
     "doc": "typedoc --out docs/detail src\\/",
     "proxy": "export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;",

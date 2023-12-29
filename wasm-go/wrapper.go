@@ -8,10 +8,10 @@ import (
 	"strings"
 	"regexp"
 	"encoding/json"
-	"github.com/loopexchange-labs/go-loopring-sig/loopring"
-	"github.com/loopexchange-labs/go-loopring-sig/poseidon"
-	"github.com/loopexchange-labs/go-loopring-sig/utils"
-	"github.com/loopexchange-labs/go-loopring-sig/eddsa"
+	"github.com/loopring/loopring"
+	"github.com/loopring/poseidon"
+	"github.com/loopringg/utils"
+	"github.com/loopring/eddsa"
 )
 
 func generateKeyPair(_ js.Value, args []js.Value) (interface{}, error) {

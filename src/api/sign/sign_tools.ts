@@ -59,6 +59,8 @@ import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import {webAssemblySign} from "./webAssemblySign";
+import {method} from "lodash";
+import * as path from "path";
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -251,7 +253,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
 
 
 
-export function signRequest(
+export async function signRequest(
   method: string,
   baseUrl: string,
   path: string,
@@ -331,7 +333,7 @@ export function verifyEdDSASig(
   return true
 }
 
-export const  getEdDSASigWithPoseidon =async (inputs: any, PrivateKey: string | undefined) => {
+export const  getEdDSASigWithPoseidon =async (inputs: (string|number)[], PrivateKey: string | undefined) => {
   const p = field.SNARK_SCALAR_FIELD
   const poseidonParams = new PoseidonParams(
     p,
@@ -352,7 +354,7 @@ export const  getEdDSASigWithPoseidon =async (inputs: any, PrivateKey: string | 
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams)
   return {
-    hash,
+    hash:hash?.toString(),
     result: genSigWithPadding(PrivateKey, hash),
   }
 }
@@ -995,18 +997,20 @@ export async function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKe
   if (request.fillAmountBOrS) {
     fillAmountBOrS = 1
   }
-  const inputs = [
+
+  const inputs:(string|number)[] = [
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
     request.sellToken?.tokenId !== undefined ? request.sellToken.tokenId : '',
     (request.buyToken as any)?.nftData
-      ? (request.buyToken as NFTTokenAmountInfo).nftData
+      // @ts-ignore
+      ? request.buyToken.nftData as any
       : request.buyToken.tokenId,
     request.sellToken?.amount ? request.sellToken.amount : 0,
     request.buyToken?.amount ? request.buyToken.amount : 0,
     request.validUntil,
-    request.maxFeeBips,
+    request.maxFeeBips??5,
     fillAmountBOrS,
     new BN(ethUtil.toBuffer(request.taker)).toString(),
   ]
@@ -1490,19 +1494,33 @@ export function get_EddsaSig_ExitAmmPool(data: ExitAmmPoolRequest, patch: AmmPoo
 }
 
 export class WebAssemblySign {
-  async signRequest(
-    privateKey: string,
-    method: string,
-    baseUrl: string,
-    path: string,
-    data: Map<string, any>,
-  ): Promise<string> {
-    return await signRequest( method, baseUrl, path, data,privateKey,)
-  }
-  async getEdDSASigWithPoseidon(
-    inputs: (string | number)[],
-    privateKey: string | undefined,
-  ): Promise<{ hash: string; result: string }> {
-    return await getEdDSASigWithPoseidon(inputs, privateKey)
-  }
+    get signRequest() {
+        return  async (
+            privateKey: string,
+            method: string,
+            baseUrl: string,
+            path: string,
+            data: Map<string, any>,
+        ): Promise<string> =>{
+            return await signRequest( method, baseUrl, path, data,privateKey,)
+        }
+    }
+    get getEdDSASigWithPoseidon() {
+        return  async (
+            inputs: (string | number)[],
+            privateKey: string | undefined,
+           ): Promise<{ hash: string; result: string }> => {
+            myLog('getEdDSASigWithPoseidon',inputs)
+            return await getEdDSASigWithPoseidon(inputs, privateKey)
+        }
+    }
+  //    async  signRequest(
+  //   privateKey: string,
+  //   method: string,
+  //   baseUrl: string,
+  //   path: string,
+  //   data: Map<string, any>,
+  // ): Promise<string> {
+  //
+  // }
 }

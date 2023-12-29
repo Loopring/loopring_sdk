@@ -15,7 +15,10 @@ when using for browser make sure set up `NODE_ENV=production|development`
 
 > Make sure you are using the original npm registry.  
 > `npm config set registry http://registry.npmjs.org`
-
+ 
+## wasm
+wasm tinygo: v0.30.0
+[wasm_exec.js](src%2Fapi%2Fsign%2Fwasm_exec.js) from `$(tinygo env TINYGOROOT)targets/wasm_exec.js`
 
 ## 📒 Documentation
 

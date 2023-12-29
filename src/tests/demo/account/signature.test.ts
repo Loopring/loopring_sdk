@@ -51,8 +51,8 @@ describe('signature', function () {
     ]
 
     const { hash, result } = await webAssemblySign.getEdDSASigWithPoseidon(dataToSig, eddsaKey.sk)
-    const {hash:_jHash,result:_result} = getEdDSASigWithPoseidon(dataToSig, eddsaKey.sk)
-    console.log('hash, result', hash,_jHash, result,_result)
+    const {hash:_jHash,result:_result} =await getEdDSASigWithPoseidon(dataToSig, eddsaKey.sk)
+    console.log('hash, result', hash, _jHash, result, _result)
 
   })
   it('signRequest', async () => {
