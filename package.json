@@ -1,11 +1,12 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.8.15",
+  "version": "3.8.16",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
   "main": "dist/index.cjs",
   "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "source": "src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
