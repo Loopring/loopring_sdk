@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Transaction } from '@ethereumjs/tx'
+import ethereumjsTx from '@ethereumjs/tx'
 
 import * as loopring_defs from '../defs'
 
@@ -7,7 +7,7 @@ import * as fm from '../utils/formatter'
 
 import { addHexPrefix, toHex, toNumber } from '../utils/formatter'
 import { Contracts } from './ethereum/contracts'
-
+const Transaction = ethereumjsTx.Transaction
 export enum ERC20Method {
   Approve = 'approve',
   Deposit = 'deposit',

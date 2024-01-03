@@ -1,8 +1,9 @@
 /* tslint:disable */
 // @ts-nocheck
 import { addHexPrefix, clearHexPrefix, toBuffer, toHex } from '../../../utils/formatter'
-import { methodID, rawDecode, rawEncode } from 'ethereumjs-abi'
+import ethereumjsAbi from 'ethereumjs-abi'
 import BN from 'bn.js'
+const { methodID, rawDecode, rawEncode } = ethereumjsAbi
 
 export class AbiFunction {
   name
