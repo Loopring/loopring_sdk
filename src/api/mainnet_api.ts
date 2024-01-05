@@ -24,7 +24,20 @@ export class MainnetAPI extends BaseAPI {
     offset?: number
   }): Promise<{
     raw_data: any
-    luckTokenAgents: { [key: string]: loopring_defs.LuckyTokenInfo }
+    totalNum: number,
+    infos: { 
+      optionHash: string;
+      productId: string;
+      base: string;
+      quote: string;
+      currency: string;
+      createTime: number;
+      expireTime: number;
+      strike: string,
+      expired: boolean,
+      dualType: string,
+      buyLow: boolean
+     }[]
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_MAINNET_DEFI_DUAL_PRODUCTLIST,
@@ -32,32 +45,37 @@ export class MainnetAPI extends BaseAPI {
       sigFlag: SIG_FLAG.NO_SIG,
       queryParams: req
     }
-    debugger
-
     const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo) {
-      return {
-        ...raw_data?.resultInfo,
-      }
-    }
-    const luckTokenAgents = raw_data.reduce(
-      (
-        prev: { [key: string]: loopring_defs.LuckyTokenInfo },
-        item: { owner: string; infos: any[] },
-      ) => {
-        prev[item.owner] = {
-          signer: item.infos[0],
-          signerUrl: item.infos[1],
-          logoUrl: item.infos[2],
-          memo: item.infos[3],
-        }
-        return prev
-      },
-      {} as { [key: string]: loopring_defs.LuckyTokenInfo },
-    )
     return {
       raw_data,
-      luckTokenAgents,
+      ...raw_data
+    }
+  }
+
+  public async defiDualSignature(req: {
+    user: string;
+    optionHash: string;
+    profit: string;
+    investAmount: string;
+  }): Promise<{
+    raw_data: any
+    ecdsaSig: string
+    optionHash: string
+    profitRatio: string
+    deadline: string
+    investAmount: string
+    salt: string
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.POST_MAINNET_DEFI_DUAL_SIGNATURE,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.NO_SIG,
+      bodyParams: req
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return {
+      raw_data,
+      ...raw_data
     }
   }
 

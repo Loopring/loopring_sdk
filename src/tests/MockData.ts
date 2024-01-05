@@ -9,6 +9,7 @@ import {
   GlobalAPI,
   WhitelistedUserAPI,
   DefiAPI,
+  MainnetAPI
 } from '../api'
 import Web3 from 'web3'
 import * as sdk from '../index'
@@ -63,7 +64,7 @@ export const LoopringAPI = {
   nftAPI: new NFTAPI({ chainId, baseUrl }),
   defiAPI: new DefiAPI({ chainId, baseUrl }),
   delegate: new DelegateAPI({ chainId, baseUrl }),
-  mainnetAPI: new sdk.MainnetAPI({ chainId, baseUrl }),
+  mainnetAPI: new MainnetAPI({ chainId, baseUrl }),
   __chainId__: chainId,
 }
 export const LOOPRING_EXPORTED_ACCOUNT = {
