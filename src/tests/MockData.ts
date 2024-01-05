@@ -63,6 +63,7 @@ export const LoopringAPI = {
   nftAPI: new NFTAPI({ chainId, baseUrl }),
   defiAPI: new DefiAPI({ chainId, baseUrl }),
   delegate: new DelegateAPI({ chainId, baseUrl }),
+  mainnetAPI: new sdk.MainnetAPI({ chainId, baseUrl }),
   __chainId__: chainId,
 }
 export const LOOPRING_EXPORTED_ACCOUNT = {

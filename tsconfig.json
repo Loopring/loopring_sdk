@@ -17,7 +17,6 @@
     "esModuleInterop": true,
     "declaration": true,
     "declarationMap": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "strict": true,
