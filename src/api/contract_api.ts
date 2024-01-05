@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import ethereumjsTx from '@ethereumjs/tx'
+import * as ethereumjsTx from '@ethereumjs/tx'
 
 import * as loopring_defs from '../defs'
 

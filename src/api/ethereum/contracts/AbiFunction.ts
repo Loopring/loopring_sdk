@@ -4,7 +4,6 @@ import { addHexPrefix, clearHexPrefix, toBuffer, toHex } from '../../../utils/fo
 import ethereumjsAbi from 'ethereumjs-abi'
 import BN from 'bn.js'
 const { methodID, rawDecode, rawEncode } = ethereumjsAbi
-
 export class AbiFunction {
   name
   inputTypes

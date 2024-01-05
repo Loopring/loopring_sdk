@@ -235,4 +235,20 @@ export enum LOOPRING_URLs {
   GET_VAULT_PRICE = '/api/v3/vault/tokenPrice',
   GET_DEFI_APYS = '/api/v3/datacenter/getDefiApys',
   GET_DEFI_STAKE_TRANSACTIONS = '/api/v3/defi/stake/transactions',
+
+  // mainnet
+  GET_MAINNET_DEFI_DUAL_PRODUCTLIST = '/api/v3/mainnet/defi/dual/productlist',
+  POST_MAINNET_DEFI_DUAL_SIGNATURE = '/api/v3/mainnet/defi/dual/signature',
 }
+
+// curl --location 'https://dev.loopring.io/api/v3/mainnet/defi/dual/productlist?offset=0&limit=10'
+
+
+// curl --location 'https://dev.loopring.io/api/v3/mainnet/defi/dual/signature' \
+// --header 'Content-Type: application/json' \
+// --data '{
+// "user":"0xa09a702f08a218c038a7e5bd1e6be483499a9828",
+// "optionHash":"0x11f445839312a45c980ff35c0c2ea1e60e93bd4c9a31c9993d5bacf78bf7cd80",
+// "profit":"0.00045",
+// "investAmount":"500000000"
+// }'
