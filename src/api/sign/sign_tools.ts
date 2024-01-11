@@ -58,6 +58,8 @@ import { myLog } from '../../utils/log_tools'
 import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
+import { Wallet } from 'ethers'
+import { arrayify, sha256, toUtf8Bytes } from 'ethers/lib/utils'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -284,6 +286,31 @@ export function getEdDSASig(
   return sig
 }
 
+export function getRequstEcDSASig(
+  method: string,
+  basePath: string,
+  api_url: string,
+  privateKey: string,
+  bodyJSONString?: string,
+  queryParamsString?: any,
+) {
+  const methodUpcase = method.toUpperCase()
+  const pathEncoded = encodeURIComponent(`${basePath}${api_url}`)
+  var parameterString: string
+  if (method === 'POST') {
+    parameterString = bodyJSONString ? bodyJSONString : ""
+  } else if (method === 'GET' || "DELETE") {
+    parameterString = queryParamsString ? queryParamsString : ""
+  } else {
+    parameterString = ''
+  }
+  const msg = `${methodUpcase}&${pathEncoded}&${encodeURIComponent(parameterString)}`
+  const hash = sha256(toUtf8Bytes(msg))
+  const wallet = new Wallet(privateKey)
+  return wallet.signMessage(arrayify(hash))
+}
+
+
 export function creatEdDSASigHasH({
   method,
   basePath,
@@ -302,14 +329,14 @@ export function creatEdDSASigHasH({
   if (method === 'GET' || method === 'DELETE') {
     params = makeRequestParamStr(requestInfo)
   } else if (method === 'POST' || method === 'PUT') {
-    params = makeObjectStr(requestInfo)
+    params = JSON.stringify(requestInfo)
   } else {
     throw new Error(`${method} is not supported yet!`)
   }
 
   const uri = encodeURIComponent(`${basePath}${api_url}`)
 
-  const message = `${method}&${uri}&${params}`
+  const message = `${method}&${uri}&${encodeURIComponent(params)}`
   // LOG: for signature
   myLog('getEdDSASig', message)
 

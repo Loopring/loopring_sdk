@@ -64,5 +64,6 @@ module.exports = {
       include: ['src/**/*.ts'],
       exclude: './node_modules/**',
     }),
-  ]
+  ],
+  cache: false
 };
