@@ -15,6 +15,7 @@ describe("mainnet api", function () {
     async () => {
       const response = await LoopringAPI.mainnetAPI.getDefiDualProductlist({
         // owner: LOOPRING_EXPORTED_ACCOUNT.address,
+        baseSymbol: "LRC"
       });
       expect(response.infos).toHaveLength
       expect(response.totalNum).toBeGreaterThan(0)
