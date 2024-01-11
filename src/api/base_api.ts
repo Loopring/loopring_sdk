@@ -1,22 +1,8 @@
-import {
-  ChainId,
-  ConnectorError,
-  ConnectorNames,
-  CounterFactualInfo,
-  GetAvailableBrokerRequest,
-  GetCounterFactualInfoRequest,
-  LOOPRING_URLs,
-  LoopringErrorCode,
-  ReqMethod,
-  ReqParams,
-  RESULT_INFO,
-  SIG_FLAG,
-  TX_HASH_API,
-} from '../defs'
+import * as loopring_defs from '../defs'
 import { Request } from './request'
 import { addHexPrefix, toBuffer, toHex } from '../utils'
 import { myLog } from '../utils/log_tools'
-import ABI from './ethereum/contracts'
+import { contracts as abi } from './ethereum/contracts'
 import { AxiosResponse } from 'axios'
 import * as ethUtil from 'ethereumjs-util'
 import { isContract } from './contract_api'
@@ -29,33 +15,36 @@ export const KEY_MESSAGE =
 export class BaseAPI {
   static KEY_MESSAGE: string = KEY_MESSAGE
   protected baseUrl = ''
-  protected chainId: ChainId = ChainId.MAINNET
-  public genErr(err: Error | (AxiosResponse & Error)): RESULT_INFO {
+  protected chainId: loopring_defs.ChainId = loopring_defs.ChainId.MAINNET
+  public genErr(err: Error | (AxiosResponse & Error)): loopring_defs.RESULT_INFO {
     if (err.hasOwnProperty('request')) {
       // const axiosError = errorInfo as AxiosResponse;
       return {
         // @ts-ignore;
-        message: ConnectorError.HTTP_ERROR,
+        message: loopring_defs.ConnectorError.HTTP_ERROR,
         ...err,
-        msg: ConnectorError.HTTP_ERROR,
-        code: LoopringErrorCode.HTTP_ERROR,
-      } as RESULT_INFO
+        msg: loopring_defs.ConnectorError.HTTP_ERROR,
+        code: loopring_defs.LoopringErrorCode.HTTP_ERROR,
+      } as loopring_defs.RESULT_INFO
       err?.message
     } else if (!err || !err?.message) {
       return {
         message: 'unKnown',
-        code: LoopringErrorCode.SKD_UNKNOW,
+        code: loopring_defs.LoopringErrorCode.SKD_UNKNOW,
       }
     } else {
-      const key = Reflect.ownKeys(ConnectorError).find(
-        (key) => err?.message.search(ConnectorError[key as keyof typeof ConnectorError]) !== -1,
+      const key = Reflect.ownKeys(loopring_defs.ConnectorError).find(
+        (key) =>
+          err?.message.search(
+            loopring_defs.ConnectorError[key as keyof typeof loopring_defs.ConnectorError],
+          ) !== -1,
       )
       if (key) {
         return {
           ...err,
-          message: key as keyof typeof ConnectorError,
-          code: LoopringErrorCode[key as keyof typeof ConnectorError],
-        } as RESULT_INFO
+          message: key as keyof typeof loopring_defs.ConnectorError,
+          code: loopring_defs.LoopringErrorCode[key as keyof typeof loopring_defs.ConnectorError],
+        } as loopring_defs.RESULT_INFO
       }
       return {
         ...(err instanceof Error
@@ -64,13 +53,13 @@ export class BaseAPI {
               return { ...prev, [item]: err[item.toString()] }
             }, {})
           : err),
-        code: LoopringErrorCode.SKD_UNKNOW,
+        code: loopring_defs.LoopringErrorCode.SKD_UNKNOW,
       }
     }
   }
-  protected returnTxHash<T extends TX_HASH_API>(
+  protected returnTxHash<T extends loopring_defs.TX_HASH_API>(
     raw_data: T,
-  ): (Omit<T, 'resultInfo'> & { raw_data: Omit<T, 'resultInfo'> }) | RESULT_INFO {
+  ): (Omit<T, 'resultInfo'> & { raw_data: Omit<T, 'resultInfo'> }) | loopring_defs.RESULT_INFO {
     if (raw_data?.resultInfo) {
       return {
         ...raw_data.resultInfo,
@@ -90,8 +79,8 @@ export class BaseAPI {
     param: InitParam,
     timeout: number = 6000,
     baseUrlMap = {
-      [ChainId.MAINNET]: 'https://api3.loopring.io',
-      [ChainId.GOERLI]: 'https://uat2.loopring.io',
+      [loopring_defs.ChainId.MAINNET]: 'https://api3.loopring.io',
+      [loopring_defs.ChainId.GOERLI]: 'https://uat2.loopring.io',
     },
   ) {
     if (param.baseUrl) {
@@ -99,48 +88,50 @@ export class BaseAPI {
     } else if (param.chainId !== undefined) {
       this.setChainId(param.chainId)
     } else {
-      this.setChainId(ChainId.GOERLI)
+      this.setChainId(loopring_defs.ChainId.GOERLI)
     }
     this.baseUrlMap = baseUrlMap
     this.timeout = timeout
   }
 
-  public async getAvailableBroker(request: GetAvailableBrokerRequest): Promise<{ broker: string }> {
-    const reqParams: ReqParams = {
-      sigFlag: SIG_FLAG.NO_SIG,
+  public async getAvailableBroker(
+    request: loopring_defs.GetAvailableBrokerRequest,
+  ): Promise<{ broker: string }> {
+    const reqParams: loopring_defs.ReqParams = {
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       queryParams: request,
-      url: LOOPRING_URLs.GET_AVAILABLE_BROKER,
-      method: ReqMethod.GET,
+      url: loopring_defs.LOOPRING_URLs.GET_AVAILABLE_BROKER,
+      method: loopring_defs.ReqMethod.GET,
     }
     const result = (await this.makeReq().request(reqParams)).data
     return result
   }
 
   public async getCounterFactualInfo<T extends any>(
-    request: GetCounterFactualInfoRequest,
+    request: loopring_defs.GetCounterFactualInfoRequest,
   ): Promise<{
     raw_data: T
-    counterFactualInfo: CounterFactualInfo | undefined
-    error?: RESULT_INFO
+    counterFactualInfo: loopring_defs.CounterFactualInfo | undefined
+    error?: loopring_defs.RESULT_INFO
   }> {
-    const reqParams: ReqParams = {
-      url: LOOPRING_URLs.COUNTER_FACTUAL_INFO,
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.COUNTER_FACTUAL_INFO,
       queryParams: request,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
 
-    let counterFactualInfo: CounterFactualInfo | undefined
-    let error: RESULT_INFO | undefined = undefined
+    let counterFactualInfo: loopring_defs.CounterFactualInfo | undefined
+    let error: loopring_defs.RESULT_INFO | undefined = undefined
 
     if (raw_data && raw_data?.resultInfo) {
       error = raw_data?.resultInfo
     } else {
       counterFactualInfo = {
         ...raw_data,
-      } as CounterFactualInfo
+      } as loopring_defs.CounterFactualInfo
     }
 
     return {
@@ -150,7 +141,7 @@ export class BaseAPI {
     }
   }
 
-  public setChainId(chainId: ChainId) {
+  public setChainId(chainId: loopring_defs.ChainId) {
     this.baseUrl =
       this.baseUrlMap && this.baseUrlMap[0]
         ? getBaseUrlByChainId(chainId, this.baseUrlMap as any)
@@ -192,7 +183,7 @@ export function ecRecover(
 export async function contractWalletValidate32(web3: any, account: string, msg: string, sig: any) {
   return new Promise((resolve) => {
     const hash = ethUtil.hashPersonalMessage(toBuffer(msg))
-    const data = ABI.Contracts.ContractWallet.encodeInputs('isValidSignature(bytes32,bytes)', {
+    const data = abi.Contracts.ContractWallet.encodeInputs('isValidSignature(bytes32,bytes)', {
       _data: hash,
       _signature: toBuffer(sig),
     })
@@ -204,7 +195,7 @@ export async function contractWalletValidate32(web3: any, account: string, msg: 
       },
       function (err: any, result: any) {
         if (!err) {
-          const valid = ABI.Contracts.ContractWallet.decodeOutputs(
+          const valid = abi.Contracts.ContractWallet.decodeOutputs(
             'isValidSignature(bytes32,bytes)',
             result,
           )
@@ -223,7 +214,7 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
     web3.eth.call(
       {
         to: myKeyContract,
-        data: ABI.Contracts.ContractWallet.encodeInputs('getKeyData', {
+        data: abi.Contracts.ContractWallet.encodeInputs('getKeyData', {
           _account: account,
           _index: 3,
         }),
@@ -233,7 +224,7 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
           const signature = ethUtil.fromRpcSig(sig)
           const hash = ethUtil.hashPersonalMessage(ethUtil.keccak256(toBuffer(msg)))
           const address = addHexPrefix(
-            ABI.Contracts.ContractWallet.decodeOutputs('getKeyData', res)[0],
+            abi.Contracts.ContractWallet.decodeOutputs('getKeyData', res)[0],
           )
           const recAddress = toHex(
             ethUtil.pubToAddress(ethUtil.ecrecover(hash, signature.v, signature.r, signature.s)),
@@ -251,10 +242,6 @@ export async function mykeyWalletValid(web3: any, account: string, msg: string, 
 
 export async function ecRecover2(account: string, message: string, signature: any) {
   const messageBuffer = Buffer.from(message, 'utf8')
-
-  // myLog('message:', message)
-  // myLog('signature raw:', signature)
-
   signature = signature.split('x')[1]
 
   const parts = [
@@ -277,9 +264,9 @@ export async function ecRecover2(account: string, message: string, signature: an
 
   const recoveredAddress = '0x' + ethUtil.pubToAddress(pub).toString('hex')
 
-  if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
-    myLog('v:', v, 'old_v:', old_v, ' recoveredAddress:', recoveredAddress)
-  }
+  // if (account.toLowerCase() !== recoveredAddress.toLowerCase()) {
+  //   myLog('v:', v, 'old_v:', old_v, ' recoveredAddress:', recoveredAddress)
+  // }
 
   return new Promise((resolve) =>
     resolve({
@@ -289,19 +276,19 @@ export async function ecRecover2(account: string, message: string, signature: an
 }
 
 const getBaseUrlByChainId = (
-  id: ChainId,
+  id: loopring_defs.ChainId,
   baseUrlMap = {
-    [ChainId.MAINNET]: 'https://api3.loopring.io',
-    [ChainId.GOERLI]: 'https://uat2.loopring.io',
+    [loopring_defs.ChainId.MAINNET]: 'https://api3.loopring.io',
+    [loopring_defs.ChainId.GOERLI]: 'https://uat2.loopring.io',
   },
 ) => {
   let baseUrl = ''
   switch (id) {
-    case ChainId.MAINNET:
-      baseUrl = baseUrlMap[ChainId.MAINNET]
+    case loopring_defs.ChainId.MAINNET:
+      baseUrl = baseUrlMap[loopring_defs.ChainId.MAINNET]
       break
     default:
-      baseUrl = baseUrlMap[ChainId.GOERLI]
+      baseUrl = baseUrlMap[loopring_defs.ChainId.GOERLI]
       break
   }
   return baseUrl
@@ -311,7 +298,7 @@ const getBaseUrlByChainId = (
  * @default keySeed `Sign this message to access Loopring exchange: ${exchangeAddress} with key nonce: ${nonce}`
  */
 export interface InitParam {
-  chainId?: ChainId
+  chainId?: loopring_defs.ChainId
   baseUrl?: string
 }
 
@@ -334,10 +321,10 @@ export async function personalSign(
   account: string | undefined,
   pwd: string,
   msg: string,
-  walletType: ConnectorNames,
-  chainId: ChainId,
+  walletType: loopring_defs.ConnectorNames,
+  chainId: loopring_defs.ChainId,
   accountId?: number,
-  counterFactualInfo?: CounterFactualInfo,
+  counterFactualInfo?: loopring_defs.CounterFactualInfo,
   isMobile?: boolean,
 ) {
   if (!account) {
@@ -373,6 +360,7 @@ export async function personalSign(
           // Valid: 2. webview directory signature Valid
           // @ts-ignore
           if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected) {
+            // LOG: for signature
             myLog('ecRecover before', result)
             const valid: any = ecRecover(account, msg, result)
             // LOG: for signature
@@ -448,10 +436,10 @@ export async function fcWalletValid(
   msg: string,
   result: any,
   accountId: number,
-  chainId: ChainId,
-  counterFactualInfo?: CounterFactualInfo,
+  chainId: loopring_defs.ChainId,
+  counterFactualInfo?: loopring_defs.CounterFactualInfo,
 ): Promise<{
-  counterFactualInfo?: CounterFactualInfo
+  counterFactualInfo?: loopring_defs.CounterFactualInfo
   error?: any
   result?: boolean
 }> {

@@ -43,6 +43,23 @@ export enum LOOPRING_URLs {
   GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
   GET_USER_BILLS = '/api/v3/user/bills',
 
+  // Contacts
+  GET_CONTACTS = '/api/v3/user/contact',
+  CREATE_CONTACT = '/api/v3/user/contact/add',
+  UPDATE_CONTACT = '/api/v3/user/contact/update',
+  DELETE_CONTACT = '/api/v3/user/contact',
+
+  // Refer
+  GET_REFER_DOWNSIDES = '/api/v3/user/refer/profit/downsides',
+  GET_REFER_SELF = '/api/v3/user/refer/profit/self',
+  GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
+
+  // Notification
+  GET_NOTIFICATION_ALL = '/api/v3/user/notification',
+  POST_NOTIFICATION_CLEAR = '/api/v3/user/notification/clearAll',
+  POST_NOTIFICATION_READ_ALL = '/api/v3/user/notification/readAll',
+  POST_NOTIFICATION_READ_ONE = '/api/v3/user/notification/read',
+
   GET_ALLOWANCES = '/api/v3/eth/allowances',
   GET_ETH_NONCE = '/api/v3/eth/nonce',
   GET_ETH_BALANCES = '/api/v3/eth/balances',
@@ -92,6 +109,7 @@ export enum LOOPRING_URLs {
   GET_QUOTE_TREND = '/api/v3/datacenter/getTokenQuoteTrend',
   GET_QUOTE_TOKEN_INFO = '/api/v3/datacenter/getTokenInfo',
   GET_QUOTE_TOKEN_OHLCV_TREND = '/api/v3/datacenter/getTokenOHLCVTrend',
+  GET_QUOTE_TOKEN_GETCMCTOKENRELATIONS = '/api/v3/datacenter/getCmcTokenRelations',
 
   GET_USER_ASSETS = '/api/wallet/v3/userAssets',
   GET_TOKEN_PRICES = '/api/wallet/v3/tokenPrices',
@@ -148,6 +166,8 @@ export enum LOOPRING_URLs {
   GET_USER_NFT_TRADE_HISTORY_OLD = '/api/v3/user/nft/trades',
   GET_USER_NFT_TRADE_HISTORY = '/api/v3/new/user/nft/trades',
   GET_USER_NFT_MINT_HISTORY = '/api/v3/user/nft/mints',
+  GET_USER_NFT_BURN_ADDRESS = '/api/v3/datacenter/getNftBurnAddress',
+
   GET_DEPLOY_TOKEN_ADDRESS = '/api/v3/nft/deployTokenAddress',
   IPFS_META_URL = 'https://ipfs.loopring.io/ipfs/',
 
@@ -189,21 +209,12 @@ export enum LOOPRING_URLs {
   GET_STAKE_SUMMARY = '/api/v3/stake/user/summary',
   GET_STAKE_TRANSACTIONS = '/api/v3/stake/user/transactions',
 
-  // Contacts
-  GET_CONTACTS = '/api/v3/user/contact',
-  CREATE_CONTACT = '/api/v3/user/contact/add',
-  UPDATE_CONTACT = '/api/v3/user/contact/update',
-  DELETE_CONTACT = '/api/v3/user/contact',
-
   // CEFI_MARKETS
   GET_BTRATE_MARKETS = '/api/v3/btrade/markets',
   GET_BTRATE_DEPTH = '/api/v3/btrade/depth',
   GET_BTRATE_ORDERS = '/api/v3/btrade/orders',
   POST_BTRATE_ORDER = '/api/v3/btrade/order',
 
-  GET_REFER_DOWNSIDES = '/api/v3/user/refer/profit/downsides',
-  GET_REFER_SELF = '/api/v3/user/refer/profit/self',
-  GET_REFER_STATISTIC = '/api/v3/user/refer/statistic',
   GET_TOTAL_CLAIM_INFO = '/api/v3/claim/totalClaimInfo',
   POST_TOTAL_CLAIM = '/api/v3/claim/claim',
   GET_VAULT_TOKENS = '/api/v3/vault/tokens',
@@ -221,8 +232,7 @@ export enum LOOPRING_URLs {
   POST_VAULT_TRANSFER = '/api/v3/vault/transfer',
   POST_VAULT_LOAN = '/api/v3/vault/loan',
   POST_VAULT_REPAY = '/api/v3/vault/repay',
-
-  //   GET_VAULT_TOKENS= "/api/v3/vault/tokens",
-  // GET_VAULT_MARKETS= "/api/v3/vault/markets",
-  //   GET_VAULT_account ="/api/v3/vault/account"
+  GET_VAULT_PRICE = '/api/v3/vault/tokenPrice',
+  GET_DEFI_APYS = '/api/v3/datacenter/getDefiApys',
+  GET_DEFI_STAKE_TRANSACTIONS = '/api/v3/defi/stake/transactions',
 }

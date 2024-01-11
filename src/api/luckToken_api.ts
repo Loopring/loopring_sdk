@@ -9,11 +9,10 @@ import {
   SIG_FLAG,
   UserNFTBalanceInfo,
 } from '../defs'
-import * as loopring_defs from '../defs/loopring_defs'
+import * as loopring_defs from '../defs'
 import { sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
-import { SigSuffix } from '../defs'
 
 export class LuckTokenAPI extends BaseAPI {
   public async getLuckTokenAgents<R>(): Promise<{
@@ -171,7 +170,8 @@ export class LuckTokenAPI extends BaseAPI {
       limit?: number
       hash: string
       fromId?: number
-      accountId?: number
+      accountId?: number,
+      serialNo?: number
     },
     apiKey: string,
   ): Promise<{
@@ -201,7 +201,8 @@ export class LuckTokenAPI extends BaseAPI {
       hash: string
       fromId?: number
       showHelper: boolean
-      accountId?: number
+      accountId?: number,
+      serialNo?: number
     },
     apiKey: string,
   ): Promise<{
@@ -409,7 +410,8 @@ export class LuckTokenAPI extends BaseAPI {
     request: {
       hash: string
       claimer: string
-      referrer: string
+      referrer: string,
+      serialNo?: number
     }
     eddsaKey: string
     apiKey: string
@@ -448,6 +450,7 @@ export class LuckTokenAPI extends BaseAPI {
       hash: string
       claimer: string
       referrer: string
+      serialNo?: number
     }
     eddsaKey: string
     apiKey: string
@@ -739,25 +742,23 @@ export class LuckTokenAPI extends BaseAPI {
 
   public async getLuckTokenUserLuckyTokenTargets<R>(
     request: {
-      statuses?: number[],
-      fromId?: number,
-      limit?: number,
-      offset?: number,
-      isAll?: number, // 0-all, 1-unexpired
+      statuses?: number[]
+      fromId?: number
+      limit?: number
+      offset?: number
+      isAll?: number // 0-all, 1-unexpired
     },
     apiKey: string,
   ): Promise<{
     raw_data: R
-    totalNum: number,
+    totalNum: number
     list: loopring_defs.LuckyTokenItemForReceive[]
   }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.GET_LUCK_TOKEN_LUCKYTOKENTARGETS,
       queryParams: {
         ...request,
-        statuses: request.statuses 
-          ? request.statuses.join(',') 
-          : undefined
+        statuses: request.statuses ? request.statuses.join(',') : undefined,
       },
       apiKey,
       method: ReqMethod.GET,
@@ -773,14 +774,14 @@ export class LuckTokenAPI extends BaseAPI {
     return {
       raw_data,
       totalNum: raw_data?.totalNum as number,
-      list: raw_data?.list as loopring_defs.LuckyTokenItemForReceive[]
+      list: raw_data?.list as loopring_defs.LuckyTokenItemForReceive[],
     }
   }
   public async sendLuckTokenSubmitAddTarget<R>(
     request: {
-      claimer: string[],
-      hash: string,
-      notifyType: number, // 0-red dot, 1-pop
+      claimer: string[]
+      hash: string
+      notifyType: number // 0-red dot, 1-pop
     },
     eddsaSignKey: string,
     apiKey: string,
@@ -799,7 +800,6 @@ export class LuckTokenAPI extends BaseAPI {
         PrivateKey: eddsaSignKey,
       },
     }
-    
 
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {

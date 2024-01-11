@@ -1,16 +1,33 @@
 {
-  "presets": [
-    [
-      "@babel/env",
-      {
-        "targets": { "node": "10" },
-        "useBuiltIns": "usage",
-        "corejs": 3
-      }
-    ],
-    "@babel/typescript"
-  ],
+  "env": {
+    "esmBundled": {
+      "presets": [
+        ["@babel/env", {
+        "targets": "> 0.25%, not dead"
+      }], "@babel/typescript"]
+    },
+    "cjs": {
+      "presets": [
+        ["@babel/env", {
+        "modules":"commonjs"
+      }], "@babel/typescript"]
+    },
+   "prod": {
+     "presets": [
+       [
+         "@babel/env",
+         {
+           "targets": { "node": "18" },
+           "useBuiltIns": "usage",
+           "corejs": 3
+         }
+       ],
+       "@babel/typescript"
+     ]
+   }
+  },
   "plugins": [
+    "@babel/plugin-transform-optional-chaining",
     "@babel/plugin-transform-typescript",
     "transform-class-properties"
   ]

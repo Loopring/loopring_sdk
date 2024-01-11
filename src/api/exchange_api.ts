@@ -1,17 +1,13 @@
 /* eslint-disable camelcase  */
-
 import { BaseAPI } from './base_api'
-
 import {
   LOOPRING_URLs,
   SIG_FLAG,
   ReqMethod,
   Side,
-  MarketStatus,
   VipCatergory,
   TradingInterval,
   ReqParams,
-  TokenInfo,
   MarketTradeInfo,
   FiatPriceInfo,
   LoopringMap,
@@ -37,7 +33,6 @@ import {
   VipFeeRateInfoMap,
   AccountInfo,
   TokenAddress,
-  SoursURL,
   SEP,
   GetALLTokenBalancesRequest,
   TOKENMAPLIST,
@@ -47,11 +42,11 @@ import {
   GetDatacenterTokenQuoteTrendRequest,
   DatacenterTokenInfoSimple,
   GetDatacenterTokenOhlcvQuoteTrendRequest,
+  GetCmcTokenRelationsRequest,
 } from '../defs'
 
 import BigNumber from 'bignumber.js'
 import { getBaseQuote, makeMarket, makeMarkets } from '../utils'
-import { isArray } from 'lodash'
 
 const checkAmt = (rawStr: string) => {
   if (rawStr.trim() === '') {
@@ -1227,7 +1222,7 @@ export class ExchangeAPI extends BaseAPI {
   public async getTokenInfo<R = DatacenterTokenInfo>(
     request: { token: string; currency: 'USD' },
     url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_INFO,
-  ): Promise<R & { raw_data: R }> {
+  ) {
     const reqParams: ReqParams = {
       url,
       queryParams: { ...request },
@@ -1243,7 +1238,7 @@ export class ExchangeAPI extends BaseAPI {
     }
     return {
       raw_data,
-      ...raw_data,
+      list: raw_data.data,
     }
   }
 
@@ -1253,7 +1248,13 @@ export class ExchangeAPI extends BaseAPI {
   ): Promise<{ raw_data: R; list: R }> {
     const reqParams: ReqParams = {
       url,
-      queryParams: { request, tokens: request.tokens?.join(',') ?? '' },
+      queryParams: {
+        ...request,
+        cmcTokenIds:
+          typeof request.cmcTokenIds === 'string'
+            ? request.cmcTokenIds
+            : request.cmcTokenIds?.join(','),
+      },
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     }
@@ -1265,7 +1266,7 @@ export class ExchangeAPI extends BaseAPI {
       }
     }
     return {
-      raw_data: raw_data?.data,
+      raw_data,
       list: raw_data.data,
     }
   }
@@ -1301,6 +1302,44 @@ export class ExchangeAPI extends BaseAPI {
       url,
       queryParams: {
         ...request,
+      },
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      raw_data,
+      list: raw_data?.data,
+    }
+  }
+  public async getCmcTokenRelations<
+    R = {
+      cmcTokenId: number
+      tokenAddress: string
+      symbol: string
+    }[],
+  >(
+    request: GetCmcTokenRelationsRequest,
+    url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_GETCMCTOKENRELATIONS,
+  ): Promise<{ list: R; raw_data: R }> {
+    const reqParams: ReqParams = {
+      url,
+      queryParams: {
+        ...request,
+        cmcTokenIds:
+          typeof request.cmcTokenIds === 'string'
+            ? request.cmcTokenIds
+            : request.cmcTokenIds?.join(','),
+        tokenAddresses:
+          typeof request.tokenAddresses === 'string'
+            ? request.tokenAddresses
+            : request.tokenAddresses?.join(',') ?? '',
       },
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,

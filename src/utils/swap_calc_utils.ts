@@ -24,7 +24,6 @@ import {
   TokenInfo,
   TokenVolumeV3,
   XOR,
-  VaultAccountInfo,
   VaultMarket,
 } from '../defs'
 
@@ -975,23 +974,29 @@ export function calcDefi({
   isInputSell,
   sellAmount,
   buyAmount,
-  feeVol,
+  defaultFee,
+  maxFeeBips,
   marketInfo,
   tokenSell,
   tokenBuy,
   buyTokenBalanceVol,
+  withdrawFeeBips,
 }: {
   isJoin: boolean
   isInputSell: boolean
-  feeVol: string
+  maxFeeBips: number
+  defaultFee: string
   marketInfo: DefiMarketInfo
   tokenSell: TokenInfo
   tokenBuy: TokenInfo
   buyTokenBalanceVol: string
+  withdrawFeeBips?: string | undefined
+  // feeVol
 } & XOR<{ sellAmount: string }, { buyAmount: string }>): {
   sellVol: string
   buyVol: string
   maxSellVol: string
+  feeVol: string
   maxFeeBips: number
   miniSellVol: string
   isJoin: boolean
@@ -999,13 +1004,8 @@ export function calcDefi({
 } {
   /** isDeposit calc sellPrice & buyPrice */
   const [sellPrice] = isJoin ? [marketInfo.depositPrice] : [marketInfo.withdrawPrice]
-
   /** calc MiniSellVol & MaxSellVol**/
   const dustToken = tokenBuy
-
-  const minVolBuy = BigNumber.max(fm.toBig(feeVol).times(2), dustToken.orderAmounts.dust)
-
-  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice), tokenSell.orderAmounts.dust)
   const maxSellVol = fm.toBig(buyTokenBalanceVol).div(sellPrice)
   /** calc MiniSellVol & MaxSellVol END**/
   // debugger;
@@ -1019,17 +1019,31 @@ export function calcDefi({
     sellVol = buyVol.div(sellPrice)
   }
   /** View input calc sellVol & buyVol END */
+  let feeVol
 
   /** calc current maxFeeBips **/
-  const maxFeeBips = Math.ceil(fm.toBig(feeVol).times(10000).div(buyVol).toNumber())
-
+  let cosFeeBips: any = buyVol.gt(0)
+    ? fm.toBig(defaultFee).times(10000).div(buyVol).toFixed(0, BigNumber.ROUND_CEIL)
+    : 0
+  let _maxFeeBips: any = BigNumber.max(cosFeeBips, 5, maxFeeBips)
+  if (!isJoin && withdrawFeeBips) {
+    _maxFeeBips = fm
+      .toBig(_maxFeeBips)
+      .plus(withdrawFeeBips ?? 0)
+      .toString()
+  }
+  feeVol = fm.toBig(_maxFeeBips).div(10000).times(buyVol).toString()
+  // defaultFee
+  const minVolBuy = BigNumber.max(fm.toBig(feeVol).times(2), dustToken.orderAmounts.dust)
+  const miniSellVol = BigNumber.max(minVolBuy.div(sellPrice), tokenSell.orderAmounts.dust)
   return {
     sellVol: sellVol.toString(),
     buyVol: buyVol.toString(),
     maxSellVol: maxSellVol.toString(),
+    feeVol,
     isJoin,
     isInputSell,
-    maxFeeBips,
+    maxFeeBips: Number(_maxFeeBips),
     miniSellVol: miniSellVol.toString(),
   }
 }
@@ -1246,10 +1260,6 @@ export function calcDex<R = BTRADE_MARKET | VaultMarket>({
         ).toString()
         amountB = outputOrderbook
         buyVol = toWEI(tokenMap, buy, outputOrderbook)
-        // amountB = fm
-        //   .toBig(buyVol ?? 0)
-        //   .div("1e" + buyToken.decimals)
-        //   .toString();
       }
     }
   } else {
@@ -1311,7 +1321,6 @@ export function calcDex<R = BTRADE_MARKET | VaultMarket>({
     amountB: amountB?.toString(),
     amountS: amountS?.toString(),
     amountBSlipped,
-    // amountBMiniReceiveCutFee,
     exceedDepth,
   }
 }

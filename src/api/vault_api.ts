@@ -1,10 +1,8 @@
 import { BaseAPI } from './base_api'
-import * as loopring_defs from '../defs/loopring_defs'
-import { LOOPRING_URLs, ReqMethod, SIG_FLAG, SigPatchField } from '../defs'
+import * as loopring_defs from '../defs'
 import { get_EddsaSig_NFT_Order, getMidPrice, sortObjDictionary } from '../index'
 import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
-import { VaultOperationEnum, VaultRepayRequestV3WithPatch } from '../defs/loopring_defs'
 
 export class VaultAPI extends BaseAPI {
   public async getVaultTokens<R = loopring_defs.VaultToken[]>(): Promise<{
@@ -12,11 +10,10 @@ export class VaultAPI extends BaseAPI {
     tokens: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_TOKENS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_TOKENS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
-
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
       return {
@@ -33,11 +30,11 @@ export class VaultAPI extends BaseAPI {
     userBalances: loopring_defs.LoopringMap<R>
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_BALANCE,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_BALANCE,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -64,9 +61,9 @@ export class VaultAPI extends BaseAPI {
     markets: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_MARKETS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_MARKETS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -83,11 +80,11 @@ export class VaultAPI extends BaseAPI {
     apiKey: string,
   ): Promise<{ raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_GETAVAILABLENFT,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETAVAILABLENFT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -104,11 +101,11 @@ export class VaultAPI extends BaseAPI {
     apiKey: string,
   ): Promise<{ raw_data: R } & R> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_ACCOUNT,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_ACCOUNT,
       queryParams: request,
       apiKey,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -127,7 +124,7 @@ export class VaultAPI extends BaseAPI {
   >(
     request: {
       accountId: number
-      operateTypes: VaultOperationEnum[] | string //  VaultOperationType seperate by ',',
+      operateTypes: loopring_defs.VaultOperationEnum[] | string //  VaultOperationType seperate by ',',
       offset: number
       start?: number
       end?: number
@@ -136,7 +133,7 @@ export class VaultAPI extends BaseAPI {
     apiKey: string,
   ): Promise<{ raw_data: { data: R[]; total: number } } & { list: R[]; totalNum: number }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_GETOPERATIONS,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETOPERATIONS,
       queryParams: {
         ...request,
         operateTypes:
@@ -144,9 +141,9 @@ export class VaultAPI extends BaseAPI {
             ? request.operateTypes
             : request.operateTypes.join(','),
       },
-      method: ReqMethod.GET,
+      method: loopring_defs.ReqMethod.GET,
       apiKey,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -169,11 +166,11 @@ export class VaultAPI extends BaseAPI {
     apiKey: string,
   ): Promise<R & { raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_GETOPERATIONBY_HASH,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETOPERATIONBY_HASH,
       queryParams: request,
-      method: ReqMethod.GET,
+      method: loopring_defs.ReqMethod.GET,
       apiKey,
-      sigFlag: SIG_FLAG.NO_SIG,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -199,10 +196,10 @@ export class VaultAPI extends BaseAPI {
     raw_data: R
   }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_DEPTH,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_DEPTH,
       queryParams: { ...request },
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -257,10 +254,10 @@ export class VaultAPI extends BaseAPI {
     }
     const dataToSig: Map<string, any> = sortObjDictionary(_request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_JOIN,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_JOIN,
       bodyParams: _request,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: eddsaKey,
@@ -298,14 +295,14 @@ export class VaultAPI extends BaseAPI {
     ]
 
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_ORDER,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_ORDER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG_POSEIDON,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG_POSEIDON,
       sigObj: {
         dataToSig,
-        sigPatch: SigPatchField.EddsaSignature,
+        sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
     }
@@ -327,11 +324,11 @@ export class VaultAPI extends BaseAPI {
   }) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_EXIT,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_EXIT,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -347,9 +344,9 @@ export class VaultAPI extends BaseAPI {
 
   public async submitVaultTransfer<R>() {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_TRANSFER,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_TRANSFER,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -370,11 +367,11 @@ export class VaultAPI extends BaseAPI {
   }) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_LOAN,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_LOAN,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.EDDSA_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
       sigObj: {
         dataToSig,
         PrivateKey: privateKey,
@@ -403,11 +400,11 @@ export class VaultAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_VAULT_REPAY,
+      url: loopring_defs.LOOPRING_URLs.POST_VAULT_REPAY,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature: undefined,
     }
 
@@ -421,9 +418,9 @@ export class VaultAPI extends BaseAPI {
 
   public async getVaultInfos<R>(): Promise<{ raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.GET_VAULT_INFOS,
-      method: ReqMethod.GET,
-      sigFlag: SIG_FLAG.NO_SIG,
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_INFOS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -449,11 +446,11 @@ export class VaultAPI extends BaseAPI {
       request.counterFactualInfo = counterFactualInfo
     }
     const reqParams: loopring_defs.ReqParams = {
-      url: LOOPRING_URLs.POST_INTERNAL_TRANSFER,
+      url: loopring_defs.LOOPRING_URLs.POST_INTERNAL_TRANSFER,
       bodyParams: request,
       apiKey,
-      method: ReqMethod.POST,
-      sigFlag: SIG_FLAG.NO_SIG,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature: undefined,
     }
     let raw_data
@@ -467,6 +464,31 @@ export class VaultAPI extends BaseAPI {
       return { raw_data, ...raw_data }
     } catch (error) {
       throw error as AxiosResponse
+    }
+  }
+
+  public async getVaultPrice(request: { tokenIds: string | number[] }) {
+    // let { request, eddsaKey, apiKey } = req
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_PRICE,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...request,
+        tokenIds:
+          typeof request.tokenIds === 'string' ? request?.tokenIds : request.tokenIds?.join(','),
+      },
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    } else {
+      return {
+        list: [...raw_data],
+        raw_data,
+      }
     }
   }
 }

@@ -10,11 +10,13 @@ import {
   Currency,
   IntervalType,
   MarketStatus,
+  NetworkWallet,
   OffchainFeeReqType,
   OffchainNFTFeeReqType,
   OrderStatus,
   OrderType,
   OrderTypeResp,
+  PublicKey,
   ReqMethod,
   RuleType,
   Side,
@@ -47,7 +49,6 @@ export interface VipFeeRateInfo {
 
 export type VipFeeRateInfoMap = { [key: string]: VipFeeRateInfo }
 
-export type TX_HASH_API = { hash?: string; resultInfo?: RESULT_INFO }
 export type TX_HASH_RESULT<T> = T & { raw_data: T }
 
 export interface ReqOptions {
@@ -58,40 +59,6 @@ export interface ReqOptions {
   url?: string
 }
 
-export enum NetworkWallet {
-  ETHEREUM = 'ETHEREUM',
-  ARBITRUM = 'ARBITRUM',
-  GOERLI = 'GOERLI',
-  TAIKO = 'TAIKO',
-}
-
-export interface ReqParams {
-  url: string
-  method: ReqMethod
-  sigFlag: SIG_FLAG
-
-  queryParams?: any
-  bodyParams?: any
-
-  apiKey?: string
-
-  sigObj?: {
-    dataToSig?: any
-    sig?: string
-    sigPatch?: string
-
-    PrivateKey?: string
-
-    owner?: string
-    pwd?: string
-    web3?: any
-    hasDataStruct?: boolean
-    ecdsaPrivateKey?: string
-  }
-  eddsaSignature?: string
-  ecdsaSignature?: string
-  eddsaSignatureREFER?: boolean
-}
 
 export interface LoopringMap<T> {
   [key: string]: T
@@ -2516,20 +2483,6 @@ export interface OffChainWithdrawalRequestV3 {
  * @export
  * @interface PublicKey
  */
-export interface PublicKey {
-  /**
-   * The public keys x part.
-   * @type {string}
-   * @memberof PublicKey
-   */
-  x: string
-  /**
-   * The public keys y part.
-   * @type {string}
-   * @memberof PublicKey
-   */
-  y: string
-}
 
 export interface UpdateAccountRequestV3 {
   /**
@@ -3806,6 +3759,8 @@ export type LuckyTokenItemForReceive = {
   isNft?: boolean
   isOfficial?: boolean
   nftExpireTime: number
+  notifyType?: string
+  serialNo?: number 
 }
 export type BlindBoxClaimInfo = {
   // 盲盒信息
@@ -3823,6 +3778,7 @@ export type BlindBoxClaimInfo = {
   openTime: string
   expireTime: string
   createdAt: number
+  serialNo?: number
 }
 export type LuckyTokenBlindBoxItemReceive = {
   luckyToken: LuckyTokenItemForReceive
@@ -3848,6 +3804,7 @@ export type LuckTokenClaim = {
   amount: number
   createdAt: number
   claimId: number
+  serialNo?: number
 }
 
 export type LuckyTokenSignerFlag = 0 | 1
@@ -3944,6 +3901,7 @@ export interface OriginLuckTokenWithdrawsRequestV3 {
   }
   nftData?: string
   luckyTokenHash?: string
+  serialNo?: number
 }
 
 export interface OriginLuckTokenWithdrawsRequestV3WithPatch {
@@ -4367,6 +4325,7 @@ export enum LOCK_TYPE {
   BTRADE = 'BTRADE',
   L2STAKING = 'L2STAKING',
   STOP_LIMIT = 'STOP_LIMIT',
+  VAULT_COLLATERAL = 'VAULT_COLLATERAL',
 }
 
 export type getUserLockSummaryRequest = {
@@ -4420,12 +4379,11 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
    * @memberof VaultToken
    */
   gasAmounts: any
-  // enabled: boolean
-  btradeAmount: string // important for vault
   vaultTokenAmounts: {
-    // important for vault
+    maxAmount: string
     minAmount: string
     qtyStepScale: number
+    minLoanAmount: string
     // bit1:show
     // bit2:join
     // bit3:exit
@@ -4437,6 +4395,7 @@ export type VaultToken = Omit<TokenInfo, 'type'> & {
 
 export type VaultMarket = {
   market: string
+  wsMarket: string
   baseTokenId: number
   quoteTokenId: number
   precisionForPrice: number
@@ -4451,7 +4410,7 @@ export type VaultMarket = {
     base: string
     quote: string
   }
-  btradeAmount: {
+  maxAmount: {
     base: string
     quote: string
   }
@@ -4503,12 +4462,12 @@ export enum VaultAccountStatus {
 export type VaultAccountInfo = {
   accountStatus: VaultAccountStatus
   marginLevel: string
-  totalBalanceOfUsd: string
-  totalDebtOfUsd: string
-  totalEquityOfUsd: string
-  totalCollateralOfUsd: string
+  totalBalanceOfUsdt: string
+  totalDebtOfUsdt: string
+  totalEquityOfUsdt: string
+  totalCollateralOfUsdt: string
   collateralInfo: CollateralInfo
-  maxBorrowableOfUsd: string
+  maxBorrowableOfUsdt: string
   userAssets: VaultBalance[]
   openDate: number
 }
@@ -4530,6 +4489,7 @@ export enum VaultOperationEnum {
   VAULT_CLOSE_OUT,
 }
 export enum VaultOperationStatus {
+  VAULT_STATUS_EARNING = 'VAULT_STATUS_EARNING',
   VAULT_STATUS_RECEIVED = 'VAULT_STATUS_RECEIVED',
   VAULT_STATUS_PROCESSING = 'VAULT_STATUS_PROCESSING',
   VAULT_STATUS_SUCCEED = 'VAULT_STATUS_SUCCEED',
@@ -4632,7 +4592,7 @@ export interface DatacenterTokenQuote {
 }
 
 export interface GetDatacenterTokenInfoRequest {
-  tokens?: string[]
+  cmcTokenIds?: number[] | string
   currency: 'USD'
 }
 export interface DatacenterTokenInfoSimple {
@@ -4686,12 +4646,19 @@ export enum OHLCVDatacenterRange {
 }
 
 export interface GetDatacenterTokenQuoteTrendRequest {
-  token: string
+  token?: string
+  cmcTokenId?: number
   range?: DatacenterRange
   currency: 'USD'
 }
+
+export interface GetCmcTokenRelationsRequest {
+  tokenAddresses?: string[] | string
+  cmcTokenIds?: string[] | string
+}
 export interface GetDatacenterTokenOhlcvQuoteTrendRequest {
-  token: string
+  token?: string
+  cmcTokenId?: number
   range?: OHLCVDatacenterRange
   currency: 'USD'
 }
@@ -4705,6 +4672,52 @@ export enum GetDatacenterTokenQuoteTrend {
   percentChange7D,
   percentChange30D,
   marketCap,
+}
+export enum NotificationMessageType {
+  L1_CREATED = 0, //noweb
+  L2_CREATED = 1,
+  L1_RECEIVE = 2,
+  L1_SEND = 3,
+  L2_RECEIVE = 4,
+  L2_SEND = 5,
+  DEPOSIT = 6,
+  WITHDRAW = 7,
+  GUARDIAN_RECEIVE_PENDING_REQUEST = 8,
+  REQUEST_UPDATED = 9,
+  GUARDIAN_ADDITION = 10,
+  EVENT = 11,
+  L1_CREATING = 12,
+  GUARDIAN_COMMON = 13,
+  PROTECTED_ADD_GUARDIAN_SUCCESS = 14,
+  PROTECTED_ADD_GUARDIAN_REJECTED = 15,
+  PROTECTED_ADD_GUARDIAN_NONCE_FAILED = 16,
+  PROTECTED_REQUEST_APPROVED = 17,
+  PROTECTED_REQUEST_REJECTED = 18,
+  QUOTA_CHANGED_ON_CHAIN_SUCCESS = 19,
+  PROTECTED_REMOVE_GUARDIAN_SUCCESS = 20,
+  ADD_TRUST_ON_CHAIN_SUCCESS = 30,
+  REMOVE_TRUST_ON_CHAIN_SUCCESS = 31,
+  WALLET_LOCKED = 32,
+  WALLET_UNLOCKED = 33,
+  DEAD_LOCK_GUARDIAN = 34,
+  GUARDIAN_SAFETY_CHECK_NOTIFICATION = 35,
+  TAIKO_A3_CREATE = 36,
+  FACING_FORCED_SETTLEMENT = 40,
+  DUAL_SETTLED = 50,
+  DUAL_RECURES_ORDER_SWAP = 51,
+  DUAL_RECURES_RETRY_FAILED = 52,
+  DUAL_RECURES_RETRY_SUCCESS = 53,
+  DUAL_PRICE_ALERT = 54,
+}
+export type UserNotification = {
+  id: number
+  walletAddress: string
+  network: NetworkWallet
+  messageType: NotificationMessageType | number
+  message: string
+  read: boolean
+  createAt: number
+  redirectionContext: string
 }
 
 //

@@ -1,5 +1,5 @@
 // import sha256 from 'crypto-js/sha256'
-import crypto from 'crypto-js'
+import * as crypto from 'crypto-js'
 
 import * as abi from 'ethereumjs-abi'
 import * as sigUtil from 'eth-sig-util'
@@ -128,7 +128,6 @@ export async function generateKeyPair(
   publicKey: { x: string; y: string } | undefined = undefined,
 ) {
   // LOG: for signature
-
   myLog(
     'personalSign ->',
     'counterFactualInfo',
@@ -243,9 +242,7 @@ const genSigWithPadding = (PrivateKey: string | undefined, hash: any) => {
     const padding = new Array(64 - signatureS_Hex.length).fill(0)
     signatureS_Hex = padding.join('').toString() + signatureS_Hex
   }
-
   const result = '0x' + signatureRx_Hex + signatureRy_Hex + signatureS_Hex
-  // myLog("signature result", result)
   return result
 }
 
@@ -378,7 +375,6 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
     bigIntInputs.push(BigNumber.from(input))
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams)
-  // myLog("getEdDSASigWithPoseidon", hash.toHexString(), bigIntInputs);
   return {
     hash,
     result: genSigWithPadding(PrivateKey, hash),
@@ -485,7 +481,8 @@ export async function getEcDSASig(
     case GetEcDSASigType.HasDataStruct:
       try {
         response = await new Promise((resolve, reject) => {
-          myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
+          // LOG: for signature
+          // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
           web3.currentProvider.sendAsync(
             {
               method: 'eth_signTypedData_v4',
@@ -498,7 +495,6 @@ export async function getEcDSASig(
                 reject(error || result?.error)
                 return
               }
-              myLog('eth_signTypedData_v4', result)
               let _result
               if (typeof result === 'string') {
                 // resolve(result);
@@ -852,7 +848,6 @@ export function getNftData(request: NFTMintRequestV3) {
     bigIntInputs.push(BigNumber.from(input))
   }
   const hash = permunation.poseidon(bigIntInputs, poseidonParams)
-  // myLog("get hasher *16 hash:", hash);
   return hash
 }
 
@@ -1028,7 +1023,7 @@ export function get_EddsaSig_NFT_Order(request: NFTOrderRequestV3, eddsaKey: str
     new BN(ethUtil.toBuffer(request.exchange)).toString(),
     request.storageId,
     request.accountId,
-    request.sellToken?.tokenId ? request.sellToken.tokenId : '',
+    request.sellToken?.tokenId !== undefined ? request.sellToken.tokenId : '',
     (request.buyToken as any)?.nftData
       ? (request.buyToken as NFTTokenAmountInfo).nftData
       : request.buyToken.tokenId,
@@ -1371,13 +1366,9 @@ export function getNFTTransferTypedData(
 }
 
 export function eddsaSign(typedData: any, eddsaKey: string) {
-  const hash = fm.toHex(
-    sigUtil.TypedDataUtils.sign(
-      typedData,
-      // sigUtil.SignTypedDataVersion.V4
-    ),
-  )
-  myLog('eddsaSign', hash)
+  const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData))
+  // LOG: for signature
+  // myLog('eddsaSign', hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
   const signature = EDDSAUtil.sign(eddsaKey, sigHash)
   return {
@@ -1421,7 +1412,6 @@ export function getAmmJoinEcdsaTypedData(data: JoinAmmPoolRequest, patch: AmmPoo
     validUntil: data.validUntil,
   }
 
-  // myLog('message:', message)
   const typedData = {
     types: {
       EIP712Domain: [

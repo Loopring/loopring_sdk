@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BaseAPI } from './base_api'
 import CID from 'cids'
-import { CollectionMeta, LOOPRING_URLs, RESULT_INFO } from '../defs'
+import * as loopring_defs from '../defs'
 import {
   ChainId,
   ConnectorError,
@@ -16,17 +16,9 @@ import {
 import { myLog } from '../utils/log_tools'
 import * as ethUtil from 'ethereumjs-util'
 import { genExchangeData, sendRawTx } from './contract_api'
-import contracts from './ethereum/contracts'
-import {
-  ApproveParam,
-  CallRefreshNFT,
-  ContractNFTMetaParam,
-  DepositNFTParam,
-  IsApproveParam,
-  UserNFTBalanceParam,
-} from '../defs/nft_defs'
+import { contracts } from './ethereum/contracts'
+
 import BN from 'bn.js'
-import * as loopring_defs from '../defs/loopring_defs'
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -34,6 +26,12 @@ const CREATION_CODE = {
   [ChainId.MAINNET]:
     '3d602d80600a3d3981f3363d3d373d3d3d363d73b25f6d711aebf954fb0265a3b29f7b9beba7e55d5af43d82803e903d91602b57fd5bf3',
 }
+const {
+  Contracts: {
+    erc721Abi: { erc721 },
+    erc1155Abi: { erc1155 },
+  },
+} = contracts
 
 export enum NFTType {
   ERC1155 = 0,
@@ -83,10 +81,7 @@ export class NFTAPI extends BaseAPI {
   }
 
   private _genContract(web3: any, contractAddress: string, type: NFTType = NFTType.ERC1155) {
-    return new web3.eth.Contract(
-      type === NFTType.ERC1155 ? contracts.Contracts.erc1155Abi : contracts.Contracts.erc721Abi,
-      contractAddress,
-    )
+    return new web3.eth.Contract(type === NFTType.ERC1155 ? erc1155 : erc721, contractAddress)
   }
 
   /**
@@ -103,7 +98,7 @@ export class NFTAPI extends BaseAPI {
     account,
     nftId,
     nftType = NFTType.ERC1155,
-  }: UserNFTBalanceParam): Promise<{
+  }: loopring_defs.UserNFTBalanceParam): Promise<{
     count?: string
   }> {
     try {
@@ -157,7 +152,7 @@ export class NFTAPI extends BaseAPI {
     try {
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
-        url: LOOPRING_URLs.GET_NFTs_INFO,
+        url: loopring_defs.LOOPRING_URLs.GET_NFTs_INFO,
         method: ReqMethod.GET,
         queryParams: { nftDatas: nftDatas.join(',') },
       }
@@ -188,13 +183,13 @@ export class NFTAPI extends BaseAPI {
   }
 
   public async callRefreshNFT(
-    request: CallRefreshNFT,
+    request: loopring_defs.CallRefreshNFT,
   ): Promise<{ status: string; createdAt: number; updatedAt: number } | undefined> {
     try {
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
         bodyParams: request,
-        url: LOOPRING_URLs.POST_NFT_VALIDATE_REFRESH_NFT,
+        url: loopring_defs.LOOPRING_URLs.POST_NFT_VALIDATE_REFRESH_NFT,
         method: ReqMethod.POST,
       }
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -231,8 +226,8 @@ export class NFTAPI extends BaseAPI {
    * @param nftType
    */
   public async getContractNFTMeta(
-    { web3, tokenAddress, nftId, nftType = NFTType.ERC1155 }: ContractNFTMetaParam,
-    _IPFS_META_URL: string = LOOPRING_URLs.IPFS_META_URL,
+    { web3, tokenAddress, nftId, nftType = NFTType.ERC1155 }: loopring_defs.ContractNFTMetaParam,
+    _IPFS_META_URL: string = loopring_defs.LOOPRING_URLs.IPFS_META_URL,
   ) {
     try {
       myLog(tokenAddress, 'nftid', nftId, web3.utils.hexToNumberString(nftId))
@@ -244,7 +239,7 @@ export class NFTAPI extends BaseAPI {
         tokenAddress,
         nftType,
       )
-      result = result.replace(/^ipfs:\/\/(ipfs\/)?/, LOOPRING_URLs.IPFS_META_URL)
+      result = result.replace(/^ipfs:\/\/(ipfs\/)?/, loopring_defs.LOOPRING_URLs.IPFS_META_URL)
       result = result.replace('{id}', web3.utils.hexToNumberString(nftId))
       return await fetch(result).then((response) => response.json())
     } catch (err) {
@@ -282,7 +277,7 @@ export class NFTAPI extends BaseAPI {
     nonce,
     approved = true,
     sendByMetaMask = true,
-  }: ApproveParam) {
+  }: loopring_defs.ApproveParam) {
     let data: any
 
     if (nftType === NFTType.ERC1155) {
@@ -350,7 +345,7 @@ export class NFTAPI extends BaseAPI {
     exchangeAddress,
     nftType = NFTType.ERC1155,
     tokenAddress,
-  }: IsApproveParam) {
+  }: loopring_defs.IsApproveParam) {
     try {
       const result = await this.callContractMethod(
         web3,
@@ -399,7 +394,7 @@ export class NFTAPI extends BaseAPI {
     nonce,
     extraData,
     sendByMetaMask = true,
-  }: DepositNFTParam) {
+  }: loopring_defs.DepositNFTParam) {
     const data = genExchangeData(NFTMethod.depositNFT, {
       from,
       to: from,
@@ -475,14 +470,14 @@ export class NFTAPI extends BaseAPI {
     }
   }
 
-  public async getPublicCollectionById<R extends CollectionMeta>(request: {
+  public async getPublicCollectionById<R extends loopring_defs.CollectionMeta>(request: {
     id: string
-  }): Promise<({ raw_data: R } & CollectionMeta) | RESULT_INFO> {
+  }): Promise<({ raw_data: R } & loopring_defs.CollectionMeta) | loopring_defs.RESULT_INFO> {
     try {
       const reqParams: ReqParams = {
         sigFlag: SIG_FLAG.NO_SIG,
         queryParams: request,
-        url: LOOPRING_URLs.GET_NFT_COLLECTION_PUBLISH,
+        url: loopring_defs.LOOPRING_URLs.GET_NFT_COLLECTION_PUBLISH,
         method: ReqMethod.GET,
       }
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -491,7 +486,7 @@ export class NFTAPI extends BaseAPI {
           ...raw_data?.resultInfo,
         }
       }
-      const result = raw_data as CollectionMeta
+      const result = raw_data as loopring_defs.CollectionMeta
       return {
         ...result,
         raw_data,
@@ -506,7 +501,7 @@ export class NFTAPI extends BaseAPI {
 
   async getCollectionWholeNFTs<R>(request: loopring_defs.GetCollectionWholeNFTsRequest) {
     const reqParams = {
-      url: LOOPRING_URLs.GET_COLLECTION_WHOLE_NFTS,
+      url: loopring_defs.LOOPRING_URLs.GET_COLLECTION_WHOLE_NFTS,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -548,7 +543,7 @@ export class NFTAPI extends BaseAPI {
   }
   async getHadUnknownCollection<R>(request: { accountId: number }): Promise<boolean> {
     const reqParams = {
-      url: LOOPRING_URLs.GET_USER_HAD_UNKNOWN_COLLECTION,
+      url: loopring_defs.LOOPRING_URLs.GET_USER_HAD_UNKNOWN_COLLECTION,
       queryParams: request,
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
@@ -560,29 +555,23 @@ export class NFTAPI extends BaseAPI {
       }
     }
     return raw_data
-    // if (raw_data.nftTokenInfos.length) {
-    //   raw_data.nftTokenInfos = raw_data.nftTokenInfos.reduce(
-    //     (prev: loopring_defs.UserNFTBalanceInfo[], item: loopring_defs.UserNFTBalanceInfo) => {
-    //       if (item.nftId && item.nftId.startsWith('0x')) {
-    //         const hashBN = new BN(item.nftId.replace('0x', ''), 16)
-    //         item.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
-    //         if (
-    //           request.metadata === true &&
-    //           item.metadata &&
-    //           item.metadata.nftId &&
-    //           item.metadata.nftId.startsWith('0x')
-    //         ) {
-    //           // const hashBN = new BN(item.metadata.nftId.replace("0x", ""), 16);
-    //           item.metadata.nftId = '0x' + hashBN.toString('hex').padStart(64, '0')
-    //         }
-    //       }
-    //       return [...prev, item]
-    //     },
-    //     [],
-    //   )
-    //   // const hashBN = new BN(raw_data.transactions.metadata.nftId.replace("0x", ""), 16);
-    //   // raw_data.transactions.metadata.nftId= "0x" + hashBN.toString("hex").padStart(64, "0");
-    // }
-    // return {}
+  }
+  async getUserNFTBurnAddress<R>(request: {
+    accountId: number
+    tokenId: number
+  }): Promise<boolean> {
+    const reqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_USER_NFT_BURN_ADDRESS,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return raw_data
   }
 }

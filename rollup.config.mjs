@@ -1,53 +1,68 @@
-// const replace = require();
-// const babel = require();
-// const  = require("@rollup/plugin-node-resolve");
-// import merge from "deepmerge";
-import merge  from "deepmerge";
-
-import replace from "@rollup/plugin-replace";
-import resolve from "@rollup/plugin-node-resolve";
-import {createBasicConfig} from '@open-wc/building-rollup';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from "@rollup/plugin-typescript";
-import json from  "@rollup/plugin-json";
-
-export default merge(createBasicConfig({ rootDir:"./src",outputDir:"dist"}),{
-  input: "./src/index.ts",
-  preserveModules: true,
+import babel from '@rollup/plugin-babel'
+import terser from '@rollup/plugin-terser'
+import json from '@rollup/plugin-json';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2';
+import { builtinModules } from 'module';
+import pkg from  './package.json'  assert { type: "json" };
+// console.log('pkg',pkg)
+module.exports = {
+  input: pkg.source,
+  output: [
+    { file:pkg.main  , format: 'cjs', sourcemap: true, plugins: [terser()], },
+    { file: pkg.module , format: 'esm', sourcemap: true, plugins: [terser()], }
+  ],
+  external: [
+    ...builtinModules,
+    ...(pkg.dependencies ? Object.keys(pkg.dependencies) : []),
+    ...(pkg.devDependencies ? Object.keys(pkg.devDependencies) : []),
+    ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [])
+  ],
+  watch: {
+    include: 'lib/**'
+  },
   plugins: [
-   json(),
-
-  // babel(),
-  replace({
-    "process.env.NODE_ENV": JSON.stringify('production'),
-    preventAssignment: true,
-  }),
-  resolve(),
-  typescript({ tsconfig: "./tsconfig.json" }),
-  commonjs({
-    defaultIsModuleExports: 'auto',
-  }),
-
-],})
-// const baseConfig = createBasicConfig({
-  // input: "./src/index.ts",
-
-
-
-  // rollup(config, options) {
-  //   config.output.esModule = true;
-  //   config.plugins = config.plugins.map((p) =>
-  //       p.name === "replace"
-  //           ? replace({
-  //             "process.env.NODE_ENV": JSON.stringify(options.env),
-  //             preventAssignment: true,
-  //           })
-  //           : p
-  //   );
-  //   config.plugins.push(resolve());
-  //   config.plugins.push(babel());
-  //   return config;
-  // },
-// });
-// export default baseConfig;
-
+    json(),
+    typescript({
+          abortOnError: process.env.NODE_ENV === 'production',
+          tsconfig:'./tsconfig.json',
+          tsconfigDefaults: {
+            exclude: [
+              // all TS test files, regardless whether co-located or in test/ etc
+              '**/*.spec.ts',
+              '**/*.test.ts',
+              '**/*.spec.ts',
+              '**/*.test.ts',
+              // TS defaults below
+              'node_modules',
+              'bower_components',
+              'jspm_packages',
+            ],
+            compilerOptions: {
+              sourceMap: true,
+              declaration: true,
+              jsx: 'react',
+            },
+          },
+          tsconfigOverride: {
+            compilerOptions: Object.assign({
+              // TS -> esnext, then leave the rest to babel-preset-env
+              target: 'esnext' }, { declaration: true, declarationMap: true }),
+          },
+        }
+    ),
+    commonjs() ,
+    nodeResolve({
+      exportConditions: ['import', 'default', 'require'],
+      mainFields: ['module', 'main', 'browser'],
+      modulesOnly: true,
+      preferBuiltins: false,
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      include: ['src/**/*.ts'],
+      exclude: './node_modules/**',
+    }),
+  ]
+};
