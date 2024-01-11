@@ -86,6 +86,7 @@ export interface ReqParams {
     pwd?: string
     web3?: any
     hasDataStruct?: boolean
+    ecdsaPrivateKey?: string
   }
   eddsaSignature?: string
   ecdsaSignature?: string

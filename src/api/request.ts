@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ReqParams, ReqOptions } from '../defs/loopring_defs'
 import { SIG_FLAG } from '../defs/loopring_enums'
-import { getEdDSASig, getEdDSASigWithPoseidon } from './sign/sign_tools'
+import { getEdDSASig, getEdDSASigWithPoseidon, getRequstEcDSASig } from './sign/sign_tools'
 import { sortObject } from '../utils/obj_tools'
+import { myLog } from '../utils/log_tools'
 
 /**
  *
@@ -64,7 +65,7 @@ export class Request {
         // 'Accept-Encoding': 'gzip, deflate, br',
         feeVersion: 'v2',
         'Content-Type': 'application/json',
-        pf: 'web', // tag for recognizing source
+        pf: 'WEB', // tag for recognizing source
       },
 
       validateStatus: function (status: any) {
@@ -77,7 +78,6 @@ export class Request {
 
       insecure: true,
     }
-
     this._axios = axios.create(this.baseOptions)
   }
 
@@ -98,7 +98,7 @@ export class Request {
 
     let sig: any = params.sigObj?.sig
 
-    if (params.sigFlag !== SIG_FLAG.NO_SIG && !params?.sigObj?.dataToSig) {
+    if ([SIG_FLAG.EDDSA_SIG, SIG_FLAG.EDDSA_SIG_POSEIDON].includes(params.sigFlag) && !params?.sigObj?.dataToSig) {
       throw Error('no dataToSig field!')
     }
 
@@ -115,6 +115,16 @@ export class Request {
           params.url,
           params.sigObj?.dataToSig,
           params.sigObj?.PrivateKey,
+        )
+        break
+      case SIG_FLAG.ECDSA_SIG:
+        sig = await getRequstEcDSASig(
+          params.method,
+          this.baseOptions.baseURL,
+          params.url,
+          params.sigObj!.ecdsaPrivateKey!,
+          serializeDataIfNeeded(params.bodyParams),
+          localUrl.search.slice(1),
         )
         break
       default:
@@ -167,8 +177,6 @@ export class Request {
       url: this.baseOptions.baseURL + urlPathStr,
     }
 
-    // myLog(optInOne);
-    // myLog("headers config", optInOne);
     return await this._axios.request(optInOne)
   }
 

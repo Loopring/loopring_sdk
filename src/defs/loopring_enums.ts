@@ -203,6 +203,7 @@ export enum SIG_FLAG {
   NO_SIG,
   EDDSA_SIG,
   EDDSA_SIG_POSEIDON,
+  ECDSA_SIG,
 }
 
 export enum AssetType {
