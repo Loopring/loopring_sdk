@@ -1,7 +1,7 @@
 // getRelayerCurrentTime
 import { DEFAULT_TIMEOUT, LoopringAPI } from '../../MockData'
 import * as sdk from '../../../index'
-import { HebaoAPI } from '../../../api/hebap_api'
+import { HebaoAPI } from '../../../api/hebao_api'
 import { WalletAPI } from '../../../api/wallet_api'
 import * as sign_tools from '../../../api/sign/sign_tools'
 import { BigNumber, BigNumberish, Contract, Wallet } from 'ethers'
