@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.8.16",
+  "version": "3.8.17-test-10",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -67,7 +67,7 @@
   },
   "scripts": {
     "build": "rimraf dist && NODE_ENV=production cross-env BABEL_ENV=prod rollup -c --bundleConfigAsCjs",
-    "start": "yarn link; tsdx watch",
+    "start": "yarn link; rollup -c --bundleConfigAsCjs -w",
     "test": "tsdx test",
     "test_calc": "tsdx test",
     "lint": "eslint . --fix --quiet --ext .ts",

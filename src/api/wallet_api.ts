@@ -336,12 +336,96 @@ export class WalletAPI extends BaseAPI {
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
-    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+    if (raw_data && raw_data?.resultInfo && raw_data?.resultInfo.code === 0) {
       return {
-        ...raw_data?.resultInfo,
+        code: raw_data?.resultInfo.code,
+        data: raw_data?.data as {
+          etherId: number
+          version: string
+          pendingPeriods: {
+            action: string
+            period: number
+          }[]
+          supportTokens: {
+            symbol: string
+            decimals: number
+            logo: string
+            address: string
+          }[]
+          supportContracts: {
+            contractName: string
+            contractAddress: string
+          }[]
+          actionGasSettings: {
+            action: string
+            actionCode: number
+            freeCount: number
+            gasLimit: string
+            gasOverhead: string
+          }[]
+          gasTokens: {
+            symbol: string
+            decimals: number
+            logo: string
+            address: string
+          }[]
+          upgradeAddress: string
+          officialGuardians: {
+            address: string
+            type: string
+            ens: string
+          }[]
+          createWalletConfig: {
+            moduleVersion: string
+            freeWalletReturns: number
+            buyWalletEachLevelQueryLimit: number
+            buyWalletLevel: { [key: string]: string }
+            ensLengthCost: { [key: string]: string }
+            orderLockInSeconds: number
+            enqueueTaskLimitInSeconds: number
+            metaTxConfigs: {
+              baseCreateGasPriceDiscountPercentage: number
+              ensGasPriceDiscountPercentage: number
+              addressGasPriceDiscountPercentage: number
+              baseCreateGasUse: {
+                blankWallet: number
+                blankWalletWithoutEns: number
+                ownerWallet: number
+                ownerWalletWithoutENS: number
+              }
+            }
+            requireDeposit: { [key: string]: string }
+          }
+          rewardPoint: {
+            createWallet: number
+            inviteCreateWallet: number
+          }
+          security: {
+            walletAssetWarnAboveInUsd: number
+            contractVersionLimit: {
+              eqOrLgSignaturePostfixOptional: string
+              eqOrLgAllowCallContractCallErc20Methods: string
+              metaTxVersions: string
+              userOpVersions: string
+            }
+          }
+          createWalletStringLimit: {
+            email: string
+            phone: string
+            requestID: string
+          }
+          deploySameAddressWithWalletFactory: { [key: string]: any }
+          deploySameAddressWithWalletFactory2: { [key: string]: { [key: string]: string } }
+          networkConfigsJsonString: string
+          extra: { [key: string]: string }
+          // supportToken{symbol: "ETH", decimals: 18, logo: "", address: "0x0000000000000000000000000000000000000000"}
+        },
+      }
+    } else {
+      throw {
+        code: raw_data?.resultInfo.code,
       }
     }
-    return { raw_data: raw_data.data }
   }
 
   public async sendMetaTx<R extends any, T extends any>(
