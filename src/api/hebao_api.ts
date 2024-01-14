@@ -3,6 +3,7 @@ import { BaseAPI } from './base_api'
 import { ReqMethod, ReqParams, SIG_FLAG } from '../defs'
 import { sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
+import { ChallengeData } from '../defs/hebao_def'
 
 export class HebaoAPI extends BaseAPI {
   public async lockCreateWalletGasSettings(
@@ -223,7 +224,7 @@ export class HebaoAPI extends BaseAPI {
             masterCopy: string
             walletFactory: string
           }
-        },
+        } | ChallengeData,
       }
     } else {
       throw {
@@ -232,6 +233,7 @@ export class HebaoAPI extends BaseAPI {
       }
     }
   }
+
   public async activateCreateWallet(
     request: {
       owner?: string
@@ -344,9 +346,7 @@ export class HebaoAPI extends BaseAPI {
       address: raw_data.data as string,
     }
   }
-  public async verifyCode<R>(request: { securityId: string; code: string }): Promise<{
-    raw_data: R
-  }> {
+  public async verifyCode(request: { securityId: string; code: string }) {
     const reqParams: ReqParams = {
       url: '/api/risk/v2/verifyCode',
       queryParams: {
@@ -357,16 +357,13 @@ export class HebaoAPI extends BaseAPI {
       method: ReqMethod.GET,
       sigFlag: SIG_FLAG.NO_SIG,
     }
-    const aa = await this.makeReq().request(reqParams)
-    const raw_data = aa.data
-    if (raw_data?.resultInfo) {
-      return {
-        ...raw_data?.resultInfo,
-      }
-    }
+    const res = await this.makeReq().request(reqParams)
+    const raw_data = res.data
     return {
-      raw_data,
+      code: raw_data?.resultInfo.code as number,
+      message: raw_data?.resultInfo.message as string,
     }
+    
   }
   // public async computeWalletAddress<R>(request: { network?: string, owner?: string, wallet?: string, timestamp: number }, ecdsaPrivateKey: string): Promise<{
   //   raw_data: R

@@ -7,6 +7,8 @@ export * from './loopring_constants'
 export * from './loopring_defs'
 export * from './error_codes'
 export * from './nft_defs'
+export * from './hebao_def'
+
 
 export const IsMobile = {
   Android: function () {
