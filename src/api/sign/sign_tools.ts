@@ -59,7 +59,7 @@ import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { Wallet } from 'ethers'
-import { arrayify, sha256, toUtf8Bytes } from 'ethers/lib/utils'
+import { utils } from 'ethers'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -258,7 +258,7 @@ export function getEdDSASig(
   requestInfo: any,
   PrivateKey: string | undefined,
 ) {
-  let params = undefined
+  let params: string
 
   method = method.toUpperCase().trim()
 
@@ -305,9 +305,9 @@ export function getRequstEcDSASig(
     parameterString = ''
   }
   const msg = `${methodUpcase}&${pathEncoded}&${encodeURIComponent(parameterString)}`
-  const hash = sha256(toUtf8Bytes(msg))
+  const hash = utils.sha256(utils.toUtf8Bytes(msg))
   const wallet = new Wallet(privateKey)
-  return wallet.signMessage(arrayify(hash))
+  return wallet.signMessage(utils.arrayify(hash))
 }
 
 
@@ -322,7 +322,7 @@ export function creatEdDSASigHasH({
   api_url: string
   requestInfo: any
 }) {
-  let params = undefined
+  let params: string
 
   method = method.toUpperCase().trim()
 

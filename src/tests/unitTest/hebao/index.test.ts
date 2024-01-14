@@ -6,11 +6,12 @@ import { WalletAPI } from '../../../api/wallet_api'
 import * as sign_tools from '../../../api/sign/sign_tools'
 import { BigNumber, BigNumberish, Contract, Wallet } from 'ethers'
 import walletFactory from '../../../api/config/abis/walletFactory'
-import { Interface, defaultAbiCoder, formatBytes32String, id, keccak256, parseEther } from 'ethers/lib/utils'
+import { utils } from 'ethers'
 import { bufferToHex, ecsign, keccak, zeroAddress } from 'ethereumjs-util'
 import BN from "bn.js";
 const abi = require("ethereumjs-abi");
 const assert = require("assert");
+const { Interface, defaultAbiCoder, formatBytes32String, id, keccak256, parseEther } = utils
 
 export class Bitstream {
   private data: string;
@@ -596,6 +597,7 @@ describe('hebaoapi test', function () {
       // const input1 = JSON.parse(inputStr)
       const requestId = '7db25c006CC266916f805972605D88D0b479BF4f' + new Date().getTime()
       console.log('requestId', requestId)
+      api.lockCreateWalletGasSettings
       const askdlaksld: any = await api.activateCreateWalletGasSettings(
         {
           email: 'jingguo.li.uk@gmail.com',
