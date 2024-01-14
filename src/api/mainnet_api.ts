@@ -18,10 +18,12 @@ export class MainnetAPI extends BaseAPI {
   public async getDefiDualProductlist(req: {
     optionHash?: string,
     baseSymbol?: string,
+    quoteSymbol?: string,
     startTime?: string,
     endTime?: string,
     limit?: number,
-    offset?: number
+    offset?: number,
+    dualType?: "DUAL_BASE" | "DUAL_CURRENCY"
   }): Promise<{
     raw_data: any
     totalNum: number,
