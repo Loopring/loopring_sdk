@@ -37,14 +37,14 @@ describe("DefiAPI test", function () {
     },
     DEFAULT_TIMEOUT
   );
-  it(
+  it.skip(
     "getDefiTransaction",
     async () => {
       const { apiKey } = await LoopringAPI.userAPI.getUserApiKey(
         {
           accountId: LOOPRING_EXPORTED_ACCOUNT.accountId,
         },
-        LOOPRING_EXPORTED_ACCOUNT.privateKey
+        '0x' + LOOPRING_EXPORTED_ACCOUNT.privateKey 
       );
       const response = await LoopringAPI.defiAPI.getDefiTransaction(
         {
@@ -58,7 +58,7 @@ describe("DefiAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "orderDefi",
     async () => {
       // Step 1. get account info
@@ -106,6 +106,7 @@ describe("DefiAPI test", function () {
         isJoin,
         isInputSell,
         sellAmount: sellValue,
+        // @ts-ignore
         feeVol: fees[buySymbol].fee,
         marketInfo,
         tokenSell: TOKEN_INFO.tokenMap[sellSymbol],

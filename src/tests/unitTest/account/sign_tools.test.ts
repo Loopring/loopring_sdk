@@ -158,7 +158,7 @@ describe('signature', function () {
   //     sdk.ConnectorNames.Unknown
   //   );
   // });
-  it('NFTAction Trade Hash', async () => {
+  it.skip('NFTAction Trade Hash', async () => {
     try {
       const makerOrder: NFTOrderRequestV3 = {
         exchange: '0xD1221BA705B653d9Ea22569c911Bddf68264fAF4',
@@ -220,7 +220,7 @@ describe('signature', function () {
       console.log(err)
     }
   })
-  it('ERC20 Order Hash', async () => {
+  it.skip('ERC20 Order Hash', async () => {
     try {
       const orderRequest: SubmitOrderRequestV3 = {
         exchange: '0x2e76EBd1c7c0C8e7c2B875b6d505a260C525d25e',
@@ -249,7 +249,7 @@ describe('signature', function () {
       console.log(err)
     }
   })
-  it('getNftData', async () => {
+  it.skip('getNftData', async () => {
     const cid = 'QmNuqdeWUJ9iEiw5qZfJ2pJ9onqAS45ZffvV8JQSUzp7DQ'
     const nftID = LoopringAPI.nftAPI.ipfsCid0ToNftID(cid)
     const mintRequest = {

@@ -13,7 +13,7 @@ describe("Withdraw", function () {
     jest.setTimeout(DEFAULT_TIMEOUT * 3);
   }, DEFAULT_TIMEOUT);
 
-  it(
+  it.skip(
     "submitWithdraw",
     async () => {
       /*

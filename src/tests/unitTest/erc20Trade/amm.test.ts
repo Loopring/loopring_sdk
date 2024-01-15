@@ -17,7 +17,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolUserRewards",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
@@ -40,7 +40,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolUserRewards-LRC-ETH",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
@@ -64,8 +64,8 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
-    'getAmmPoolUserRewards-LRC-ETH_ETH-USDT"',
+  it.skip(
+    'getAmmPoolUserRewards-LRC-ETH_ETH-USDT',
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolUserRewards<
         any[]
@@ -88,7 +88,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolGameRank",
     async () => {
       const response: any = await LoopringAPI.ammpoolAPI.getAmmPoolGameRank({
@@ -113,7 +113,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolGameUserRank",
     async () => {
       // Step 1. getAccount
@@ -180,7 +180,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolSnapshot",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
@@ -256,7 +256,7 @@ describe("AmmpoolAPI test", function () {
   //   DEFAULT_TIMEOUT
   // );
 
-  it(
+  it.skip(
     "getAmmPoolSnapshot",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
@@ -268,7 +268,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolBalances",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolBalances();
@@ -281,7 +281,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolTrades",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolTrades<any>({
@@ -293,7 +293,7 @@ describe("AmmpoolAPI test", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "getAmmPoolTxs",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolTxs({

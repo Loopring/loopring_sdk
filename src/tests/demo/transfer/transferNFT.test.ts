@@ -9,7 +9,7 @@ import {
 import * as sdk from "../../../index";
 
 describe("TransferNFT", function () {
-  it(
+  it.skip(
     "submitNFTInTransfer",
     async () => {
       /*

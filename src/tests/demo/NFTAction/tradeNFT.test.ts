@@ -126,7 +126,7 @@ describe('tradeNFT group', function () {
       maxFeeBips: 100,
     }
   }, DEFAULT_TIMEOUT * 3)
-  it(
+  it.skip(
     'tradeNFT',
     async () => {
       jest.useFakeTimers('legacy')

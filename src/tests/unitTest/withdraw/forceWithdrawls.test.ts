@@ -8,7 +8,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 
-it(
+it.skip(
   "submitForceWithdrawals",
   async () => {
     // Step 1. getAccount

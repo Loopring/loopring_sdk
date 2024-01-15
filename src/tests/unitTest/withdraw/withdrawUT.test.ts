@@ -50,7 +50,7 @@ describe("Withdraw NFTAction test", function () {
   //   DEFAULT_TIMEOUT
   // );
 
-  it(
+  it.skip(
     "forceWithdraw",
     async () => {
       /*

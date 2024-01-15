@@ -5,14 +5,14 @@ import { HebaoAPI } from '../../../api/hebao_api'
 import { WalletAPI } from '../../../api/wallet_api'
 import * as sign_tools from '../../../api/sign/sign_tools'
 import { BigNumber, BigNumberish, Contract, Wallet } from 'ethers'
-import walletFactory from '../../../api/config/abis/walletFactory'
+// import walletFactory from '../../../api/config/abis/walletFactory'
 import { utils } from 'ethers'
 import { bufferToHex, ecsign, keccak, zeroAddress } from 'ethereumjs-util'
 import BN from "bn.js";
+import walletFactory from '../../../api/config/abis/walletFactory'
 const abi = require("ethereumjs-abi");
 const assert = require("assert");
 const { Interface, defaultAbiCoder, formatBytes32String, id, keccak256, parseEther } = utils
-
 export class Bitstream {
   private data: string;
 

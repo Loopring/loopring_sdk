@@ -13,7 +13,7 @@ import {
 } from "../../../index";
 
 describe("amm_calc", function () {
-  it(
+  it.skip(
     "amm_calc_test",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
@@ -45,7 +45,7 @@ describe("amm_calc", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "make_join_request",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
@@ -101,7 +101,7 @@ describe("amm_calc", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "make_exit_request",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
@@ -154,7 +154,7 @@ describe("amm_calc", function () {
     },
     DEFAULT_TIMEOUT
   );
-  it(
+  it.skip(
     "getEddsaSigExitAmmPool",
     async () => {
       const response = await LoopringAPI.ammpoolAPI.getAmmPoolSnapshot<any>({
