@@ -467,6 +467,87 @@ export function makeMarkets<R, C extends MarketInfo>(
   }
 }
 
+export function makeMarketsWithIdIndex<C extends MarketInfo>(
+  raw_data: any,
+  url: string = LOOPRING_URLs.GET_MARKETS,
+  idIndex: any
+): {
+  markets: LoopringMap<C>
+  pairs: LoopringMap<TokenRelatedInfo>
+  tokenArr: string[]
+  tokenArrStr: string
+  marketArr: string[]
+  marketArrStr: string
+} {
+  const markets: LoopringMap<C> = {}
+
+  const pairs: LoopringMap<TokenRelatedInfo> = {}
+
+  const isMix = url === LOOPRING_URLs.GET_MIX_MARKETS
+
+  if (raw_data?.markets instanceof Array) {
+    raw_data.markets.forEach((item: any) => {
+      const marketInfo: C = {
+        ...item,
+        baseTokenId: item.baseTokenId,
+        enabled: item.enabled,
+        market: item.market,
+        orderbookAggLevels: item.orderbookAggLevels,
+        precisionForPrice: item.precisionForPrice,
+        quoteTokenId: item.quoteTokenId,
+      }
+
+      if (isMix) {
+        marketInfo.status = item.status as MarketStatus
+        marketInfo.isSwapEnabled =
+          marketInfo.status === MarketStatus.ALL || marketInfo.status === MarketStatus.AMM
+        marketInfo.createdAt = parseInt(item.createdAt)
+      }
+
+      const base = idIndex[item.baseTokenId]
+      const quote = idIndex[item.quoteTokenId]
+
+      markets[`${base}-${quote}`] = {
+        ...marketInfo,
+        market: `${base}-${quote}`,
+      }
+
+      if (item.enabled) {
+        if (!pairs[base]) {
+          pairs[base] = {
+            tokenId: item.baseTokenId,
+            tokenList: [quote],
+          }
+        } else {
+          pairs[base].tokenList = [...pairs[base].tokenList, quote]
+        }
+
+        if (!pairs[quote]) {
+          pairs[quote] = {
+            tokenId: item.quoteTokenId,
+            tokenList: [base],
+          }
+        } else {
+          pairs[quote].tokenList = [...pairs[quote].tokenList, base]
+        }
+      }
+    })
+  }
+
+  const marketArr: string[] = Reflect.ownKeys(markets) as string[]
+
+  const tokenArr: string[] = Reflect.ownKeys(pairs) as string[]
+
+  return {
+    markets,
+    pairs,
+    tokenArr,
+    tokenArrStr: tokenArr.join(SEP),
+    marketArr,
+    marketArrStr: marketArr.join(SEP),
+  }
+}
+
 export function makeInvestMarkets<C extends loopring_defs.DefiMarketInfo>(
   raw_data: any,
   types?: string[],
