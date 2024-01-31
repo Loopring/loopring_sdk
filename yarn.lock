@@ -9911,7 +9911,7 @@ try-resolve@^1.0.1:
   resolved "https://registry.yarnpkg.com/try-resolve/-/try-resolve-1.0.1.tgz#cfde6fabd72d63e5797cfaab873abbe8e700e912"
   integrity sha512-yHeaPjCBzVaXwWl5IMUapTaTC2rn/eBYg2fsG2L+CvJd+ttFbk0ylDnpTO3wVhosmE1tQEvcebbBeKLCwScQSQ==
 
-ts-jest@^26.6.3:
+ts-jest@^26.5.6:
   version "26.5.6"
   resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.5.6.tgz#c32e0746425274e1dfe333f43cd3c800e014ec35"
   integrity sha512-rua+rCP8DxpA8b4DQD/6X2HQS8Zy/xzViVYfEs2OQu68tkCuKLV0Md8pmX55+W24uRIyAsf/BajRfxOs+R2MKA==
