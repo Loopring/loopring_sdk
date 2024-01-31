@@ -20,7 +20,7 @@ module.exports = {
     ...(pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [])
   ],
   watch: {
-    include: 'src/**/*'
+    include: 'src/**'
   },
   plugins: [
     json(),
