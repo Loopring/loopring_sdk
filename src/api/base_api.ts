@@ -359,7 +359,7 @@ export async function personalSign(
 
           // Valid: 2. webview directory signature Valid
           // @ts-ignore
-          if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected) {
+          if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected || web3?.currentProvider.connected) {
             // LOG: for signature
             myLog('ecRecover before', result)
             const valid: any = ecRecover(account, msg, result)
