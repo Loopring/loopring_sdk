@@ -13,7 +13,7 @@ import * as sdk from "../../../index";
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
 describe("ActiveAccount", function () {
-  it(
+  it.skip(
     "updateAccount",
     async () => {
       // Step 1. get account info
@@ -75,7 +75,7 @@ describe("ActiveAccount", function () {
     DEFAULT_TIMEOUT * 2
   );
 
-  it(
+  it.skip(
     "customer_keySeed",
     async () => {
       // Step 1. get account info

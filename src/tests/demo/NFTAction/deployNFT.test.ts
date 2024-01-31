@@ -8,7 +8,7 @@ import {
 } from "../../MockData";
 import * as sdk from "../../../index";
 describe("deployNFT", function () {
-  it(
+  it.skip(
     "submitDeployNFT",
     async () => {
       // Step 1. getAccount

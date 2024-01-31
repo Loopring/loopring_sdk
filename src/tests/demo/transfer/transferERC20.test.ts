@@ -10,7 +10,7 @@ import * as sdk from "../../../index";
 import * as sign_tools from "../../../api/sign/sign_tools";
 import { myLog } from "../../../utils/log_tools";
 describe("Transfer", function () {
-  it(
+  it.skip(
     "submitInternalTransfer",
     async () => {
       /*

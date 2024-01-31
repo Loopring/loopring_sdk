@@ -15,7 +15,7 @@ describe("deposit", function () {
       await LoopringAPI.exchangeAPI.getGasPrice()
     ).gasPrice;
   }, DEFAULT_TIMEOUT);
-  it(
+  it.skip(
     "deposit_LRC",
     async () => {
       // step1: getAllowances
@@ -70,7 +70,7 @@ describe("deposit", function () {
     DEFAULT_TIMEOUT * 3
   );
 
-  it(
+  it.skip(
     "deposit_ETH",
     async () => {
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);

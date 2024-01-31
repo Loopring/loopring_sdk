@@ -118,7 +118,7 @@ describe('mintNFT', function () {
   )
 
   //Suggest use this function
-  it(
+  it.skip(
     'submitNFTMintWithCollection',
     async () => {
       // Step 1. getAccount

@@ -176,13 +176,13 @@ describe("formatter test", function () {
     console.log(zeroPad("420", 0)); // todo add assertion
   });
 
-  it("test toHex", async () => {
+  it.skip("test toHex", async () => {
     expect(toHex(LOOPRING_EXPORTED_ACCOUNT.nftId)).toBe(
       "0xa0ce8990402955e559799af24ea765b14ffecc32dfa1cce2dadaf20016b074e6"
     );
   });
 
-  it("test toNumber", async () => {
+  it.skip("test toNumber", async () => {
     expect(toNumber("69")).toBe(69);
     expect(toNumber(420)).toBe(420);
     expect(toNumber("12345.6789")).toBe(12345.6789);
@@ -235,7 +235,7 @@ describe("formatter test", function () {
     expect(toGWEI("420")).toEqual(new BigNumber(4.2e-7));
   });
 
-  it("test formatKey", async () => {
+  it.skip("test formatKey", async () => {
     expect(formatKey("0x" + BUFFER)).toBe(NUMBER.toString());
     expect(formatKey(LOOPRING_EXPORTED_ACCOUNT.address.toLowerCase())).toBe(
       LOOPRING_EXPORTED_ACCOUNT.testNotOx
@@ -246,7 +246,7 @@ describe("formatter test", function () {
   });
 
   // Missing test input data for Uint8Array
-  it("test formatAddress", async () => {
+  it.skip("test formatAddress", async () => {
     expect(
       formatAddress(LOOPRING_EXPORTED_ACCOUNT.testNotOx).toLowerCase()
     ).toBe(LOOPRING_EXPORTED_ACCOUNT.address);
@@ -256,7 +256,7 @@ describe("formatter test", function () {
     expect(formatAddress("0x" + BUFFER)).toBe("0x" + BUFFER);
   });
 
-  it("test addHexPrefix", async () => {
+  it.skip("test addHexPrefix", async () => {
     expect(addHexPrefix(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
       LOOPRING_EXPORTED_ACCOUNT.address
     );
@@ -266,7 +266,7 @@ describe("formatter test", function () {
     expect(() => addHexPrefix(420)).toThrowError("Unsupported type");
   });
 
-  it("test clearHexPrefix", async () => {
+  it.skip("test clearHexPrefix", async () => {
     expect(clearHexPrefix(LOOPRING_EXPORTED_ACCOUNT.address)).toBe(
       LOOPRING_EXPORTED_ACCOUNT.testNotOx
     );

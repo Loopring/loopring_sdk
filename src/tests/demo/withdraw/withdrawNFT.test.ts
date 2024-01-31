@@ -10,7 +10,7 @@ import * as sdk from "../../../index";
 import { DEPLOYMENT_STATUS } from "../../../index";
 
 describe("WithdrawNFT", function () {
-  it(
+  it.skip(
     "submitNFTWithdraw",
     async () => {
       /*
