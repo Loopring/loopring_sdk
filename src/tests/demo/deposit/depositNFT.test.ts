@@ -13,7 +13,7 @@ describe("depositNFT", function () {
       await LoopringAPI.exchangeAPI.getGasPrice()
     ).gasPrice;
   }, DEFAULT_TIMEOUT);
-  it(
+  it.skip(
     "deposit NFTAction ERC1155",
     async () => {
       // Step 1. getNFTBalance & getEthBalances

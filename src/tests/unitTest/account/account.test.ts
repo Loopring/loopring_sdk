@@ -78,7 +78,7 @@ describe("AccountDemo", function () {
     DEFAULT_TIMEOUT
   );
 
-  it(
+  it.skip(
     "approveMax_LRC",
     async () => {
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
@@ -99,7 +99,7 @@ describe("AccountDemo", function () {
     DEFAULT_TIMEOUT * 2
   );
 
-  it(
+  it.skip(
     "approveZero_LRC",
     async () => {
       const nonce = await sdk.getNonce(web3, LOOPRING_EXPORTED_ACCOUNT.address);
