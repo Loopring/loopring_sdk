@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Wallet, ethers } from 'ethers'
+import { BigNumber, BigNumberish, Signer, Wallet, ethers } from 'ethers'
 import {
   Interface,
   defaultAbiCoder,
@@ -7,7 +7,8 @@ import {
   parseEther,
   randomBytes,
 } from 'ethers/lib/utils'
-import { bufferToHex, ecsign, keccak } from 'ethereumjs-util'
+import { bufferToHex, ecsign, keccak,  } from 'ethereumjs-util'
+
 import BN from 'bn.js'
 import assert from 'assert'
 import abi from 'ethereumjs-abi'
@@ -413,7 +414,8 @@ const createWalletWithEmail = async (args: {
 
 const createWalletWithEmailAndVerifyCode = async (args: {
   apiInitParam: InitParam
-  sk: string
+  sk?: string
+  signer?: Signer
   email: string
   network: string
   wallet: string
@@ -423,7 +425,7 @@ const createWalletWithEmailAndVerifyCode = async (args: {
   securityId: string
   createWalletData: string
 }) => {
-  const { apiInitParam, sk, email, network, wallet, owner, salt, requestId, securityId, createWalletData } =
+  const { apiInitParam, sk, signer, email, network, wallet, owner, salt, requestId, securityId, createWalletData } =
     args
 
   return new HebaoAPI(apiInitParam).createWallet(

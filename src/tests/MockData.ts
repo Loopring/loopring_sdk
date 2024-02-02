@@ -100,6 +100,16 @@ export const LOOPRING_EXPORTED_ACCOUNT = {
   gasPrice: 20, // for test
   gasLimit: 200000, // for test
   validUntil: Math.round(Date.now() / 1000) + 30 * 86400,
+
+  smartWallet1: {
+    address: '0xA1988a8AD850c35719477A24ca9EcE090D20f481',
+    ownerPrivateKey: '0x20cc4f60b50557e0992635883c7b83d3f13c20b1f2f0d3664492c1e03523d746',
+    salt: '2762715284999773417'
+  }
+
+  // smartWallet: '0xA1988a8AD850c35719477A24ca9EcE090D20f481',
+  // privateKeySmartWalletOwner: '0x20cc4f60b50557e0992635883c7b83d3f13c20b1f2f0d3664492c1e03523d746',
+  // privateKeySmartWalletOwnerSalt: '2762715284999773417',
 }
 
 const provider = new PrivateKeyProvider(
