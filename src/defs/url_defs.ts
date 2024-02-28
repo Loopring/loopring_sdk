@@ -238,6 +238,7 @@ export enum LOOPRING_URLs {
 
   // mainnet
   GET_MAINNET_DEFI_DUAL_PRODUCTLIST = '/api/v3/mainnet/defi/dual/productlist',
+  GET_MAINNET_DEFI_DUAL_USER_TRANSACTIONS = '/api/v3/mainnet/defi/dual/user/transactions',
   POST_MAINNET_DEFI_DUAL_SIGNATURE = '/api/v3/mainnet/defi/dual/signature',
 }
 
