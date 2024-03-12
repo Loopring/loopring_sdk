@@ -23,6 +23,14 @@ describe("mainnet api", function () {
     DEFAULT_TIMEOUT
   );
   it(
+    "get dual products",
+    async () => {
+      const response = await LoopringAPI.mainnetAPI.getDefiDualProducts({});
+      console.log(response);
+    },
+    DEFAULT_TIMEOUT
+  );
+  it(
     "get dual signature",
     async () => {
       const response = await LoopringAPI.mainnetAPI.defiDualSignature({

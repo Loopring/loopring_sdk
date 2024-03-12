@@ -53,6 +53,59 @@ export class MainnetAPI extends BaseAPI {
       ...raw_data,
     }
   }
+  
+  public async getDefiDualProducts(req: {
+    start?: number
+    end?: number
+    limit?: number
+    offset?: number
+    investmentStatuses?: number[]
+  }): Promise<{
+    raw_data: any
+    totalNum: number
+    products: {
+      optionHash: string
+      productId: string
+      base: string
+      quote: string
+      currency: string
+      createTime: number
+      expireTime: number
+      strike: string
+      expired: boolean
+      dualType: string
+      buyLow: boolean
+      settlementTime: number,
+      deliveryPrice: number,
+      isSwap: boolean
+      investedBase: boolean
+      investToken: string
+      investAmount: string
+      toBeSettledToken: string
+      toBeSettledAmount: string
+    }[]
+    indexes: {
+      index: string
+      base: string
+      quote: string
+      indexTime: string
+    }[]
+  }> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_MAINNET_DEFI_DUAL_PRODUCTS,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...req,
+        investmentStatuses: req.investmentStatuses ? req.investmentStatuses.join(',') : undefined
+      },
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return {
+      raw_data,
+      ...raw_data,
+    }
+  }
 
   public async getDefiDualUserTransactions(req: {
     user: string
