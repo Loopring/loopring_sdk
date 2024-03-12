@@ -1,6 +1,6 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from './base_api'
-import { ReqMethod, ReqParams, SIG_FLAG } from '../defs'
+import { ReqMethod, ReqParams, SIG_FLAG, WalletStatus } from '../defs'
 import { sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { ChallengeData } from '../defs/hebao_def'
@@ -404,7 +404,7 @@ export class HebaoAPI extends BaseAPI {
     }
     email: string
     apiKey: string
-    status: number
+    status: WalletStatus
     lockExpiration: number
     modules: any[]
     contractData: {
@@ -452,6 +452,5 @@ export class HebaoAPI extends BaseAPI {
         message: raw_data?.resultInfo.message,
       }      
     }
-    
   }
 }

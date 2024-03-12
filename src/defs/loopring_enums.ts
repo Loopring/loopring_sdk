@@ -273,3 +273,15 @@ export enum NetworkWallet {
   GOERLI = 'GOERLI',
   TAIKO = 'TAIKO',
 }
+
+export enum WalletStatus {
+  INITIALIZED = 0,
+  WALLET_CREATING = 1,
+  WALLET_CREATE_FAILED = 2,
+  WALLET_CREATED = 3,
+  WALLET_LOCK_WAIT = 4,
+  WALLET_LOCKED = 5,
+  LOCK_FAILED = 6,
+  WALLET_UNLOCK_WAIT = 7,
+  UNLOCK_FAILED = 8,
+}
