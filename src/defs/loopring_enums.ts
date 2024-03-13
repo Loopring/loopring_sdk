@@ -271,3 +271,19 @@ export enum NetworkWallet {
   GOERLI = 'GOERLI',
   TAIKO = 'TAIKO',
 }
+
+export enum Layer1DualInvestmentStatus {
+  DUAL_RECEIVED = 0,
+  DUAL_CONFIRMED = 1,
+  DUAL_CANCELED_L2 = 2,
+  DUAL_CANCELED_L1 = 3,
+  DUAL_SETTLED = 4,
+}
+export enum Layer1DualOrderStatus{
+  DUAL_ORDER_SUBMITTED = 0,
+  DUAL_ORDER_CONFIRMED = 1,
+  DUAL_ORDER_FILLED = 2,
+  DUAL_ORDER_PARTIAL_FILLED = 3,
+  DUAL_ORDER_CANCELLED = 4,
+  DUAL_ORDER_REJECTED = 5,
+}
