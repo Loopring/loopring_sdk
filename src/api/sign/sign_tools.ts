@@ -286,6 +286,28 @@ export function getEdDSASig(
   return sig
 }
 
+export function getRequstHash(
+  method: string,
+  basePath: string,
+  api_url: string,
+  bodyJSONString?: string,
+  queryParamsString?: any,
+) {
+  const methodUpcase = method.toUpperCase()
+  const pathEncoded = encodeURIComponent(`${basePath}${api_url}`)
+  var parameterString: string
+  if (method === 'POST') {
+    parameterString = bodyJSONString ? bodyJSONString : ""
+  } else if (method === 'GET' || "DELETE") {
+    parameterString = queryParamsString ? queryParamsString : ""
+  } else {
+    parameterString = ''
+  }
+  const msg = `${methodUpcase}&${pathEncoded}&${encodeURIComponent(parameterString)}`
+  const hash = utils.sha256(utils.toUtf8Bytes(msg))
+  return hash
+}
+
 export function getRequstEcDSASig(
   method: string,
   basePath: string,

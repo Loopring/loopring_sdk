@@ -316,8 +316,9 @@ const createWalletWithEmail = async (args: {
   sk: string
   email: string
   network: string,
+  chainID: number
 }) => {
-  const { apiInitArgs, sk, email, network } = args
+  const { apiInitArgs, sk, email, network, chainID } = args
   const eoaWallet = new Wallet(sk!)
   const owner = eoaWallet.address
   const salt = BigNumber.from(randomBytes(8)).toString() // todo, make it random
@@ -366,7 +367,7 @@ const createWalletWithEmail = async (args: {
     maxFeeAmount,
     salt,
     sk!.slice(2),
-    5,
+    chainID
   )
 
   const createWalletData = new Interface(WalletFactoryV3ABI).encodeFunctionData('createWallet', [
@@ -454,6 +455,7 @@ const activeLayerOneWallet = async (args: {
   smartWalletAddress: string
   maxFeeAmount: BigNumber
   tokenAddress: string
+  chainId: number
 }) => {
   const {
     apiInitParam,
@@ -462,6 +464,7 @@ const activeLayerOneWallet = async (args: {
     smartWalletAddress,
     maxFeeAmount,
     tokenAddress,
+    chainId
   } = args
   const eoa = new Wallet(sk)
   const requestId = smartWalletAddress + Date.now()
@@ -495,7 +498,7 @@ const activeLayerOneWallet = async (args: {
     maxFeeAmount,
     walletInfo.salt,
     sk!.slice(2),
-    5,
+    chainId,
   )
   const createWalletData = new Interface(WalletFactoryV3ABI).encodeFunctionData('createWallet', [
     {
@@ -515,7 +518,7 @@ const activeLayerOneWallet = async (args: {
   return hebaoAPI.activateCreateWallet(
     {
       owner: eoa.address,
-      network: 'GOERLI',
+      network,
       from: smartWalletAddress,
       requestId,
       data: createWalletData,
