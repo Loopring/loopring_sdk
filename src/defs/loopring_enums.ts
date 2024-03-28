@@ -270,6 +270,7 @@ export enum NetworkWallet {
   ARBITRUM = 'ARBITRUM',
   GOERLI = 'GOERLI',
   TAIKO = 'TAIKO',
+  SEPOLIA = 'SEPOLIA',
 }
 
 export enum Layer1DualInvestmentStatus {
