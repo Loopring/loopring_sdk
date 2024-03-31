@@ -4585,7 +4585,8 @@ export interface DatacenterTokenQuote {
 
 export interface GetDatacenterTokenInfoRequest {
   cmcTokenIds?: number[] | string
-  currency: 'USD'
+  currency: 'USD' | 'CNY'
+  network?: string
 }
 export interface DatacenterTokenInfoSimple {
   tokenAddress: string

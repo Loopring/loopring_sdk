@@ -1219,10 +1219,46 @@ export class ExchangeAPI extends BaseAPI {
       raw_data,
     }
   }
-  public async getTokenInfo<R = DatacenterTokenInfo>(
-    request: { token: string; currency: 'USD' },
+
+  public async getTokenInfo(
+    request: { token?: string; currency: string; cmcTokenId: number },
     url: string = LOOPRING_URLs.GET_QUOTE_TOKEN_INFO,
-  ) {
+  ): Promise<{
+    raw_data: any
+    list: {
+      tokenId: number
+      tokenAddress: string
+      name: string
+      symbol: string
+      description: string
+      slug: string
+      logo: string
+      cmcRank: number
+      website: string
+      explorer: string
+      platform: string
+      dateAdded: string
+      dateLaunched: string
+      selfReportedCirculatingSupply: string
+      selfReportedMarketCap: string
+      infiniteSupply: boolean
+      circulatingSupply: string
+      totalSupply: string
+      maxSupply: string
+      quote: {
+        price: string
+        volume24H: string
+        volumeChange24H: string
+        percentChange1H: string
+        percentChange24H: string
+        percentChange7D: string
+        percentChange30D: string
+        marketCap: string
+        fullyDilutedMarketCap: string
+      }
+      timestamp: number
+    }[]
+  }> {
     const reqParams: ReqParams = {
       url,
       queryParams: { ...request },
