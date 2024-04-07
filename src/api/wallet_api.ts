@@ -288,7 +288,7 @@ export class WalletAPI extends BaseAPI {
     from,
     contractAddress,
     gasPrice,
-    gasLimit = 150000,
+    gasLimit = '0x' + Number(150000).toString(16),
     chainId = 1,
     wallet,
     nonce,
@@ -309,7 +309,7 @@ export class WalletAPI extends BaseAPI {
         chainId as loopring_defs.ChainId,
         nonce,
         gasPrice,
-        Number(gasLimit),
+        gasLimit,
         true,
       )
     } else {
@@ -322,7 +322,7 @@ export class WalletAPI extends BaseAPI {
         chainId as loopring_defs.ChainId,
         nonce,
         gasPrice,
-        Number(gasLimit),
+        gasLimit,
         true,
       )
     }
