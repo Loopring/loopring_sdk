@@ -4642,7 +4642,7 @@ export interface GetDatacenterTokenQuoteTrendRequest {
   token?: string
   cmcTokenId?: number
   range?: DatacenterRange
-  currency: 'USD'
+  currency: string 
 }
 
 export interface GetCmcTokenRelationsRequest {
