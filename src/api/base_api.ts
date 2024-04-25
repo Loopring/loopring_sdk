@@ -6,6 +6,7 @@ import { contracts as abi } from './ethereum/contracts'
 import { AxiosResponse } from 'axios'
 import * as ethUtil from 'ethereumjs-util'
 import { isContract } from './contract_api'
+import { getWindowSafely } from 'utils/window_utils'
 
 export const KEY_MESSAGE =
   'Sign this message to access Loopring Exchange: ' +
@@ -359,14 +360,22 @@ export async function personalSign(
 
           // Valid: 2. webview directory signature Valid
           // @ts-ignore
-          if (window?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected || web3?.currentProvider.connected) {
-            // LOG: for signature
+          if (
+            web3?.currentProvider?.isWalletLink &&
+            web3?.currentProvider?.isConnected
+          ) {
+            account === web3.currentProvider?.selectedAddress;
+            return resolve({ sig: result });
+          } else {
             myLog('ecRecover before', result)
-            const valid: any = ecRecover(account, msg, result)
-            // LOG: for signature
-            myLog('ecRecover after', valid.result)
-            if (valid.result) {
-              return resolve({ sig: result })
+            try {
+              const valid: any = ecRecover(account, msg, result)
+              myLog('ecRecover after', valid.result)
+              if (valid.result) {
+                return resolve({ sig: result })
+              }
+            } catch {
+              myLog('ecRecover failed')
             }
           }
 
