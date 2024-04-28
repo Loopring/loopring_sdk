@@ -95,9 +95,9 @@ export async function sendRawTx(
   value: any,
   data: any,
   chainId: loopring_defs.ChainId,
-  nonce: number | undefined | null,
+  nonce: string | number | undefined | null,
   gasPrice: any,
-  gasLimit: number | undefined,
+  gasLimit: string | number | undefined,
   sendByMetaMask = true,
 ) {
   checkWeb3(web3)
@@ -147,9 +147,9 @@ export async function approve(
   depositAddress: string,
   _value: string,
   chainId: loopring_defs.ChainId,
-  nonce: number,
-  gasPrice: number,
-  gasLimit: number,
+  nonce: string | number,
+  gasPrice: string | number,
+  gasLimit: string | number,
   sendByMetaMask: boolean,
 ) {
   const data = genERC20Data(ERC20Method.Approve, {
@@ -217,10 +217,10 @@ export async function approveMax(
   owner: string,
   tokenAddress: string,
   depositAddress: string,
-  gasPrice: number,
-  gasLimit: number,
+  gasPrice: string,
+  gasLimit: string,
   chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
-  nonce: number,
+  nonce: string,
   sendByMetaMask = false,
 ) {
   return await approve(
@@ -248,10 +248,10 @@ export async function deposit(
   token: loopring_defs.TokenInfo,
   value: number,
   fee: number,
-  gasPrice: number,
-  gasLimit: number,
+  gasPrice: string,
+  gasLimit: string,
   chainId: loopring_defs.ChainId = loopring_defs.ChainId.GOERLI,
-  nonce: number,
+  nonce: string,
   sendByMetaMask = true,
   to?: string,
 ) {

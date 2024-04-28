@@ -1,6 +1,5 @@
 import * as fm from './formatter'
 import { toBig } from './formatter'
-
 import {
   ABInfo,
   AmmPoolSnapshot,
@@ -1103,9 +1102,7 @@ export function calcDual({
     lessEarnVol = toBig(settleRatio).plus(1).times(sellVol) //dualViewInfo.strike);
     lessEarnTokenSymbol = sellToken.symbol
     greaterEarnVol = toBig(
-      toBig(settleRatio)
-        .plus(1)
-        .times(sellAmount ? sellAmount : 0)
+      toBig(sellAmount ? sellAmount : 0)
         .times(info.strike)
         .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),
     ).times('1e' + buyToken.decimals)
@@ -1124,9 +1121,7 @@ export function calcDual({
     //info.dualPrice.dualBid[ 0 ].baseQty;
   } else {
     lessEarnVol = toBig(
-      toBig(settleRatio)
-        .plus(1)
-        .times(sellAmount ? sellAmount : 0)
+      toBig(sellAmount ? sellAmount : 0)
         // .times(1 + info.ratio)
         .div(info.strike)
         .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),

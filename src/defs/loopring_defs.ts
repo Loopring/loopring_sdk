@@ -3082,8 +3082,8 @@ export interface LockHebaoHebaoParam {
   wallet: string
   value?: string | number
   contractAddress: string
-  gasPrice: number
-  gasLimit: number
+  gasPrice: string
+  gasLimit: string
   chainId?: ChainId
   nonce: number
   isVersion1: boolean
