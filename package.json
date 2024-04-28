@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.8.24-dev-fix-window-undefine4",
+  "version": "3.8.24",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
