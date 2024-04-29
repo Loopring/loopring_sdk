@@ -360,22 +360,14 @@ export async function personalSign(
 
           // Valid: 2. webview directory signature Valid
           // @ts-ignore
-          if (
-            web3?.currentProvider?.isWalletLink &&
-            web3?.currentProvider?.isConnected
-          ) {
-            account === web3.currentProvider?.selectedAddress;
-            return resolve({ sig: result });
-          } else {
+          if (getWindowSafely()?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected || web3?.currentProvider.connected || !getWindowSafely()) {
+            // LOG: for signature
             myLog('ecRecover before', result)
-            try {
-              const valid: any = ecRecover(account, msg, result)
-              myLog('ecRecover after', valid.result)
-              if (valid.result) {
-                return resolve({ sig: result })
-              }
-            } catch {
-              myLog('ecRecover failed')
+            const valid: any = ecRecover(account, msg, result)
+            // LOG: for signature
+            myLog('ecRecover after', valid.result)
+            if (valid.result) {
+              return resolve({ sig: result })
             }
           }
 
