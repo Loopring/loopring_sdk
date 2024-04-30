@@ -58,6 +58,7 @@ import { myLog } from '../../utils/log_tools'
 import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
+import { getWindowSafely } from 'utils/window_utils'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -396,7 +397,7 @@ export async function signEip712(web3: any, account: string, method: string, par
 export async function signEip712WalletConnect(web3: any, account: string, typedData: any) {
   try {
     let response: any
-    if (window?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) {
+    if (getWindowSafely()?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) {
       const result: any = await new Promise((resolve) => {
         web3.currentProvider?.sendAsync(
           {
