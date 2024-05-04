@@ -4,7 +4,7 @@ import { PublicKey } from './loopring_enums'
  * AccountInfo
  * @property accountId number Account ID
  * @property owner string  Ethereum address
- * @property frozen boolean The frozen state of the account, true stands for frozen, if the account is frozen, the user cant submit order.
+ * @property frozen boolean The frozen state of the account, true stands for frozen, if the account is frozen, the user can't submit order.
  * @property publicKey PublicKey The user's public key
  * @property tags? string Comma separated list of tags such as VIP levels, etc
  * @property nonce number field.DexAccountV3.nonce
