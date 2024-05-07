@@ -1,3 +1,5 @@
+import { getNavigatorSafely, getWindowSafely } from 'utils/window_utils'
+
 export * from './loopring_enums'
 export * from './url_defs'
 export * from './account_defs'
@@ -12,22 +14,22 @@ export * from './hebao_def'
 
 export const IsMobile = {
   Android: function () {
-    return navigator.userAgent.match(/Android/i)
+    return getNavigatorSafely()?.userAgent.match(/Android/i)
   },
   BlackBerry: function () {
-    return navigator.userAgent.match(/BlackBerry/i)
+    return getNavigatorSafely()?.userAgent.match(/BlackBerry/i)
   },
   iOS: function () {
-    return navigator.userAgent.match(/iPhone|iPad|iPod/i)
+    return getNavigatorSafely()?.userAgent.match(/iPhone|iPad|iPod/i)
   },
   Opera: function () {
-    return navigator.userAgent.match(/Opera Mini/i)
+    return getNavigatorSafely()?.userAgent.match(/Opera Mini/i)
   },
   Windows: function () {
-    return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i)
+    return getNavigatorSafely()?.userAgent.match(/IEMobile/i) || getNavigatorSafely()?.userAgent.match(/WPDesktop/i)
   },
   Ethereum: function () {
-    return window?.ethereum && window?.ethereum.isImToken
+    return getWindowSafely()?.ethereum && getWindowSafely()?.ethereum.isImToken
   },
 
   any: function () {
