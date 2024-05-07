@@ -1,6 +1,6 @@
 /* tslint:disable */
 // @ts-nocheck
-import { methodID } from 'ethereumjs-abi'
+import ethereumjsAbi from 'ethereumjs-abi'
 import { toHex } from '../../../utils/formatter'
 import { AbiFunction } from './AbiFunction'
 
@@ -11,7 +11,7 @@ export class Contract {
     this.abiFunctions = funAbi.reduce((acc, item) => {
       const inputTypes = item.inputs.map(({ type }) => type)
       const key = `${item.name}(${inputTypes.toString()})`
-      const methodHash = methodID(item.name, inputTypes)
+      const methodHash = ethereumjsAbi.methodID(item.name, inputTypes)
       return {
         ...acc,
         [item.name]: new AbiFunction(item),

@@ -18,6 +18,9 @@ import {
 } from '../../../index'
 import { myLog } from '../../../utils/log_tools'
 import { performance } from 'perf_hooks'
+import { recoverAddress } from 'ethers/lib/utils'
+import { serializeDataIfNeeded } from '../../../api/request'
+import { EDDSAUtil } from '../../../api/sign/poseidon/EDDSAUtil'
 
 let mockData:
   | {
@@ -275,6 +278,80 @@ describe('signature', function () {
     getNftData({ ...mintRequest, nftId: nftID })
     myLog('nftID', '0x1', 'result is:')
     getNftData({ ...mintRequest, nftId: '0x1' })
+  })
+  it.skip('get hash', async () => {
+  //   basePath: string,
+  // api_url: string,
+  // requestInfo: any,
+    const sorted = serializeDataIfNeeded({
+      "createData": {
+        "l2": {
+          "updateAccountData": "{\"accountId\":10134,\"counterFactualInfo\":{\"walletOwner\":\"0x75652e23a467aab68c7e2c90dbe2c6223b1f6b2f\",\"walletFactory\":\"0xe7d8df8f6546965a59dab007e8709965efe1255d\",\"walletSalt\":\"1711465569\"},\"ecdsaSignature\":\"0x2426ec6f8fc1e14f72fa00a4383e7f487f06db87a020f937c179264d2153f75005e3f77f04d0763bdcd1f7ee1128a09e3e1657e5fa3a692bb425aec492f800ca1c\",\"exchange\":\"0x5db136b5a3b2901f4d65bdc4547c5E45e4fb3587\",\"hashApproved\":\"0x87cf36017f0a8e19aa1483262250fb35fb8830af1bd6391cd8381e4f61e490ca\",\"maxFee\":{\"volume\":\"1608000000000000\",\"tokenId\":0},\"nonce\":0,\"owner\":\"0xdb5300df6159cf8aee728948453d4639fdf29215\",\"publicKey\":{\"x\":\"0x127dfe23f8383af0e6d8815d91898c3fe625dfdbadbfbe2720b72bff539d71ee\",\"y\":\"0x28711897b691ca93769dac305a8499a58c95ddc9912c065f8e36fa682a279da3\"},\"validUntil\":1899273791}"
+        }
+      },
+      "network": "Sepolia",
+      "orderId": 27,
+      "owner": "0x75652e23a467aab68c7e2c90dbe2c6223b1f6b2f",
+      "wallet": "0xdb5300df6159cf8aee728948453d4639fdf29215"
+    })
+    const sig2= "0x2426ec6f8fc1e14f72fa00a4383e7f487f06db87a020f937c179264d2153f75005e3f77f04d0763bdcd1f7ee1128a09e3e1657e5fa3a692bb425aec492f800ca1c"
+    const obj = {
+      "accountId": 10134,
+      "counterFactualInfo": {
+        "walletOwner": "0x75652e23a467aab68c7e2c90dbe2c6223b1f6b2f",
+        "walletFactory": "0xe7d8df8f6546965a59dab007e8709965efe1255d",
+        "walletSalt": "1711465569"
+      },
+      // "ecdsaSignature": "0x2426ec6f8fc1e14f72fa00a4383e7f487f06db87a020f937c179264d2153f75005e3f77f04d0763bdcd1f7ee1128a09e3e1657e5fa3a692bb425aec492f800ca1c",
+      "exchange": "0x5db136b5a3b2901f4d65bdc4547c5E45e4fb3587",
+      "hashApproved": "0x87cf36017f0a8e19aa1483262250fb35fb8830af1bd6391cd8381e4f61e490ca",
+      "maxFee": {
+        "volume": "1608000000000000",
+        "tokenId": 0
+      },
+      "nonce": 0,
+      "owner": "0xdb5300df6159cf8aee728948453d4639fdf29215",
+      "publicKey": {
+        "x": "0x127dfe23f8383af0e6d8815d91898c3fe625dfdbadbfbe2720b72bff539d71ee",
+        "y": "0x28711897b691ca93769dac305a8499a58c95ddc9912c065f8e36fa682a279da3"
+      },
+      "validUntil": 1899273791
+    }
+    const sig = '0x0e5a5c48186e8ca96ad8c7fa9ad6651debb693f9ebd2494d1359406e5767b0424436d1d4ac6b5d154f21aafafd389a464001ef97dc1eb0c76694f4fcada0b0e91b'
+    const hash = sdk.getRequstHash('POST', 'http://aa4c8da74cf154b52bdad56369956089-1213582495.us-east-2.elb.amazonaws.com', '/api/wallet/v3/submitL1L2CreationRequest', serializeDataIfNeeded(obj))
+    const addr = recoverAddress(hash, sig)
+    debugger
+  })
+  // it('aes decript', async () => {
+  // //   basePath: string,
+  // // api_url: string,
+  // // requestInfo: any,
+  // const crypto = require("crypto");
+
+  // var key = "";
+  // const iv =  "";
+  // const token = "";
+  
+  
+  // function decrypt(token:any, iv:any, _key: any) {
+  //   const key = 
+  //     const decrypter = crypto.createDecipheriv("aes-256-cbc", key, iv);
+  //     let decrypted = decrypter.update(token, "hex", "utf8");
+  //     decrypted += decrypter.final("utf8");
+  //     return  decrypted
+  // }
+  
+  // console.log(decrypt(token, iv, key));
+  //   debugger
+  // })
+  it.only('eddsa', async () => {
+    const packed = EDDSAUtil.pack('0x127dfe23f8383af0e6d8815d91898c3fe625dfdbadbfbe2720b72bff539d71ee', '0x28711897b691ca93769dac305a8499a58c95ddc9912c065f8e36fa682a279da3')
+    const aaa = sdk.convertPublicKey({
+      x: '0x127dfe23f8383af0e6d8815d91898c3fe625dfdbadbfbe2720b72bff539d71ee', 
+      y: '0x28711897b691ca93769dac305a8499a58c95ddc9912c065f8e36fa682a279da3'
+    }).toString(16)
+    debugger
+    // 28711897b691ca93769dac305a8499a58c95ddc9912c065f8e36fa682a279da3
   })
 })
 

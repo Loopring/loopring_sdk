@@ -1,7 +1,7 @@
 /* tslint:disable */
 // @ts-nocheck
 import { addHexPrefix, clearHexPrefix, toBuffer, toHex } from '../../../utils/formatter'
-import { methodID, rawDecode, rawEncode } from 'ethereumjs-abi'
+import ethereumjsAbi from 'ethereumjs-abi'
 import BN from 'bn.js'
 
 export class AbiFunction {
@@ -19,7 +19,7 @@ export class AbiFunction {
     this.outputTypes = outputs.map(({ type }) => type)
     this.outputs = outputs
     this.constant = constant
-    this.methodAbiHash = toHex(methodID(name, this.inputTypes))
+    this.methodAbiHash = toHex(ethereumjsAbi.methodID(name, this.inputTypes))
   }
 
   /**
@@ -29,7 +29,7 @@ export class AbiFunction {
    */
   encodeInputs(inputs) {
     const abiInputs = this.parseInputs(inputs)
-    return this.methodAbiHash + clearHexPrefix(toHex(rawEncode(this.inputTypes, abiInputs)))
+    return this.methodAbiHash + clearHexPrefix(toHex(ethereumjsAbi.rawEncode(this.inputTypes, abiInputs)))
   }
 
   /**
@@ -38,7 +38,7 @@ export class AbiFunction {
    * @returns {*}
    */
   decodeOutputs(outputs) {
-    return this.parseOutputs(rawDecode(this.outputTypes, toBuffer(outputs)))
+    return this.parseOutputs(ethereumjsAbi.rawDecode(this.outputTypes, toBuffer(outputs)))
   }
 
   /**
@@ -47,7 +47,7 @@ export class AbiFunction {
    * @returns {*}
    */
   decodeEncodedInputs(encoded) {
-    return this.parseOutputs(rawDecode(this.inputTypes, toBuffer(addHexPrefix(encoded))))
+    return this.parseOutputs(ethereumjsAbi.rawDecode(this.inputTypes, toBuffer(addHexPrefix(encoded))))
   }
 
   parseInputs(inputs = {}) {

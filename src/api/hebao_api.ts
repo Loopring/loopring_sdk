@@ -1,6 +1,6 @@
 /* eslint-disable camelcase  */
 import { BaseAPI } from './base_api'
-import { ReqMethod, ReqParams, SIG_FLAG, WalletStatus } from '../defs'
+import { LOOPRING_URLs, ReqMethod, ReqParams, SIG_FLAG, WalletStatus } from '../defs'
 import { sortObjDictionary } from '../utils'
 import * as sign_tools from './sign/sign_tools'
 import { ChallengeData } from '../defs/hebao_def'
@@ -196,35 +196,37 @@ export class HebaoAPI extends BaseAPI {
     if (raw_data?.resultInfo.code === 0) {
       return {
         code: 0,
-        data: raw_data.data as {
-          orderId: number
-          conditionType: number
-          recommendedGasPrice: string
-          base: {
-            gasLimit: string
-            discountPercentage: 80
-            gasPrices: { [key: string]: string }
-            originalPriceInUsd: string
-            actualPriceInUsd: string
-          }
+        data: raw_data.data as
+          | {
+              orderId: number
+              conditionType: number
+              recommendedGasPrice: string
+              base: {
+                gasLimit: string
+                discountPercentage: 80
+                gasPrices: { [key: string]: string }
+                originalPriceInUsd: string
+                actualPriceInUsd: string
+              }
 
-          lockInfo: {
-            from: number
-            orderOverdueAt: number
-            enqueueOverdueAt: number
-            releaseAt: number
-          }
-          total: { [key: string]: string }
-          ens: any
-          walletAddress: any
-          deposit: any
-          contractData: {
-            network: string
-            contractVersion: string
-            masterCopy: string
-            walletFactory: string
-          }
-        } | ChallengeData,
+              lockInfo: {
+                from: number
+                orderOverdueAt: number
+                enqueueOverdueAt: number
+                releaseAt: number
+              }
+              total: { [key: string]: string }
+              ens: any
+              walletAddress: any
+              deposit: any
+              contractData: {
+                network: string
+                contractVersion: string
+                masterCopy: string
+                walletFactory: string
+              }
+            }
+          | ChallengeData,
       }
     } else {
       throw {
@@ -363,31 +365,8 @@ export class HebaoAPI extends BaseAPI {
       code: raw_data?.resultInfo.code as number,
       message: raw_data?.resultInfo.message as string,
     }
-    
   }
-  // public async computeWalletAddress<R>(request: { network?: string, owner?: string, wallet?: string, timestamp: number }, ecdsaPrivateKey: string): Promise<{
-  //   raw_data: R
-  // }> {
-  //   const reqParams: ReqParams = {
-  //     url: '/api/wallet/v3/getWallet',
-  //     queryParams: { network: request.network, owner: request.owner, wallet: request.wallet, timestamp: request.timestamp },
-  //     method: ReqMethod.GET,
-  //     sigFlag: SIG_FLAG.ECDSA_SIG,
-  //     sigObj: {
-  //       dataToSig: {},
-  //       ecdsaPrivateKey: ecdsaPrivateKey,
-  //     },
-  //   }
-  //   const raw_data = (await this.makeReq().request(reqParams)).data
-  //   if (raw_data?.resultInfo) {
-  //     return {
-  //       ...raw_data?.resultInfo,
-  //     }
-  //   }
-  //   return {
-  //     raw_data,
-  //   }
-  // }
+
   public async getWallet(
     request: { network?: string; owner?: string; wallet?: string; timestamp: number },
     ecdsaPrivateKey: string,
@@ -398,7 +377,7 @@ export class HebaoAPI extends BaseAPI {
     salt: string
     walletAddress: string
     ens: string
-    phone: { 
+    phone: {
       countryCode: string
       phoneNumber: string
     }
@@ -444,13 +423,63 @@ export class HebaoAPI extends BaseAPI {
     if (raw_data?.resultInfo.code === 0) {
       return {
         raw_data: raw_data,
-        ...raw_data.data
+        ...raw_data.data,
       }
     } else {
       throw {
         code: raw_data?.resultInfo.code,
         message: raw_data?.resultInfo.message,
-      }      
+      }
     }
+  }
+
+  public async activateLayer2(
+    request: {
+      accountId: number
+      counterFactualInfo: {
+        walletOwner: string
+        walletFactory: string
+        walletSalt: string
+      }
+      ecdsaSignature: string
+      exchange: string
+      hashApproved: string
+      maxFee: {
+        volume: string
+        tokenId: number
+      }
+      nonce: number
+      owner: string
+      publicKey: {
+        x: string
+        y: string
+      }
+      validUntil: number
+    },
+    eddsaPrivateKey: string,
+  ): Promise<{}> {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.ACCOUNT_ACTION,
+      bodyParams: request,
+      method: ReqMethod.POST,
+      sigFlag: SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig: sortObjDictionary(request),
+        PrivateKey: eddsaPrivateKey,
+      },
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data
+    // if (raw_data?.resultInfo?.code === 0) {
+    //   return {
+    //     raw_data: raw_data,
+    //     ...raw_data.data,
+    //   }
+    // } else {
+    //   throw {
+    //     code: raw_data?.resultInfo.code,
+    //     message: raw_data?.resultInfo.message,
+    //   }
+    // }
   }
 }

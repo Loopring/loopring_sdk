@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { Transaction } from '@ethereumjs/tx'
+import * as ethereumjsTx from '@ethereumjs/tx'
 
 import * as loopring_defs from '../defs'
 
@@ -61,7 +61,7 @@ export async function signEthereumTx(
   rawTx: any,
   chainId: loopring_defs.ChainId,
 ): Promise<{ result: string; rawTx: object } | { error: any }> {
-  const ethTx = Transaction.fromSerializedTx(rawTx)
+  const ethTx = ethereumjsTx.Transaction.fromSerializedTx(rawTx)
   const hash = toHex(ethTx.hash())
   try {
     const response: any = await sign(web3, account, '', hash)
