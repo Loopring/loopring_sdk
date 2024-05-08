@@ -457,7 +457,14 @@ export class HebaoAPI extends BaseAPI {
       validUntil: number
     },
     eddsaPrivateKey: string,
-  ): Promise<{}> {
+  ): Promise<{
+    accountId: number
+    hash: string
+    isIdempotent: boolean
+    status: string
+    storageId: number
+    tokenId: number
+  }> {
     const reqParams: ReqParams = {
       url: LOOPRING_URLs.ACCOUNT_ACTION,
       bodyParams: request,
