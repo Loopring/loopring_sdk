@@ -71,7 +71,7 @@ export class Request {
           return true
         }
         return false
-        // return true // always true, handle exception in each bussiness logic
+        // return true // always true, handle exception in each business logic
       },
 
       insecure: true,
