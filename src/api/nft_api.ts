@@ -27,6 +27,10 @@ const CREATION_CODE = {
     '3d602d80600a3d3981f3363d3d373d3d3d363d73b25f6d711aebf954fb0265a3b29f7b9beba7e55d5af43d82803e903d91602b57fd5bf3',
   [ChainId.SEPOLIA]:
     '3d602d80600a3d3981f3363d3d373d3d3d363d73a38a8522e2cdad8cf4e38be82710563d926931de5af43d82803e903d91602b57fd5bf3',
+  [ChainId.TAIKOHEKLA]:
+    '',
+  [ChainId.TAIKO]:
+    '',
 }
 const {
   Contracts: {

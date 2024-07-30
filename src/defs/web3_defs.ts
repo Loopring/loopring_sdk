@@ -30,6 +30,8 @@ export const NFTFactory = {
   [ChainId.MAINNET]: '0xc852aC7aAe4b0f0a0Deb9e8A391ebA2047d80026',
   [ChainId.GOERLI]: '0x355E9941C5e301033ecfD37184E78443c5241035',
   [ChainId.SEPOLIA]: '0xaD8923F1836C7177CB337fCf803D412f5729E587',
+  [ChainId.TAIKOHEKLA]: '',
+  [ChainId.TAIKO]: '',
 }
 
 export const NFTFactory_Collection = {
