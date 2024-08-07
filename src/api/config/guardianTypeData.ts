@@ -2,6 +2,7 @@ import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from '../../defs'
 import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
 import { personalSign } from '../base_api'
+import { utils } from 'ethers'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -62,7 +63,8 @@ function getApproveRecoverTypedData({
       // newOwner: newOwner,
     },
   }
-  // myLog('typedData message', ethUtil.keccak256(toBuffer(typedData.message)))
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {recover: typedData.types.recover}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 
@@ -108,6 +110,8 @@ function getApproveTransferTypedData({
       ...message,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {transferToken: typedData.types.transferToken}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 
@@ -181,6 +185,8 @@ function getRemoveGuardianTypedData({
       ...message,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {removeGuardian: typedData.types.removeGuardian}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 function getUnlockWalletTypedData({
@@ -221,6 +227,8 @@ function getUnlockWalletTypedData({
       validUntil: validUntil,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {unlock: typedData.types.unlock}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 function getApproveChangeMasterCopy({
@@ -262,6 +270,8 @@ function getApproveChangeMasterCopy({
       ...message,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {changeMasterCopy: typedData.types.changeMasterCopy}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 function getDepositWalletTypedData({
@@ -305,6 +315,8 @@ function getDepositWalletTypedData({
       ...message,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {callContract: typedData.types.callContract}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 
@@ -348,6 +360,8 @@ function getApproveTokenCopy({
       ...message,
     },
   }
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {approveToken: typedData.types.approveToken}, typedData.message)
+  console.log('EIP712 hash', hash)
   return typedData
 }
 export async function signHebaoApproveWrap(
