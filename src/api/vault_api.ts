@@ -313,6 +313,7 @@ export class VaultAPI extends BaseAPI {
       throw error as AxiosResponse
     }
   }
+  
   public async submitVaultExit<R>({
     request,
     privateKey,
@@ -489,6 +490,57 @@ export class VaultAPI extends BaseAPI {
         list: [...raw_data],
         raw_data,
       }
+    }
+  }
+
+  public async getCredit(request: { accountId: number }, apiKey: string) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_CREDIT,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...request
+      },
+      apiKey
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      throw {
+        ...raw_data?.resultInfo,
+      }
+    } else {
+      return {
+        tokenFactors: raw_data.data as {
+          symbol: string
+          factor: string
+        }[],
+        maxLeverage: raw_data.maxLeverage as string
+      }
+    }
+  }
+  public async submitLeverage<R>({
+    request,
+    // privateKey,
+    apiKey,
+  }: {
+    request: {
+      accountId: string
+      leverage: string
+    }
+    apiKey: string
+  }) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_SUBMIT_LEVERAGE,
+      bodyParams: request,
+      apiKey,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return raw_data
+    } catch (error) {
+      throw error as AxiosResponse
     }
   }
 }

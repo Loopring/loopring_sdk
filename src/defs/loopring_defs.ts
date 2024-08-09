@@ -4462,6 +4462,7 @@ export type VaultAccountInfo = {
   maxBorrowableOfUsdt: string
   userAssets: VaultBalance[]
   openDate: number
+  leverage: string
 }
 
 export enum VaultOperationType {
