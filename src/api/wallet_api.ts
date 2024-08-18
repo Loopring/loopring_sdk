@@ -560,4 +560,35 @@ export class WalletAPI extends BaseAPI {
       raw_data,
     }
   }
+  public async getAccountServices<R>(request: loopring_defs.GetAccountServicesRequest): Promise<{
+    register: any
+    order: any
+    joinAmm: any
+    dAppTrade: any
+    legal: any
+    raw_data: R
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_ACCOUNT_SERVICES,
+      queryParams: request,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      ...raw_data,
+      register: raw_data?.register,
+      order: raw_data?.order,
+      joinAmm: raw_data?.joinAmm,
+      dAppTrade: raw_data?.dAppTrade,
+      legal: raw_data?.dAppTrade,
+      raw_data,
+    }
+  }
 }
