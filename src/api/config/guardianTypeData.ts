@@ -188,7 +188,7 @@ function getRemoveGuardianTypedData({
     message: {
       wallet: wallet,
       validUntil: validUntil,
-      ...message,
+      guardian: message!['guardian'],
     },
   }
   const hash= utils._TypedDataEncoder.hash(typedData.domain, {removeGuardian: typedData.types.removeGuardian}, typedData.message)

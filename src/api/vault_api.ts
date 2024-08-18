@@ -518,6 +518,33 @@ export class VaultAPI extends BaseAPI {
       }
     }
   }
+  public async getCollaterals(request: { accountId: number }, apiKey: string) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_COLLATERALS,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...request
+      },
+      apiKey
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      throw {
+        ...raw_data?.resultInfo,
+      }
+    } else {
+      return {
+        collateralTokens: raw_data.data as {
+          orderHash: string
+          collateralTokenId: number
+          collateralTokenAmount: string
+          nftTokenId: number
+          nftData: string
+        }[]
+      }
+    }
+  }
   public async submitLeverage<R>({
     request,
     // privateKey,
@@ -539,6 +566,36 @@ export class VaultAPI extends BaseAPI {
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
       return raw_data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+  }
+  public async submitDustCollector(
+    req: loopring_defs.VaultDustCollectorRequest
+  ) {
+    let { dustTransfers, eddsaKey, apiKey, accountId } = req
+    const signedDustTransfers = dustTransfers.map(dustTransfer => {
+      const eddsaSignature= sign_tools.get_EddsaSig_Transfer(dustTransfer, eddsaKey)?.result
+      return {
+        ...dustTransfer,
+        eddsaSignature
+      }
+    })
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_SUBMIT_DUST_COLLECTOR,
+      bodyParams: {
+        dustTransfers: signedDustTransfers,
+        accountId
+      },
+      apiKey,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return {
+        hash: raw_data.hash as string
+      }
     } catch (error) {
       throw error as AxiosResponse
     }

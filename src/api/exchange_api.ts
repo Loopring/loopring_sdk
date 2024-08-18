@@ -43,6 +43,8 @@ import {
   DatacenterTokenInfoSimple,
   GetDatacenterTokenOhlcvQuoteTrendRequest,
   GetCmcTokenRelationsRequest,
+  getLatestTokenPricesRequest,
+  GetUserTradeAmount,
 } from '../defs'
 
 import BigNumber from 'bignumber.js'
@@ -1354,6 +1356,55 @@ export class ExchangeAPI extends BaseAPI {
     return {
       raw_data,
       list: raw_data?.data,
+    }
+  }
+
+  public async getLatestTokenPrices(request?: getLatestTokenPricesRequest) {
+    const reqParams: ReqParams = {
+      queryParams: request,
+      url: LOOPRING_URLs.GET_LATEST_TOKEN_PRICES,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    const tokenPrices: LoopringMap<number> = {}
+
+    if (raw_data?.data instanceof Array) {
+      raw_data.data.forEach((item: any) => {
+        tokenPrices[item.token.toLowerCase()] = parseFloat(item.price)
+      })
+    }
+
+    return {
+      tokenPrices,
+      raw_data,
+    }
+  }
+
+  /*
+   * Get user trade amount
+   */
+  public async getUserTradeAmount(request: GetUserTradeAmount) {
+    const reqParams: ReqParams = {
+      url: LOOPRING_URLs.GET_USER_TRADE_AMOUNT,
+      queryParams: request,
+      method: ReqMethod.GET,
+      sigFlag: SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return {
+      raw_data,
     }
   }
 }
