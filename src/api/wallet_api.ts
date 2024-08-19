@@ -115,8 +115,9 @@ export class WalletAPI extends BaseAPI {
       isHWAddr: isHWAddrOld,
     } = req
     const isHWAddr = !!isHWAddrOld
-    let ecdsaSignature = undefined
-    ecdsaSignature = await signHebaoApproveWrap({
+    const {
+      signature: ecdsaSignature
+    } = await signHebaoApproveWrap({
       chainId,
       web3,
       owner: request.signer,
