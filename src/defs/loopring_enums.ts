@@ -271,4 +271,5 @@ export enum NetworkWallet {
   GOERLI = 'GOERLI',
   TAIKO = 'TAIKO',
   SEPOLIA = 'SEPOLIA',
+  TAIKOHEKLA = 'TAIKOHEKLA',
 }
