@@ -2,6 +2,7 @@ import { ChainId, ConnectorNames, HEBAO_META_TYPE, SigSuffix } from '../../defs'
 import { myLog } from '../../utils/log_tools'
 import { getEcDSASig, GetEcDSASigType } from '../sign/sign_tools'
 import { personalSign } from '../base_api'
+import { utils } from 'ethers'
 
 const EIP712Domain = [
   { name: 'name', type: 'string' },
@@ -62,8 +63,12 @@ function getApproveRecoverTypedData({
       // newOwner: newOwner,
     },
   }
-  // myLog('typedData message', ethUtil.keccak256(toBuffer(typedData.message)))
-  return typedData
+  const hash = utils._TypedDataEncoder.hash(typedData.domain, {recover: typedData.types.recover}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 
 function getApproveTransferTypedData({
@@ -108,7 +113,12 @@ function getApproveTransferTypedData({
       ...message,
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {transferToken: typedData.types.transferToken}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 
 // function getAddGuardianTypedData({
@@ -178,10 +188,15 @@ function getRemoveGuardianTypedData({
     message: {
       wallet: wallet,
       validUntil: validUntil,
-      ...message,
+      guardian: message!['guardian'],
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {removeGuardian: typedData.types.removeGuardian}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 function getUnlockWalletTypedData({
   chainId,
@@ -221,7 +236,12 @@ function getUnlockWalletTypedData({
       validUntil: validUntil,
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {unlock: typedData.types.unlock}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 function getApproveChangeMasterCopy({
   chainId,
@@ -262,7 +282,12 @@ function getApproveChangeMasterCopy({
       ...message,
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {changeMasterCopy: typedData.types.changeMasterCopy}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 function getDepositWalletTypedData({
   chainId,
@@ -305,7 +330,12 @@ function getDepositWalletTypedData({
       ...message,
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {callContract: typedData.types.callContract}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
 
 function getApproveTokenCopy({
@@ -348,8 +378,14 @@ function getApproveTokenCopy({
       ...message,
     },
   }
-  return typedData
+  const hash= utils._TypedDataEncoder.hash(typedData.domain, {approveToken: typedData.types.approveToken}, typedData.message)
+  console.log('EIP712 hash', hash)
+  return {
+    typedData,
+    hash
+  }
 }
+
 export async function signHebaoApproveWrap(
   props: {
     web3: any
@@ -385,16 +421,16 @@ export async function signHebaoApproveWrap(
       guardian,
       walletVersion,
     } = props as any
-    let typedData, messageHash
+    let messageHash
+    let data: {typedData: any, hash: string} | undefined
     myLog('backend hash', guardian?.messageHash)
-
     switch (type) {
       case HEBAO_META_TYPE.recovery:
         let newOwner = messageData?.newOwner
         if (!newOwner) {
           throw 'no newOwner'
         }
-        typedData = getApproveRecoverTypedData({
+        data = getApproveRecoverTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -424,7 +460,7 @@ export async function signHebaoApproveWrap(
         })
         break
       case HEBAO_META_TYPE.remove_guardian:
-        typedData = getRemoveGuardianTypedData({
+        data = getRemoveGuardianTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -434,10 +470,11 @@ export async function signHebaoApproveWrap(
           },
           walletVersion,
         })
+
         break
 
       case HEBAO_META_TYPE.unlock_wallet:
-        typedData = getUnlockWalletTypedData({
+        data = getUnlockWalletTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -449,7 +486,7 @@ export async function signHebaoApproveWrap(
         })
         break
       case HEBAO_META_TYPE.transfer:
-        typedData = getApproveTransferTypedData({
+        data = getApproveTransferTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -464,7 +501,7 @@ export async function signHebaoApproveWrap(
         })
         break
       case HEBAO_META_TYPE.deposit_wallet:
-        typedData = getDepositWalletTypedData({
+        data = getDepositWalletTypedData({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -478,7 +515,7 @@ export async function signHebaoApproveWrap(
         })
         break
       case HEBAO_META_TYPE.approve_token:
-        typedData = getApproveTokenCopy({
+        data = getApproveTokenCopy({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -494,7 +531,7 @@ export async function signHebaoApproveWrap(
         })
         break
       case HEBAO_META_TYPE.upgrade_contract:
-        typedData = getApproveChangeMasterCopy({
+        data = getApproveChangeMasterCopy({
           chainId,
           guardiaContractAddress: forwarderModuleAddress ? forwarderModuleAddress : masterCopy,
           wallet, // guardian.signedRequest.wallet,
@@ -509,10 +546,10 @@ export async function signHebaoApproveWrap(
         messageHash = guardian?.messageHash
     }
 
-    if (typedData) {
+    if (data && data?.typedData) {
       const result = await getEcDSASig(
         web3,
-        typedData,
+        data.typedData,
         owner,
         isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
         chainId,
@@ -522,7 +559,10 @@ export async function signHebaoApproveWrap(
         // counterFactualInfo
       )
       // ecdsaSignature
-      return (result.ecdsaSig += SigSuffix.Suffix02)
+      return {
+        signature: result.ecdsaSig += SigSuffix.Suffix02,
+        hash: data.hash
+      }
     } else {
       // const messageHash =
       const signature: any = await personalSign(
@@ -534,7 +574,10 @@ export async function signHebaoApproveWrap(
         chainId,
       )
       if (signature?.sig) {
-        return (signature.sig += SigSuffix.Suffix03)
+        return {
+          signature: signature.sig += SigSuffix.Suffix03,
+          hash: data?.hash
+        }
       } else {
         throw 'empty'
       }

@@ -4462,6 +4462,9 @@ export type VaultAccountInfo = {
   maxBorrowableOfUsdt: string
   userAssets: VaultBalance[]
   openDate: number
+  leverage: string
+  totalInterestOfUsdt: string
+  totalBorrowedOfUsdt: string
 }
 
 export enum VaultOperationType {
@@ -4569,6 +4572,30 @@ export interface VaultRepayRequestV3WithPatch {
   eddsaKey: string
   apiKey: string
   isHWAddr?: boolean
+}
+
+export interface VaultDustCollectorRequest {
+  dustTransfers: {
+    exchange: string
+    payerId: number
+    payerAddr: string
+    payeeId: number
+    payeeAddr: string
+    token: {
+      tokenId: number
+      volume: string
+    }
+    maxFee: {
+      tokenId: number
+      volume: string
+    }
+    storageId: number
+    validUntil: number
+    memo: string
+  }[]
+  eddsaKey: string
+  apiKey: string
+  accountId: number
 }
 
 export interface DatacenterTokenQuote {
