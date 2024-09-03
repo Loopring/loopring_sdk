@@ -1103,6 +1103,7 @@ export function calcDual({
     lessEarnTokenSymbol = sellToken.symbol
     greaterEarnVol = toBig(
       toBig(sellAmount ? sellAmount : 0)
+        .times(toBig(1).plus(settleRatio))
         .times(info.strike)
         .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),
     ).times('1e' + buyToken.decimals)
