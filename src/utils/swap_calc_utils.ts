@@ -1125,7 +1125,7 @@ export function calcDual({
       toBig(sellAmount ? sellAmount : 0)
         // .times(1 + info.ratio)
         .div(info.strike)
-        .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),
+        .times(toBig(1).plus(settleRatio))
     ).times('1e' + buyToken.decimals)
 
     // sellVol.times(1 + info.ratio).div(dualViewInfo.strike); //.times(1 + dualViewInfo.settleRatio);
