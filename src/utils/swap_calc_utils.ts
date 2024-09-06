@@ -1099,11 +1099,10 @@ export function calcDual({
   } = dualMarket
   const settleRatio = fm.toBig(info.profit).times(info.ratio).toFixed(6, BigNumber.ROUND_DOWN)
   if (info.dualType === DUAL_TYPE.DUAL_BASE) {
-    lessEarnVol = toBig(settleRatio).plus(1).times(sellVol) //dualViewInfo.strike);
+    lessEarnVol = toBig(sellVol)
     lessEarnTokenSymbol = sellToken.symbol
     greaterEarnVol = toBig(
       toBig(sellAmount ? sellAmount : 0)
-        .times(toBig(1).plus(settleRatio))
         .times(info.strike)
         .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),
     ).times('1e' + buyToken.decimals)
@@ -1125,12 +1124,12 @@ export function calcDual({
       toBig(sellAmount ? sellAmount : 0)
         // .times(1 + info.ratio)
         .div(info.strike)
-        .times(toBig(1).plus(settleRatio))
+        .toFixed(buyToken.precision, BigNumber.ROUND_CEIL),
     ).times('1e' + buyToken.decimals)
 
     // sellVol.times(1 + info.ratio).div(dualViewInfo.strike); //.times(1 + dualViewInfo.settleRatio);
     lessEarnTokenSymbol = buyToken.symbol
-    greaterEarnVol = toBig(settleRatio).plus(1).times(sellVol)
+    greaterEarnVol = toBig(sellVol)
     //.div(dualViewInfo.strike);
     greaterEarnTokenSymbol = sellToken.symbol
     miniSellVol = BigNumber.max(
