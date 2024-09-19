@@ -5,7 +5,7 @@ import * as sign_tools from './sign/sign_tools'
 import { AxiosResponse } from 'axios'
 
 export class VaultAPI extends BaseAPI {
-  public async getVaultTokens<R = loopring_defs.VaultToken[]>(): Promise<{
+  public async getVaultTokens<R = loopring_defs.VaultToken[]>(apiVersion?: string): Promise<{
     raw_data: R
     tokens: R
   }> {
@@ -13,6 +13,11 @@ export class VaultAPI extends BaseAPI {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_TOKENS,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -263,6 +268,9 @@ export class VaultAPI extends BaseAPI {
         PrivateKey: eddsaKey,
       },
       apiKey,
+      extraHeaders: {
+        'X-API-VERSION': '1',
+      },
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
