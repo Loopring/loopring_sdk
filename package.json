@@ -67,8 +67,8 @@
   "scripts": {
     "build": "rimraf dist && NODE_ENV=production cross-env BABEL_ENV=prod rollup -c --bundleConfigAsCjs",
     "start": "NODE_ENV=development rollup -c --bundleConfigAsCjs -w",
-    "test": "tsdx test",
-    "test_calc": "tsdx test",
+    "test": "jest",
+    "test_calc": "jest",
     "lint": "eslint . --fix --quiet --ext .ts",
     "prepublishDev": "NODE_ENV=dev build build",
     "prepublishOnly": "yarn build",

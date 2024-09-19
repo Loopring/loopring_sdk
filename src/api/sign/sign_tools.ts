@@ -57,7 +57,7 @@ import { myLog } from '../../utils/log_tools'
 import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { getWindowSafely } from 'utils/window_utils'
+import { getWindowSafely } from '../../utils/window_utils'
 import { TypedDataDomain, TypedDataField, utils } from 'ethers'
 
 export enum GetEcDSASigType {
