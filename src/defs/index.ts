@@ -1,4 +1,4 @@
-import { getNavigatorSafely, getWindowSafely } from 'utils/window_utils'
+import { getNavigatorSafely, getWindowSafely } from '../utils/window_utils'
 
 export * from './loopring_enums'
 export * from './url_defs'
