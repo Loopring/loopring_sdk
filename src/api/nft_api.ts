@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { BaseAPI } from './base_api'
-import CID from 'cids'
+import { CID } from 'multiformats'
 import * as loopring_defs from '../defs'
 import {
   ChainId,
@@ -17,8 +17,9 @@ import { myLog } from '../utils/log_tools'
 import * as ethUtil from 'ethereumjs-util'
 import { genExchangeData, sendRawTx } from './contract_api'
 import { contracts } from './ethereum/contracts'
-
 import BN from 'bn.js'
+import {code} from 'multiformats/codecs/raw'
+import {SHA_256} from 'multiformats'
 
 const CREATION_CODE = {
   [ChainId.GOERLI]:
@@ -320,8 +321,8 @@ export class NFTAPI extends BaseAPI {
   }
   public ipfsCid0ToNftID(cidV0Str: string): string {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const cid = new CID(cidV0Str)
-    const hashHex = Buffer.from(cid.multihash.slice(2)).toString('hex')
+    const cid = CID.parse(cidV0Str)
+    const hashHex = Buffer.from(cid.multihash.bytes).toString('hex')
     const hashBN = new BN(hashHex, 16)
     return '0x' + hashBN.toString('hex').padStart(64, '0')
   }
@@ -334,8 +335,8 @@ export class NFTAPI extends BaseAPI {
     const hashBN = new BN(nftId.replace('0x', ''), 16)
     const hex = hashBN.toString(16, 64)
     const buf = Buffer.from('1220' + hex, 'hex')
-    const cid = new CID(buf)
-    return cid.toString()
+    // const cid = CID.create(0 ,code, sh)
+    return 'todo'
   }
   /**
    * isApprovedForAll

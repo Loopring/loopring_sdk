@@ -14,7 +14,6 @@
     "sourceMap": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
@@ -31,7 +30,8 @@
   "include": [
     "src",
     "src/**/*.json",
-    "src/*"
+    "src/*",
+    "src/defs/web3_defs.ts"
   ],
   "exclude": [
     "node_modules",

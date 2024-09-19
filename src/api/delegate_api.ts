@@ -11,6 +11,7 @@ export class DelegateAPI extends BaseAPI {
       bodyParams: { address },
     }
 
+    
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo) {
       return {

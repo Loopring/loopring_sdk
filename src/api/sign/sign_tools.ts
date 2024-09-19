@@ -2,7 +2,6 @@
 import * as crypto from 'crypto-js'
 
 import * as abi from 'ethereumjs-abi'
-import * as sigUtil from 'eth-sig-util'
 
 import * as ethUtil from 'ethereumjs-util'
 
@@ -59,6 +58,7 @@ import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { getWindowSafely } from 'utils/window_utils'
+import { TypedDataDomain, TypedDataField, utils } from 'ethers'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -438,7 +438,7 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
 
 export async function getEcDSASig(
   web3: any,
-  typedData: any,
+  typedData: TypedData,
   address: string | undefined,
   type: GetEcDSASigType,
   chainId: ChainId,
@@ -489,7 +489,7 @@ export async function getEcDSASig(
       }
 
     case GetEcDSASigType.WithoutDataStruct:
-      hash = sigUtil.TypedDataUtils.sign(typedData)
+      hash = utils._TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message)
       hash = fm.toHex(hash)
       if (!walletType) {
         throw Error('no walletType set!')
@@ -563,7 +563,7 @@ export function getUpdateAccountEcdsaTypedData(data: UpdateAccountRequestV3, cha
     nonce: data.nonce,
   }
 
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -665,10 +665,18 @@ export function getOrderHash(request: SubmitOrderRequestV3) {
   return hashInHex
 }
 
+interface TypedData {
+  types: Record<string, Array<TypedDataField>>
+  domain: TypedDataDomain
+  // value: Record<string, any>
+  primaryType: string
+  message: Record<string, any>
+}
+
 export function getWithdrawTypedData(
   data: OffChainWithdrawalRequestV3,
   chainId: ChainId,
-): sigUtil.EIP712TypedData {
+): TypedData {
   const message = {
     owner: data.owner,
     accountID: data.accountId,
@@ -683,7 +691,7 @@ export function getWithdrawTypedData(
     storageID: data.storageId,
   }
 
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -829,7 +837,7 @@ export function getNFTMintTypedData(
   data: NFTMintRequestV3,
   chainId: ChainId,
   web3: Web3,
-): sigUtil.EIP712TypedData {
+): TypedData {
   let nftId = data.nftId
   if (data.nftId.startsWith('0x')) {
     nftId = web3.utils.hexToNumberString(data.nftId)
@@ -847,7 +855,7 @@ export function getNFTMintTypedData(
     storageID: data.storageId,
   }
 
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -883,7 +891,7 @@ export function getNFTMintTypedData(
 export function getNFTWithdrawTypedData(
   data: NFTWithdrawRequestV3,
   chainId: ChainId,
-): sigUtil.EIP712TypedData {
+): TypedData {
   const message = {
     owner: data.owner,
     accountID: data.accountId,
@@ -898,7 +906,7 @@ export function getNFTWithdrawTypedData(
     storageID: data.storageId,
   }
 
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -1086,7 +1094,7 @@ export function get_EddsaSig_Transfer(request: OriginTransferRequestV3, eddsaKey
 export function getTransferOldTypedData(
   data: OriginTransferRequestV3,
   chainId: ChainId,
-): sigUtil.EIP712TypedData {
+): TypedData {
   const message = {
     from: data.payerAddr,
     to: data.payeeAddr,
@@ -1097,7 +1105,7 @@ export function getTransferOldTypedData(
     validUntil: data.validUntil,
     storageID: data.storageId,
   }
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -1131,7 +1139,7 @@ export function getTransferOldTypedData(
 export function getTransferTypedData(
   data: OriginTransferRequestV3,
   chainId: ChainId,
-): sigUtil.EIP712TypedData {
+): TypedData {
   const message = {
     from: data.payerAddr,
     to: data.payeeAddr,
@@ -1142,7 +1150,7 @@ export function getTransferTypedData(
     validUntil: data.validUntil,
     storageID: data.storageId,
   }
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -1297,7 +1305,7 @@ export function getNftTradeHash(request: NFTTradeRequestV3) {
 export function getNFTTransferTypedData(
   data: OriginNFTTransferRequestV3,
   chainId: ChainId,
-): sigUtil.EIP712TypedData {
+): TypedData {
   const message = {
     from: data.fromAddress,
     to: data.toAddress,
@@ -1308,7 +1316,7 @@ export function getNFTTransferTypedData(
     validUntil: data.validUntil,
     storageID: data.storageId,
   }
-  const typedData: sigUtil.EIP712TypedData = {
+  const typedData: TypedData = {
     types: {
       EIP712Domain: [
         { name: 'name', type: 'string' },
@@ -1339,8 +1347,9 @@ export function getNFTTransferTypedData(
   return typedData
 }
 
-export function eddsaSign(typedData: any, eddsaKey: string) {
-  const hash = fm.toHex(sigUtil.TypedDataUtils.sign(typedData))
+export function eddsaSign(typedData: TypedData, eddsaKey: string) {
+  
+  const hash = utils._TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message)
   // LOG: for signature
   // myLog('eddsaSign', hash)
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
@@ -1356,15 +1365,15 @@ export function eddsaSign(typedData: any, eddsaKey: string) {
 export function eddsaSignWithDomain(
   domainHax: string,
   primaryType: string,
-  message: sigUtil.EIP712Message,
-  types: sigUtil.EIP712Types,
+  message: Record<string, unknown>,
+  types: Record<string, Array<TypedDataField>>,
   eddsaKey: string,
 ) {
-  const parts = [Buffer.from('1901', 'hex')]
-  parts.push(Buffer.from(domainHax.slice(2), 'hex'))
-
-  //https://github.com/MetaMask/eth-sig-util/blob/main/CHANGELOG.md
-  parts.push(sigUtil.TypedDataUtils.hashStruct(primaryType, message, types))
+  const parts = [
+    Buffer.from('1901', 'hex'),
+    Buffer.from(domainHax.slice(2), 'hex'),
+    Buffer.from(utils._TypedDataEncoder.hashStruct(primaryType, types, message).slice(2), 'hex'),
+  ]
   const hash = fm.toHex(ethUtil.keccak(Buffer.concat(parts))) //5.2.0 - 2018-04-27 keccak  sha3() -> keccak()
   const sigHash = fm.toHex(new BigInteger(hash, 16).idiv(8))
   const signature = EDDSAUtil.sign(eddsaKey, sigHash)
