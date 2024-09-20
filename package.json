@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.9.7",
+  "version": "3.9.8-warningOpt2",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -43,16 +43,15 @@
     "buffer": "^6.0.3",
     "core-js": "3",
     "crypto-js": "4.1.1",
-    "eth-sig-util": "2.3.0",
     "ethereumjs-abi": "0.6.8",
     "ethereumjs-util": "5.2.0",
     "ethers": "^5.7.2",
     "js-sha3": "^0.8.0",
     "js-sha512": "^0.8.0",
     "jsbn": "^1.1.0",
-    "multiformats": "^12.0.1",
+    "ts-jest": "^29.2.5",
     "web-encoding": "^1.1.5",
-    "web3": "1.10.0"
+    "web3": "4.13.0"
   },
   "build": {
     "files": [

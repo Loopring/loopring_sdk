@@ -6,7 +6,7 @@ import { contracts as abi } from './ethereum/contracts'
 import { AxiosResponse } from 'axios'
 import * as ethUtil from 'ethereumjs-util'
 import { isContract } from './contract_api'
-import { getWindowSafely } from 'utils/window_utils'
+import { getWindowSafely } from '../utils/window_utils'
 
 export const KEY_MESSAGE =
   'Sign this message to access Loopring Exchange: ' +
