@@ -2023,6 +2023,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; contractAddress: string }> {
     const _req = req.nftFactory
       ? req
+      //@ts-ignore
       : { ...req, nftFactory: loopring_defs.NFTFactory_Collection[chainId] }
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {

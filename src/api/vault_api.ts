@@ -30,6 +30,7 @@ export class VaultAPI extends BaseAPI {
   public async getVaultBalance<R = loopring_defs.UserBalanceInfo>(
     request: loopring_defs.GetUserBalancesRequest,
     apiKey: string,
+    apiVersion?: string
   ): Promise<{
     raw_data: R[]
     userBalances: loopring_defs.LoopringMap<R>
@@ -40,6 +41,11 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
 
     const raw_data = (await this.makeReq().request(reqParams)).data
@@ -61,7 +67,7 @@ export class VaultAPI extends BaseAPI {
       raw_data,
     }
   }
-  public async getVaultMarkets<R = loopring_defs.VaultMarket[]>(): Promise<{
+  public async getVaultMarkets<R = loopring_defs.VaultMarket[]>(apiVersion?: string): Promise<{
     raw_data: R
     markets: R
   }> {
@@ -69,6 +75,11 @@ export class VaultAPI extends BaseAPI {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_MARKETS,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -83,6 +94,7 @@ export class VaultAPI extends BaseAPI {
       accountId: number
     },
     apiKey: string,
+    apiVersion?: string
   ): Promise<{ raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETAVAILABLENFT,
@@ -90,6 +102,11 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -104,6 +121,7 @@ export class VaultAPI extends BaseAPI {
       accountId: number
     },
     apiKey: string,
+    apiVersion?: string
   ): Promise<{ raw_data: R } & R> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_ACCOUNT,
@@ -111,6 +129,11 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -136,6 +159,7 @@ export class VaultAPI extends BaseAPI {
       limit: number
     },
     apiKey: string,
+    apiVersion?: string
   ): Promise<{ raw_data: { data: R[]; total: number } } & { list: R[]; totalNum: number }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETOPERATIONS,
@@ -149,6 +173,11 @@ export class VaultAPI extends BaseAPI {
       method: loopring_defs.ReqMethod.GET,
       apiKey,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -169,6 +198,7 @@ export class VaultAPI extends BaseAPI {
       hash: string // OperationHash
     },
     apiKey: string,
+    apiVersion?: string
   ): Promise<R & { raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_GETOPERATIONBY_HASH,
@@ -176,6 +206,11 @@ export class VaultAPI extends BaseAPI {
       method: loopring_defs.ReqMethod.GET,
       apiKey,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -196,7 +231,7 @@ export class VaultAPI extends BaseAPI {
       limit?: number
     }
     tokenMap?: any
-  }): Promise<{
+  }, apiVersion?: string): Promise<{
     depth: loopring_defs.DepthData
     raw_data: R
   }> {
@@ -205,6 +240,11 @@ export class VaultAPI extends BaseAPI {
       queryParams: { ...request },
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
 
@@ -251,7 +291,7 @@ export class VaultAPI extends BaseAPI {
     request,
     eddsaKey,
     apiKey,
-  }: loopring_defs.VaultOrderNFTRequestV3WithPatch) {
+  }: loopring_defs.VaultOrderNFTRequestV3WithPatch, apiVersion?: string) {
     const takerOrderEddsaSignature = get_EddsaSig_NFT_Order(request, eddsaKey).result
     const _request = {
       ...request,
@@ -268,9 +308,11 @@ export class VaultAPI extends BaseAPI {
         PrivateKey: eddsaKey,
       },
       apiKey,
-      extraHeaders: {
-        'X-API-VERSION': '1',
-      },
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -287,7 +329,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultOrderRequest
     privateKey: string
     apiKey: string
-  }) {
+  }, apiVersion?: string) {
     const dataToSig = [
       request.exchange,
       request.storageId,
@@ -313,6 +355,11 @@ export class VaultAPI extends BaseAPI {
         sigPatch: loopring_defs.SigPatchField.EddsaSignature,
         PrivateKey: privateKey,
       },
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -330,7 +377,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultExitRequest
     privateKey: string
     apiKey: string
-  }) {
+  }, apiVersion?: string) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.POST_VAULT_EXIT,
@@ -342,6 +389,11 @@ export class VaultAPI extends BaseAPI {
         dataToSig,
         PrivateKey: privateKey,
       },
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -351,11 +403,16 @@ export class VaultAPI extends BaseAPI {
     }
   }
 
-  public async submitVaultTransfer<R>() {
+  public async submitVaultTransfer<R>(apiVersion?: string) {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.POST_VAULT_TRANSFER,
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -373,7 +430,7 @@ export class VaultAPI extends BaseAPI {
     request: loopring_defs.VaultBorrowRequest
     privateKey: string
     apiKey: string
-  }) {
+  }, apiVersion?: string) {
     const dataToSig: Map<string, any> = sortObjDictionary(request)
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.POST_VAULT_LOAN,
@@ -385,6 +442,11 @@ export class VaultAPI extends BaseAPI {
         dataToSig,
         PrivateKey: privateKey,
       },
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -397,6 +459,7 @@ export class VaultAPI extends BaseAPI {
   public async submitVaultRepay<R>(
     req: loopring_defs.VaultRepayRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
+    apiVersion?: string
   ) {
     let { request, eddsaKey, apiKey } = req
     const { counterFactualInfo }: any = options ? options : { accountId: 0 }
@@ -415,6 +478,11 @@ export class VaultAPI extends BaseAPI {
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature: undefined,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
 
     try {
@@ -443,6 +511,7 @@ export class VaultAPI extends BaseAPI {
   public async sendVaultResetToken(
     req: loopring_defs.OriginTransferRequestV3WithPatch,
     options?: { accountId?: number; counterFactualInfo?: any },
+    apiVersion?: string
   ) {
     let { request, eddsaKey, apiKey } = req
     const { counterFactualInfo }: any = options ? options : { accountId: 0 }
@@ -461,6 +530,11 @@ export class VaultAPI extends BaseAPI {
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
       ecdsaSignature: undefined,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     let raw_data
     try {
@@ -476,7 +550,7 @@ export class VaultAPI extends BaseAPI {
     }
   }
 
-  public async getVaultPrice(request: { tokenIds: string | number[] }) {
+  public async getVaultPrice(request: { tokenIds: string | number[] }, apiVersion?: string) {
     // let { request, eddsaKey, apiKey } = req
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_PRICE,
@@ -487,6 +561,11 @@ export class VaultAPI extends BaseAPI {
         tokenIds:
           typeof request.tokenIds === 'string' ? request?.tokenIds : request.tokenIds?.join(','),
       },
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -501,7 +580,7 @@ export class VaultAPI extends BaseAPI {
     }
   }
 
-  public async getCredit(request: { accountId: number }, apiKey: string) {
+  public async getCredit(request: { accountId: number }, apiKey: string, apiVersion?: string) {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_CREDIT,
       method: loopring_defs.ReqMethod.GET,
@@ -509,7 +588,12 @@ export class VaultAPI extends BaseAPI {
       queryParams: {
         ...request
       },
-      apiKey
+      apiKey,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -518,7 +602,7 @@ export class VaultAPI extends BaseAPI {
       }
     } else {
       return {
-        tokenFactors: raw_data.data as {
+        tokenFactors: raw_data.tokenFactors as {
           symbol: string
           factor: string
         }[],
@@ -526,7 +610,7 @@ export class VaultAPI extends BaseAPI {
       }
     }
   }
-  public async getCollaterals(request: { accountId: number }, apiKey: string) {
+  public async getCollaterals(request: { accountId: number }, apiKey: string, apiVersion?: string) {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_COLLATERALS,
       method: loopring_defs.ReqMethod.GET,
@@ -534,7 +618,12 @@ export class VaultAPI extends BaseAPI {
       queryParams: {
         ...request
       },
-      apiKey
+      apiKey,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
     if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
@@ -563,13 +652,18 @@ export class VaultAPI extends BaseAPI {
       leverage: string
     }
     apiKey: string
-  }) {
+  }, apiVersion?: string) {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_SUBMIT_LEVERAGE,
       bodyParams: request,
       apiKey,
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -579,7 +673,7 @@ export class VaultAPI extends BaseAPI {
     }
   }
   public async submitDustCollector(
-    req: loopring_defs.VaultDustCollectorRequest
+    req: loopring_defs.VaultDustCollectorRequest, apiVersion?: string
   ) {
     let { dustTransfers, eddsaKey, apiKey, accountId } = req
     const signedDustTransfers = dustTransfers.map(dustTransfer => {
@@ -598,6 +692,11 @@ export class VaultAPI extends BaseAPI {
       apiKey,
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
     }
     try {
       const raw_data = (await this.makeReq().request(reqParams)).data
@@ -606,6 +705,34 @@ export class VaultAPI extends BaseAPI {
       }
     } catch (error) {
       throw error as AxiosResponse
+    }
+  }
+  
+  public async getMaxBorrowable(request: { accountId: number, symbol: string }, apiKey: string, apiVersion?: string) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_GEMAX_BORROWABLE,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      queryParams: {
+        ...request
+      },
+      apiKey,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      throw {
+        ...raw_data?.resultInfo,
+      }
+    } else {
+      return raw_data as {
+        accountId: number
+        maxBorrowableOfUsdt: string
+      }
     }
   }
 }

@@ -4410,6 +4410,18 @@ export type VaultMarket = {
     base: string
     quote: string
   }
+  minTradeAmount: {
+    base: string
+    quote: string
+  }
+  minTradePromptAmount: {
+    base: string
+    quote: string
+  }
+  upSlippageFeeBips: {
+    base: string
+    quote: string
+  }
   // cefiMarket: LRCUSDT,
   riskThreshold: number
   interestThreshold: number
