@@ -4410,6 +4410,18 @@ export type VaultMarket = {
     base: string
     quote: string
   }
+  minTradeAmount: {
+    base: string
+    quote: string
+  }
+  minTradePromptAmount: {
+    base: string
+    quote: string
+  }
+  upSlippageFeeBips: {
+    base: string
+    quote: string
+  }
   // cefiMarket: LRCUSDT,
   riskThreshold: number
   interestThreshold: number
@@ -4474,6 +4486,8 @@ export enum VaultOperationType {
   VAULT_REPAY = 'VAULT_REPAY',
   VAULT_TRADE = 'VAULT_TRADE',
   VAULT_CLOSE_OUT = 'VAULT_CLOSE_OUT',
+  VAULT_CONVERT = 'VAULT_CONVERT',
+  VAULT_JOIN_REDEEM = 'VAULT_JOIN_REDEEM',
 }
 export enum VaultOperationEnum {
   VAULT_OPEN_POSITION,
