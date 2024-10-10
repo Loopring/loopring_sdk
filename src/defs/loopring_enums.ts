@@ -250,6 +250,7 @@ export interface ReqParams {
   eddsaSignature?: string
   ecdsaSignature?: string
   eddsaSignatureREFER?: boolean
+  extraHeaders?: Record<string, string>
 }
 export interface PublicKey {
   /**
