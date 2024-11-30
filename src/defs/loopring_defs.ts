@@ -4752,5 +4752,19 @@ export type UserNotification = {
   createAt: number
   redirectionContext: string
 }
+export type TaikoFarmingAvaiableNFT = {
+  nftTokenInfo: NFTTokenInfo
+  accountId: number
+  tokenId: number
+  nftData: string
+  broker: string
+  brokerId: number
+}
 
 //
+export type TaikoFarmingSubmitRequest = NFTOrderRequestV3 & { preOrderHash?: string }
+export interface TaikoFarmingSubmitOrderNFTRequestV3WithPatch {
+  request: TaikoFarmingSubmitRequest
+  eddsaKey: string
+  apiKey: string
+}
