@@ -241,4 +241,12 @@ export enum LOOPRING_URLs {
 
   GET_DEFI_APYS = '/api/v3/datacenter/getDefiApys',
   GET_DEFI_STAKE_TRANSACTIONS = '/api/v3/defi/stake/transactions',
+
+  GET_TAIKO_FARMING_POSITION_INFO = '/api/v3/taiko/farming/getPositionInfo',
+  GET_TAIKO_FARMING_TRANSACTIONS = '/api/v3/taiko/farming/transactions',
+  GET_TAIKO_FARMING_USER_SUMMARY = '/api/v3/taiko/farming/user/summary',
+  GET_TAIKO_FARMING_AVAILABLE_NFT = '/api/v3/taiko/farming/getAvailableNft',
+  GET_TAIKO_FARMING_TRANSACTION_BY_HASH = '/api/v3/taiko/farming/getTaikoFarmingTransactionByHash',
+  GET_TAIKO_FARMING_DEPOSIT_DURATION_LIST = '/api/v3/taiko/farming/getDepositDurationList',
+  POST_TAIKO_FARMING_SUMBIT_CLAIM = '/api/v3/taiko/farming/sumbitClaim',
 }
