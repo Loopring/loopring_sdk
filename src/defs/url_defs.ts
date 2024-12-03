@@ -248,5 +248,7 @@ export enum LOOPRING_URLs {
   GET_TAIKO_FARMING_AVAILABLE_NFT = '/api/v3/taiko/farming/getAvailableNft',
   GET_TAIKO_FARMING_TRANSACTION_BY_HASH = '/api/v3/taiko/farming/getTaikoFarmingTransactionByHash',
   GET_TAIKO_FARMING_DEPOSIT_DURATION_LIST = '/api/v3/taiko/farming/getDepositDurationList',
+  GET_TAIKO_FARMING_GET_REDEEM ='api/v3/taiko/farming/getRedeem',
   POST_TAIKO_FARMING_SUMBIT_CLAIM = '/api/v3/taiko/farming/sumbitClaim',
+  
 }

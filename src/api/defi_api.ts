@@ -1122,6 +1122,18 @@ export class DefiAPI extends BaseAPI {
       }[]
     }
   }
+  public async getTaikoFarmingGetRedeem(queryParams: {
+    accountId: number
+  }) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_GET_REDEEM,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data
+  }
   public async submitTaikoFarmingClaim({
     request,
     eddsaKey,
