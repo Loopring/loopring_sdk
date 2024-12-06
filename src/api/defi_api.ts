@@ -927,14 +927,12 @@ export class DefiAPI extends BaseAPI {
       raw_data,
     }
   }
-  public async getTaikoFarmingPositionInfo<R = any>(
-    {
-      accountId,
-    }: {
-      accountId: number
-    }
-  ): Promise<
-    {
+  public async getTaikoFarmingPositionInfo<R = any>({
+    accountId,
+  }: {
+    accountId: number
+  }): Promise<{
+    data: {
       tokenId: number
       symbol: string
       address: string
@@ -950,7 +948,10 @@ export class DefiAPI extends BaseAPI {
       minAmount: string
       maxAmount: string
     }[]
-  > {
+    account: {
+      status: number // 0 => init, 1 => opened, 2 => minting, 3 => redeeming
+    }
+  }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_POSITION_INFO,
       queryParams: {
@@ -963,7 +964,7 @@ export class DefiAPI extends BaseAPI {
     if (raw_data.resultInfo.code !== 0) {
       throw raw_data.resultInfo
     } else {
-      return raw_data.data
+      return raw_data
     }
   }
   public async getTaikoFarmingTransactions(
@@ -1001,18 +1002,16 @@ export class DefiAPI extends BaseAPI {
     const raw_data = (await this.makeReq().request(reqParams)).data
     return raw_data
   }
-  public async getTaikoFarmingUserSummary(
-    queryParams: {
-      accountId: number
-      tokenId: number
-      start?: number
-      end?: number
-      limit?: number
-      offset?: number
-      hashes?: string
-      statuses?: string
-    }
-  ): Promise<{
+  public async getTaikoFarmingUserSummary(queryParams: {
+    accountId: number
+    tokenId: number
+    start?: number
+    end?: number
+    limit?: number
+    offset?: number
+    hashes?: string
+    statuses?: string
+  }): Promise<{
     totalNum: number
     totalStaked: string
     totalStakedRewards: string
@@ -1122,17 +1121,27 @@ export class DefiAPI extends BaseAPI {
       }[]
     }
   }
-  public async getTaikoFarmingGetRedeem(queryParams: {
-    accountId: number
-  }) {
+  public async getTaikoFarmingGetRedeem(
+    queryParams: {
+      accountId: number
+      tokenId: number
+    },
+    apiKey: string,
+  ) {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_GET_REDEEM,
       queryParams: queryParams,
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      apiKey,
     }
     const raw_data = (await this.makeReq().request(reqParams)).data
-    return raw_data
+    return raw_data as {
+      redeemAmount: string
+      profit: string
+      profitOfU: string
+      resultInfo?: loopring_defs.RESULT_INFO
+    }
   }
   public async submitTaikoFarmingClaim({
     request,
