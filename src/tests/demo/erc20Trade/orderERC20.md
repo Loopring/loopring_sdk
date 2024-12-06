@@ -580,7 +580,7 @@ const [{depth}, {ammPoolSnapshot}] = await Promise.all([
 ]);
 ```
 
-### Step 5. Check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact & swap output
+### Step 5. Check MinAmt see log and calc mini receive and output value & maxfeeBips & priceImpact & swap output
 
 ```ts
 const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
@@ -719,7 +719,7 @@ const [{depth}, {ammPoolSnapshot}] = await Promise.all([
 ]);
 ```
 
-### Step  5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact
+### Step  5. check MinAmt see log and calc mini receive and output value & maxfeeBips & priceImpact
 
 ```ts
 const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(

@@ -1484,7 +1484,7 @@ export enum STOP_SIDE {
 
 export interface SubmitOrderRequestV3 {
   /**
-   * The adderss of the exchange which has to process this order
+   * The address of the exchange which has to process this order
    * @type {string}
    * @memberof SubmitOrderRequestV3
    */
