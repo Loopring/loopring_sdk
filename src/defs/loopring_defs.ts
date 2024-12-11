@@ -4318,6 +4318,7 @@ export enum LOCK_TYPE {
   L2STAKING = 'L2STAKING',
   STOP_LIMIT = 'STOP_LIMIT',
   VAULT_COLLATERAL = 'VAULT_COLLATERAL',
+  TAIKO_FARMING = 'TAIKO_FARMING',
 }
 
 export type getUserLockSummaryRequest = {
