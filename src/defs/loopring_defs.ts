@@ -4318,6 +4318,7 @@ export enum LOCK_TYPE {
   L2STAKING = 'L2STAKING',
   STOP_LIMIT = 'STOP_LIMIT',
   VAULT_COLLATERAL = 'VAULT_COLLATERAL',
+  TAIKO_FARMING = 'TAIKO_FARMING',
 }
 
 export type getUserLockSummaryRequest = {
@@ -4752,5 +4753,19 @@ export type UserNotification = {
   createAt: number
   redirectionContext: string
 }
+export type TaikoFarmingAvaiableNFT = {
+  nftTokenInfo: NFTTokenInfo
+  accountId: number
+  tokenId: number
+  nftData: string
+  broker: string
+  brokerId: number
+}
 
 //
+export type TaikoFarmingSubmitRequest = NFTOrderRequestV3 & { preOrderHash?: string }
+export interface TaikoFarmingSubmitOrderNFTRequestV3WithPatch {
+  request: TaikoFarmingSubmitRequest
+  eddsaKey: string
+  apiKey: string
+}

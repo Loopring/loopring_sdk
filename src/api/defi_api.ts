@@ -927,4 +927,256 @@ export class DefiAPI extends BaseAPI {
       raw_data,
     }
   }
+  public async getTaikoFarmingPositionInfo<R = any>({
+    accountId,
+  }: {
+    accountId: number
+  }): Promise<{
+    data: {
+      tokenId: number
+      symbol: string
+      address: string
+      decimals: number
+      status: number
+      apr: string
+      precision: number
+      stakedTotal: string
+      claimedTotal: string
+      holdClaimedTotal: string
+      claimableTotal: string
+      totalPoints: string
+      minAmount: string
+      maxAmount: string
+    }[]
+    account: {
+      status: number // 0 => init, 1 => opened, 2 => minting, 3 => redeeming
+    }
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_POSITION_INFO,
+      queryParams: {
+        accountId,
+      },
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data.resultInfo.code !== 0) {
+      throw raw_data.resultInfo
+    } else {
+      return raw_data
+    }
+  }
+  public async getTaikoFarmingTransactions(
+    queryParams: {
+      accountId: number
+      tokenId: number
+      start?: number
+      end?: number
+      limit?: number
+      offset?: number
+      hashes?: string
+      types?: string
+    },
+    apiKey: string,
+  ): Promise<{
+    totalNum: number
+    transactions: {
+      accountId: number
+      tokenId: number
+      amount: string
+      productId: string
+      hash: string
+      stakingType: 'subscribe' | 'unsubscribe'
+      createdAt: number
+      updatedAt: number
+    }[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_TRANSACTIONS,
+      apiKey,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data
+  }
+  public async getTaikoFarmingUserSummary(queryParams: {
+    accountId: number
+    tokenId: number
+    start?: number
+    end?: number
+    limit?: number
+    offset?: number
+    hashes?: string
+    statuses?: string
+  }): Promise<{
+    totalNum: number
+    totalStaked: string
+    totalStakedRewards: string
+    totalLastDayPendingRewards: string
+    totalClaimableRewards: string
+    staking: {
+      accountId: number
+      tokenId: number
+      stakeAt: number
+      initialAmount: string
+      remainAmount: string
+      totalRewards: string
+      productId: string
+      hash: string
+      status: string
+      createdAt: number
+      updatedAt: number
+      claimableTime: number
+      lastDayPendingRewards: string
+      apr: string
+    }[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_USER_SUMMARY,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data
+  }
+  public async getTaikoFarmingAvailableNft(
+    queryParams: {
+      accountId: number
+    },
+    apiKey: string,
+  ): Promise<loopring_defs.TaikoFarmingAvaiableNFT> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_AVAILABLE_NFT,
+      apiKey,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data
+  }
+  public async getTaikoFarmingTransactionByHash(
+    queryParams: {
+      accountId: number
+      hash: string
+    },
+    apiKey: string,
+  ) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_TRANSACTION_BY_HASH,
+      apiKey,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data as {
+      operation: {
+        accountId: number
+        tokenId: number
+        amount: string
+        productId: string
+        hash: string
+        stakingType: string
+        status: number
+        createdAt: number
+        updatedAt: number
+      }
+    }
+  }
+  public async getTaikoFarmingDepositDurationList(queryParams: {
+    accountId: number
+    tokenId: number
+    start?: number
+    end?: number
+    limit?: number
+    offset?: number
+    hashes?: string
+    statuses?: string
+  }) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_DEPOSIT_DURATION_LIST,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data as {
+      totalNum: number
+      data: {
+        accountId: number
+        tokenId: number
+        stakeAt: number
+        txHash: string
+        eventIndex: number
+        lockDuration: number
+        hash: string
+        status: string
+        createdAt: number
+        updatedAt: number
+      }[]
+    }
+  }
+  public async getTaikoFarmingGetRedeem(
+    queryParams: {
+      accountId: number
+      tokenId: number
+    },
+    apiKey: string,
+  ) {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_TAIKO_FARMING_GET_REDEEM,
+      queryParams: queryParams,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      apiKey,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    return raw_data as {
+      redeemAmount: string
+      profit: string
+      profitOfU: string
+      resultInfo?: loopring_defs.RESULT_INFO
+    }
+  }
+  public async submitTaikoFarmingClaim({
+    request,
+    eddsaKey,
+    apiKey,
+  }: loopring_defs.TaikoFarmingSubmitOrderNFTRequestV3WithPatch) {
+    const takerOrderEddsaSignature = sign_tools.get_EddsaSig_NFT_Order(request, eddsaKey).result
+    const _request = {
+      ...request,
+      eddsaSignature: takerOrderEddsaSignature,
+    }
+    const dataToSig: Map<string, any> = sortObjDictionary(_request)
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.POST_TAIKO_FARMING_SUMBIT_CLAIM,
+      bodyParams: _request,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+      apiKey,
+    }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return raw_data as {
+        hash: string
+        status: string
+        isIdempotent: boolean
+        accountId: number
+        tokens: number[]
+        storageId: number
+      }
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+  }
 }

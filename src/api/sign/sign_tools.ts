@@ -278,7 +278,7 @@ export function getEdDSASig(
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  myLog('getEdDSASig hash', message, '_hash', _hash.toString(), 'hash', hash)
 
   const sig = genSigWithPadding(PrivateKey, hash)
 
@@ -318,7 +318,7 @@ export function creatEdDSASigHasH({
 
   let hash = _hash.mod(SNARK_SCALAR_FIELD).toFormat(0, 0, {})
   // LOG: for signature
-  myLog('getEdDSASig hash', message, '_hash', _hash, 'hash', hash)
+  myLog('getEdDSASig hash', message, '_hash', _hash.toString(), 'hash', hash)
   return { hash, hashRaw: toHex(_hash) }
 }
 
