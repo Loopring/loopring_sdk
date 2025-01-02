@@ -116,7 +116,7 @@ export function toNumber(mixed: number | BigNumber | BN | Buffer | string | Uint
  * @returns {BigNumber}
  */
 export function toBig(mixed: number | BigNumber | BN | Buffer | string | Uint8Array) {
-  if (mixed instanceof BigNumber) {
+  if (BigNumber.isBigNumber(mixed)) {
     return mixed
   }
 
