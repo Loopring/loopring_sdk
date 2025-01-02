@@ -786,6 +786,11 @@ export type GetOffchainFeeAmtRequest =
       tokenSymbol: string
       amount: string
     }
+  | {
+      requestType: OffchainFeeReqType.RABBIT_OFFCHAIN_WITHDRAWAL
+      tokenSymbol: string
+      amount: string
+    }
   | { requestType: OffchainFeeReqType.EXTRA_TYPES; extraType: any }
 
 /**
@@ -4339,6 +4344,15 @@ export interface GetTotalClaimRequest {
   accountId: number
 }
 
+export interface GetUserCrossChainFeeRequest {
+  receiveFeeNetwork: string,
+  calFeeNetwork: string,
+  requestType: number,
+  tokenSymbol?: string,
+  amount?: string,
+  market?: string
+}
+
 export enum CLAIM_TYPE {
   PROTOCOL_FEE = 'PROTOCOL_FEE',
   RECOMMENDER_FEE = 'RECOMMENDER_FEE',
@@ -4762,6 +4776,12 @@ export type TaikoFarmingAvaiableNFT = {
   brokerId: number
 }
 
+export interface RabbitWithdrawRequest {
+  fromNetwork: string;
+  toNetwork: string;
+  toAddress: string;
+  transfer: OriginTransferRequestV3
+}
 //
 export type TaikoFarmingSubmitRequest = NFTOrderRequestV3 & { preOrderHash?: string }
 export interface TaikoFarmingSubmitOrderNFTRequestV3WithPatch {

@@ -64,6 +64,7 @@ export enum OffchainFeeReqType {
   DEFI_EXIT = 22,
   FORCE_WITHDRAWAL = 23,
   EXTRA_TYPES = 24,
+  RABBIT_OFFCHAIN_WITHDRAWAL = 25,
 }
 export enum OffchainNFTFeeReqType {
   NFT_MINT = 9,

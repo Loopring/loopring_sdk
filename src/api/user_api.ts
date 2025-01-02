@@ -2023,8 +2023,8 @@ export class UserAPI extends BaseAPI {
   ): Promise<loopring_defs.RESULT_INFO | { raw_data: R; contractAddress: string }> {
     const _req = req.nftFactory
       ? req
-      //@ts-ignore
-      : { ...req, nftFactory: loopring_defs.NFTFactory_Collection[chainId] }
+      : //@ts-ignore
+        { ...req, nftFactory: loopring_defs.NFTFactory_Collection[chainId] }
     const dataToSig: Map<string, any> = sortObjDictionary(_req)
     const reqParams = {
       url: loopring_defs.LOOPRING_URLs.POST_NFT_CREATE_COLLECTION,
@@ -2679,6 +2679,35 @@ export class UserAPI extends BaseAPI {
       ...raw_data,
       raw_data,
     }
+  }
+
+  public async getUserCrossChainFee<R>(
+    request: loopring_defs.GetUserCrossChainFeeRequest,
+    apiKey: string,
+  ): Promise<{
+    gasPrice: string
+    fees: {
+      token: string
+      tokenId: number
+      fee: string
+      discount: number
+    }[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_CROSSCHAIN_OFFCHAIN_FEE_AMT,
+      queryParams: { ...request },
+      apiKey,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    return raw_data
   }
 
   public async getNotificationAll<R = loopring_defs.UserNotification>(
