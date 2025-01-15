@@ -149,6 +149,26 @@ export async function generateKeyPair(
     counterFactualInfo,
     isMobile === undefined ? IsMobile.any() : isMobile,
   )
+  
+  if (process.env.REACT_APP_LOG_SIGNATURE === 'true') {
+    console.log(
+      'UnlockAccountEcdsaSigInput',
+      'address:',
+      address,
+      'keySeed:',
+      keySeed,
+      'walletType:',
+      walletType,
+      'chainId:',
+      chainId,
+      'accountId:',
+      accountId,
+      'counterFactualInfo:',
+      counterFactualInfo,
+    )
+    console.log('UnlockAccountEcdsaSigOutput', result)
+  }
+  
   try {
     let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } = generatePrivateKey(result)
 
