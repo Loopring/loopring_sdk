@@ -13,7 +13,7 @@ interface CounterFactualInfo {
 }
 
 export class RabbitWithdrawAPI extends BaseAPI {
-  public async getConfig(): Promise<{config: string}> {
+  public async getConfig(): Promise<{ config: string }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_RABBIT_WITHDRAW_CONFIG, // You'll need to add this URL in url_defs.ts
       method: loopring_defs.ReqMethod.GET,
@@ -25,33 +25,47 @@ export class RabbitWithdrawAPI extends BaseAPI {
     }
   }
   public async getNetworkWithdrawalAgents(req: {
-    tokenId: number, amount: string, network: string
-  }): Promise<{}> {
+    tokenId: number
+    amount: string
+    network: string
+  }): Promise<
+    {
+      address: string
+      tokenId: number
+      symbol: string
+      totalAmount: string
+      freezeAmount: string
+      timestamp: number
+    }[]
+  > {
     const reqParams: loopring_defs.ReqParams = {
       queryParams: req,
       url: loopring_defs.LOOPRING_URLs.GET_NETWORK_WITHDRAWAL_AGENTS, // You'll need to add this URL in url_defs.ts
       method: loopring_defs.ReqMethod.GET,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
     }
-    
+
     const data = (await this.makeReq().request(reqParams)).data
-    return data as {
-      // config: string
-    }
+    return data
   }
 
-  public async submitRabitWithdraw(req: RabbitWithdrawRequest, extra: {
-    signer: ethers.providers.JsonRpcSigner, chainId: number, exchangeAddr: string,
-    eddsaSignKey: string
-  } ): Promise<{
-      hash: string;
-      status: string;
-      isIdempotent: boolean;
-      accountId: number;
-      tokenId: number;
-      storageId: number;
+  public async submitRabitWithdraw(
+    req: RabbitWithdrawRequest,
+    extra: {
+      signer: ethers.providers.JsonRpcSigner
+      chainId: number
+      exchangeAddr: string
+      eddsaSignKey: string
+    },
+  ): Promise<{
+    hash: string
+    status: string
+    isIdempotent: boolean
+    accountId: number
+    tokenId: number
+    storageId: number
   }> {
-    const {signer, chainId, exchangeAddr} = extra
+    const { signer, chainId, exchangeAddr } = extra
     const mapRequestToTypedData = (request: Record<string, any>) => {
       return {
         fromNetwork: request['fromNetwork'],
@@ -69,7 +83,7 @@ export class RabbitWithdrawAPI extends BaseAPI {
         storageID: request['transfer']['storageId'],
       } as Record<string, any>
     }
-    
+
     const signFastWithdrawTypedData = (args: {
       signer: ethers.providers.JsonRpcSigner
       chainId: number
@@ -85,20 +99,19 @@ export class RabbitWithdrawAPI extends BaseAPI {
       }
       const types = {
         RabbitWithdraw: [
-          {type: 'uint32', name: 'payerId'},
-          {type: 'address', name: 'payerAddr'},
-          {type: 'uint32', name: 'payeeId'},
-          {type: 'address', name: 'payeeAddr'},
-          {type: 'uint16', name: 'tokenID'},
-          {type: 'uint96', name: 'amount'},
-          {type: 'uint16', name: 'feeTokenID'},
-          {type: 'uint96', name: 'maxFee'},
-          {type: 'uint32', name: 'validUntil'},
-          {type: 'uint32', name: 'storageID'},
-          {type: 'string', name: 'fromNetwork'},
-          {type: 'string', name: 'toNetwork'},
-          {type: 'address', name: 'withdrawToAddr'}
-    
+          { type: 'uint32', name: 'payerId' },
+          { type: 'address', name: 'payerAddr' },
+          { type: 'uint32', name: 'payeeId' },
+          { type: 'address', name: 'payeeAddr' },
+          { type: 'uint16', name: 'tokenID' },
+          { type: 'uint96', name: 'amount' },
+          { type: 'uint16', name: 'feeTokenID' },
+          { type: 'uint96', name: 'maxFee' },
+          { type: 'uint32', name: 'validUntil' },
+          { type: 'uint32', name: 'storageID' },
+          { type: 'string', name: 'fromNetwork' },
+          { type: 'string', name: 'toNetwork' },
+          { type: 'address', name: 'withdrawToAddr' },
         ],
       }
       console.log('EIP712 hash', _TypedDataEncoder.hash(domain, types, args.data))
