@@ -153,7 +153,8 @@ export async function generateKeyPair(
   
   if (process.env.REACT_APP_LOG_SIGNATURE === 'true') {
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(result.sig));
-    console.log('UnlockAccountEcdsaSigHashOutput', hash)
+    console.log('UnlockAccountEcdsaSigHashOutput', 'hash', hash,  result.sig)
+    console.log('UnlockAccountEcdsaSigHashOutput', 'isSigEmpty', result.sig === '')
   }
   
   try {
