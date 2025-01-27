@@ -161,7 +161,10 @@ export class Request {
 
     const optInOne = {
       ...this.baseOptions,
-      ...{ headers },
+      headers: {
+        ...headers,
+        ...params.extraHeaders,
+      },
       ...localVarRequestOptions,
       url: this.baseOptions.baseURL + urlPathStr,
     }

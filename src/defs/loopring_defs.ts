@@ -4318,6 +4318,7 @@ export enum LOCK_TYPE {
   L2STAKING = 'L2STAKING',
   STOP_LIMIT = 'STOP_LIMIT',
   VAULT_COLLATERAL = 'VAULT_COLLATERAL',
+  TAIKO_FARMING = 'TAIKO_FARMING',
 }
 
 export type getUserLockSummaryRequest = {
@@ -4410,6 +4411,18 @@ export type VaultMarket = {
     base: string
     quote: string
   }
+  minTradeAmount: {
+    base: string
+    quote: string
+  }
+  minTradePromptAmount: {
+    base: string
+    quote: string
+  }
+  upSlippageFeeBips: {
+    base: string
+    quote: string
+  }
   // cefiMarket: LRCUSDT,
   riskThreshold: number
   interestThreshold: number
@@ -4474,6 +4487,8 @@ export enum VaultOperationType {
   VAULT_REPAY = 'VAULT_REPAY',
   VAULT_TRADE = 'VAULT_TRADE',
   VAULT_CLOSE_OUT = 'VAULT_CLOSE_OUT',
+  VAULT_CONVERT = 'VAULT_CONVERT',
+  VAULT_JOIN_REDEEM = 'VAULT_JOIN_REDEEM',
 }
 export enum VaultOperationEnum {
   VAULT_OPEN_POSITION,
@@ -4738,5 +4753,19 @@ export type UserNotification = {
   createAt: number
   redirectionContext: string
 }
+export type TaikoFarmingAvaiableNFT = {
+  nftTokenInfo: NFTTokenInfo
+  accountId: number
+  tokenId: number
+  nftData: string
+  broker: string
+  brokerId: number
+}
 
 //
+export type TaikoFarmingSubmitRequest = NFTOrderRequestV3 & { preOrderHash?: string }
+export interface TaikoFarmingSubmitOrderNFTRequestV3WithPatch {
+  request: TaikoFarmingSubmitRequest
+  eddsaKey: string
+  apiKey: string
+}
