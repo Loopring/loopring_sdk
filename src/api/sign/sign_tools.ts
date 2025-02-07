@@ -60,7 +60,7 @@ import { personalSign } from '../base_api'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getWindowSafely } from 'utils/window_utils'
 import { ethers } from 'ethers'
-import { hashMessage } from 'ethers/lib/utils'
+// import { hashMessage } from 'ethers/lib/utils'
 
 export enum GetEcDSASigType {
   HasDataStruct,
@@ -154,7 +154,7 @@ export async function generateKeyPair(
   
   if (process.env.REACT_APP_LOG_SIGNATURE === 'true') {
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(result.sig));
-    console.log('UnlockAccountEcdsaSigHashOutput', 'message hash', keySeed, hashMessage(keySeed))
+    console.log('UnlockAccountEcdsaSigHashOutput', 'message hash', keySeed, ethers.utils.hashMessage(keySeed))
     console.log('UnlockAccountEcdsaSigHashOutput', 'signature hash', hash)
     console.log('UnlockAccountEcdsaSigHashOutput', 'isSigEmpty', result.sig === '')
   }
