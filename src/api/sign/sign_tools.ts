@@ -159,6 +159,9 @@ export async function generateKeyPair(
     console.log('UnlockAccountEcdsaSigHashOutput', 'isSigEmpty', result.sig === '')
   }
   
+  if (!result.sig) {
+    throw Error('sig is empty')
+  }
   try {
     let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } = generatePrivateKey(result)
 
