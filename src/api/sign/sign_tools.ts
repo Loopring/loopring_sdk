@@ -149,6 +149,9 @@ export async function generateKeyPair(
     counterFactualInfo,
     isMobile === undefined ? IsMobile.any() : isMobile,
   )
+  if (!result.sig) {
+    throw Error('sig is empty')
+  }
   try {
     let { keyPair, formatedPx, formatedPy, sk, counterFactualInfo } = generatePrivateKey(result)
 
