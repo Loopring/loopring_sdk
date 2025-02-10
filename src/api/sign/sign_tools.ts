@@ -690,7 +690,7 @@ export function getWithdrawTypedData(
     feeTokenID: data.maxFee.tokenId,
     maxFee: data.maxFee.volume,
     to: data.to,
-    extraData: data.extraData ? data.extraData : '',
+    extraData: data.extraData ? data.extraData : '0x',
     minGas: data.minGas,
     validUntil: data.validUntil,
     storageID: data.storageId,
