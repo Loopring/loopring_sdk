@@ -149,7 +149,7 @@ export async function generateKeyPair(
     counterFactualInfo,
     isMobile === undefined ? IsMobile.any() : isMobile,
   )
-  if (!result.sig) {
+  if (!result.error && !result.sig) {
     throw Error('sig is empty')
   }
   try {
