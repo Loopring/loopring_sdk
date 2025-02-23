@@ -29,8 +29,8 @@ function test_prehash_message_1() {
 function test_to_bytes_1() {
   // console.log("test_to_bytes_1")
   const arg = BigNumber.from("20693456676802104653139582814194312788878632719314804297029697306071204881418")
-  const resutls = SignatureScheme.to_bytes(arg)
-  assert(JSON.stringify(resutls) === JSON.stringify([10, 228, 215, 147, 146, 102, 9, 42, 66, 160, 26, 94, 171, 73, 235, 194, 245, 106, 249, 114, 50, 52, 155, 182, 188, 18, 133, 216, 215, 20, 192, 45]))
+  const results = SignatureScheme.to_bytes(arg)
+  assert(JSON.stringify(results) === JSON.stringify([10, 228, 215, 147, 146, 102, 9, 42, 66, 160, 26, 94, 171, 73, 235, 194, 245, 106, 249, 114, 50, 52, 155, 182, 188, 18, 133, 216, 215, 20, 192, 45]))
   // console.log("test_to_bytes_1 passed")
 }
 
