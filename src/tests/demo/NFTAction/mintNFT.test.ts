@@ -14,7 +14,7 @@ const mockData = {
 /**
  * !!!important  describe
  * Follow mehod is the simple way for mint NTF, but this kind of NFT will using the same contact & with no Contract metadata forever on L1,
- * New Version of NFT will has it isolate Contract/colletion with metadata inforamtion
+ * New Version of NFT will has it isolate Contract/colletion with metadata information
  * From Step 3. nftTokenAddress please follow create `collectionNFT` step create collection(contract), the api will return follow info for mint NFT
  * tokenAddress: collectionMeta.contractAddress,
  * counterFactualNftInfo: {
