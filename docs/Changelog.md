@@ -3,7 +3,7 @@
 ## JS SDK Version ChangeLog
 #### v3.6.0
     1) dual Invest autoReinvest
-    2) guardina singature typeData
+    2) guardina signature typeData
     3) remove signature 02/03 ended
 
 #### v3.2.1
