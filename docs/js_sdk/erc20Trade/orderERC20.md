@@ -20,29 +20,29 @@ The parameters to call this interface are "accountId" and "market=LRC-ETH". In t
 
 **4) Set slippage as the slippage value user configured in UI (for example 0.1%)**
 
-**5）Caculate minCostLRC and minCostETH as below**
+**5）Calculate minCostLRC and minCostETH as below**
 
     minCostLRC = max(minTokenLRC, tradeCostLRC/maxAllowBips)
     minCostETH = max(minTokenETH, tradeCostETH/maxAllowBips)
 
-**6) Caculate the cost by considering slippage**
+**6) Calculate the cost by considering slippage**
 
     minCostLRCSlip = minCostLRC/(1-slippage)
     minCostETHSlip = minCostETH/(1-slippage)
 
 
-**7) Cacluate the minimum quantity user has to set**
+**7) Calculate the minimum quantity user has to set**
 
     tradeCostSellLRC = max(tradeCostSellLRC, minTokenLRC) * 1.1
     tradeCostSellETH = max(tradeCostSellETH, minTokenETH) * 1.1
-Here we add additonally 10% tolerance.
+Here we add additionally 10% tolerance.
 
-**8) Caculate the previous minimum token amount per calling api/v3/user/orderUserRateAmount (existing logic)**
+**8) Calculate the previous minimum token amount per calling api/v3/user/orderUserRateAmount (existing logic)**
 
 This is the threshold to distinguish small quantity trading and normal trading  
-We will get two values (configSellLRC and configSellETH) which are used for previous trading quantity limit (Per USD 100) caculation
+We will get two values (configSellLRC and configSellETH) which are used for previous trading quantity limit (Per USD 100) calculation
 
-**9）Caculate the new maxFeeBips and start trading**
+**9）Calculate the new maxFeeBips and start trading**
 
 Let's take LRC->ETH as the example
 User inputs the amount of LRC to convert, amount = sellLRC
@@ -728,7 +728,7 @@ const [{depth}, {ammPoolSnapshot}] = await Promise.all([
 ]);
 ```
 
-### Step  5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact
+### Step  5. check MinAmt see log and calc mini receive and output value & maxfeeBips & priceImpact
 
 ```ts
 const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
