@@ -42,6 +42,7 @@ export enum LOOPRING_URLs {
   GET_MINIMUM_TOKEN_AMT = '/api/v3/user/orderUserRateAmount',
   GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
   GET_USER_BILLS = '/api/v3/user/bills',
+  GET_CROSSCHAIN_OFFCHAIN_FEE_AMT = '/api/v3/user/crosschain/offchainFee',
 
   // Contacts
   GET_CONTACTS = '/api/v3/user/contact',
@@ -251,4 +252,7 @@ export enum LOOPRING_URLs {
   GET_TAIKO_FARMING_GET_REDEEM ='api/v3/taiko/farming/getRedeem',
   POST_TAIKO_FARMING_SUMBIT_CLAIM = '/api/v3/taiko/farming/sumbitClaim',
   
+  GET_RABBIT_WITHDRAW_CONFIG = '/api/v3/rabbitWithdraw/config',
+  GET_NETWORK_WITHDRAWAL_AGENTS = '/api/v3/exchange/networkWithdrawalAgents',
+  POST_RABBIT_WITHDRAW = '/api/v3/rabbitWithdraw',
 }
