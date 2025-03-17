@@ -3,6 +3,7 @@ import * as loopring_defs from '../defs'
 import {RabbitWithdrawRequest} from '../defs'
 import { ethers, utils  } from 'ethers';
 import { get_EddsaSig_Transfer } from './sign/sign_tools';
+import { AxiosResponse } from 'axios';
 
 const {_TypedDataEncoder} = utils
 
@@ -136,5 +137,34 @@ export class RabbitWithdrawAPI extends BaseAPI {
     }
     const data = (await this.makeReq().request(reqParams)).data
     return data
+  }
+  
+  public async getUserCrossChainFee<R>(
+    request: loopring_defs.GetUserCrossChainFeeRequest,
+    apiKey: string,
+  ): Promise<{
+    gasPrice: string
+    fees: {
+      token: string
+      tokenId: number
+      fee: string
+      discount: number
+    }[]
+  }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_CROSSCHAIN_OFFCHAIN_FEE_AMT,
+      queryParams: { ...request },
+      apiKey,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    }
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+
+    return raw_data
   }
 }
