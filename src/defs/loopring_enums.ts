@@ -274,4 +274,6 @@ export enum NetworkWallet {
   TAIKO = 'TAIKO',
   SEPOLIA = 'SEPOLIA',
   TAIKOHEKLA = 'TAIKOHEKLA',
+  BASE = 'BASE',
+  BASESEPOLIA = 'BASESEPOLIA',
 }

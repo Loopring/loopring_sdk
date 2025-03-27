@@ -31,6 +31,10 @@ const CREATION_CODE = {
     '',
   [ChainId.TAIKO]:
     '',
+  [ChainId.BASE]:
+    '',
+  [ChainId.BASESEPOLIA]:
+    '',
 }
 const {
   Contracts: {
