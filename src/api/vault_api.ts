@@ -735,4 +735,37 @@ export class VaultAPI extends BaseAPI {
       }
     }
   }
+
+  public async closeShort<R>(
+    {
+      request,
+    }: {
+      request: {
+        accountId: number
+        tokenId: number
+        timestamp: number
+      }
+    },
+    apiKey: string,
+    eddsaKey: string,
+  ) {
+    const dataToSig: Map<string, any> = sortObjDictionary(request)
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_CLOSE_SHORT,
+      bodyParams: request,
+      apiKey,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
+      sigObj: {
+        dataToSig,
+        PrivateKey: eddsaKey,
+      },
+    }
+    try {
+      const raw_data = (await this.makeReq().request(reqParams)).data
+      return raw_data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+  }
 }
