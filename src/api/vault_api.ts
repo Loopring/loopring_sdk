@@ -493,6 +493,27 @@ export class VaultAPI extends BaseAPI {
     }
   }
 
+  public async getVaultConfig(apiKey: string, apiVersion?: string): Promise<{ data: {penaltyFeeBips: number} }> {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_VAULT_CONFIG,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      apiKey,
+      extraHeaders: apiVersion
+        ? {
+            'X-API-VERSION': apiVersion,
+          }
+        : undefined,
+    }
+    const raw_data = (await this.makeReq().request(reqParams)).data
+    if (raw_data?.resultInfo && raw_data?.resultInfo.code) {
+      return {
+        ...raw_data?.resultInfo,
+      }
+    }
+    return { data: raw_data }
+  }
+
   public async getVaultInfos<R>(): Promise<{ raw_data: R }> {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_VAULT_INFOS,
