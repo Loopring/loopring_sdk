@@ -201,7 +201,7 @@ export class permunation {
 
   // poseidon
   /*
-    Main instansiation of the Poseidon permutation
+    Main instantiation of the Poseidon permutation
 
     The state is `t` elements wide, there are `F` full-rounds
     followed by `P` partial rounds, then `F` full rounds again.
