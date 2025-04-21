@@ -2852,7 +2852,7 @@ export class UserAPI extends BaseAPI {
   ): Promise<
     (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
   > {
-    const { request, privateKey, chainId, web3, isHWAddr,   } = req
+    const { request   } = req
 
     // let ecdsaSignature = undefined
     // const typedData = getUpdateAccountEcdsaTypedData(request, chainId)
@@ -2886,7 +2886,9 @@ export class UserAPI extends BaseAPI {
       bodyParams: _request,
       method: loopring_defs.ReqMethod.POST,
       sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
-      ecdsaSignature,
+      sigObj: {
+        sig: ecdsaSignature,
+      },
       // ...(privateKey && request.recommenderAccountId
 
             // eddsaSignatureREFER: true,

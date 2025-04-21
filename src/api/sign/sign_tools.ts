@@ -380,28 +380,11 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
  * @returns {Promise.<*>}
  */
 export async function signEip712(web3: any, account: string, method: string, params: any) {
-  const response: any = await new Promise((resolve) => {
-    web3.currentProvider?.sendAsync(
-      {
-        method,
-        params,
-        account,
-      },
-      function (err: any, result: any) {
-        if (err) {
-          resolve({ error: { message: err.message } })
-          return
-        }
-
-        if (result.error) {
-          resolve({ error: { message: result.error.message } })
-          return
-        }
-
-        resolve({ result: result.result })
-      },
-    )
-  })
+  const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+  const response: any = await provider.send(
+    method,
+    params
+  )
 
   if (response?.result) {
     return response
@@ -413,6 +396,7 @@ export async function signEip712(web3: any, account: string, method: string, par
 export async function signEip712WalletConnect(web3: any, account: string, typedData: any) {
   try {
     let response: any
+    
     if (getWindowSafely()?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) {
       const result: any = await new Promise((resolve) => {
         web3.currentProvider?.sendAsync(
@@ -440,7 +424,8 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
       myLog('eth_signTypedData', result)
       response = result?.result
     } else {
-      response = await web3.currentProvider?.send('eth_signTypedData', [account, typedData])
+      const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+      response = await provider.send('eth_signTypedData', [account, typedData])
     }
     // LOG: for signature
     myLog('eth_signTypedData success', response)
@@ -470,32 +455,12 @@ export async function getEcDSASig(
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
       try {
-        response = await new Promise((resolve, reject) => {
-          // LOG: for signature
-          // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
-          web3.currentProvider.sendAsync(
-            {
-              method: 'eth_signTypedData_v4',
-              params,
-              address,
-            },
-            (error: any, result: any) => {
-              if (error || result?.error) {
-                // return error || result.error;
-                reject(error || result?.error)
-                return
-              }
-              let _result
-              if (typeof result === 'string') {
-                // resolve(result);
-                _result = result
-              } else {
-                _result = result?.result
-              }
-              resolve(_result?.slice(0, 132))
-            },
-          )
-        })
+        const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+        
+        response = await provider.send(
+          'eth_signTypedData_v4',
+          params,
+        )
       } catch (error) {
         console.log('eth_signTypedData_v4 error', error)
         throw error

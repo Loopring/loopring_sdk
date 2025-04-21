@@ -25,4 +25,5 @@ export {
   erc721Abi,
   erc1155Abi,
   HeBao,
+  exchange36Abi
 }
