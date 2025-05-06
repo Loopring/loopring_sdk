@@ -2907,4 +2907,69 @@ export class UserAPI extends BaseAPI {
     }
     return this.returnTxHash(raw_data)
   }
+
+  
+
+  public async submitEncryptedEcdsaKey(
+    req: {
+      accountId: number
+      eddsaEncryptedPrivateKey: string
+      nonce: number
+    },
+    eddsaSignKey: string,
+    apiKey: string,
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.POST_ENCRYPTED_ECDSA_KEY,
+      bodyParams: req,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
+      apiKey,
+      sigObj: {
+        PrivateKey: eddsaSignKey,
+        dataToSig: sortObjDictionary(req),
+      },
+    } as loopring_defs.ReqParams
+    
+    // const dataToSig: Map<string, any> = new Map()
+    // dataToSig.set('accountId', request.accountId)
+
+    // const dataToSig: Map<string, any> = sortObjDictionary(req)
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
+  }
+
+  public async getEncryptedEcdsaKey(
+    req: {
+      owner: string
+      ecdsaSig: string
+      validUntilInMs: number
+    }
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_ENCRYPTED_ECDSA_KEY,
+      queryParams: req,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    } as loopring_defs.ReqParams
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
+  }
+  
 }
