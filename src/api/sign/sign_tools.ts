@@ -384,7 +384,9 @@ export async function signEip712(web3: any, account: string, method: string, par
   const response: any = await provider.send(
     method,
     params
-  )
+  ).catch(err => {
+    return { error: { message: err.message } }
+  })
 
   if (response?.result) {
     return response
