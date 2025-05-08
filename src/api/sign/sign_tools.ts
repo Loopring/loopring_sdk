@@ -413,7 +413,8 @@ export async function signEip712(web3: any, account: string, method: string, par
 export async function signEip712WalletConnect(web3: any, account: string, typedData: any) {
   try {
     let response: any
-    if (getWindowSafely()?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) {
+    
+    if ((getWindowSafely()?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) && !getWindowSafely()?.ethereum?.isTrustWallet) {
       const result: any = await new Promise((resolve) => {
         web3.currentProvider?.sendAsync(
           {
