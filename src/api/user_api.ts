@@ -2954,7 +2954,7 @@ export class UserAPI extends BaseAPI {
       validUntilInMs: number
     }
   ): Promise<
-    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+    {data: {nonce: number, encryptedEddsaPrivateKey: string}}
   > {
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.GET_ENCRYPTED_ECDSA_KEY,
@@ -2969,7 +2969,7 @@ export class UserAPI extends BaseAPI {
     } catch (error) {
       throw error as AxiosResponse
     }
-    return this.returnTxHash(raw_data)
+    return raw_data
   }
   
 }
