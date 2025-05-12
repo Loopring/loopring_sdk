@@ -471,32 +471,39 @@ export async function getEcDSASig(
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
       try {
-        response = await new Promise((resolve, reject) => {
-          // LOG: for signature
-          // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
-          web3.currentProvider.sendAsync(
-            {
-              method: 'eth_signTypedData_v4',
-              params,
-              address,
-            },
-            (error: any, result: any) => {
-              if (error || result?.error) {
-                // return error || result.error;
-                reject(error || result?.error)
-                return
-              }
-              let _result
-              if (typeof result === 'string') {
-                // resolve(result);
-                _result = result
-              } else {
-                _result = result?.result
-              }
-              resolve(_result?.slice(0, 132))
-            },
-          )
-        })
+        if (getWindowSafely()?.ethereum?.isTrustWallet) {
+          const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+          response = await provider.send('eth_signTypedData_v4', params)
+        } else {
+          response = await new Promise((resolve, reject) => {
+            // LOG: for signature
+            // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
+            web3.currentProvider.sendAsync(
+              {
+                method: 'eth_signTypedData_v4',
+                params,
+                address,
+              },
+              (error: any, result: any) => {
+                if (error || result?.error) {
+                  // return error || result.error;
+                  reject(error || result?.error)
+                  return
+                }
+                let _result
+                if (typeof result === 'string') {
+                  // resolve(result);
+                  _result = result
+                } else {
+                  _result = result?.result
+                }
+                resolve(_result?.slice(0, 132))
+              },
+            )
+          })
+          
+        }
+
       } catch (error) {
         console.log('eth_signTypedData_v4 error', error)
         throw error
