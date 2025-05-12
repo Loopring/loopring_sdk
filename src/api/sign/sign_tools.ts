@@ -59,7 +59,7 @@ import { personalSign } from '../base_api'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { getWindowSafely } from 'utils/window_utils'
-import { ethers } from 'ethers'
+import { ethers, providers } from 'ethers'
 // import { hashMessage } from 'ethers/lib/utils'
 
 export enum GetEcDSASigType {
@@ -380,28 +380,19 @@ export const getEdDSASigWithPoseidon = (inputs: any, PrivateKey: string | undefi
  * @returns {Promise.<*>}
  */
 export async function signEip712(web3: any, account: string, method: string, params: any) {
-  const response: any = await new Promise((resolve) => {
-    web3.currentProvider?.sendAsync(
-      {
-        method,
-        params,
-        account,
-      },
-      function (err: any, result: any) {
-        if (err) {
-          resolve({ error: { message: err.message } })
-          return
-        }
-
-        if (result.error) {
-          resolve({ error: { message: result.error.message } })
-          return
-        }
-
-        resolve({ result: result.result })
-      },
-    )
-  })
+  const provider = new providers.Web3Provider(web3.currentProvider)
+  const response: any = await provider
+    .send(method, params)
+    .then((result) => {
+      if (result.error) {
+        return { error: { message: result.error.message } }
+      } else {
+        return { result: result.result }
+      }
+    })
+    .catch((err) => {
+      return { error: { message: err.message } }
+    })
 
   if (response?.result) {
     return response
@@ -415,28 +406,19 @@ export async function signEip712WalletConnect(web3: any, account: string, typedD
     let response: any
     
     if ((getWindowSafely()?.ethereum?.isLoopring || !web3.currentProvider?.signer?.session) && !getWindowSafely()?.ethereum?.isTrustWallet) {
-      const result: any = await new Promise((resolve) => {
-        web3.currentProvider?.sendAsync(
-          {
-            method: 'eth_signTypedData',
-            params: [account, typedData],
-            account,
-          },
-          (err: any, result: any) => {
-            if (err) {
-              resolve({ error: { message: err.message } })
-              return
-            }
-
-            if (result.error) {
-              resolve({ error: { message: result.error.message } })
-              return
-            }
-
-            resolve({ result: result.result })
-          },
-        )
+      const provider = new providers.Web3Provider(web3.currentProvider)
+      const result: any = await provider.send('eth_signTypedData', [account, typedData])
+      .then((result) => {
+        if (result.error) {
+          return { error: { message: result.error.message } }
+        } else {
+          return { result: result.result }
+        }
       })
+      .catch((err) => {
+        return { error: { message: err.message } }
+      })
+      
       // LOG: for signature
       myLog('eth_signTypedData', result)
       response = result?.result
@@ -471,39 +453,15 @@ export async function getEcDSASig(
   switch (type) {
     case GetEcDSASigType.HasDataStruct:
       try {
-        if (getWindowSafely()?.ethereum?.isTrustWallet) {
-          const provider = new ethers.providers.Web3Provider(web3.currentProvider)
-          response = await provider.send('eth_signTypedData_v4', params)
-        } else {
-          response = await new Promise((resolve, reject) => {
-            // LOG: for signature
-            // myLog('hash', fm.toHex(sigUtil.TypedDataUtils.sign(typedData)))
-            web3.currentProvider.sendAsync(
-              {
-                method: 'eth_signTypedData_v4',
-                params,
-                address,
-              },
-              (error: any, result: any) => {
-                if (error || result?.error) {
-                  // return error || result.error;
-                  reject(error || result?.error)
-                  return
-                }
-                let _result
-                if (typeof result === 'string') {
-                  // resolve(result);
-                  _result = result
-                } else {
-                  _result = result?.result
-                }
-                resolve(_result?.slice(0, 132))
-              },
-            )
-          })
-          
-        }
-
+        const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+        response = await provider.send('eth_signTypedData_v4', params).then((result) => {
+          if (result.error) {
+            throw result?.error
+          } else {
+            const _result = typeof result === 'string' ? result : result?.result
+            return _result?.slice(0, 132)
+          }
+        })
       } catch (error) {
         console.log('eth_signTypedData_v4 error', error)
         throw error
