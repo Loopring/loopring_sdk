@@ -2852,34 +2852,8 @@ export class UserAPI extends BaseAPI {
   ): Promise<
     (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
   > {
-    const { request   } = req
-
-    // let ecdsaSignature = undefined
-    // const typedData = getUpdateAccountEcdsaTypedData(request, chainId)
-    // try {
-    //   ecdsaSignature = (
-    //     await getEcDSASig(
-    //       web3,
-    //       typedData,
-    //       request.owner,
-    //       isHWAddr ? GetEcDSASigType.WithoutDataStruct : GetEcDSASigType.HasDataStruct,
-    //       chainId,
-    //       0,
-    //       '',
-    //       loopring_defs.ConnectorNames.Unknown,
-    //       undefined,
-    //     )
-    //   )?.ecdsaSig
-    //   // ecdsaSignature += isHWAddr ? SigSuffix.Suffix03 : SigSuffix.Suffix02
-    // } catch (error) {
-    //   console.log('EcDSASig error try sign WithoutDataStruct', error)
-    //   throw error
-    // }
+    const { request } = req
     const {ecdsaSignature, ..._request} = request
-    // const dataToSig = sortObjDictionary({
-    //   ...request,
-    //   ecdsaSignature: ecdsaSignature,
-    // })
 
     const reqParams: loopring_defs.ReqParams = {
       url: loopring_defs.LOOPRING_URLs.ACCOUNT_ACTION,
@@ -2889,14 +2863,6 @@ export class UserAPI extends BaseAPI {
       sigObj: {
         sig: ecdsaSignature,
       },
-      // ...(privateKey && request.recommenderAccountId
-
-            // eddsaSignatureREFER: true,
-            // sigObj: {
-            //   PrivateKey: privateKey,
-            //   dataToSig: dataToSig,
-            // },
-      //   : {}),
     } as unknown as loopring_defs.ReqParams
 
     let raw_data
@@ -2934,10 +2900,6 @@ export class UserAPI extends BaseAPI {
       },
     } as loopring_defs.ReqParams
     
-    // const dataToSig: Map<string, any> = new Map()
-    // dataToSig.set('accountId', request.accountId)
-
-    // const dataToSig: Map<string, any> = sortObjDictionary(req)
     let raw_data
     try {
       raw_data = (await this.makeReq().request(reqParams)).data
