@@ -2846,4 +2846,92 @@ export class UserAPI extends BaseAPI {
       raw_data,
     }
   }
+
+  public async checkUpdateAccount<T extends loopring_defs.TX_HASH_API>(
+    req: loopring_defs.UpdateAccountRequestV3WithPatch,
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
+    const { request } = req
+    const {ecdsaSignature, ..._request} = request
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.ACCOUNT_ACTION,
+      bodyParams: _request,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+      sigObj: {
+        sig: ecdsaSignature,
+      },
+    } as unknown as loopring_defs.ReqParams
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
+  }
+
+  
+
+  public async submitEncryptedEcdsaKey(
+    req: {
+      accountId: number
+      eddsaEncryptedPrivateKey: string
+      nonce: number
+    },
+    eddsaSignKey: string,
+    apiKey: string,
+  ): Promise<
+    (Omit<any, 'resultInfo'> & { raw_data: Omit<any, 'resultInfo'> }) | loopring_defs.RESULT_INFO
+  > {
+
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.POST_ENCRYPTED_ECDSA_KEY,
+      bodyParams: req,
+      method: loopring_defs.ReqMethod.POST,
+      sigFlag: loopring_defs.SIG_FLAG.EDDSA_SIG,
+      apiKey,
+      sigObj: {
+        PrivateKey: eddsaSignKey,
+        dataToSig: sortObjDictionary(req),
+      },
+    } as loopring_defs.ReqParams
+    
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return this.returnTxHash(raw_data)
+  }
+
+  public async getEncryptedEcdsaKey(
+    req: {
+      owner: string
+      ecdsaSig: string
+      validUntilInMs: number
+    }
+  ): Promise<
+    {data: {nonce: number, encryptedEddsaPrivateKey: string}}
+  > {
+    const reqParams: loopring_defs.ReqParams = {
+      url: loopring_defs.LOOPRING_URLs.GET_ENCRYPTED_ECDSA_KEY,
+      queryParams: req,
+      method: loopring_defs.ReqMethod.GET,
+      sigFlag: loopring_defs.SIG_FLAG.NO_SIG,
+    } as loopring_defs.ReqParams
+
+    let raw_data
+    try {
+      raw_data = (await this.makeReq().request(reqParams)).data
+    } catch (error) {
+      throw error as AxiosResponse
+    }
+    return raw_data
+  }
+  
 }

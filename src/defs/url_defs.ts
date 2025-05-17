@@ -43,6 +43,8 @@ export enum LOOPRING_URLs {
   GET_OFFCHAIN_FEE_AMT = '/api/v3/user/offchainFee',
   GET_USER_BILLS = '/api/v3/user/bills',
   GET_CROSSCHAIN_OFFCHAIN_FEE_AMT = '/api/v3/user/crosschain/offchainFee',
+  GET_ENCRYPTED_ECDSA_KEY = '/api/v3/account/ecdsa/enctypted',
+  POST_ENCRYPTED_ECDSA_KEY = '/api/v3/account/ecdsa/enctypted',
 
   // Contacts
   GET_CONTACTS = '/api/v3/user/contact',
