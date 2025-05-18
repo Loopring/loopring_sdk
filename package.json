@@ -1,6 +1,6 @@
 {
   "name": "@loopring-web/loopring-sdk",
-  "version": "3.9.22",
+  "version": "3.9.23-trustFix-1",
   "author": "Loopring Dev Team",
   "description": "Loopring SDK",
   "license": "SEE LICENSE IN LICENSE",
@@ -79,7 +79,8 @@
     "cp-file-doc": "cp README.md ./docs/README.md;  cp Changelog.md ./docs/Changelog.md; ",
     "build-b": "npm run doc; npm run build-book",
     "serve-book": "npx honkit serve",
-    "deploy-book": "gh-pages -d _book"
+    "deploy-book": "gh-pages -d _book",
+    "publishDev": "yarn publish --tag dev"
   },
   "browserslist": {
     "production": [
