@@ -359,16 +359,13 @@ export async function personalSign(
           }
 
           // Valid: 2. webview directory signature Valid
-          // @ts-ignore
-          if (getWindowSafely()?.ethereum || global?.ethereum || web3?.currentProvider?.isConnected || web3?.currentProvider.connected || !getWindowSafely()) {
-            // LOG: for signature
-            myLog('ecRecover before', result)
-            const valid: any = ecRecover(account, msg, result)
-            // LOG: for signature
-            myLog('ecRecover after', valid.result)
-            if (valid.result) {
-              return resolve({ sig: result })
-            }
+          myLog('ecRecover before', result)
+          const valid: any = ecRecover(account, msg, result)
+          myLog('ecRecover after', valid.result)
+          if (valid.result) {
+            return resolve({ sig: result })
+          } else {
+            myLog('ecRecover error', valid)
           }
 
           // Valid: 3. contractWallet no recover
