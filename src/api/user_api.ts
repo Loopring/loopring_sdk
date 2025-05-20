@@ -322,7 +322,7 @@ export class UserAPI extends BaseAPI {
   /*
    * Cancel multiple orders using clientOrderIds
    */
-  public async cancelMultiOrdersByCreditOrderId<R>(
+  public async cancelMultiOrdersByClientOrderId<R>(
     request: loopring_defs.CancelMultiOrdersByClientOrderIdRequest,
     PrivateKey: string,
     apiKey: string,
