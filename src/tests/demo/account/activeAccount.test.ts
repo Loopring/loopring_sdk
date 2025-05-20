@@ -9,7 +9,7 @@ import {
 import * as sdk from "../../../index";
 
 /*
- * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddressess
+ * @replace LOOPRING_EXPORTED_ACCOUNT.exchangeAddress =  exchangeInfo.exchangeAddresses
  * const { exchangeInfo } = await LoopringAPI.exchangeAPI.getExchangeInfo();
  */
 describe("ActiveAccount", function () {
