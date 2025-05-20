@@ -618,7 +618,7 @@ describe("orderERC20", function () {
           }),
         ]);
 
-        // Step 5. check MinAmt see log and calc mini receive and ouput value & maxfeeBips & priceImpact
+        // Step 5. check MinAmt see log and calc mini receive and output value & maxfeeBips & priceImpact
         // @ts-ignore
         const { calcTradeParams, maxFeeBips, minimumReceived } = calculateSwap(
           sell,
